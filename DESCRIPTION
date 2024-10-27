@@ -1,10 +1,13 @@
 Package: glymotif
-Title: What the Package Does (One Line, Title Case)
+Title: Extract glycan motifs from glycan structures
 Version: 0.0.0.9000
 Authors@R: 
-    person("First", "Last", , "first.last@example.com", role = c("aut", "cre"),
-           comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
+    person("Bin", "Fu", , "23110220018@m.fudan.edu.cn", role = c("aut", "cre"),
+           comment = c(ORCID = "0000-0001-8567-2997"))
+Description: 
+    This package extracts glycan motifs (substructures) from glycan structures. 
+    It uses `glyparse` to parse glycan structures text representations and
+    uses `glyrepr` to analyze glycan structure graphs.
 License: MIT + file LICENSE
 Suggests: 
     testthat (>= 3.0.0)
