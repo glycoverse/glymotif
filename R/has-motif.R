@@ -5,7 +5,12 @@ has_motif <- function(glycan, motif, ignore_linkages = FALSE) {
   }
 
   # Ensure that `glycan` and `motif` have the same mode
-  motif <- ensure_same_mode(glycan, motif)
+  motif <- ensure_motif_graph_mode(glycan, motif)
+
+  # Ensure that `glycan` and `motif` have the same monosaccharide type
+  # To ensure strict comparison, if the glycan type is lower than the motif type,
+  # an error will be raised by `ensure_glycan_mono_type()`.
+  glycan <- ensure_glycan_mono_type(glycan, motif)
 
   # Colorize the glycan and motif graphs.
   # This is to add "color" attributes to the vertices and edges of a glycan graph,
@@ -17,8 +22,8 @@ has_motif <- function(glycan, motif, ignore_linkages = FALSE) {
 }
 
 
-ensure_same_mode <- function(glycan, motif) {
-  # Make motif the same mode as the glycan
+ensure_motif_graph_mode <- function(glycan, motif) {
+  # Make motif the same graph mode (NE or DN) as the glycan
   if (glyrepr::is_ne_glycan(glycan) && glyrepr::is_dn_glycan(motif)) {
     return(glyrepr::convert_dn_to_ne(motif))
   }
@@ -26,6 +31,28 @@ ensure_same_mode <- function(glycan, motif) {
     return(glyrepr::convert_ne_to_dn(motif))
   }
   return(motif)
+}
+
+
+ensure_glycan_mono_type <- function(glycan, motif) {
+  # Make the glycan the same monosaccharide type (concrete, generic or simple) as the motif.
+  # If the glycan type is lower than the motif type, an error will be raised.
+  glycan_type <- glyrepr::decide_glycan_mono_type(glycan)
+  motif_type <- glyrepr::decide_glycan_mono_type(motif)
+
+  conditions <- (
+    (glycan_type == "concrete" && motif_type != "concrete") ||
+    (glycan_type == "generic" && motif_type == "simple")
+  )
+  if (conditions) return(glyrepr::convert_glycan_mono_type(glycan, motif_type))
+
+  if (glycan_type != motif_type) {
+    cli::cli_abort(c(
+      "The monosaccharide type of `glycan` cannot be obscurer than `motif`.",
+      "x" = "{.val {glycan_type}} is obscurer than {.val {motif_type}}."
+    ))
+  }
+  return(glycan)
 }
 
 

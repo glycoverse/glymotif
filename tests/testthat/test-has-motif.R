@@ -119,3 +119,49 @@ test_that("NE glycan and DN motif", {
   motif <- glyparse::parse_iupac_condensed("Gal(b1-3)GalNAc", mode = "dn")
   expect_true(has_motif(glycan, motif))
 })
+
+
+test_that("concrete glycan and generic motif", {
+  glycan <- glyrepr::o_glycan_core_2()
+  motif <- glyparse::parse_iupac_condensed("Gal(b1-3)GalNAc")
+  motif <- glyrepr::convert_glycan_mono_type(motif, "generic")
+  expect_true(has_motif(glycan, motif))
+})
+
+
+test_that("concrete glycan and simple motif", {
+  glycan <- glyrepr::o_glycan_core_2()
+  motif <- glyparse::parse_iupac_condensed("Gal(b1-3)GalNAc")
+  motif <- glyrepr::convert_glycan_mono_type(motif, "simple")
+  expect_true(has_motif(glycan, motif))
+})
+
+
+test_that("generic glycan and simple motif", {
+  glycan <- glyrepr::o_glycan_core_2(mono_type = "generic")
+  motif <- glyparse::parse_iupac_condensed("Gal(b1-3)GalNAc")
+  motif <- glyrepr::convert_glycan_mono_type(motif, "simple")
+  expect_true(has_motif(glycan, motif))
+})
+
+
+test_that("simple glycan and concrete motif", {
+  glycan <- glyrepr::o_glycan_core_2(mono_type = "simple")
+  motif <- glyparse::parse_iupac_condensed("Gal(b1-3)GalNAc")
+  expect_snapshot(has_motif(glycan, motif), error = TRUE)
+})
+
+
+test_that("simple glycan and generic motif", {
+  glycan <- glyrepr::o_glycan_core_2(mono_type = "simple")
+  motif <- glyparse::parse_iupac_condensed("Gal(b1-3)GalNAc")
+  motif <- glyrepr::convert_glycan_mono_type(motif, "generic")
+  expect_snapshot(has_motif(glycan, motif), error = TRUE)
+})
+
+
+test_that("generic glycan and concrete motif", {
+  glycan <- glyrepr::o_glycan_core_2(mono_type = "generic")
+  motif <- glyparse::parse_iupac_condensed("Gal(b1-3)GalNAc")
+  expect_snapshot(has_motif(glycan, motif), error = TRUE)
+})
