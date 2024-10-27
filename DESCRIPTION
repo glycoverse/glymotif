@@ -6,13 +6,22 @@ Authors@R:
            comment = c(ORCID = "0000-0001-8567-2997"))
 Description: 
     This package extracts glycan motifs (substructures) from glycan structures. 
-    It uses `glyparse` to parse glycan structures text representations and
-    uses `glyrepr` to analyze glycan structure graphs.
+    It also determine common structural properties of N-glycans, e.g. 
+    the number of antennae, the number of branches, etc.
 License: MIT + file LICENSE
 Suggests: 
-    testthat (>= 3.0.0)
+    testthat (>= 3.0.0),
+    glyparse (>= 0.0.0.9000)
 Config/testthat/edition: 3
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
 URL: https://fubin1999.github.io/glymotif/
+Imports: 
+    dplyr,
+    glyrepr (>= 0.0.0.9004),
+    igraph,
+    rlang
+Remotes:  
+    fubin1999/glyrepr,
+    fubin1999/glyparse
