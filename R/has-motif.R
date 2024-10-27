@@ -1,57 +1,73 @@
-has_motif <- function(glycan, motif) {
-  if (!glyrepr::is_glycan(glycan)) {
-    rlang::abort("`glycan` must be a 'glycan_graph' object.")
+has_motif <- function(glycan, motif, ignore_linkages = FALSE) {
+  # Check input arguments
+  if (!glyrepr::is_glycan(glycan) || !glyrepr::is_glycan(motif)) {
+    rlang::abort("`glycan` and `motif` must be 'glycan_graph' objects.")
   }
-  if (!glyrepr::is_glycan(motif)) {
-    rlang::abort("`motif` must be a 'glycan_graph' object.")
-  }
+
+  # Ensure that `glycan` and `motif` have the same mode
   if (inherits(glycan, "ne_glycan_graph") && inherits(motif, "dn_glycan_graph")) {
       motif <- glyrepr::convert_dn_to_ne(motif)
   }
   if (inherits(glycan, "dn_glycan_graph") && inherits(motif, "ne_glycan_graph")) {
       motif <- glyrepr::convert_ne_to_dn(motif)
   }
-  colored_graphs <- colorize_glycan_graphs(glycan, motif)
-  igraph::subgraph_isomorphic(colored_graphs[["motif"]], colored_graphs[["glycan"]], method = "vf2")
+
+  # Colorize the glycan and motif graphs.
+  # This is to add "color" attributes to the vertices and edges of a glycan graph,
+  # which is demanded by the "vf2" method of `igraph::subgraph_isomorphic()`.
+  colored_graphs <- colorize_glycan_graphs(glycan, motif, ignore_linkages)
+
+  # Check if the motif is a subgraph of the glycan
+  vf2_subgraph_isomorphic(colored_graphs[["glycan"]], colored_graphs[["motif"]])
 }
 
 
-colorize_glycan_graphs <- function(glycan, motif) {
+vf2_subgraph_isomorphic <- function(glycan, motif) {
+  # `glycan` and `motif` should be colored.
+  igraph::subgraph_isomorphic(motif, glycan, method = "vf2")
+}
+
+
+colorize_glycan_graphs <- function(glycan, motif, ignore_linkages) {
   # Add "color" attributes to the vertices and edges of a glycan graph.
   # The "color" attrs wiil be usd by `igraph::subgraph_isomorphic()`
   # to compare glycan graphs (with method = "vf2").
   #
   # This function assumes that `glycan` and `input` are both "NE" or "DN" glycan graphs.
   if (inherits(glycan, "ne_glycan_graph")) {
-    colorize_ne_glycan_graphs(glycan, motif)
+    colorize_ne_glycan_graphs(glycan, motif, ignore_linkages)
   } else {
-    colorize_dn_glycan_graphs(glycan, motif)
+    colorize_dn_glycan_graphs(glycan, motif, ignore_linkages)
   }
 }
 
 
-colorize_ne_glycan_graphs <- function(glycan, motif) {
+colorize_ne_glycan_graphs <- function(glycan, motif, ignore_linkages) {
   node_colors <- colorize_labels(igraph::V(glycan)$mono, igraph::V(motif)$mono)
   igraph::V(glycan)$color <- node_colors[["glycan"]]
   igraph::V(motif)$color <- node_colors[["motif"]]
 
-  edge_colors <- colorize_labels(igraph::E(glycan)$linkage, igraph::E(motif)$linkage)
-  igraph::E(glycan)$color <- edge_colors[["glycan"]]
-  igraph::E(motif)$color <- edge_colors[["motif"]]
+  if (!ignore_linkages) {
+    edge_colors <- colorize_labels(igraph::E(glycan)$linkage, igraph::E(motif)$linkage)
+    igraph::E(glycan)$color <- edge_colors[["glycan"]]
+    igraph::E(motif)$color <- edge_colors[["motif"]]
+  }
 
   list(glycan = glycan, motif = motif)
 }
 
 
-colorize_dn_glycan_graphs <- function(glycan, motif) {
-  get_labels <- function(graph) {
+colorize_dn_glycan_graphs <- function(glycan, motif, ignore_linkages) {
+  get_labels <- function(graph, ignore_linkages) {
     dplyr::if_else(
       igraph::V(graph)$type == "mono",
       igraph::V(graph)$mono,
-      igraph::V(graph)$linkage
+      if (ignore_linkages) "??-?" else igraph::V(graph)$linkage
     )
   }
-  colors <- colorize_labels(get_labels(glycan), get_labels(motif))
+  glycan_labels <- get_labels(glycan, ignore_linkages)
+  motif_labels <- get_labels(motif, ignore_linkages)
+  colors <- colorize_labels(glycan_labels, motif_labels)
   igraph::V(glycan)$color <- colors[["glycan"]]
   igraph::V(motif)$color <- colors[["motif"]]
 

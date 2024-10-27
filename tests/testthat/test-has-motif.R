@@ -52,3 +52,17 @@ test_that("complex negative case for DN glycan", {
   motif <- glyparse::parse_iupac_condensed("Man(b1-4)GlcNAc(b1-4)[Fuc(a1-6)]GlcNAc", mode = "dn")
   expect_false(has_motif(glycan, motif))
 })
+
+
+test_that("NE glycan ignore linkages", {
+  glycan <- glyrepr::o_glycan_core_2(mode = "ne")
+  motif <- glyparse::parse_iupac_condensed("Gal(b1-4)GalNAc", mode = "ne")
+  expect_true(has_motif(glycan, motif, ignore_linkages = TRUE))
+})
+
+
+test_that("DN glycan ignore linkages", {
+  glycan <- glyrepr::o_glycan_core_2(mode = "dn")
+  motif <- glyparse::parse_iupac_condensed("Gal(b1-4)GalNAc", mode = "dn")
+  expect_true(has_motif(glycan, motif, ignore_linkages = TRUE))
+})

@@ -11,7 +11,7 @@ Description:
 License: MIT + file LICENSE
 Suggests: 
     testthat (>= 3.0.0),
-    glyparse (>= 0.0.0.9000)
+    glyparse (== 0.0.0.9001)
 Config/testthat/edition: 3
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
@@ -19,7 +19,7 @@ RoxygenNote: 7.3.2
 URL: https://fubin1999.github.io/glymotif/
 Imports: 
     dplyr,
-    glyrepr (>= 0.0.0.9004),
+    glyrepr (== 0.0.0.9008),
     igraph,
     rlang
 Remotes:  
