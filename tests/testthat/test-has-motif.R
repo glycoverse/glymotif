@@ -66,3 +66,31 @@ test_that("DN glycan ignore linkages", {
   motif <- glyparse::parse_iupac_condensed("Gal(b1-4)GalNAc", mode = "dn")
   expect_true(has_motif(glycan, motif, ignore_linkages = TRUE))
 })
+
+
+test_that("wrong glycan types", {
+  glycan <- igraph::make_empty_graph()
+  motif <- glyparse::parse_iupac_condensed("Gal(b1-4)GalNAc", mode = "ne")
+  expect_error(has_motif(glycan, motif), "`glycan` and `motif` must be 'glycan_graph' objects.")
+})
+
+
+test_that("wrong motif types", {
+  glycan <- glyrepr::o_glycan_core_2(mode = "ne")
+  motif <- igraph::make_empty_graph()
+  expect_error(has_motif(glycan, motif), "`glycan` and `motif` must be 'glycan_graph' objects.")
+})
+
+
+test_that("ND glycan and NE motif", {
+  glycan <- glyrepr::o_glycan_core_2(mode = "dn")
+  motif <- glyparse::parse_iupac_condensed("Gal(b1-3)GalNAc", mode = "ne")
+  expect_true(has_motif(glycan, motif))
+})
+
+
+test_that("NE glycan and DN motif", {
+  glycan <- glyrepr::o_glycan_core_2(mode = "ne")
+  motif <- glyparse::parse_iupac_condensed("Gal(b1-3)GalNAc", mode = "dn")
+  expect_true(has_motif(glycan, motif))
+})
