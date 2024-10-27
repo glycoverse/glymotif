@@ -5,12 +5,7 @@ has_motif <- function(glycan, motif, ignore_linkages = FALSE) {
   }
 
   # Ensure that `glycan` and `motif` have the same mode
-  if (inherits(glycan, "ne_glycan_graph") && inherits(motif, "dn_glycan_graph")) {
-      motif <- glyrepr::convert_dn_to_ne(motif)
-  }
-  if (inherits(glycan, "dn_glycan_graph") && inherits(motif, "ne_glycan_graph")) {
-      motif <- glyrepr::convert_ne_to_dn(motif)
-  }
+  motif <- ensure_same_mode(glycan, motif)
 
   # Colorize the glycan and motif graphs.
   # This is to add "color" attributes to the vertices and edges of a glycan graph,
@@ -22,9 +17,15 @@ has_motif <- function(glycan, motif, ignore_linkages = FALSE) {
 }
 
 
-vf2_subgraph_isomorphic <- function(glycan, motif) {
-  # `glycan` and `motif` should be colored.
-  igraph::subgraph_isomorphic(motif, glycan, method = "vf2")
+ensure_same_mode <- function(glycan, motif) {
+  # Make motif the same mode as the glycan
+  if (glyrepr::is_ne_glycan(glycan) && glyrepr::is_dn_glycan(motif)) {
+    return(glyrepr::convert_dn_to_ne(motif))
+  }
+  if (glyrepr::is_dn_glycan(glycan) && glyrepr::is_ne_glycan(motif)) {
+    return(glyrepr::convert_ne_to_dn(motif))
+  }
+  return(motif)
 }
 
 
@@ -87,4 +88,10 @@ colorize_labels <- function(glycan_labels, motif_labels) {
   names(motif_colors) <- NULL
 
   list(glycan = glycan_colors, motif = motif_colors)
+}
+
+
+vf2_subgraph_isomorphic <- function(glycan, motif) {
+  # `glycan` and `motif` should be colored.
+  igraph::subgraph_isomorphic(motif, glycan, method = "vf2")
 }
