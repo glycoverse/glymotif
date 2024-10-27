@@ -54,6 +54,21 @@ test_that("complex negative case for DN glycan", {
 })
 
 
+test_that("motif larger than glycan returns FALSE", {
+  glycan <- glyparse::parse_iupac_condensed("Gal(b1-3)GalNAc", mode = "ne")
+  motif <- glyparse::parse_iupac_condensed("Gal(b1-3)Gal(b1-3)GalNAc", mode = "ne")
+  expect_false(has_motif(glycan, motif))
+})
+
+
+test_that("multiple instances of motif in glycan", {
+  glycan <- glyparse::parse_iupac_condensed("Gal(b1-3)Gal(b1-3)GalNAc", mode = "ne")
+  motif <- glyparse::parse_iupac_condensed("Gal(b1-3)GalNAc", mode = "ne")
+  expect_true(has_motif(glycan, motif))
+})
+
+
+
 test_that("NE glycan ignore linkages", {
   glycan <- glyrepr::o_glycan_core_2(mode = "ne")
   motif <- glyparse::parse_iupac_condensed("Gal(b1-4)GalNAc", mode = "ne")
@@ -79,6 +94,16 @@ test_that("wrong motif types", {
   glycan <- glyrepr::o_glycan_core_2(mode = "ne")
   motif <- igraph::make_empty_graph()
   expect_error(has_motif(glycan, motif), "`glycan` and `motif` must be 'glycan_graph' objects.")
+})
+
+
+test_that("NULL inputs", {
+  expect_error(has_motif(NULL, NULL), "`glycan` and `motif` must be 'glycan_graph' objects.")
+})
+
+
+test_that("invalid data types", {
+  expect_error(has_motif(123, "motif"), "`glycan` and `motif` must be 'glycan_graph' objects.")
 })
 
 
