@@ -1,3 +1,101 @@
+#' Check if a Glycan has the Given Motif
+#'
+#' @description
+#' This function checks if a `glycan` has a given `motif`.
+#' Technically speaking, it performs a subgraph isomorphism test to
+#' determine if the `motif` is a subgraph of the `glycan`.
+#' Both monosaccharides and linkages are considered in the comparison by default.
+#' If `ignore_linkages` is set to `TRUE`, linkages will be ignored in the comparison.
+#'
+#' Both `glycan` and `motif` should be 'glycan_graph' objects
+#' (see [glyrepr::as_glycan_graph()]).
+#' They can be either "NE" or "DN" glycan graphs (can be different).
+#'
+#' Also, they can have different monosaccharide types
+#' ("concrete", "generic" or "simple", see [glyrepr::decide_mono_type()]).
+#' However, the monosaccharide type of `glycan` cannot be obscurer than that of `motif`,
+#' which will raise an error.
+#' For example, a "concrete" `glycan` can have a "generic" `motif`, but not vice versa.
+#'
+#' Obscure linkages (e.g. "??-?") are allowed in the `motif` graph
+#' (see [glyrepr::possible_linkages()]).
+#' For example, "Man(a1-3)Man(b1-4)GlcNAc" is deemed to have the "Man(a1-?)Man" `motif`.
+#' However, obscure linkages in the `glycan` graph will always result in
+#' failure to find the `motif`.
+#' For example, "Man(a1-?)Man(b1-4)GlcNAc" is deemed not to have the "Man(a1-?)Man" `motif`,
+#' even though they seem alike.
+#' This is like `NA != NA` in R, where "?" does not necessarily equal another "?".
+#' Note that "Man(a1-?)Man(b1-4)GlcNAc" has a "Man(b1-4)GlcNAc" `motif`.
+#' Namely, obscure linkages in the `glycan` will not affect other linkages.
+#'
+#' Please see the Examples section if you are confused.
+#' And also see the documentation of key functions listed above.
+#'
+#' @details
+#' Under the hood, this function uses the "vf2" method of `igraph::subgraph_isomorphic()`
+#' to perform the subgraph isomorphism test.
+#' Vextex attributes and edge attributes of the `glycan` and `motif` graphs are colorized
+#' to add "color" attributes to the vertices and edges of the graphs.
+#'
+#' To allow obscure linkage matching, [glyrepr::possible_linkages()] is used to
+#' generate all possible versions of the `motif` graph.
+#' Then, the subgraph isomorphism test is performed for each version,
+#' returning `TRUE` if any of them is isomorphic to the `glycan` graph.
+#' This implementation could suffer from performance issues when the `motif` graph
+#' has many obscure linkages.
+#' However, it is the most straightforward way to handle obscure linkages.
+#' Future improvements may fine-tune the "vf2" method or use other methods
+#' to support wildcard matching directly.
+#'
+#' @param glycan A 'glycan_graph' object.
+#' @param motif A 'glycan_graph' object.
+#' @param ignore_linkages A logical value. If `TRUE`, linkages will be ignored in the comparison.
+#'
+#' @return A logical value indicating if the `glycan` has the `motif`.
+#'
+#' @examples
+#' library(glyparse)
+#' library(glyrepr)
+#'
+#' (glycan <- glyrepr::o_glycan_core_2(mode = "ne", mono_type = "concrete"))
+#'
+#' # The glycan has the motif "Gal(b1-3)GalNAc"
+#' motif_1 <- parse_iupac_condensed("Gal(b1-3)GalNAc")
+#' has_motif(glycan, motif_1)
+#'
+#' # But not "Gal(b1-4)GalNAc" (wrong linkage)
+#' motif_2 <- parse_iupac_condensed("Gal(b1-4)GalNAc")
+#' has_motif(glycan, motif_2)
+#'
+#' # Set `ignore_linkages` to `TRUE` to ignore linkages
+#' has_motif(glycan, motif_2, ignore_linkages = TRUE)
+#'
+#' # Glycan and motif can have different graph modes
+#' motif_1_dn <- convert_ne_to_dn(motif_1)
+#' has_motif(glycan, motif_1_dn)
+#'
+#' # And different monosaccharide types
+#' motif_1_generic <- convert_glycan_mono_type(motif_1, "generic")
+#' has_motif(glycan, motif_1_generic)
+#'
+#' # However, the monosaccharide type of `glycan` cannot be obscurer than that of `motif`
+#' glycan_simple <- convert_glycan_mono_type(glycan, "simple")
+#' try(has_motif(glycan_simple, motif_1))
+#'
+#' # Obscure linkages in the `motif` graph are allowed
+#' motif_3 <- parse_iupac_condensed("Gal(b1-?)GalNAc")
+#' has_motif(glycan, motif_3)
+#'
+#' # However, obscure linkages in `glycan` will match nothing
+#' glycan_2 <- parse_iupac_condensed("Gal(b1-?)[GlcNAc(b1-6)]GalNAc")
+#' has_motif(glycan_2, motif_1)  # doesn't have "Gal(b1-3)GalNAc"
+#' has_motif(glycan_2, motif_3)  # doesn't have "Gal(b1-?)GalNAc"
+#'
+#' # This won't affect other linkages
+#' motif_4 <- parse_iupac_condensed("GlcNAc(b1-6)GalNAc")
+#' has_motif(glycan_2, motif_4)
+#'
+#' @export
 has_motif <- function(glycan, motif, ignore_linkages = FALSE) {
   # Check input arguments
   if (!glyrepr::is_glycan(glycan) || !glyrepr::is_glycan(motif)) {
