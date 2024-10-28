@@ -71,7 +71,7 @@
 #' has_motif(glycan, motif_2, ignore_linkages = TRUE)
 #'
 #' # Glycan and motif can have different graph modes
-#' motif_1_dn <- convert_ne_to_dn(motif_1)
+#' motif_1_dn <- convert_graph_mode(motif_1, to = "dn")
 #' has_motif(glycan, motif_1_dn)
 #'
 #' # And different monosaccharide types
@@ -128,13 +128,11 @@ has_motif <- function(glycan, motif, ignore_linkages = FALSE) {
 
 ensure_motif_graph_mode <- function(glycan, motif) {
   # Make motif the same graph mode (NE or DN) as the glycan
-  if (glyrepr::is_ne_glycan(glycan) && glyrepr::is_dn_glycan(motif)) {
-    return(glyrepr::convert_dn_to_ne(motif))
+  if (glyrepr::is_ne_glycan(glycan)) {
+    glyrepr::convert_graph_mode(motif, to = "ne", strict = FALSE)
+  } else {
+    glyrepr::convert_graph_mode(motif, to = "dn", strict = FALSE)
   }
-  if (glyrepr::is_dn_glycan(glycan) && glyrepr::is_ne_glycan(motif)) {
-    return(glyrepr::convert_ne_to_dn(motif))
-  }
-  return(motif)
 }
 
 
@@ -241,9 +239,9 @@ impute_ne_linkages <- function(motif) {
 
 
 impute_dn_linkages <- function(motif) {
-  ne_motif <- glyrepr::convert_dn_to_ne(motif)
+  ne_motif <- glyrepr::convert_graph_mode(motif, to = "ne")
   ne_result <- impute_ne_linkages(ne_motif)
-  purrr::map(ne_result, ~ glyrepr::convert_ne_to_dn(.x))
+  purrr::map(ne_result, glyrepr::convert_graph_mode, to = "dn")
 }
 
 
