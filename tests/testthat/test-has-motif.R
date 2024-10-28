@@ -195,6 +195,13 @@ test_that("obscure linkage in motif but false", {
 })
 
 
+test_that("obscure linkage in both motif and glycan", {
+  glycan <- glyparse::parse_iupac_condensed("Gal(b1-3)Gal(b1-?)GalNAc")
+  motif <- glyparse::parse_iupac_condensed("Gal(b1-?)GalNAc")
+  expect_true(has_motif(glycan, motif))
+})
+
+
 test_that("obscure linkage in DN motif", {
   glycan <- glyparse::parse_iupac_condensed("Gal(b1-3)Gal(b1-3)GalNAc", mode = "dn")
   motif <- glyparse::parse_iupac_condensed("Gal(b1-?)GalNAc", mode = "dn")

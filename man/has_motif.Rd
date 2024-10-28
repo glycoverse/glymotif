@@ -35,14 +35,9 @@ For example, a "concrete" \code{glycan} can have a "generic" \code{motif}, but n
 
 Obscure linkages (e.g. "??-?") are allowed in the \code{motif} graph
 (see \code{\link[glyrepr:possible_linkages]{glyrepr::possible_linkages()}}).
-For example, "Man(a1-3)Man(b1-4)GlcNAc" is deemed to have the "Man(a1-?)Man" \code{motif}.
-However, obscure linkages in the \code{glycan} graph will always result in
-failure to find the \code{motif}.
-For example, "Man(a1-?)Man(b1-4)GlcNAc" is deemed not to have the "Man(a1-?)Man" \code{motif},
-even though they seem alike.
-This is like \code{NA != NA} in R, where "?" does not necessarily equal another "?".
-Note that "Man(a1-?)Man(b1-4)GlcNAc" has a "Man(b1-4)GlcNAc" \code{motif}.
-Namely, obscure linkages in the \code{glycan} will not affect other linkages.
+"?" in a motif graph means "anything could be OK",
+so it will match any linkage in the \code{glycan} graph.
+However, "?" in a \code{glycan} graph will only match "?" in the \code{motif} graph.
 
 Please see the Examples section if you are confused.
 And also see the documentation of key functions listed above.
@@ -81,7 +76,7 @@ has_motif(glycan, motif_2)
 has_motif(glycan, motif_2, ignore_linkages = TRUE)
 
 # Glycan and motif can have different graph modes
-motif_1_dn <- convert_ne_to_dn(motif_1)
+motif_1_dn <- convert_graph_mode(motif_1, to = "dn")
 has_motif(glycan, motif_1_dn)
 
 # And different monosaccharide types
@@ -96,13 +91,9 @@ try(has_motif(glycan_simple, motif_1))
 motif_3 <- parse_iupac_condensed("Gal(b1-?)GalNAc")
 has_motif(glycan, motif_3)
 
-# However, obscure linkages in `glycan` will match nothing
+# However, obscure linkages in `glycan` will only match "?" in the `motif` graph
 glycan_2 <- parse_iupac_condensed("Gal(b1-?)[GlcNAc(b1-6)]GalNAc")
-has_motif(glycan_2, motif_1)  # doesn't have "Gal(b1-3)GalNAc"
-has_motif(glycan_2, motif_3)  # doesn't have "Gal(b1-?)GalNAc"
-
-# This won't affect other linkages
-motif_4 <- parse_iupac_condensed("GlcNAc(b1-6)GalNAc")
-has_motif(glycan_2, motif_4)
+has_motif(glycan_2, motif_1)
+has_motif(glycan_2, motif_3)
 
 }

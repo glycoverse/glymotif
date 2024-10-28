@@ -19,14 +19,9 @@
 #'
 #' Obscure linkages (e.g. "??-?") are allowed in the `motif` graph
 #' (see [glyrepr::possible_linkages()]).
-#' For example, "Man(a1-3)Man(b1-4)GlcNAc" is deemed to have the "Man(a1-?)Man" `motif`.
-#' However, obscure linkages in the `glycan` graph will always result in
-#' failure to find the `motif`.
-#' For example, "Man(a1-?)Man(b1-4)GlcNAc" is deemed not to have the "Man(a1-?)Man" `motif`,
-#' even though they seem alike.
-#' This is like `NA != NA` in R, where "?" does not necessarily equal another "?".
-#' Note that "Man(a1-?)Man(b1-4)GlcNAc" has a "Man(b1-4)GlcNAc" `motif`.
-#' Namely, obscure linkages in the `glycan` will not affect other linkages.
+#' "?" in a motif graph means "anything could be OK",
+#' so it will match any linkage in the `glycan` graph.
+#' However, "?" in a `glycan` graph will only match "?" in the `motif` graph.
 #'
 #' Please see the Examples section if you are confused.
 #' And also see the documentation of key functions listed above.
@@ -86,14 +81,10 @@
 #' motif_3 <- parse_iupac_condensed("Gal(b1-?)GalNAc")
 #' has_motif(glycan, motif_3)
 #'
-#' # However, obscure linkages in `glycan` will match nothing
+#' # However, obscure linkages in `glycan` will only match "?" in the `motif` graph
 #' glycan_2 <- parse_iupac_condensed("Gal(b1-?)[GlcNAc(b1-6)]GalNAc")
-#' has_motif(glycan_2, motif_1)  # doesn't have "Gal(b1-3)GalNAc"
-#' has_motif(glycan_2, motif_3)  # doesn't have "Gal(b1-?)GalNAc"
-#'
-#' # This won't affect other linkages
-#' motif_4 <- parse_iupac_condensed("GlcNAc(b1-6)GalNAc")
-#' has_motif(glycan_2, motif_4)
+#' has_motif(glycan_2, motif_1)
+#' has_motif(glycan_2, motif_3)
 #'
 #' @export
 has_motif <- function(glycan, motif, ignore_linkages = FALSE) {
@@ -231,7 +222,10 @@ impute_linkages <- function(motif) {
 
 impute_ne_linkages <- function(motif) {
   linkages <- igraph::E(motif)$linkage
-  candidates <- expand.grid(purrr::map(linkages, glyrepr::possible_linkages), stringsAsFactors = FALSE)
+  candidates <- expand.grid(
+    purrr::map(linkages, glyrepr::possible_linkages, include_unknown = TRUE),
+    stringsAsFactors = FALSE
+  )
   candidates <- purrr::list_transpose(unclass(candidates))
   candidates <- purrr::map(candidates, ~ unname(.x))
   purrr::map(candidates, ~ igraph::set_edge_attr(motif, "linkage", value = .x))
