@@ -165,3 +165,45 @@ test_that("generic glycan and concrete motif", {
   motif <- glyparse::parse_iupac_condensed("Gal(b1-3)GalNAc")
   expect_snapshot(has_motif(glycan, motif), error = TRUE)
 })
+
+
+test_that("obscure linkages in glycan", {
+  glycan <- glyparse::parse_iupac_condensed("Gal(b1-3)Gal(b1-?)GalNAc")
+  motif <- glyparse::parse_iupac_condensed("Gal(b1-3)GalNAc")
+  expect_false(has_motif(glycan, motif))
+})
+
+
+test_that("obscure linkages in motif", {
+  glycan <- glyparse::parse_iupac_condensed("Gal(b1-3)Gal(b1-3)GalNAc")
+  motif <- glyparse::parse_iupac_condensed("Gal(b1-?)GalNAc")
+  expect_true(has_motif(glycan, motif))
+})
+
+
+test_that("many obscure linkages in motif", {
+  glycan <- glyparse::parse_iupac_condensed("Gal(b1-3)Gal(b1-3)GalNAc")
+  motif <- glyparse::parse_iupac_condensed("Gal(b1-?)Gal(b?-3)GalNAc")
+  expect_true(has_motif(glycan, motif))
+})
+
+
+test_that("obscure linkage in motif but false", {
+  glycan <- glyparse::parse_iupac_condensed("Gal(b1-3)Gal(b1-3)GalNAc")
+  motif <- glyparse::parse_iupac_condensed("Gal(b2-?)GalNAc")
+  expect_false(has_motif(glycan, motif))
+})
+
+
+test_that("obscure linkage in DN motif", {
+  glycan <- glyparse::parse_iupac_condensed("Gal(b1-3)Gal(b1-3)GalNAc", mode = "dn")
+  motif <- glyparse::parse_iupac_condensed("Gal(b1-?)GalNAc", mode = "dn")
+  expect_true(has_motif(glycan, motif))
+})
+
+
+test_that("obscure linkage in DN motif but false", {
+  glycan <- glyparse::parse_iupac_condensed("Gal(b1-3)Gal(b1-3)GalNAc", mode = "dn")
+  motif <- glyparse::parse_iupac_condensed("Gal(b2-?)GalNAc", mode = "dn")
+  expect_false(has_motif(glycan, motif))
+})
