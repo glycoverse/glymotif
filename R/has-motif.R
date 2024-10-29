@@ -23,12 +23,31 @@
 #' so it will match any linkage in the `glycan` graph.
 #' However, "?" in a `glycan` graph will only match "?" in the `motif` graph.
 #'
+#' According to the [GlycoMotif](https://glycomotif.glyomics.org) database,
+#' a motif can be classified into four alignment types:
+#' - "substructure": The motif can be anywhere in the glycan. This is the default.
+#' See [substructure](https://glycomotif.glyomics.org/glycomotif/Substructure_Alignment)
+#' for details.
+#' - "core": The motif must align with at least one connected substructure
+#' (subtree) at the reducing end of the glycan.
+#' See [glycan core](https://glycomotif.glyomics.org/glycomotif/Glycan_Core_Alignment)
+#' for details.
+#' - "terminal": The motif must align with at least one connected substructure
+#' (subtree) at the nonreducing end of the glycan.
+#' See [nonreducing end](https://glycomotif.glyomics.org/glycomotif/Nonreducing-End_Alignment)
+#' for details.
+#' - "whole": The motif must align with the entire glycan.
+#' See [whole-glycan](https://glycomotif.glyomics.org/glycomotif/Whole-Glycan_Alignment)
+#' for details.
+#'
 #' Please see the Examples section if you are confused.
 #' And also see the documentation of key functions listed above.
 #'
 #' @details
-#' Under the hood, this function uses the "vf2" method of `igraph::subgraph_isomorphic()`
-#' to perform the subgraph isomorphism test.
+#' Under the hood, if `alignment` is "whole", the function uses
+#' [igraph::isomorphic()] with "vf2" method to perform the isomorphism test.
+#' Otherwise, it uses [igraph::graph.get.subisomorphisms.vf2()] to get all possible
+#' subgraph isomorphisms between the `glycan` and `motif` graphs.
 #' Vextex attributes and edge attributes of the `glycan` and `motif` graphs are colorized
 #' to add "color" attributes to the vertices and edges of the graphs.
 #'
@@ -44,6 +63,9 @@
 #'
 #' @param glycan A 'glycan_graph' object.
 #' @param motif A 'glycan_graph' object.
+#' @param ... Not used.
+#' @param alignment A character string. Possible values are "substructure", "core", "terminal" and "whole".
+#' See description for details. Default is "substructure".
 #' @param ignore_linkages A logical value. If `TRUE`, linkages will be ignored in the comparison.
 #'
 #' @return A logical value indicating if the `glycan` has the `motif`.
@@ -86,8 +108,21 @@
 #' has_motif(glycan_2, motif_1)
 #' has_motif(glycan_2, motif_3)
 #'
+#' # Alignment types
+#' glycan_3 <- parse_iupac_condensed("Gal(a1-3)Gal(a1-4)Gal(a1-6)Gal")
+#' motif_4 <-  parse_iupac_condensed("Gal(a1-3)Gal(a1-4)Gal(a1-6)Gal")
+#' motif_5 <-  parse_iupac_condensed("Gal(a1-3)Gal(a1-4)Gal")
+#' motif_6 <-  parse_iupac_condensed(         "Gal(a1-4)Gal(a1-6)Gal")
+#' motif_7 <-  parse_iupac_condensed(         "Gal(a1-4)Gal")
+#' motifs <- list(motif_4, motif_5, motif_6, motif_7)
+#'
+#' purrr::map_lgl(motifs, ~ has_motif(glycan_3, .x, alignment = "whole"))
+#' purrr::map_lgl(motifs, ~ has_motif(glycan_3, .x, alignment = "core"))
+#' purrr::map_lgl(motifs, ~ has_motif(glycan_3, .x, alignment = "terminal"))
+#' purrr::map_lgl(motifs, ~ has_motif(glycan_3, .x, alignment = "substructure"))
+#'
 #' @export
-has_motif <- function(glycan, motif, ignore_linkages = FALSE) {
+has_motif <- function(glycan, motif, ..., alignment = "substructure", ignore_linkages = FALSE) {
   # Check input arguments
   if (!glyrepr::is_glycan(glycan) || !glyrepr::is_glycan(motif)) {
     rlang::abort("`glycan` and `motif` must be 'glycan_graph' objects.")
@@ -105,13 +140,13 @@ has_motif <- function(glycan, motif, ignore_linkages = FALSE) {
   if (ignore_linkages) {
     glycan <- glyrepr::remove_linkages(glycan)
     motif <- glyrepr::remove_linkages(motif)
-    vf2_subgraph_isomorphic(glycan, motif)
+    vf2_subgraph_isomorphic(glycan, motif, alignment)
   } else {
     # Impute the "?" in the linkage of the motif graph with every possibility
     motif_candidates <- impute_linkages(motif)
     any(purrr::map_lgl(
       motif_candidates,
-      ~ vf2_subgraph_isomorphic(glycan, .x)
+      ~ vf2_subgraph_isomorphic(glycan, .x, alignment)
     ))
   }
 }
@@ -239,13 +274,45 @@ impute_dn_linkages <- function(motif) {
 }
 
 
-vf2_subgraph_isomorphic <- function(glycan, motif) {
+vf2_subgraph_isomorphic <- function(glycan, motif, alignment) {
   # Colorize the glycan and motif graphs.
   # This is to add "color" attributes to the vertices and edges of a glycan graph,
   # which is demanded by the "vf2" method of `igraph::subgraph_isomorphic()`.
   colored_graphs <- colorize_glycan_graphs(glycan, motif)
   c_glycan <- colored_graphs[["glycan"]]
   c_motif <- colored_graphs[["motif"]]
+
   # Perform the subgraph isomorphism test with the "vf2" method.
-  igraph::subgraph_isomorphic(c_motif, c_glycan, method = "vf2")
+  # Possible `alignment`: "substructure", "core", "terminal", "whole"
+  if (alignment == "whole") {
+    return(igraph::isomorphic(c_glycan, c_motif, method = "vf2"))
+  }
+
+  res <- igraph::graph.get.subisomorphisms.vf2(c_glycan, c_motif)
+  if (alignment == "substructure") {
+    return(length(res) > 0)
+  }
+  if (alignment == "core") {
+    glycan_core_node <- core_node(c_glycan)
+    return(any(purrr::map_lgl(res, ~ glycan_core_node %in% .x)))
+  }
+  if (alignment == "terminal") {
+    glycan_terminal_nodes <- terminal_nodes(c_glycan)
+    motif_terminal_nodes <- terminal_nodes(c_motif)
+    return(any(purrr::map_lgl(
+      res, ~ all(.x[motif_terminal_nodes] %in% glycan_terminal_nodes)))
+    )
+  }
+}
+
+
+terminal_nodes <- function(glycan) {
+  out_degree <- igraph::degree(glycan, mode = "out")
+  igraph::V(glycan)[out_degree == 0]
+}
+
+
+core_node <- function(glycan) {
+  in_degree <- igraph::degree(glycan, mode = "in")
+  igraph::V(glycan)[in_degree == 0]
 }

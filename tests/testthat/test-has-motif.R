@@ -214,3 +214,115 @@ test_that("obscure linkage in DN motif but false", {
   motif <- glyparse::parse_iupac_condensed("Gal(b2-?)GalNAc", mode = "dn")
   expect_false(has_motif(glycan, motif))
 })
+
+
+test_that("whole alignment simple positive case", {
+  glycan <- glyrepr::o_glycan_core_2()
+  motif <- glyrepr::o_glycan_core_2()
+  expect_true(has_motif(glycan, motif, alignment = "whole"))
+})
+
+
+test_that("whole alignment simple negative case", {
+  glycan <- glyrepr::o_glycan_core_2()
+  motif <- glyrepr::o_glycan_core_1()
+  expect_false(has_motif(glycan, motif, alignment = "whole"))
+})
+
+
+test_that("whole alignment complex positive case", {
+  glycan <- glyrepr::n_glycan_core()
+  motif <- glyrepr::n_glycan_core()
+  expect_true(has_motif(glycan, motif, alignment = "whole"))
+})
+
+
+test_that("whole alignment complex negative case", {
+  glycan <- glyrepr::n_glycan_core()
+  motif <- glyparse::parse_iupac_condensed("Man(a1-3)Man(b1-4)GlcNAc(b1-4)GlcNAc")
+  expect_false(has_motif(glycan, motif, alignment = "whole"))
+})
+
+
+test_that("core alignment simple positive case", {
+  glycan <- glyparse::parse_iupac_condensed("GlcNAc(b1-6)Gal(b1-6)Gal")
+  motif <- glyparse::parse_iupac_condensed("Gal(b1-6)Gal")
+  expect_true(has_motif(glycan, motif, alignment = "core"))
+})
+
+
+test_that("core alignment simple negative case", {
+  glycan <- glyparse::parse_iupac_condensed("GlcNAc(b1-6)Gal(b1-6)Gal")
+  motif <- glyparse::parse_iupac_condensed("GlcNAc(b1-6)Gal")
+  expect_false(has_motif(glycan, motif, alignment = "core"))
+})
+
+
+test_that("core alignment complex positive case", {
+  glycan <- glyrepr::n_glycan_core()
+  motif <- glyparse::parse_iupac_condensed("Man(b1-4)GlcNAc(b1-4)GlcNAc")
+  expect_true(has_motif(glycan, motif, alignment = "core"))
+})
+
+
+test_that("core alignment complex negative case", {
+  glycan <- glyrepr::n_glycan_core()
+  motif <- glyparse::parse_iupac_condensed("Man(a1-6)Man(b1-4)GlcNAc")
+  expect_false(has_motif(glycan, motif, alignment = "core"))
+})
+
+
+test_that("core alignment more complex positive case", {
+  glycan <- glyparse::parse_iupac_condensed("Man(a1-3)[Man(b1-6)]Man(b1-4)GlcNAc(b1-4)[Fuc(a1-6)]GlcNAc")
+  motif <- glyparse::parse_iupac_condensed("GlcNAc(b1-4)GlcNAc")
+  expect_true(has_motif(glycan, motif, alignment = "core"))
+})
+
+
+test_that("core alignment more complex negative case", {
+  glycan <- glyparse::parse_iupac_condensed("Man(a1-3)[Man(b1-6)]Man(b1-4)GlcNAc(b1-4)[Fuc(a1-6)]GlcNAc")
+  motif <- glyparse::parse_iupac_condensed("Man(a1-6)Man(b1-4)GlcNAc")
+  expect_false(has_motif(glycan, motif, alignment = "core"))
+})
+
+
+test_that("terminal alignment simple positive case", {
+  glycan <- glyparse::parse_iupac_condensed("GlcNAc(b1-6)Gal(b1-6)Gal")
+  motif <- glyparse::parse_iupac_condensed("GlcNAc(b1-6)Gal")
+  expect_true(has_motif(glycan, motif, alignment = "terminal"))
+})
+
+
+test_that("terminal alignment simple negative case", {
+  glycan <- glyparse::parse_iupac_condensed("GlcNAc(b1-6)Gal(b1-6)Gal")
+  motif <- glyparse::parse_iupac_condensed("Gal(b1-6)Gal")
+  expect_false(has_motif(glycan, motif, alignment = "terminal"))
+})
+
+
+test_that("terminal alignment complex positive case", {
+  glycan <- glyrepr::n_glycan_core()
+  motif <- glyparse::parse_iupac_condensed("Man(a1-6)Man(b1-4)GlcNAc")
+  expect_true(has_motif(glycan, motif, alignment = "terminal"))
+})
+
+
+test_that("terminal alignment complex negative case", {
+  glycan <- glyrepr::n_glycan_core()
+  motif <- glyparse::parse_iupac_condensed("Man(b1-4)GlcNAc(b1-4)GlcNAc")
+  expect_false(has_motif(glycan, motif, alignment = "terminal"))
+})
+
+
+test_that("termimal alignment more complex positive case", {
+  glycan <- glyparse::parse_iupac_condensed("Neu5Ac(a2-3)Gal(b1-4)[Fuc(a1-3)]GlcNAc(b1-4)GlcNAc")
+  motif <- glyparse::parse_iupac_condensed("Neu5Ac(a2-3)Gal(b1-4)GlcNAc")
+  expect_true(has_motif(glycan, motif, alignment = "terminal"))
+})
+
+
+test_that("terminal alignment more complex negative case", {
+  glycan <- glyparse::parse_iupac_condensed("Neu5Ac(a2-3)Gal(b1-4)[Fuc(a1-3)]GlcNAc(b1-4)GlcNAc")
+  motif <- glyparse::parse_iupac_condensed("Gal(b1-4)[Fuc(a1-3)]GlcNAc")
+  expect_false(has_motif(glycan, motif, alignment = "terminal"))
+})

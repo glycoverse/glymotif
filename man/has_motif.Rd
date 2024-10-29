@@ -4,12 +4,23 @@
 \alias{has_motif}
 \title{Check if a Glycan has the Given Motif}
 \usage{
-has_motif(glycan, motif, ignore_linkages = FALSE)
+has_motif(
+  glycan,
+  motif,
+  ...,
+  alignment = "substructure",
+  ignore_linkages = FALSE
+)
 }
 \arguments{
 \item{glycan}{A 'glycan_graph' object.}
 
 \item{motif}{A 'glycan_graph' object.}
+
+\item{...}{Not used.}
+
+\item{alignment}{A character string. Possible values are "substructure", "core", "terminal" and "whole".
+See description for details. Default is "substructure".}
 
 \item{ignore_linkages}{A logical value. If \code{TRUE}, linkages will be ignored in the comparison.}
 }
@@ -39,12 +50,33 @@ Obscure linkages (e.g. "??-?") are allowed in the \code{motif} graph
 so it will match any linkage in the \code{glycan} graph.
 However, "?" in a \code{glycan} graph will only match "?" in the \code{motif} graph.
 
+According to the \href{https://glycomotif.glyomics.org}{GlycoMotif} database,
+a motif can be classified into four alignment types:
+\itemize{
+\item "substructure": The motif can be anywhere in the glycan. This is the default.
+See \href{https://glycomotif.glyomics.org/glycomotif/Substructure_Alignment}{substructure}
+for details.
+\item "core": The motif must align with at least one connected substructure
+(subtree) at the reducing end of the glycan.
+See \href{https://glycomotif.glyomics.org/glycomotif/Glycan_Core_Alignment}{glycan core}
+for details.
+\item "terminal": The motif must align with at least one connected substructure
+(subtree) at the nonreducing end of the glycan.
+See \href{https://glycomotif.glyomics.org/glycomotif/Nonreducing-End_Alignment}{nonreducing end}
+for details.
+\item "whole": The motif must align with the entire glycan.
+See \href{https://glycomotif.glyomics.org/glycomotif/Whole-Glycan_Alignment}{whole-glycan}
+for details.
+}
+
 Please see the Examples section if you are confused.
 And also see the documentation of key functions listed above.
 }
 \details{
-Under the hood, this function uses the "vf2" method of \code{igraph::subgraph_isomorphic()}
-to perform the subgraph isomorphism test.
+Under the hood, if \code{alignment} is "whole", the function uses
+\code{\link[igraph:isomorphic]{igraph::isomorphic()}} with "vf2" method to perform the isomorphism test.
+Otherwise, it uses \code{\link[igraph:subgraph_isomorphisms]{igraph::graph.get.subisomorphisms.vf2()}} to get all possible
+subgraph isomorphisms between the \code{glycan} and \code{motif} graphs.
 Vextex attributes and edge attributes of the \code{glycan} and \code{motif} graphs are colorized
 to add "color" attributes to the vertices and edges of the graphs.
 
@@ -95,5 +127,18 @@ has_motif(glycan, motif_3)
 glycan_2 <- parse_iupac_condensed("Gal(b1-?)[GlcNAc(b1-6)]GalNAc")
 has_motif(glycan_2, motif_1)
 has_motif(glycan_2, motif_3)
+
+# Alignment types
+glycan_3 <- parse_iupac_condensed("Gal(a1-3)Gal(a1-4)Gal(a1-6)Gal")
+motif_4 <-  parse_iupac_condensed("Gal(a1-3)Gal(a1-4)Gal(a1-6)Gal")
+motif_5 <-  parse_iupac_condensed("Gal(a1-3)Gal(a1-4)Gal")
+motif_6 <-  parse_iupac_condensed(         "Gal(a1-4)Gal(a1-6)Gal")
+motif_7 <-  parse_iupac_condensed(         "Gal(a1-4)Gal")
+motifs <- list(motif_4, motif_5, motif_6, motif_7)
+
+purrr::map_lgl(motifs, ~ has_motif(glycan_3, .x, alignment = "whole"))
+purrr::map_lgl(motifs, ~ has_motif(glycan_3, .x, alignment = "core"))
+purrr::map_lgl(motifs, ~ has_motif(glycan_3, .x, alignment = "terminal"))
+purrr::map_lgl(motifs, ~ has_motif(glycan_3, .x, alignment = "substructure"))
 
 }
