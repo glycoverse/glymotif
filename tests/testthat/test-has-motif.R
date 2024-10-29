@@ -326,3 +326,14 @@ test_that("terminal alignment more complex negative case", {
   motif <- glyparse::parse_iupac_condensed("Gal(b1-4)[Fuc(a1-3)]GlcNAc")
   expect_false(has_motif(glycan, motif, alignment = "terminal"))
 })
+
+
+test_that("substituents are considered", {
+  glycan1 <- glyparse::parse_iupac_condensed("Neu5Ac9Ac(a2-3)Gal(b1-4)GlcNAc")
+  glycan2 <- glyparse::parse_iupac_condensed("Neu5Ac(a2-3)Gal(b1-4)GlcNAc")
+
+  expect_true(has_motif(glycan1, glycan1))
+  expect_false(has_motif(glycan1, glycan2))
+  expect_false(has_motif(glycan2, glycan1))
+  expect_true(has_motif(glycan2, glycan2))
+})

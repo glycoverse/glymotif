@@ -75,6 +75,12 @@ for details.
 }
 }
 
+\section{Substituents}{
+Substituents (e.g. "Ac", "SO3") are matched in strict mode.
+"Neu5Ac-9Ac" will only match "Neu5Ac-9Ac" but not "Neu5Ac",
+and "Neu5Ac" will not match "Neu5Ac-9Ac".
+}
+
 \section{Implementation}{
 Under the hood, if \code{alignment} is "whole", the function uses
 \code{\link[igraph:isomorphic]{igraph::isomorphic()}} with "vf2" method to perform the isomorphism test.
@@ -144,5 +150,14 @@ purrr::map_lgl(motifs, ~ has_motif(glycan_3, .x, alignment = "whole"))
 purrr::map_lgl(motifs, ~ has_motif(glycan_3, .x, alignment = "core"))
 purrr::map_lgl(motifs, ~ has_motif(glycan_3, .x, alignment = "terminal"))
 purrr::map_lgl(motifs, ~ has_motif(glycan_3, .x, alignment = "substructure"))
+
+# Substituents
+glycan_4 <- parse_iupac_condensed("Neu5Ac9Ac(a2-3)Gal(b1-4)GlcNAc")
+glycan_5 <- parse_iupac_condensed("Neu5Ac(a2-3)Gal(b1-4)GlcNAc")
+
+has_motif(glycan_4, glycan_5)
+has_motif(glycan_5, glycan_4)
+has_motif(glycan_4, glycan_4)
+has_motif(glycan_5, glycan_5)
 
 }

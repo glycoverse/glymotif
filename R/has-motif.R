@@ -47,6 +47,12 @@
 #' See [whole-glycan](https://glycomotif.glyomics.org/glycomotif/Whole-Glycan_Alignment)
 #' for details.
 #'
+#' # Substituents
+#'
+#' Substituents (e.g. "Ac", "SO3") are matched in strict mode.
+#' "Neu5Ac-9Ac" will only match "Neu5Ac-9Ac" but not "Neu5Ac",
+#' and "Neu5Ac" will not match "Neu5Ac-9Ac".
+#'
 #' # Implementation
 #'
 #' Under the hood, if `alignment` is "whole", the function uses
@@ -125,6 +131,15 @@
 #' purrr::map_lgl(motifs, ~ has_motif(glycan_3, .x, alignment = "core"))
 #' purrr::map_lgl(motifs, ~ has_motif(glycan_3, .x, alignment = "terminal"))
 #' purrr::map_lgl(motifs, ~ has_motif(glycan_3, .x, alignment = "substructure"))
+#'
+#' # Substituents
+#' glycan_4 <- parse_iupac_condensed("Neu5Ac9Ac(a2-3)Gal(b1-4)GlcNAc")
+#' glycan_5 <- parse_iupac_condensed("Neu5Ac(a2-3)Gal(b1-4)GlcNAc")
+#'
+#' has_motif(glycan_4, glycan_5)
+#' has_motif(glycan_5, glycan_4)
+#' has_motif(glycan_4, glycan_4)
+#' has_motif(glycan_5, glycan_5)
 #'
 #' @export
 has_motif <- function(glycan, motif, ..., alignment = "substructure", ignore_linkages = FALSE) {
@@ -207,7 +222,9 @@ colorize_glycan_graphs <- function(glycan, motif) {
 
 
 colorize_ne_glycan_graphs <- function(glycan, motif) {
-  node_colors <- colorize_labels(igraph::V(glycan)$mono, igraph::V(motif)$mono)
+  glycan_labels <- stringr::str_c(igraph::V(glycan)$mono, igraph::V(glycan)$sub)
+  motif_labels <- stringr::str_c(igraph::V(motif)$mono, igraph::V(motif)$sub)
+  node_colors <- colorize_labels(glycan_labels, motif_labels)
   igraph::V(glycan)$color <- node_colors[["glycan"]]
   igraph::V(motif)$color <- node_colors[["motif"]]
 
@@ -223,7 +240,7 @@ colorize_dn_glycan_graphs <- function(glycan, motif) {
   get_labels <- function(graph) {
     dplyr::if_else(
       igraph::V(graph)$type == "mono",
-      igraph::V(graph)$mono,
+      stringr::str_c(igraph::V(graph)$mono, igraph::V(graph)$sub),
       igraph::V(graph)$linkage
     )
   }
