@@ -5,7 +5,9 @@
 #' Technically speaking, it performs a subgraph isomorphism test to
 #' determine if the `motif` is a subgraph of the `glycan`.
 #' Both monosaccharides and linkages are considered in the comparison by default.
-#' If `ignore_linkages` is set to `TRUE`, linkages will be ignored in the comparison.
+#'
+#' @details
+#' # Graph mode and monosaccharide type
 #'
 #' Both `glycan` and `motif` should be 'glycan_graph' objects
 #' (see [glyrepr::as_glycan_graph()]).
@@ -17,11 +19,16 @@
 #' which will raise an error.
 #' For example, a "concrete" `glycan` can have a "generic" `motif`, but not vice versa.
 #'
+#' # Linkages
+#'
 #' Obscure linkages (e.g. "??-?") are allowed in the `motif` graph
 #' (see [glyrepr::possible_linkages()]).
 #' "?" in a motif graph means "anything could be OK",
 #' so it will match any linkage in the `glycan` graph.
 #' However, "?" in a `glycan` graph will only match "?" in the `motif` graph.
+#' You can set `ignore_linkages = TRUE` to ignore linkages in the comparison.
+#'
+#' # Alignment
 #'
 #' According to the [GlycoMotif](https://glycomotif.glyomics.org) database,
 #' a motif can be classified into four alignment types:
@@ -40,10 +47,8 @@
 #' See [whole-glycan](https://glycomotif.glyomics.org/glycomotif/Whole-Glycan_Alignment)
 #' for details.
 #'
-#' Please see the Examples section if you are confused.
-#' And also see the documentation of key functions listed above.
+#' # Implementation
 #'
-#' @details
 #' Under the hood, if `alignment` is "whole", the function uses
 #' [igraph::isomorphic()] with "vf2" method to perform the isomorphism test.
 #' Otherwise, it uses [igraph::graph.get.subisomorphisms.vf2()] to get all possible

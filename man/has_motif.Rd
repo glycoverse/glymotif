@@ -32,8 +32,8 @@ This function checks if a \code{glycan} has a given \code{motif}.
 Technically speaking, it performs a subgraph isomorphism test to
 determine if the \code{motif} is a subgraph of the \code{glycan}.
 Both monosaccharides and linkages are considered in the comparison by default.
-If \code{ignore_linkages} is set to \code{TRUE}, linkages will be ignored in the comparison.
-
+}
+\section{Graph mode and monosaccharide type}{
 Both \code{glycan} and \code{motif} should be 'glycan_graph' objects
 (see \code{\link[glyrepr:as_glycan_graph]{glyrepr::as_glycan_graph()}}).
 They can be either "NE" or "DN" glycan graphs (can be different).
@@ -43,13 +43,18 @@ Also, they can have different monosaccharide types
 However, the monosaccharide type of \code{glycan} cannot be obscurer than that of \code{motif},
 which will raise an error.
 For example, a "concrete" \code{glycan} can have a "generic" \code{motif}, but not vice versa.
+}
 
+\section{Linkages}{
 Obscure linkages (e.g. "??-?") are allowed in the \code{motif} graph
 (see \code{\link[glyrepr:possible_linkages]{glyrepr::possible_linkages()}}).
 "?" in a motif graph means "anything could be OK",
 so it will match any linkage in the \code{glycan} graph.
 However, "?" in a \code{glycan} graph will only match "?" in the \code{motif} graph.
+You can set \code{ignore_linkages = TRUE} to ignore linkages in the comparison.
+}
 
+\section{Alignment}{
 According to the \href{https://glycomotif.glyomics.org}{GlycoMotif} database,
 a motif can be classified into four alignment types:
 \itemize{
@@ -68,11 +73,9 @@ for details.
 See \href{https://glycomotif.glyomics.org/glycomotif/Whole-Glycan_Alignment}{whole-glycan}
 for details.
 }
-
-Please see the Examples section if you are confused.
-And also see the documentation of key functions listed above.
 }
-\details{
+
+\section{Implementation}{
 Under the hood, if \code{alignment} is "whole", the function uses
 \code{\link[igraph:isomorphic]{igraph::isomorphic()}} with "vf2" method to perform the isomorphism test.
 Otherwise, it uses \code{\link[igraph:subgraph_isomorphisms]{igraph::graph.get.subisomorphisms.vf2()}} to get all possible
@@ -90,6 +93,7 @@ However, it is the most straightforward way to handle obscure linkages.
 Future improvements may fine-tune the "vf2" method or use other methods
 to support wildcard matching directly.
 }
+
 \examples{
 library(glyparse)
 library(glyrepr)
