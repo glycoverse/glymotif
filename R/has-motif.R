@@ -127,6 +127,9 @@ has_motif <- function(glycan, motif, ..., alignment = "substructure", ignore_lin
   if (!glyrepr::is_glycan(glycan) || !glyrepr::is_glycan(motif)) {
     rlang::abort("`glycan` and `motif` must be 'glycan_graph' objects.")
   }
+  if (!alignment %in% c("substructure", "core", "terminal", "whole")) {
+    rlang::abort("`alignment` must be one of 'substructure', 'core', 'terminal' or 'whole'.")
+  }
 
   # Ensure that `glycan` and `motif` have the same mode
   motif <- ensure_motif_graph_mode(glycan, motif)
