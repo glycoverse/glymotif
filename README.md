@@ -15,6 +15,9 @@ coverage](https://codecov.io/gh/fubin1999/glymotif/graph/badge.svg)](https://app
 <!-- badges: end -->
 
 The goal of glymotif is to extract glycan motifs from glycan structures.
+It works seemlessly with
+[glyrepr](%22https://github.com/fubin1999/glyrepr%22) and
+[glyparse](%22https://github.com/fubin1999/glyparse%22).
 
 ## Installation
 

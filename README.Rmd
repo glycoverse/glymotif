@@ -23,6 +23,8 @@ knitr::opts_chunk$set(
 <!-- badges: end -->
 
 The goal of glymotif is to extract glycan motifs from glycan structures.
+It works seemlessly with [glyrepr]("https://github.com/fubin1999/glyrepr")
+and [glyparse]("https://github.com/fubin1999/glyparse").
 
 ## Installation
 
