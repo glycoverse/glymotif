@@ -337,3 +337,77 @@ test_that("substituents are considered", {
   expect_false(has_motif(glycan2, glycan1))
   expect_true(has_motif(glycan2, glycan2))
 })
+
+
+test_that("anomer right for substructure alignment", {
+  glycan <- glyparse::parse_iupac_condensed("Neu5Ac(a2-3)Gal(b1-4)GlcNAc")
+  motif <- glyparse::parse_iupac_condensed("Gal(b1-")
+  expect_true(has_motif(glycan, motif, alignment = "substructure"))
+})
+
+
+patrick::with_parameters_test_that(
+  "obscure anomer right for substructure alignment",
+  {
+    glycan <- glyparse::parse_iupac_condensed("Neu5Ac(a2-3)Gal(b1-4)GlcNAc")
+    motif <- glyparse::parse_iupac_condensed(motif_iupac)
+    expect_true(has_motif(glycan, motif, alignment = "substructure"))
+  },
+  motif_iupac = c("Gal(?1-", "Gal(b?-", "Gal(??-")
+)
+
+
+test_that("anomer wrong for substructure alignment", {
+  glycan <- glyparse::parse_iupac_condensed("Neu5Ac(a2-3)Gal(b1-4)GlcNAc")
+  motif <- glyparse::parse_iupac_condensed("Gal(a1-")
+  expect_false(has_motif(glycan, motif, alignment = "substructure"))
+})
+
+
+test_that("obscure anomer wrong for substructure alignment", {
+  glycan <- glyparse::parse_iupac_condensed("Neu5Ac(a2-3)Gal(b1-4)GlcNAc")
+  motif <- glyparse::parse_iupac_condensed("Gal(a?-")
+  expect_false(has_motif(glycan, motif, alignment = "substructure"))
+})
+
+
+test_that("anomer right for core alignment", {
+  glycan <- glyparse::parse_iupac_condensed("Neu5Ac(a2-3)Gal(b1-4)GlcNAc(b1-")
+  motif <- glyparse::parse_iupac_condensed("Gal(b1-4)GlcNAc(b1-")
+  expect_true(has_motif(glycan, motif, alignment = "core"))
+})
+
+
+test_that("anomer wrong for core alignment", {
+  glycan <- glyparse::parse_iupac_condensed("Neu5Ac(a2-3)Gal(b1-4)GlcNAc(b1-")
+  motif <- glyparse::parse_iupac_condensed("Gal(b1-4)GlcNAc(a1-")
+  expect_false(has_motif(glycan, motif, alignment = "core"))
+})
+
+
+test_that("anomer right for terminal alignment", {
+  glycan <- glyparse::parse_iupac_condensed("Neu5Ac(a2-3)Gal(b1-4)GlcNAc")
+  motif <- glyparse::parse_iupac_condensed("Neu5Ac(a2-")
+  expect_true(has_motif(glycan, motif, alignment = "terminal"))
+})
+
+
+test_that("anomer wrong for terminal alignment", {
+  glycan <- glyparse::parse_iupac_condensed("Neu5Ac(a2-3)Gal(b1-4)GlcNAc")
+  motif <- glyparse::parse_iupac_condensed("Neu5Ac(b2-")
+  expect_false(has_motif(glycan, motif, alignment = "terminal"))
+})
+
+
+test_that("anomer right for whole alignment", {
+  glycan <- glyparse::parse_iupac_condensed("Neu5Ac(a2-")
+  motif <- glyparse::parse_iupac_condensed("Neu5Ac(a2-")
+  expect_true(has_motif(glycan, motif, alignment = "whole"))
+})
+
+
+test_that("anomer wrong for whole alignment", {
+  glycan <- glyparse::parse_iupac_condensed("Neu5Ac(a2-")
+  motif <- glyparse::parse_iupac_condensed("Neu5Ac(b2-")
+  expect_false(has_motif(glycan, motif, alignment = "whole"))
+})

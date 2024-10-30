@@ -138,13 +138,19 @@ glycan_2 <- parse_iupac_condensed("Gal(b1-?)[GlcNAc(b1-6)]GalNAc")
 has_motif(glycan_2, motif_1)
 has_motif(glycan_2, motif_3)
 
+# The anomer of the motif will be matched to linkages in the glycan
+motif_4 <- parse_iupac_condensed("GlcNAc(b1-")
+has_motif(glycan_2, motif_4)
+
 # Alignment types
+# The default type is "substructure", which means the motif can be anywhere in the glycan.
+# Other options include "core", "terminal" and "whole".
 glycan_3 <- parse_iupac_condensed("Gal(a1-3)Gal(a1-4)Gal(a1-6)Gal")
-motif_4 <-  parse_iupac_condensed("Gal(a1-3)Gal(a1-4)Gal(a1-6)Gal")
-motif_5 <-  parse_iupac_condensed("Gal(a1-3)Gal(a1-4)Gal")
-motif_6 <-  parse_iupac_condensed(         "Gal(a1-4)Gal(a1-6)Gal")
-motif_7 <-  parse_iupac_condensed(         "Gal(a1-4)Gal")
-motifs <- list(motif_4, motif_5, motif_6, motif_7)
+motif_5 <-  parse_iupac_condensed("Gal(a1-3)Gal(a1-4)Gal(a1-6)Gal")
+motif_6 <-  parse_iupac_condensed("Gal(a1-3)Gal(a1-4)Gal")
+motif_7 <-  parse_iupac_condensed(         "Gal(a1-4)Gal(a1-6)Gal")
+motif_8 <-  parse_iupac_condensed(         "Gal(a1-4)Gal")
+motifs <- list(motif_5, motif_6, motif_7, motif_8)
 
 purrr::map_lgl(motifs, ~ has_motif(glycan_3, .x, alignment = "whole"))
 purrr::map_lgl(motifs, ~ has_motif(glycan_3, .x, alignment = "core"))
