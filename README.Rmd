@@ -23,8 +23,8 @@ knitr::opts_chunk$set(
 <!-- badges: end -->
 
 The goal of glymotif is to extract glycan motifs from glycan structures.
-It works seemlessly with [glyrepr]("https://github.com/fubin1999/glyrepr")
-and [glyparse]("https://github.com/fubin1999/glyparse").
+It works seemlessly with [glyrepr](https://github.com/fubin1999/glyrepr)
+and [glyparse](https://github.com/fubin1999/glyparse).
 
 ## Installation
 
@@ -37,4 +37,23 @@ pak::pak("fubin1999/glymotif")
 
 ## Example
 
-Comming soon.
+```{r}
+library(glymotif)
+library(glyparse)
+```
+
+Say we have a glycan, ...
+```{r}
+(glycan <- parse_iupac_condensed("Gal(b1-3)GlcNAc(b1-3)Gal(b1-3)GalNAc(a1-"))
+```
+
+... and we want to check if it has the O-Glycan core 1 motif.
+```{r}
+has_motif(glycan, "Gal(b1-3)GalNAc(a1-", alignment = "core")
+```
+
+Or use the motif name directly.
+```{r}
+has_motif(glycan, "O-Glycan core 1")
+```
+
