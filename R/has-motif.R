@@ -73,8 +73,9 @@
 #' - Anomer: using `anomer_check()`
 #' The function returns `TRUE` if any of the matches pass all checks.
 #'
-#' @param glycan A 'glycan_graph' object.
-#' @param motif A 'glycan_graph' object.
+#' @param glycan A 'glycan_graph' object, or an IUPAC-condensed structure string.
+#' @param motif A 'glycan_graph' object, an IUPAC-condensed structure string,
+#' or a known motif name (use [available_motifs()] to see all available motifs).
 #' @param ... Not used.
 #' @param alignment A character string. Possible values are "substructure", "core", "terminal" and "whole".
 #' See description for details. Default is "substructure".
@@ -86,53 +87,45 @@
 #' library(glyparse)
 #' library(glyrepr)
 #'
-#' (glycan <- glyrepr::o_glycan_core_2(mode = "ne", mono_type = "concrete"))
+#' (glycan <- o_glycan_core_2(mode = "ne", mono_type = "concrete"))
 #'
 #' # The glycan has the motif "Gal(b1-3)GalNAc"
-#' motif_1 <- parse_iupac_condensed("Gal(b1-3)GalNAc")
-#' has_motif(glycan, motif_1)
+#' has_motif(glycan, "Gal(b1-3)GalNAc")
 #'
 #' # But not "Gal(b1-4)GalNAc" (wrong linkage)
-#' motif_2 <- parse_iupac_condensed("Gal(b1-4)GalNAc")
-#' has_motif(glycan, motif_2)
+#' has_motif(glycan, "Gal(b1-4)GalNAc")
 #'
 #' # Set `ignore_linkages` to `TRUE` to ignore linkages
-#' has_motif(glycan, motif_2, ignore_linkages = TRUE)
+#' has_motif(glycan, "Gal(b1-4)GalNAc", ignore_linkages = TRUE)
 #'
-#' # Glycan and motif can have different graph modes
-#' motif_1_dn <- convert_graph_mode(motif_1, to = "dn")
-#' has_motif(glycan, motif_1_dn)
-#'
-#' # And different monosaccharide types
-#' motif_1_generic <- convert_glycan_mono_type(motif_1, "generic")
-#' has_motif(glycan, motif_1_generic)
+#' # Different monosaccharide types are allowed
+#' has_motif(glycan, "Hex(b1-3)HexNAc")
 #'
 #' # However, the monosaccharide type of `glycan` cannot be obscurer than that of `motif`
 #' glycan_simple <- convert_glycan_mono_type(glycan, "simple")
-#' try(has_motif(glycan_simple, motif_1))
+#' try(has_motif(glycan_simple, "Gal(b1-3)GalNAc"))
 #'
 #' # Obscure linkages in the `motif` graph are allowed
-#' motif_3 <- parse_iupac_condensed("Gal(b1-?)GalNAc")
-#' has_motif(glycan, motif_3)
+#' has_motif(glycan, "Gal(b1-?)GalNAc")
 #'
 #' # However, obscure linkages in `glycan` will only match "?" in the `motif` graph
 #' glycan_2 <- parse_iupac_condensed("Gal(b1-?)[GlcNAc(b1-6)]GalNAc")
-#' has_motif(glycan_2, motif_1)
-#' has_motif(glycan_2, motif_3)
+#' has_motif(glycan_2, "Gal(b1-3)GalNAc")
+#' has_motif(glycan_2, "Gal(b1-?)GalNAc")
 #'
 #' # The anomer of the motif will be matched to linkages in the glycan
-#' motif_4 <- parse_iupac_condensed("GlcNAc(b1-")
-#' has_motif(glycan_2, motif_4)
+#' has_motif(glycan_2, "GlcNAc(b1-")
 #'
 #' # Alignment types
 #' # The default type is "substructure", which means the motif can be anywhere in the glycan.
 #' # Other options include "core", "terminal" and "whole".
 #' glycan_3 <- parse_iupac_condensed("Gal(a1-3)Gal(a1-4)Gal(a1-6)Gal")
-#' motif_5 <-  parse_iupac_condensed("Gal(a1-3)Gal(a1-4)Gal(a1-6)Gal")
-#' motif_6 <-  parse_iupac_condensed("Gal(a1-3)Gal(a1-4)Gal")
-#' motif_7 <-  parse_iupac_condensed(         "Gal(a1-4)Gal(a1-6)Gal")
-#' motif_8 <-  parse_iupac_condensed(         "Gal(a1-4)Gal")
-#' motifs <- list(motif_5, motif_6, motif_7, motif_8)
+#' motifs <- c(
+#'   "Gal(a1-3)Gal(a1-4)Gal(a1-6)Gal",
+#'   "Gal(a1-3)Gal(a1-4)Gal",
+#'            "Gal(a1-4)Gal(a1-6)Gal",
+#'            "Gal(a1-4)Gal"
+#' )
 #'
 #' purrr::map_lgl(motifs, ~ has_motif(glycan_3, .x, alignment = "whole"))
 #' purrr::map_lgl(motifs, ~ has_motif(glycan_3, .x, alignment = "core"))
@@ -140,8 +133,8 @@
 #' purrr::map_lgl(motifs, ~ has_motif(glycan_3, .x, alignment = "substructure"))
 #'
 #' # Substituents
-#' glycan_4 <- parse_iupac_condensed("Neu5Ac9Ac(a2-3)Gal(b1-4)GlcNAc")
-#' glycan_5 <- parse_iupac_condensed("Neu5Ac(a2-3)Gal(b1-4)GlcNAc")
+#' glycan_4 <- "Neu5Ac9Ac(a2-3)Gal(b1-4)GlcNAc"
+#' glycan_5 <- "Neu5Ac(a2-3)Gal(b1-4)GlcNAc"
 #'
 #' has_motif(glycan_4, glycan_5)
 #' has_motif(glycan_5, glycan_4)
@@ -151,12 +144,20 @@
 #' @export
 has_motif <- function(glycan, motif, ..., alignment = "substructure", ignore_linkages = FALSE) {
   # Check input arguments
-  if (!glyrepr::is_glycan(glycan) || !glyrepr::is_glycan(motif)) {
-    rlang::abort("`glycan` and `motif` must be 'glycan_graph' objects.")
-  }
   if (!alignment %in% c("substructure", "core", "terminal", "whole")) {
     rlang::abort("`alignment` must be one of 'substructure', 'core', 'terminal' or 'whole'.")
   }
+  if (!glyrepr::is_glycan(glycan) && !is.character(glycan)) {
+    rlang::abort("`glycan` must be a 'glycan_graph' object or an IUPAC-condensed structure string.")
+  }
+  if (!glyrepr::is_glycan(motif) && !is.character(motif)) {
+    rlang::abort("`motif` must be a 'glycan_graph' object or an IUPAC-condensed structure string.")
+  }
+
+  glycan <- ensure_glycan_is_graph(glycan)
+  motif_data <- ensure_motif_is_graph(motif, alignment, !missing(alignment))
+  motif <- motif_data$motif
+  alignment <- motif_data$alignment
 
   # Ensure that `glycan` and `motif` are all "NE" type
   glycan <- glyrepr::convert_graph_mode(glycan, to = "ne", strict = FALSE)
@@ -166,6 +167,14 @@ has_motif <- function(glycan, motif, ..., alignment = "substructure", ignore_lin
   # To ensure strict comparison, if the glycan type is lower than the motif type,
   # an error will be raised by `ensure_glycan_mono_type()`.
   glycan <- ensure_glycan_mono_type(glycan, motif)
+
+  # Check if the glycan has the motif
+  has_motif_(glycan, motif, ..., alignment = alignment, ignore_linkages = ignore_linkages)
+}
+
+
+has_motif_ <- function(glycan, motif, ..., alignment = "substructure", ignore_linkages = FALSE) {
+  # This function is the logic part of `has_motif()`.
 
   # Colorize the graphs
   c_graphs <- colorize_graphs(glycan, motif)
@@ -188,6 +197,47 @@ has_motif <- function(glycan, motif, ..., alignment = "substructure", ignore_lin
     res, is_vaild_result, glycan = glycan, motif = motif,
     alignment = alignment, ignore_linkages = ignore_linkages
   ))
+}
+
+
+ensure_glycan_is_graph <- function(glycan) {
+  if (is.character(glycan)) {
+    glycan <- glyparse::parse_iupac_condensed(glycan)
+  }
+  glycan
+}
+
+
+ensure_motif_is_graph <- function(motif, alignment, alignment_provided) {
+  # If motif is a character, first assume it is a known motif.
+  # If not, try to parse it as an IUPAC-condensed structure.
+  if (is.character(motif)) {
+    if (is_known_motif(motif)) {
+      motif_data <- get_motif(motif)
+      motif <- motif_data$graph
+      if (!alignment_provided) {
+        alignment <- motif_data$alignment
+      } else {
+        if (alignment != motif_data$alignment) {
+          cli::cli_warn(
+            "The provided alignment type {.val {alignment}} is different
+            from the motif's alignment type {.val {motif_data$alignment}}
+            in database.",
+          )
+        }
+      }
+    } else {
+      tryCatch(
+        motif <- glyparse::parse_iupac_condensed(motif),
+        error = function(e) {
+          cli::cli_abort(
+            "{.val {motif}} is neither a known motif
+            nor a valid IUPAC-condensed structure.")
+        }
+      )
+    }
+  }
+  list(motif = motif, alignment = alignment)
 }
 
 

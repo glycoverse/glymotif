@@ -2,27 +2,46 @@
 test_that("wrong glycan types", {
   glycan <- igraph::make_empty_graph()
   motif <- glyparse::parse_iupac_condensed("Gal(b1-4)GalNAc", mode = "ne")
-  expect_error(has_motif(glycan, motif), "`glycan` and `motif` must be 'glycan_graph' objects.")
+  expect_error(has_motif(glycan, motif), "`glycan` must be a 'glycan_graph' object or an IUPAC-condensed structure string")
 })
 
 
 test_that("wrong motif types", {
   glycan <- glyrepr::o_glycan_core_2(mode = "ne")
   motif <- igraph::make_empty_graph()
-  expect_error(has_motif(glycan, motif), "`glycan` and `motif` must be 'glycan_graph' objects.")
+  expect_error(has_motif(glycan, motif), "`motif` must be a 'glycan_graph' object or an IUPAC-condensed structure string")
 })
 
 
-test_that("NULL inputs", {
-  expect_error(has_motif(NULL, NULL), "`glycan` and `motif` must be 'glycan_graph' objects.")
+test_that("IUPAC-condensed used as input", {
+  glycan <- "Gal(b1-3)[GlcNAc(b1-6)]GalNAc"
+  motif <- "Gal(b1-3)GalNAc"
+  expect_true(has_motif(glycan, motif))
 })
 
 
-test_that("invalid data types", {
-  expect_error(has_motif(123, "motif"), "`glycan` and `motif` must be 'glycan_graph' objects.")
+test_that("motif name used as input", {
+  glycan <- glyrepr::o_glycan_core_2(mode = "ne")
+  motif <- "O-Glycan core 1"
+  expect_true(has_motif(glycan, motif))
 })
 
 
+test_that("unkown motif name used as input", {
+  glycan <- glyrepr::o_glycan_core_2(mode = "ne")
+  motif <- "unknown motif name"
+  expect_error(has_motif(glycan, motif), '"unknown motif name" is neither a known motif nor a valid IUPAC-condensed structure')
+})
+
+
+test_that("warning when user-provided alignment is different from database", {
+  glycan <- glyparse::parse_iupac_condensed("GlcNAc(b1-6)Gal(b1-3)GalNAc(a1-")
+  motif <- "O-Glycan core 1"
+  expect_snapshot(has_motif(glycan, motif, alignment = "terminal"))
+})
+
+
+# ========== Graph Modes ==========
 test_that("ND glycan and NE motif", {
   glycan <- glyrepr::o_glycan_core_2(mode = "dn")
   motif <- glyparse::parse_iupac_condensed("Gal(b1-3)GalNAc", mode = "ne")
@@ -37,6 +56,21 @@ test_that("NE glycan and DN motif", {
 })
 
 
+test_that("ND glycan and DN motif", {
+  glycan <- glyrepr::o_glycan_core_2(mode = "dn")
+  motif <- glyparse::parse_iupac_condensed("Gal(b1-3)GalNAc", mode = "dn")
+  expect_true(has_motif(glycan, motif))
+})
+
+
+test_that("NE glycan and NE motif", {
+  glycan <- glyrepr::o_glycan_core_2(mode = "ne")
+  motif <- glyparse::parse_iupac_condensed("Gal(b1-3)GalNAc", mode = "ne")
+  expect_true(has_motif(glycan, motif))
+})
+
+
+# ========== Monosaccharide Types ==========
 test_that("concrete glycan and generic motif", {
   glycan <- glyrepr::o_glycan_core_2()
   motif <- glyparse::parse_iupac_condensed("Gal(b1-3)GalNAc")
