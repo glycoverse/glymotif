@@ -12,3 +12,7 @@ A character vector of motif names.
 \description{
 This function returns the names of the available motifs available in the package.
 }
+\examples{
+available_motifs()[1:5]
+
+}
