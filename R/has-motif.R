@@ -344,7 +344,7 @@ get_corresponding_edges <- function(r, glycan, motif) {
   for (i in seq_len(nrow(motif_edge_list))) {
     motif_edge <- motif_edge_list[i, ]  # c(node_id_1, node_id_2)
     glycan_edge <- r[motif_edge]
-    glycan_edge_ids[[i]] <- igraph::get.edge.ids(glycan, glycan_edge)
+    glycan_edge_ids[[i]] <- igraph::get_edge_ids(glycan, glycan_edge)
   }
 
   motif_edges <- igraph::E(motif)
