@@ -13,6 +13,18 @@ available_motifs <- function() {
 }
 
 
+#' Check if a Motif is Known
+#'
+#' This function checks if a motif is a known motif in GlycoMotif GlyGen Collection.
+#'
+#' @param name A character string of the motif name.
+#' @return A logical value.
+#' @export
+is_known_motif <- function(name) {
+  name %in% glygen_motifs$name
+}
+
+
 #' Get a Motif Graph
 #'
 #' This function returns a motif graph for a given motif name.

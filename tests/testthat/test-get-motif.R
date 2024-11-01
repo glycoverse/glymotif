@@ -3,6 +3,12 @@ test_that("get available motifs", {
 })
 
 
+test_that("check if motif is known", {
+  expect_true(is_known_motif("N-Glycan core basic"))
+  expect_false(is_known_motif("bad motif"))
+})
+
+
 test_that("get known motif", {
   expect_error(get_motif("bad motif"), 'Unknown motif: "bad motif".')
 })

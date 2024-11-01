@@ -3,3 +3,4 @@
 export(available_motifs)
 export(get_motif)
 export(has_motif)
+export(is_known_motif)
