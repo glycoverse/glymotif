@@ -28,3 +28,5 @@ Imports:
 Remotes: 
     fubin1999/glyrepr,
     fubin1999/glyparse
+Depends: 
+    R (>= 4.0)

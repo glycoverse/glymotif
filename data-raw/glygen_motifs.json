@@ -1,0 +1,1304 @@
+{
+  "head": {
+    "vars": [ "accession" , "name" , "aglycon" , "alignment" , "wurcs" ]
+  } ,
+  "results": {
+    "bindings": [
+      {
+        "accession": { "type": "literal" , "value": "000045" } ,
+        "name": { "type": "literal" , "value": "Blood group H (type 2) - Lewis y" } ,
+        "aglycon": { "type": "literal" , "value": "R" } ,
+        "alignment": { "type": "literal" , "value": "Substructure" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/3,4,3/[a2122h-1b_1-5_2*NCC/3=O][a1221m-1a_1-5][a2112h-1b_1-5]/1-2-3-2/a3-b1_a4-c1_c2-d1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "000004" } ,
+        "name": { "type": "literal" , "value": "i antigen" } ,
+        "aglycon": { "type": "literal" , "value": "R" } ,
+        "alignment": { "type": "literal" , "value": "Substructure" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/2,6,5/[a2122h-1b_1-5_2*NCC/3=O][a2112h-1b_1-5]/1-2-1-2-1-2/a4-b1_b3-c1_c4-d1_d3-e1_e4-f1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "000016" } ,
+        "name": { "type": "literal" , "value": "LacdiNAc" } ,
+        "aglycon": { "type": "literal" , "value": "R" } ,
+        "alignment": { "type": "literal" , "value": "Substructure" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/2,2,1/[a2122h-1x_1-5_2*NCC/3=O][a2112h-1b_1-5_2*NCC/3=O]/1-2/a4-b1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "000109" } ,
+        "name": { "type": "literal" , "value": "GT2" } ,
+        "aglycon": { "type": "literal" , "value": "Cer" } ,
+        "alignment": { "type": "literal" , "value": "Whole-Glycan" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/4,6,5/[a2122h-1b_1-5][a2112h-1b_1-5][Aad21122h-2a_2-6_5*NCC/3=O][a2112h-1b_1-5_2*NCC/3=O]/1-2-3-3-3-4/a4-b1_b3-c2_b4-f1_c8-d2_d8-e2" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "000046" } ,
+        "name": { "type": "literal" , "value": "Blood group B (type 1) - Lewis b" } ,
+        "aglycon": { "type": "literal" , "value": "R" } ,
+        "alignment": { "type": "literal" , "value": "Substructure" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/4,5,4/[a2122h-1b_1-5_2*NCC/3=O][a2112h-1b_1-5][a1221m-1a_1-5][a2112h-1a_1-5]/1-2-3-4-3/a3-b1_a4-e1_b2-c1_b3-d1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "000075" } ,
+        "name": { "type": "literal" , "value": "LcGg4" } ,
+        "aglycon": { "type": "literal" , "value": "Cer" } ,
+        "alignment": { "type": "literal" , "value": "Whole-Glycan" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/4,4,3/[a2122h-1b_1-5][a2112h-1b_1-5][a2122h-1b_1-5_2*NCC/3=O][a2112h-1b_1-5_2*NCC/3=O]/1-2-3-4/a4-b1_b3-c1_b4-d1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "000081" } ,
+        "name": { "type": "literal" , "value": "Sialosyl paragloboside" } ,
+        "aglycon": { "type": "literal" , "value": "Cer" } ,
+        "alignment": { "type": "literal" , "value": "Whole-Glycan" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/5,6,5/[a2122h-1b_1-5][a2112h-1b_1-5][a2122h-1b_1-5_2*NCC/3=O][a2112h-1b_1-5_2*NCC/3=O][Aad21122h-2a_2-6_5*NCC/3=O]/1-2-3-2-4-5/a4-b1_b3-c1_c4-d1_d3-e1_e3-f2" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "000022" } ,
+        "name": { "type": "literal" , "value": "Sialyl Lewis x" } ,
+        "aglycon": { "type": "literal" , "value": "R" } ,
+        "alignment": { "type": "literal" , "value": "Nonreducing-End" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/4,4,3/[a2122h-1b_1-5_2*NCC/3=O][a1221m-1a_1-5][a2112h-1b_1-5][Aad21122h-2a_2-6_5*NCC/3=O]/1-2-3-4/a3-b1_a4-c1_c3-d2" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "000011" } ,
+        "name": { "type": "literal" , "value": "A antigen (type 3)" } ,
+        "aglycon": { "type": "literal" , "value": "Ser/Thr" } ,
+        "alignment": { "type": "literal" , "value": "Whole-Glycan" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/3,4,3/[a2112h-1a_1-5_2*NCC/3=O][a2112h-1b_1-5][a1221m-1a_1-5]/1-2-3-1/a3-b1_b2-c1_b3-d1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "000006" } ,
+        "name": { "type": "literal" , "value": "Type 1 LN2" } ,
+        "aglycon": { "type": "literal" , "value": "R" } ,
+        "alignment": { "type": "literal" , "value": "Substructure" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/2,4,3/[a2122h-1b_1-5_2*NCC/3=O][a2112h-1b_1-5]/1-2-1-2/a3-b1_b3-c1_c3-d1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "000009" } ,
+        "name": { "type": "literal" , "value": "T antigen" } ,
+        "aglycon": { "type": "literal" , "value": "Ser/Thr" } ,
+        "alignment": { "type": "literal" , "value": "Whole-Glycan" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/2,2,1/[a2112h-1a_1-5_2*NCC/3=O][a2112h-1b_1-5]/1-2/a3-b1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "001005" } ,
+        "name": { "type": "literal" , "value": "O-Glycan core 1" } ,
+        "aglycon": { "type": "literal" , "value": "Ser/Thr" } ,
+        "alignment": { "type": "literal" , "value": "Core" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/2,2,1/[a2112h-1a_1-5_2*NCC/3=O][a2112h-1b_1-5]/1-2/a3-b1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "000122" } ,
+        "name": { "type": "literal" , "value": "Mono-fucosyl LN3" } ,
+        "aglycon": { "type": "literal" , "value": "Cer" } ,
+        "alignment": { "type": "literal" , "value": "Whole-Glycan" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/4,7,6/[a2122h-1b_1-5][a2112h-1b_1-5][a2122h-1b_1-5_2*NCC/3=O][a1221m-1a_1-5]/1-2-3-4-2-3-2/a4-b1_b3-c1_c3-d1_c4-e1_e3-f1_f4-g1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "000092" } ,
+        "name": { "type": "literal" , "value": "GT3" } ,
+        "aglycon": { "type": "literal" , "value": "Cer" } ,
+        "alignment": { "type": "literal" , "value": "Whole-Glycan" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/3,5,4/[a2122h-1b_1-5][a2112h-1b_1-5][Aad21122h-2a_2-6_5*NCC/3=O]/1-2-3-3-3/a4-b1_b3-c2_c8-d2_d8-e2" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "000091" } ,
+        "name": { "type": "literal" , "value": "GD3" } ,
+        "aglycon": { "type": "literal" , "value": "Cer" } ,
+        "alignment": { "type": "literal" , "value": "Whole-Glycan" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/3,4,3/[a2122h-1b_1-5][a2112h-1b_1-5][Aad21122h-2a_2-6_5*NCC/3=O]/1-2-3-3/a4-b1_b3-c2_c8-d2" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "000093" } ,
+        "name": { "type": "literal" , "value": "9-O-Acetyl GD3" } ,
+        "aglycon": { "type": "literal" , "value": "Cer" } ,
+        "alignment": { "type": "literal" , "value": "Whole-Glycan" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/3,4,3/[a2122h-1b_1-5][a2112h-1b_1-5][Aad21122h-2a_2-6_5*NCC/3=O]/1-2-3-3/a4-b1_b3-c2_c8-d2" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "000007" } ,
+        "name": { "type": "literal" , "value": "Type 1 LN3" } ,
+        "aglycon": { "type": "literal" , "value": "R" } ,
+        "alignment": { "type": "literal" , "value": "Substructure" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/2,6,5/[a2122h-1b_1-5_2*NCC/3=O][a2112h-1b_1-5]/1-2-1-2-1-2/a3-b1_b3-c1_c3-d1_d3-e1_e3-f1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "000014" } ,
+        "name": { "type": "literal" , "value": "Di-sialyl T antigen" } ,
+        "aglycon": { "type": "literal" , "value": "Ser/Thr" } ,
+        "alignment": { "type": "literal" , "value": "Whole-Glycan" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/3,4,3/[a2112h-1a_1-5_2*NCC/3=O][a2112h-1b_1-5][Aad21122h-2a_2-6_5*NCC/3=O]/1-2-3-3/a3-b1_a6-d2_b3-c2" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "000035" } ,
+        "name": { "type": "literal" , "value": "6-Sialyl-GalNAc" } ,
+        "aglycon": { "type": "literal" , "value": "R" } ,
+        "alignment": { "type": "literal" , "value": "Nonreducing-End" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/2,2,1/[a2112h-1b_1-5_2*NCC/3=O][Aad21122h-2a_2-6_5*NCC/3=O]/1-2/a6-b2" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "000102" } ,
+        "name": { "type": "literal" , "value": "B-GM1" } ,
+        "aglycon": { "type": "literal" , "value": "Cer" } ,
+        "alignment": { "type": "literal" , "value": "Whole-Glycan" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/6,7,6/[a2122h-1b_1-5][a2112h-1b_1-5][Aad21122h-2a_2-6_5*NCC/3=O][a2112h-1b_1-5_2*NCC/3=O][a1221m-1a_1-5][a2112h-1a_1-5]/1-2-3-4-2-5-6/a4-b1_b3-c2_b4-d1_d3-e1_e2-f1_e3-g1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "000072" } ,
+        "name": { "type": "literal" , "value": "Mono-sulfated globopentaosylceramide" } ,
+        "aglycon": { "type": "literal" , "value": "Cer" } ,
+        "alignment": { "type": "literal" , "value": "Whole-Glycan" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/5,5,4/[a2122h-1b_1-5][a2112h-1b_1-5][a2112h-1a_1-5][a2112h-1b_1-5_2*NCC/3=O][a2112h-1b_1-5_3*OSO/3=O/3=O]/1-2-3-4-5/a4-b1_b4-c1_c3-d1_d3-e1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "000031" } ,
+        "name": { "type": "literal" , "value": "Lex-Lex" } ,
+        "aglycon": { "type": "literal" , "value": "R" } ,
+        "alignment": { "type": "literal" , "value": "Substructure" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/3,6,5/[a2122h-1b_1-5_2*NCC/3=O][a1221m-1a_1-5][a2112h-1b_1-5]/1-2-3-1-2-3/a3-b1_a4-c1_c3-d1_d3-e1_d4-f1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "000114" } ,
+        "name": { "type": "literal" , "value": "GQ1aa" } ,
+        "aglycon": { "type": "literal" , "value": "Cer" } ,
+        "alignment": { "type": "literal" , "value": "Whole-Glycan" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/4,8,7/[a2122h-1b_1-5][a2112h-1b_1-5][Aad21122h-2a_2-6_5*NCC/3=O][a2112h-1b_1-5_2*NCC/3=O]/1-2-3-4-2-3-3-3/a4-b1_b3-c2_b4-d1_d3-e1_d6-h2_e3-f2_f8-g2" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "000117" } ,
+        "name": { "type": "literal" , "value": "GQ1c" } ,
+        "aglycon": { "type": "literal" , "value": "Cer" } ,
+        "alignment": { "type": "literal" , "value": "Whole-Glycan" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/4,8,7/[a2122h-1b_1-5][a2112h-1b_1-5][Aad21122h-2a_2-6_5*NCC/3=O][a2112h-1b_1-5_2*NCC/3=O]/1-2-3-3-3-4-2-3/a4-b1_b3-c2_b4-f1_c8-d2_d8-e2_f3-g1_g3-h2" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "000115" } ,
+        "name": { "type": "literal" , "value": "GQ1b" } ,
+        "aglycon": { "type": "literal" , "value": "Cer" } ,
+        "alignment": { "type": "literal" , "value": "Whole-Glycan" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/4,8,7/[a2122h-1b_1-5][a2112h-1b_1-5][Aad21122h-2a_2-6_5*NCC/3=O][a2112h-1b_1-5_2*NCC/3=O]/1-2-3-3-4-2-3-3/a4-b1_b3-c2_b4-e1_c8-d2_e3-f1_f3-g2_g8-h2" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "000113" } ,
+        "name": { "type": "literal" , "value": "GT1c" } ,
+        "aglycon": { "type": "literal" , "value": "Cer" } ,
+        "alignment": { "type": "literal" , "value": "Whole-Glycan" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/4,7,6/[a2122h-1b_1-5][a2112h-1b_1-5][Aad21122h-2a_2-6_5*NCC/3=O][a2112h-1b_1-5_2*NCC/3=O]/1-2-3-3-3-4-2/a4-b1_b3-c2_b4-f1_c8-d2_d8-e2_f3-g1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "000027" } ,
+        "name": { "type": "literal" , "value": "6-Sulfo-sialyl Lewis x" } ,
+        "aglycon": { "type": "literal" , "value": "R" } ,
+        "alignment": { "type": "literal" , "value": "Nonreducing-End" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/4,4,3/[a2122h-1b_1-5_2*NCC/3=O_6*OSO/3=O/3=O][a1221m-1a_1-5][a2112h-1b_1-5][Aad21122h-2a_2-6_5*NCC/3=O]/1-2-3-4/a3-b1_a4-c1_c3-d2" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "001028" } ,
+        "name": { "type": "literal" , "value": "O-GlcNAc" } ,
+        "aglycon": { "type": "literal" , "value": "Ser/Thr" } ,
+        "alignment": { "type": "literal" , "value": "Whole-Glycan" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/1,1,0/[a2122h-1b_1-5_2*NCC/3=O]/1/" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "000080" } ,
+        "name": { "type": "literal" , "value": "GL-7 globoseries ganglioside" } ,
+        "aglycon": { "type": "literal" , "value": "Cer" } ,
+        "alignment": { "type": "literal" , "value": "Whole-Glycan" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/5,6,5/[a2122h-1b_1-5][a2112h-1b_1-5][a2112h-1a_1-5][a2112h-1b_1-5_2*NCC/3=O][Aad21122h-2a_2-6_5*NCC/3=O]/1-2-3-4-2-5/a4-b1_b4-c1_c3-d1_d3-e1_e3-f2" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "000058" } ,
+        "name": { "type": "literal" , "value": "HNK-1 antigen" } ,
+        "aglycon": { "type": "literal" , "value": "R" } ,
+        "alignment": { "type": "literal" , "value": "Nonreducing-End" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/3,3,2/[a2122h-1b_1-5_2*NCC/3=O][a2112h-1b_1-5][a2122A-1b_1-5_3*OSO/3=O/3=O]/1-2-3/a4-b1_b3-c1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "000055" } ,
+        "name": { "type": "literal" , "value": "O-Linked mannose" } ,
+        "aglycon": { "type": "literal" , "value": "Ser/Thr" } ,
+        "alignment": { "type": "literal" , "value": "Whole-Glycan" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/4,4,3/[a1122h-1a_1-5][a2122h-1b_1-5_2*NCC/3=O][a2112h-1b_1-5][Aad21122h-2a_2-6_5*NCC/3=O]/1-2-3-4/a2-b1_b4-c1_c3-d2" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "001107" } ,
+        "name": { "type": "literal" , "value": "Glycosphingolipid Neo-lacto series" } ,
+        "aglycon": { "type": "literal" , "value": "Cer" } ,
+        "alignment": { "type": "literal" , "value": "Core" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/3,4,3/[u2122h][a2112h-1b_1-5][a2122h-1b_1-5_2*NCC/3=O]/1-2-3-2/a4-b1_b3-c1_c4-d1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "000085" } ,
+        "name": { "type": "literal" , "value": "para-Forssman glycolipid" } ,
+        "aglycon": { "type": "literal" , "value": "Cer" } ,
+        "alignment": { "type": "literal" , "value": "Whole-Glycan" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/4,5,4/[a2122h-1b_1-5][a2112h-1b_1-5][a2112h-1a_1-5][a2112h-1b_1-5_2*NCC/3=O]/1-2-3-4-4/a4-b1_b4-c1_c3-d1_d3-e1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "000062" } ,
+        "name": { "type": "literal" , "value": "Seminolipid" } ,
+        "aglycon": { "type": "literal" , "value": "Other" } ,
+        "alignment": { "type": "literal" , "value": "Whole-Glycan" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/1,1,0/[a2112h-1b_1-5_3*OSO/3=O/3=O]/1/" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "000063" } ,
+        "name": { "type": "literal" , "value": "Sulfatide" } ,
+        "aglycon": { "type": "literal" , "value": "Cer" } ,
+        "alignment": { "type": "literal" , "value": "Whole-Glycan" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/1,1,0/[a2112h-1b_1-5_3*OSO/3=O/3=O]/1/" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "000002" } ,
+        "name": { "type": "literal" , "value": "Type 2 LN2" } ,
+        "aglycon": { "type": "literal" , "value": "R" } ,
+        "alignment": { "type": "literal" , "value": "Substructure" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/2,4,3/[a2122h-1b_1-5_2*NCC/3=O][a2112h-1b_1-5]/1-2-1-2/a4-b1_b3-c1_c4-d1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "000013" } ,
+        "name": { "type": "literal" , "value": "Sialyl T antigen" } ,
+        "aglycon": { "type": "literal" , "value": "Ser/Thr" } ,
+        "alignment": { "type": "literal" , "value": "Whole-Glycan" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/3,3,2/[a2112h-1a_1-5_2*NCC/3=O][a2112h-1b_1-5][Aad21122h-2a_2-6_5*NCC/3=O]/1-2-3/a3-b1_b3-c2" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "000069" } ,
+        "name": { "type": "literal" , "value": "P1 antigen" } ,
+        "aglycon": { "type": "literal" , "value": "Cer" } ,
+        "alignment": { "type": "literal" , "value": "Whole-Glycan" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/4,5,4/[a2122h-1b_1-5][a2112h-1b_1-5][a2122h-1b_1-5_2*NCC/3=O][a2112h-1a_1-5]/1-2-3-2-4/a4-b1_b3-c1_c4-d1_d4-e1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "000039" } ,
+        "name": { "type": "literal" , "value": "Blood group A (type 2) - Lewis y" } ,
+        "aglycon": { "type": "literal" , "value": "R" } ,
+        "alignment": { "type": "literal" , "value": "Substructure" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/4,5,4/[a2122h-1b_1-5_2*NCC/3=O][a1221m-1a_1-5][a2112h-1b_1-5][a2112h-1a_1-5_2*NCC/3=O]/1-2-3-2-4/a3-b1_a4-c1_c2-d1_c3-e1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "000096" } ,
+        "name": { "type": "literal" , "value": "N-Glycolyl-GM2" } ,
+        "aglycon": { "type": "literal" , "value": "Cer" } ,
+        "alignment": { "type": "literal" , "value": "Whole-Glycan" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/4,4,3/[a2122h-1b_1-5][a2112h-1b_1-5][Aad21122h-2a_2-6_5*NCCO/3=O][a2112h-1b_1-5_2*NCC/3=O]/1-2-3-4/a4-b1_b3-c2_b4-d1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "001018" } ,
+        "name": { "type": "literal" , "value": "O-Glycan core 7 fuzzy" } ,
+        "aglycon": { "type": "literal" , "value": "Ser/Thr" } ,
+        "alignment": { "type": "literal" , "value": "Core" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/2,2,1/[u2112h_2*NCC/3=O][a2112h-1a_1-5_2*NCC/3=O]/1-2/a6-b1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "000018" } ,
+        "name": { "type": "literal" , "value": "Lewis x" } ,
+        "aglycon": { "type": "literal" , "value": "R" } ,
+        "alignment": { "type": "literal" , "value": "Substructure" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/3,3,2/[a2122h-1x_1-5_2*NCC/3=O][a1221m-1a_1-5][a2112h-1b_1-5]/1-2-3/a3-b1_a4-c1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "000068" } ,
+        "name": { "type": "literal" , "value": "Pk antigen" } ,
+        "aglycon": { "type": "literal" , "value": "Cer" } ,
+        "alignment": { "type": "literal" , "value": "Whole-Glycan" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/3,3,2/[a2122h-1b_1-5][a2112h-1b_1-5][a2112h-1a_1-5]/1-2-3/a4-b1_b4-c1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "000061" } ,
+        "name": { "type": "literal" , "value": "Galactosylceramide" } ,
+        "aglycon": { "type": "literal" , "value": "Cer" } ,
+        "alignment": { "type": "literal" , "value": "Whole-Glycan" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/1,1,0/[a2112h-1b_1-5]/1/" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "000071" } ,
+        "name": { "type": "literal" , "value": "Isoglobotetraosylceramide" } ,
+        "aglycon": { "type": "literal" , "value": "Cer" } ,
+        "alignment": { "type": "literal" , "value": "Whole-Glycan" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/4,4,3/[a2122h-1b_1-5][a2112h-1b_1-5][a2112h-1a_1-5][a2112h-1b_1-5_2*NCC/3=O]/1-2-3-4/a4-b1_b3-c1_c3-d1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "000083" } ,
+        "name": { "type": "literal" , "value": "Cytolipin R" } ,
+        "aglycon": { "type": "literal" , "value": "Cer" } ,
+        "alignment": { "type": "literal" , "value": "Whole-Glycan" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/4,4,3/[a2122h-1b_1-5][a2112h-1b_1-5][a2112h-1a_1-5][a2112h-1b_1-5_2*NCC/3=O]/1-2-3-4/a4-b1_b3-c1_c3-d1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "000077" } ,
+        "name": { "type": "literal" , "value": "Paragloboside" } ,
+        "aglycon": { "type": "literal" , "value": "Cer" } ,
+        "alignment": { "type": "literal" , "value": "Whole-Glycan" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/3,4,3/[a2122h-1b_1-5][a2112h-1b_1-5][a2122h-1b_1-5_2*NCC/3=O]/1-2-3-2/a4-b1_b3-c1_c4-d1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "000108" } ,
+        "name": { "type": "literal" , "value": "GD1b" } ,
+        "aglycon": { "type": "literal" , "value": "Cer" } ,
+        "alignment": { "type": "literal" , "value": "Whole-Glycan" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/4,6,5/[a2122h-1b_1-5][a2112h-1b_1-5][Aad21122h-2a_2-6_5*NCC/3=O][a2112h-1b_1-5_2*NCC/3=O]/1-2-3-3-4-2/a4-b1_b3-c2_b4-e1_c8-d2_e3-f1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "000094" } ,
+        "name": { "type": "literal" , "value": "GD2" } ,
+        "aglycon": { "type": "literal" , "value": "Cer" } ,
+        "alignment": { "type": "literal" , "value": "Whole-Glycan" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/4,5,4/[a2122h-1b_1-5][a2112h-1b_1-5][Aad21122h-2a_2-6_5*NCC/3=O][a2112h-1b_1-5_2*NCC/3=O]/1-2-3-3-4/a4-b1_b3-c2_b4-e1_c8-d2" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "000050" } ,
+        "name": { "type": "literal" , "value": "Sialylated LDN" } ,
+        "aglycon": { "type": "literal" , "value": "R" } ,
+        "alignment": { "type": "literal" , "value": "Nonreducing-End" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/3,3,2/[a2122h-1x_1-5_2*NCC/3=O][a2112h-1b_1-5_2*NCC/3=O][Aad21122h-2a_2-6_5*NCC/3=O]/1-2-3/a4-b1_b6-c2" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "000064" } ,
+        "name": { "type": "literal" , "value": "Lactosylceramide" } ,
+        "aglycon": { "type": "literal" , "value": "Cer" } ,
+        "alignment": { "type": "literal" , "value": "Whole-Glycan" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/2,2,1/[a2122h-1b_1-5][a2112h-1b_1-5]/1-2/a4-b1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "000087" } ,
+        "name": { "type": "literal" , "value": "Blood group B (type 4)" } ,
+        "aglycon": { "type": "literal" , "value": "Cer" } ,
+        "alignment": { "type": "literal" , "value": "Whole-Glycan" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/5,7,6/[a2122h-1b_1-5][a2112h-1b_1-5][a2112h-1a_1-5][a2112h-1b_1-5_2*NCC/3=O][a1221m-1a_1-5]/1-2-3-4-2-5-3/a4-b1_b4-c1_c3-d1_d3-e1_e2-f1_e3-g1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "000099" } ,
+        "name": { "type": "literal" , "value": "Asialo-GM1" } ,
+        "aglycon": { "type": "literal" , "value": "Cer" } ,
+        "alignment": { "type": "literal" , "value": "Whole-Glycan" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/3,4,3/[a2122h-1b_1-5][a2112h-1b_1-5][a2112h-1b_1-5_2*NCC/3=O]/1-2-3-2/a4-b1_b4-c1_c3-d1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "000024" } ,
+        "name": { "type": "literal" , "value": "Sialyl Lewis a" } ,
+        "aglycon": { "type": "literal" , "value": "R" } ,
+        "alignment": { "type": "literal" , "value": "Nonreducing-End" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/4,4,3/[a2122h-1b_1-5_2*NCC/3=O][a2112h-1b_1-5][Aad21122h-2a_2-6_5*NCC/3=O][a1221m-1a_1-5]/1-2-3-4/a3-b1_a4-d1_b3-c2" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "000110" } ,
+        "name": { "type": "literal" , "value": "GT1a" } ,
+        "aglycon": { "type": "literal" , "value": "Cer" } ,
+        "alignment": { "type": "literal" , "value": "Whole-Glycan" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/4,7,6/[a2122h-1b_1-5][a2112h-1b_1-5][Aad21122h-2a_2-6_5*NCC/3=O][a2112h-1b_1-5_2*NCC/3=O]/1-2-3-4-2-3-3/a4-b1_b3-c2_b4-d1_d3-e1_e3-f2_f8-g2" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "000047" } ,
+        "name": { "type": "literal" , "value": "Blood group A (type 1) - Lewis b" } ,
+        "aglycon": { "type": "literal" , "value": "R" } ,
+        "alignment": { "type": "literal" , "value": "Substructure" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/4,5,4/[a2122h-1b_1-5_2*NCC/3=O][a2112h-1b_1-5][a1221m-1a_1-5][a2112h-1a_1-5_2*NCC/3=O]/1-2-3-4-3/a3-b1_a4-e1_b2-c1_b3-d1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "000037" } ,
+        "name": { "type": "literal" , "value": "Blood group B (type 2)" } ,
+        "aglycon": { "type": "literal" , "value": "R" } ,
+        "alignment": { "type": "literal" , "value": "Substructure" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/4,4,3/[a2122h-1b_1-5_2*NCC/3=O][a2112h-1b_1-5][a1221m-1a_1-5][a2112h-1a_1-5]/1-2-3-4/a4-b1_b2-c1_b3-d1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "000078" } ,
+        "name": { "type": "literal" , "value": "GL-6 fucosylated" } ,
+        "aglycon": { "type": "literal" , "value": "Cer" } ,
+        "alignment": { "type": "literal" , "value": "Whole-Glycan" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/5,6,5/[a2122h-1b_1-5][a2112h-1b_1-5][a2112h-1a_1-5][a2112h-1b_1-5_2*NCC/3=O][a1221m-1a_1-5]/1-2-3-4-2-5/a4-b1_b4-c1_c3-d1_d3-e1_e2-f1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "000086" } ,
+        "name": { "type": "literal" , "value": "Blood group H (type 4)" } ,
+        "aglycon": { "type": "literal" , "value": "Cer" } ,
+        "alignment": { "type": "literal" , "value": "Whole-Glycan" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/5,6,5/[a2122h-1b_1-5][a2112h-1b_1-5][a2112h-1a_1-5][a2112h-1b_1-5_2*NCC/3=O][a1221m-1a_1-5]/1-2-3-4-2-5/a4-b1_b4-c1_c3-d1_d3-e1_e2-f1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "000020" } ,
+        "name": { "type": "literal" , "value": "Lewis a" } ,
+        "aglycon": { "type": "literal" , "value": "R" } ,
+        "alignment": { "type": "literal" , "value": "Substructure" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/3,3,2/[a2122h-1x_1-5_2*NCC/3=O][a2112h-1b_1-5][a1221m-1a_1-5]/1-2-3/a3-b1_a4-c1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "000010" } ,
+        "name": { "type": "literal" , "value": "H antigen (type 3)" } ,
+        "aglycon": { "type": "literal" , "value": "Ser/Thr" } ,
+        "alignment": { "type": "literal" , "value": "Whole-Glycan" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/3,3,2/[a2112h-1a_1-5_2*NCC/3=O][a2112h-1b_1-5][a1221m-1a_1-5]/1-2-3/a3-b1_b2-c1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "000119" } ,
+        "name": { "type": "literal" , "value": "GP1ca" } ,
+        "aglycon": { "type": "literal" , "value": "Cer" } ,
+        "alignment": { "type": "literal" , "value": "Whole-Glycan" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/4,9,8/[a2122h-1b_1-5][a2112h-1b_1-5][Aad21122h-2a_2-6_5*NCC/3=O][a2112h-1b_1-5_2*NCC/3=O]/1-2-3-3-3-4-2-3-3/a4-b1_b3-c2_b4-f1_c8-d2_d8-e2_f3-g1_f6-i2_g3-h2" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "000067" } ,
+        "name": { "type": "literal" , "value": "Lactotriaosylceramide" } ,
+        "aglycon": { "type": "literal" , "value": "Cer" } ,
+        "alignment": { "type": "literal" , "value": "Whole-Glycan" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/3,3,2/[a2122h-1b_1-5][a2112h-1b_1-5][a2122h-1b_1-5_2*NCC/3=O]/1-2-3/a4-b1_b3-c1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "001104" } ,
+        "name": { "type": "literal" , "value": "Glycosphingolipid Mollu series" } ,
+        "aglycon": { "type": "literal" , "value": "Cer" } ,
+        "alignment": { "type": "literal" , "value": "Core" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/4,4,3/[u2122h][a1122h-1b_1-5][a1122h-1a_1-5][a2122h-1b_1-5_2*NCC/3=O]/1-2-3-4/a4-b1_b3-c1_c2-d1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "000060" } ,
+        "name": { "type": "literal" , "value": "Glucosylceramide" } ,
+        "aglycon": { "type": "literal" , "value": "Cer" } ,
+        "alignment": { "type": "literal" , "value": "Whole-Glycan" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/1,1,0/[a2122h-1b_1-5]/1/" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "001031" } ,
+        "name": { "type": "literal" , "value": "O-Glucosylation" } ,
+        "aglycon": { "type": "literal" , "value": "Ser/Thr" } ,
+        "alignment": { "type": "literal" , "value": "Core" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/1,1,0/[a2122h-1b_1-5]/1/" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "000025" } ,
+        "name": { "type": "literal" , "value": "6'-Sulfo-sialyl Lewis x" } ,
+        "aglycon": { "type": "literal" , "value": "R" } ,
+        "alignment": { "type": "literal" , "value": "Nonreducing-End" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/4,4,3/[a2122h-1b_1-5_2*NCC/3=O][a1221m-1a_1-5][a2112h-1b_1-5_6*OSO/3=O/3=O][Aad21122h-2a_2-6_5*NCC/3=O]/1-2-3-4/a3-b1_a4-c1_c3-d2" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "000038" } ,
+        "name": { "type": "literal" , "value": "Blood group A (type 2)" } ,
+        "aglycon": { "type": "literal" , "value": "R" } ,
+        "alignment": { "type": "literal" , "value": "Substructure" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/4,4,3/[a2122h-1b_1-5_2*NCC/3=O][a2112h-1b_1-5][a1221m-1a_1-5][a2112h-1a_1-5_2*NCC/3=O]/1-2-3-4/a4-b1_b2-c1_b3-d1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "000116" } ,
+        "name": { "type": "literal" , "value": "GQ1ba" } ,
+        "aglycon": { "type": "literal" , "value": "Cer" } ,
+        "alignment": { "type": "literal" , "value": "Whole-Glycan" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/4,8,7/[a2122h-1b_1-5][a2112h-1b_1-5][Aad21122h-2a_2-6_5*NCC/3=O][a2112h-1b_1-5_2*NCC/3=O]/1-2-3-3-4-2-3-3/a4-b1_b3-c2_b4-e1_c8-d2_e3-f1_e6-h2_f3-g2" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "000100" } ,
+        "name": { "type": "literal" , "value": "cisGM1" } ,
+        "aglycon": { "type": "literal" , "value": "Cer" } ,
+        "alignment": { "type": "literal" , "value": "Whole-Glycan" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/4,5,4/[a2122h-1b_1-5][a2112h-1b_1-5][a2112h-1b_1-5_2*NCC/3=O][Aad21122h-2a_2-6_5*NCC/3=O]/1-2-3-2-4/a4-b1_b4-c1_c3-d1_d3-e2" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "000076" } ,
+        "name": { "type": "literal" , "value": "Gb5" } ,
+        "aglycon": { "type": "literal" , "value": "Cer" } ,
+        "alignment": { "type": "literal" , "value": "Whole-Glycan" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/4,5,4/[a2122h-1b_1-5][a2112h-1b_1-5][a2112h-1a_1-5][a2112h-1b_1-5_2*NCC/3=O]/1-2-3-4-2/a4-b1_b4-c1_c3-d1_d3-e1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "000079" } ,
+        "name": { "type": "literal" , "value": "SSEA-3" } ,
+        "aglycon": { "type": "literal" , "value": "Cer" } ,
+        "alignment": { "type": "literal" , "value": "Whole-Glycan" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/4,5,4/[a2122h-1b_1-5][a2112h-1b_1-5][a2112h-1a_1-5][a2112h-1b_1-5_2*NCC/3=O]/1-2-3-4-2/a4-b1_b4-c1_c3-d1_d3-e1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "000112" } ,
+        "name": { "type": "literal" , "value": "GT1b" } ,
+        "aglycon": { "type": "literal" , "value": "Cer" } ,
+        "alignment": { "type": "literal" , "value": "Whole-Glycan" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/4,7,6/[a2122h-1b_1-5][a2112h-1b_1-5][Aad21122h-2a_2-6_5*NCC/3=O][a2112h-1b_1-5_2*NCC/3=O]/1-2-3-3-4-2-3/a4-b1_b3-c2_b4-e1_c8-d2_e3-f1_f3-g2" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "001011" } ,
+        "name": { "type": "literal" , "value": "O-Glycan core 4" } ,
+        "aglycon": { "type": "literal" , "value": "Ser/Thr" } ,
+        "alignment": { "type": "literal" , "value": "Core" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/2,3,2/[a2112h-1a_1-5_2*NCC/3=O][a2122h-1b_1-5_2*NCC/3=O]/1-2-2/a3-b1_a6-c1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "001002" } ,
+        "name": { "type": "literal" , "value": "N-Glycan high mannose" } ,
+        "aglycon": { "type": "literal" , "value": "Asn" } ,
+        "alignment": { "type": "literal" , "value": "Core" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/4,7,6/[u2122h_2*NCC/3=O][a2122h-1b_1-5_2*NCC/3=O][a1122h-1b_1-5][a1122h-1a_1-5]/1-2-3-4-4-4-4/a4-b1_b4-c1_c3-d1_c6-e1_e3-f1_e6-g1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "000032" } ,
+        "name": { "type": "literal" , "value": "SDLex" } ,
+        "aglycon": { "type": "literal" , "value": "R" } ,
+        "alignment": { "type": "literal" , "value": "Nonreducing-End" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/4,7,6/[a2122h-1b_1-5_2*NCC/3=O][a1221m-1a_1-5][a2112h-1b_1-5][Aad21122h-2a_2-6_5*NCC/3=O]/1-2-3-1-2-3-4/a3-b1_a4-c1_c3-d1_d3-e1_d4-f1_f3-g2" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "000101" } ,
+        "name": { "type": "literal" , "value": "2-Fucosyl-GM1" } ,
+        "aglycon": { "type": "literal" , "value": "Cer" } ,
+        "alignment": { "type": "literal" , "value": "Whole-Glycan" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/5,6,5/[a2122h-1b_1-5][a2112h-1b_1-5][Aad21122h-2a_2-6_5*NCC/3=O][a2112h-1b_1-5_2*NCC/3=O][a1221m-1a_1-5]/1-2-3-4-2-5/a4-b1_b3-c2_b4-d1_d3-e1_e2-f1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "000120" } ,
+        "name": { "type": "literal" , "value": "GH1ca" } ,
+        "aglycon": { "type": "literal" , "value": "Cer" } ,
+        "alignment": { "type": "literal" , "value": "Whole-Glycan" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/4,10,9/[a2122h-1b_1-5][a2112h-1b_1-5][Aad21122h-2a_2-6_5*NCC/3=O][a2112h-1b_1-5_2*NCC/3=O]/1-2-3-3-3-4-2-3-3-3/a4-b1_b3-c2_b4-f1_c8-d2_d8-e2_f3-g1_f6-j2_g3-h2_h8-i2" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "000028" } ,
+        "name": { "type": "literal" , "value": "6,6'-bisSulfo-Lewis x" } ,
+        "aglycon": { "type": "literal" , "value": "R" } ,
+        "alignment": { "type": "literal" , "value": "Nonreducing-End" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/4,4,3/[a2122h-1b_1-5_2*NCC/3=O_6*OSO/3=O/3=O][a1221m-1a_1-5][a2112h-1b_1-5_6*OSO/3=O/3=O][Aad21122h-2a_2-6_5*NCC/3=O]/1-2-3-4/a3-b1_a4-c1_c3-d2" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "001008" } ,
+        "name": { "type": "literal" , "value": "O-Glycan core 2 fuzzy" } ,
+        "aglycon": { "type": "literal" , "value": "Ser/Thr" } ,
+        "alignment": { "type": "literal" , "value": "Core" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/3,3,2/[u2112h_2*NCC/3=O][a2112h-1b_1-5][a2122h-1b_1-5_2*NCC/3=O]/1-2-3/a3-b1_a6-c1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "000082" } ,
+        "name": { "type": "literal" , "value": "Disialosyl globopentaosylceramide" } ,
+        "aglycon": { "type": "literal" , "value": "Cer" } ,
+        "alignment": { "type": "literal" , "value": "Whole-Glycan" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/5,7,6/[a2122h-1b_1-5][a2112h-1b_1-5][a2112h-1a_1-5][a2112h-1b_1-5_2*NCC/3=O][Aad21122h-2a_2-6_5*NCC/3=O]/1-2-3-4-2-5-5/a4-b1_b4-c1_c3-d1_d3-e1_d6-g2_e3-f2" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "000089" } ,
+        "name": { "type": "literal" , "value": "GM4" } ,
+        "aglycon": { "type": "literal" , "value": "Cer" } ,
+        "alignment": { "type": "literal" , "value": "Whole-Glycan" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/2,2,1/[a2112h-1b_1-5][Aad21122h-2a_2-6_5*NCC/3=O]/1-2/a3-b2" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "000059" } ,
+        "name": { "type": "literal" , "value": "HNK-1 on O-mannose" } ,
+        "aglycon": { "type": "literal" , "value": "Ser/Thr" } ,
+        "alignment": { "type": "literal" , "value": "Whole-Glycan" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/4,4,3/[a1122h-1a_1-5][a2122h-1b_1-5_2*NCC/3=O][a2112h-1b_1-5][a2122A-1b_1-5_3*OSO/3=O/3=O]/1-2-3-4/a2-b1_b4-c1_c3-d1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "000084" } ,
+        "name": { "type": "literal" , "value": "Forssman glycolipid" } ,
+        "aglycon": { "type": "literal" , "value": "Cer" } ,
+        "alignment": { "type": "literal" , "value": "Whole-Glycan" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/5,5,4/[a2122h-1b_1-5][a2112h-1b_1-5][a2112h-1a_1-5][a2112h-1b_1-5_2*NCC/3=O][a2112h-1a_1-5_2*NCC/3=O]/1-2-3-4-5/a4-b1_b4-c1_c3-d1_d3-e1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "000121" } ,
+        "name": { "type": "literal" , "value": "Mono-fucosyl LN5" } ,
+        "aglycon": { "type": "literal" , "value": "Cer" } ,
+        "alignment": { "type": "literal" , "value": "Whole-Glycan" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/4,11,10/[a2122h-1b_1-5][a2112h-1b_1-5][a2122h-1b_1-5_2*NCC/3=O][a1221m-1a_1-5]/1-2-3-2-3-2-3-4-2-3-2/a4-b1_b3-c1_c4-d1_d3-e1_e4-f1_f3-g1_g3-h1_g4-i1_i3-j1_j4-k1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "000095" } ,
+        "name": { "type": "literal" , "value": "GM2" } ,
+        "aglycon": { "type": "literal" , "value": "Cer" } ,
+        "alignment": { "type": "literal" , "value": "Whole-Glycan" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/4,4,3/[a2122h-1b_1-5][a2112h-1b_1-5][Aad21122h-2a_2-6_5*NCC/3=O][a2112h-1b_1-5_2*NCC/3=O]/1-2-3-4/a4-b1_b3-c2_b4-d1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "000042" } ,
+        "name": { "type": "literal" , "value": "Blood group H (type 1)" } ,
+        "aglycon": { "type": "literal" , "value": "R" } ,
+        "alignment": { "type": "literal" , "value": "Substructure" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/3,3,2/[a2122h-1b_1-5_2*NCC/3=O][a2112h-1b_1-5][a1221m-1a_1-5]/1-2-3/a3-b1_b2-c1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "001102" } ,
+        "name": { "type": "literal" , "value": "Glycosphingolipid Muco series" } ,
+        "aglycon": { "type": "literal" , "value": "Cer" } ,
+        "alignment": { "type": "literal" , "value": "Core" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/2,4,3/[u2122h][a2112h-1b_1-5]/1-2-2-2/a4-b1_b4-c1_c3-d1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "001026" } ,
+        "name": { "type": "literal" , "value": "N-Glycan core, alditol reduced" } ,
+        "aglycon": { "type": "literal" , "value": "Asn" } ,
+        "alignment": { "type": "literal" , "value": "Core" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/4,5,4/[h2122h_2*NCC/3=O][a2122h-1b_1-5_2*NCC/3=O][a1122h-1b_1-5][a1122h-1a_1-5]/1-2-3-4-4/a4-b1_b4-c1_c3-d1_c6-e1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "001014" } ,
+        "name": { "type": "literal" , "value": "O-Glycan core 5 fuzzy" } ,
+        "aglycon": { "type": "literal" , "value": "Ser/Thr" } ,
+        "alignment": { "type": "literal" , "value": "Core" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/2,2,1/[u2112h_2*NCC/3=O][a2112h-1a_1-5_2*NCC/3=O]/1-2/a3-b1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "001021" } ,
+        "name": { "type": "literal" , "value": "O-Fucose" } ,
+        "aglycon": { "type": "literal" , "value": "Ser/Thr" } ,
+        "alignment": { "type": "literal" , "value": "Core" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/2,2,1/[a1221m-1x_1-5][a2122h-1b_1-5_2*NCC/3=O]/1-2/a3-b1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "000041" } ,
+        "name": { "type": "literal" , "value": "Blood group A2 (A-associated H type 3)" } ,
+        "aglycon": { "type": "literal" , "value": "R" } ,
+        "alignment": { "type": "literal" , "value": "Substructure" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/4,6,5/[a2122h-1b_1-5_2*NCC/3=O][a2112h-1b_1-5][a1221m-1a_1-5][a2112h-1a_1-5_2*NCC/3=O]/1-2-3-4-2-3/a4-b1_b2-c1_b3-d1_d3-e1_e2-f1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "001010" } ,
+        "name": { "type": "literal" , "value": "O-Glycan core 3 fuzzy" } ,
+        "aglycon": { "type": "literal" , "value": "Ser/Thr" } ,
+        "alignment": { "type": "literal" , "value": "Core" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/2,2,1/[u2112h_2*NCC/3=O][a2122h-1b_1-5_2*NCC/3=O]/1-2/a3-b1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "000017" } ,
+        "name": { "type": "literal" , "value": "Fucosylated LDN" } ,
+        "aglycon": { "type": "literal" , "value": "R" } ,
+        "alignment": { "type": "literal" , "value": "Substructure" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/3,3,2/[a2122h-1x_1-5_2*NCC/3=O][a1221m-1a_1-5][a2112h-1b_1-5_2*NCC/3=O]/1-2-3/a3-b1_a4-c1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "000097" } ,
+        "name": { "type": "literal" , "value": "Sialopentaosylceramide" } ,
+        "aglycon": { "type": "literal" , "value": "Cer" } ,
+        "alignment": { "type": "literal" , "value": "Whole-Glycan" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/5,6,5/[a2122h-1b_1-5][a2112h-1b_1-5][a2122h-1b_1-5_2*NCC/3=O][Aad21122h-2a_2-6_5*NCC/3=O][a2112h-1b_1-5_2*NCC/3=O]/1-2-3-2-4-5/a4-b1_b3-c1_c4-d1_d3-e2_d4-f1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "000070" } ,
+        "name": { "type": "literal" , "value": "Globoside" } ,
+        "aglycon": { "type": "literal" , "value": "Cer" } ,
+        "alignment": { "type": "literal" , "value": "Whole-Glycan" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/4,4,3/[a2122h-1b_1-5][a2112h-1b_1-5][a2112h-1a_1-5][a2112h-1b_1-5_2*NCC/3=O]/1-2-3-4/a4-b1_b4-c1_c3-d1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "000057" } ,
+        "name": { "type": "literal" , "value": "O-Mannose Lex" } ,
+        "aglycon": { "type": "literal" , "value": "Ser/Thr" } ,
+        "alignment": { "type": "literal" , "value": "Core" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/4,4,3/[a1122h-1a_1-5][a2122h-1b_1-5_2*NCC/3=O][a1221m-1a_1-5][a2112h-1b_1-5]/1-2-3-4/a2-b1_b3-c1_b4-d1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "000103" } ,
+        "name": { "type": "literal" , "value": "2-Fucosyl-GD1b" } ,
+        "aglycon": { "type": "literal" , "value": "Cer" } ,
+        "alignment": { "type": "literal" , "value": "Whole-Glycan" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/5,7,6/[a2122h-1b_1-5][a2112h-1b_1-5][Aad21122h-2a_2-6_5*NCC/3=O][a2112h-1b_1-5_2*NCC/3=O][a1221m-1a_1-5]/1-2-3-3-4-2-5/a4-b1_b3-c2_b4-e1_c8-d2_e3-f1_f2-g1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "001022" } ,
+        "name": { "type": "literal" , "value": "N-glycan core, truncated" } ,
+        "aglycon": { "type": "literal" , "value": "Asn" } ,
+        "alignment": { "type": "literal" , "value": "Core" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/3,4,3/[u2122h_2*NCC/3=O][a1122h-1b_1-5][a1122h-1a_1-5]/1-2-3-3/a4-b1_b3-c1_b6-d1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "000036" } ,
+        "name": { "type": "literal" , "value": "Blood group H (type 2)" } ,
+        "aglycon": { "type": "literal" , "value": "R" } ,
+        "alignment": { "type": "literal" , "value": "Substructure" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/3,3,2/[a2122h-1b_1-5_2*NCC/3=O][a2112h-1b_1-5][a1221m-1a_1-5]/1-2-3/a4-b1_b2-c1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "000090" } ,
+        "name": { "type": "literal" , "value": "GM3" } ,
+        "aglycon": { "type": "literal" , "value": "Cer" } ,
+        "alignment": { "type": "literal" , "value": "Whole-Glycan" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/3,3,2/[a2122h-1b_1-5][a2112h-1b_1-5][Aad21122h-2a_2-6_5*NCC/3=O]/1-2-3/a4-b1_b3-c2" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "000111" } ,
+        "name": { "type": "literal" , "value": "GT1aa" } ,
+        "aglycon": { "type": "literal" , "value": "Cer" } ,
+        "alignment": { "type": "literal" , "value": "Whole-Glycan" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/4,7,6/[a2122h-1b_1-5][a2112h-1b_1-5][Aad21122h-2a_2-6_5*NCC/3=O][a2112h-1b_1-5_2*NCC/3=O]/1-2-3-4-2-3-3/a4-b1_b3-c2_b4-d1_d3-e1_d6-g2_e3-f2" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "000049" } ,
+        "name": { "type": "literal" , "value": "4'-sulfated LDN" } ,
+        "aglycon": { "type": "literal" , "value": "R" } ,
+        "alignment": { "type": "literal" , "value": "Substructure" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/2,2,1/[a2122h-1x_1-5_2*NCC/3=O][a2112h-1b_1-5_2*NCC/3=O_4*OSO/3=O/3=O]/1-2/a4-b1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "000026" } ,
+        "name": { "type": "literal" , "value": "2,6-sialyl-Sulfo-LN" } ,
+        "aglycon": { "type": "literal" , "value": "R" } ,
+        "alignment": { "type": "literal" , "value": "Nonreducing-End" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/3,3,2/[a2122h-1b_1-5_2*NCC/3=O_6*OSO/3=O/3=O][a2112h-1b_1-5][Aad21122h-2a_2-6_5*NCC/3=O]/1-2-3/a4-b1_b6-c2" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "000040" } ,
+        "name": { "type": "literal" , "value": "Blood group A1 (type 3)" } ,
+        "aglycon": { "type": "literal" , "value": "R" } ,
+        "alignment": { "type": "literal" , "value": "Substructure" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/4,7,6/[a2122h-1b_1-5_2*NCC/3=O][a2112h-1b_1-5][a1221m-1a_1-5][a2112h-1a_1-5_2*NCC/3=O]/1-2-3-4-2-3-4/a4-b1_b2-c1_b3-d1_d3-e1_e2-f1_e3-g1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "000030" } ,
+        "name": { "type": "literal" , "value": "3'-Sulfo-Lewis a" } ,
+        "aglycon": { "type": "literal" , "value": "R" } ,
+        "alignment": { "type": "literal" , "value": "Substructure" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/3,3,2/[a2122h-1b_1-5_2*NCC/3=O][a2112h-1b_1-5_3*OSO/3=O/3=O][a1221m-1a_1-5]/1-2-3/a3-b1_a4-c1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "000088" } ,
+        "name": { "type": "literal" , "value": "Blood group A (type 4)" } ,
+        "aglycon": { "type": "literal" , "value": "Cer" } ,
+        "alignment": { "type": "literal" , "value": "Whole-Glycan" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/6,7,6/[a2122h-1b_1-5][a2112h-1b_1-5][a2112h-1a_1-5][a2112h-1b_1-5_2*NCC/3=O][a1221m-1a_1-5][a2112h-1a_1-5_2*NCC/3=O]/1-2-3-4-2-5-6/a4-b1_b4-c1_c3-d1_d3-e1_e2-f1_e3-g1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "000015" } ,
+        "name": { "type": "literal" , "value": "a-Gal antigen" } ,
+        "aglycon": { "type": "literal" , "value": "R" } ,
+        "alignment": { "type": "literal" , "value": "Substructure" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/2,2,1/[a2112h-1b_1-5][a2112h-1a_1-5]/1-2/a3-b1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "000012" } ,
+        "name": { "type": "literal" , "value": "Sialyl Tn antigen" } ,
+        "aglycon": { "type": "literal" , "value": "Ser/Thr" } ,
+        "alignment": { "type": "literal" , "value": "Whole-Glycan" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/2,2,1/[a2112h-1a_1-5_2*NCC/3=O][Aad21122h-2a_2-6_5*NCC/3=O]/1-2/a6-b2" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "000107" } ,
+        "name": { "type": "literal" , "value": "GD1a" } ,
+        "aglycon": { "type": "literal" , "value": "Cer" } ,
+        "alignment": { "type": "literal" , "value": "Whole-Glycan" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/4,6,5/[a2122h-1b_1-5][a2112h-1b_1-5][Aad21122h-2a_2-6_5*NCC/3=O][a2112h-1b_1-5_2*NCC/3=O]/1-2-3-4-2-3/a4-b1_b3-c2_b4-d1_d3-e1_e3-f2" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "000074" } ,
+        "name": { "type": "literal" , "value": "Sulfo-isogloboside" } ,
+        "aglycon": { "type": "literal" , "value": "Cer" } ,
+        "alignment": { "type": "literal" , "value": "Whole-Glycan" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/4,4,3/[a2122h-1x_1-5][a2112h-1b_1-5][a2112h-1a_1-5][a2112h-1b_1-5_2*NCC/3=O_3*OSO/3=O/3=O]/1-2-3-4/a4-b1_b3-c1_c3-d1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "000098" } ,
+        "name": { "type": "literal" , "value": "GM1" } ,
+        "aglycon": { "type": "literal" , "value": "Cer" } ,
+        "alignment": { "type": "literal" , "value": "Whole-Glycan" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/4,5,4/[a2122h-1b_1-5][a2112h-1b_1-5][Aad21122h-2a_2-6_5*NCC/3=O][a2112h-1b_1-5_2*NCC/3=O]/1-2-3-4-2/a4-b1_b3-c2_b4-d1_d3-e1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "001004" } ,
+        "name": { "type": "literal" , "value": "N-Glycan complex" } ,
+        "aglycon": { "type": "literal" , "value": "Asn" } ,
+        "alignment": { "type": "literal" , "value": "Core" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/4,7,6/[u2122h_2*NCC/3=O][a2122h-1b_1-5_2*NCC/3=O][a1122h-1b_1-5][a1122h-1a_1-5]/1-2-3-4-2-4-2/a4-b1_b4-c1_c3-d1_c6-f1_e1-d2|d4_g1-f2|f4|f6" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "000021" } ,
+        "name": { "type": "literal" , "value": "Lewis b" } ,
+        "aglycon": { "type": "literal" , "value": "R" } ,
+        "alignment": { "type": "literal" , "value": "Substructure" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/3,4,3/[a2122h-1x_1-5_2*NCC/3=O][a2112h-1b_1-5][a1221m-1a_1-5]/1-2-3-3/a3-b1_a4-d1_b2-c1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "000043" } ,
+        "name": { "type": "literal" , "value": "Blood group B (type 1)" } ,
+        "aglycon": { "type": "literal" , "value": "R" } ,
+        "alignment": { "type": "literal" , "value": "Substructure" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/4,4,3/[a2122h-1b_1-5_2*NCC/3=O][a2112h-1b_1-5][a1221m-1a_1-5][a2112h-1a_1-5]/1-2-3-4/a3-b1_b2-c1_b3-d1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "001017" } ,
+        "name": { "type": "literal" , "value": "O-Glycan core 7" } ,
+        "aglycon": { "type": "literal" , "value": "Ser/Thr" } ,
+        "alignment": { "type": "literal" , "value": "Core" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/1,2,1/[a2112h-1a_1-5_2*NCC/3=O]/1-1/a6-b1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "000066" } ,
+        "name": { "type": "literal" , "value": "Monosulfated gangliotetraosylceramide" } ,
+        "aglycon": { "type": "literal" , "value": "Cer" } ,
+        "alignment": { "type": "literal" , "value": "Whole-Glycan" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/4,4,3/[a2122h-1b_1-5][a2112h-1b_1-5][a2112h-1b_1-5_2*NCC/3=O][a2112h-1b_1-5_3*OSO/3=O/3=O]/1-2-3-4/a4-b1_b4-c1_c3-d1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "001007" } ,
+        "name": { "type": "literal" , "value": "O-Glycan core 2" } ,
+        "aglycon": { "type": "literal" , "value": "Ser/Thr" } ,
+        "alignment": { "type": "literal" , "value": "Core" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/3,3,2/[a2112h-1a_1-5_2*NCC/3=O][a2112h-1b_1-5][a2122h-1b_1-5_2*NCC/3=O]/1-2-3/a3-b1_a6-c1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "000008" } ,
+        "name": { "type": "literal" , "value": "Tn antigen" } ,
+        "aglycon": { "type": "literal" , "value": "Ser/Thr" } ,
+        "alignment": { "type": "literal" , "value": "Whole-Glycan" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/1,1,0/[a2112h-1a_1-5_2*NCC/3=O]/1/" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "001101" } ,
+        "name": { "type": "literal" , "value": "Glycosphingolipid Isoglobo series" } ,
+        "aglycon": { "type": "literal" , "value": "Cer" } ,
+        "alignment": { "type": "literal" , "value": "Core" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/4,4,3/[u2122h][a2112h-1b_1-5][a2112h-1a_1-5][a2112h-1b_1-5_2*NCC/3=O]/1-2-3-4/a4-b1_b3-c1_c3-d1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "000034" } ,
+        "name": { "type": "literal" , "value": "3-Sialyl-LN (type 2)" } ,
+        "aglycon": { "type": "literal" , "value": "R" } ,
+        "alignment": { "type": "literal" , "value": "Nonreducing-End" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/3,3,2/[a2122h-1x_1-5_2*NCC/3=O][a2112h-1b_1-5][Aad21122h-2a_2-6_5*NCC/3=O]/1-2-3/a4-b1_b3-c2" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "000105" } ,
+        "name": { "type": "literal" , "value": "GD1" } ,
+        "aglycon": { "type": "literal" , "value": "Cer" } ,
+        "alignment": { "type": "literal" , "value": "Whole-Glycan" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/4,6,5/[a2122h-1b_1-5][a2112h-1b_1-5][a2112h-1b_1-5_2*NCC/3=O][Aad21122h-2a_2-6_5*NCC/3=O]/1-2-3-2-4-4/a4-b1_b4-c1_c3-d1_d3-e2_e8-f2" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "001106" } ,
+        "name": { "type": "literal" , "value": "Glycosphingolipid Lacto series" } ,
+        "aglycon": { "type": "literal" , "value": "Cer" } ,
+        "alignment": { "type": "literal" , "value": "Core" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/3,4,3/[u2122h][a2112h-1b_1-5][a2122h-1b_1-5_2*NCC/3=O]/1-2-3-2/a4-b1_b3-c1_c3-d1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "000003" } ,
+        "name": { "type": "literal" , "value": "I antigen" } ,
+        "aglycon": { "type": "literal" , "value": "R" } ,
+        "alignment": { "type": "literal" , "value": "Substructure" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/2,6,5/[a2122h-1b_1-5_2*NCC/3=O][a2112h-1b_1-5]/1-2-1-2-1-2/a4-b1_b3-c1_b6-e1_c4-d1_e4-f1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "000106" } ,
+        "name": { "type": "literal" , "value": "GD1a" } ,
+        "aglycon": { "type": "literal" , "value": "Cer" } ,
+        "alignment": { "type": "literal" , "value": "Whole-Glycan" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/4,6,5/[a2122h-1b_1-5][a2112h-1b_1-5][a2112h-1b_1-5_2*NCC/3=O][Aad21122h-2a_2-6_5*NCC/3=O]/1-2-3-2-4-4/a4-b1_b4-c1_c3-d1_c6-f2_d3-e2" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "001015" } ,
+        "name": { "type": "literal" , "value": "O-Glycan core 6" } ,
+        "aglycon": { "type": "literal" , "value": "Ser/Thr" } ,
+        "alignment": { "type": "literal" , "value": "Core" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/2,2,1/[a2112h-1a_1-5_2*NCC/3=O][a2122h-1b_1-5_2*NCC/3=O]/1-2/a6-b1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "000056" } ,
+        "name": { "type": "literal" , "value": "2,6-Branched O-mannose" } ,
+        "aglycon": { "type": "literal" , "value": "Ser/Thr" } ,
+        "alignment": { "type": "literal" , "value": "Whole-Glycan" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/4,7,6/[a1122h-1a_1-5][a2122h-1b_1-5_2*NCC/3=O][a2112h-1b_1-5][Aad21122h-2a_2-6_5*NCC/3=O]/1-2-3-4-2-3-4/a2-b1_a6-e1_b4-c1_c3-d2_e4-f1_f3-g2" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "001012" } ,
+        "name": { "type": "literal" , "value": "O-Glycan core 4 fuzzy" } ,
+        "aglycon": { "type": "literal" , "value": "Ser/Thr" } ,
+        "alignment": { "type": "literal" , "value": "Core" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/2,3,2/[u2112h_2*NCC/3=O][a2122h-1b_1-5_2*NCC/3=O]/1-2-2/a3-b1_a6-c1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "000019" } ,
+        "name": { "type": "literal" , "value": "Lewis y" } ,
+        "aglycon": { "type": "literal" , "value": "R" } ,
+        "alignment": { "type": "literal" , "value": "Substructure" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/3,4,3/[a2122h-1x_1-5_2*NCC/3=O][a1221m-1a_1-5][a2112h-1b_1-5]/1-2-3-2/a3-b1_a4-c1_c2-d1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "001009" } ,
+        "name": { "type": "literal" , "value": "O-Glycan core 3" } ,
+        "aglycon": { "type": "literal" , "value": "Ser/Thr" } ,
+        "alignment": { "type": "literal" , "value": "Core" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/2,2,1/[a2112h-1a_1-5_2*NCC/3=O][a2122h-1b_1-5_2*NCC/3=O]/1-2/a3-b1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "000053" } ,
+        "name": { "type": "literal" , "value": "SLex Core 2 O-glycan" } ,
+        "aglycon": { "type": "literal" , "value": "Ser/Thr" } ,
+        "alignment": { "type": "literal" , "value": "Core" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/5,7,6/[a2112h-1a_1-5_2*NCC/3=O][a2112h-1b_1-5][Aad21122h-2a_2-6_5*NCC/3=O][a2122h-1b_1-5_2*NCC/3=O][a1221m-1a_1-5]/1-2-3-4-5-2-3/a3-b1_a6-d1_b3-c2_d3-e1_d4-f1_f3-g2" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "000065" } ,
+        "name": { "type": "literal" , "value": "Ceramide dihexosyl sulfate" } ,
+        "aglycon": { "type": "literal" , "value": "Cer" } ,
+        "alignment": { "type": "literal" , "value": "Whole-Glycan" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/2,2,1/[a2112h-1b_1-5][a2112h-1b_1-5_3*OSO/3=O/3=O]/1-2/a4-b1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "000118" } ,
+        "name": { "type": "literal" , "value": "GP1c" } ,
+        "aglycon": { "type": "literal" , "value": "Cer" } ,
+        "alignment": { "type": "literal" , "value": "Whole-Glycan" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/4,8,7/[a2122h-1b_1-5][Aad21122h-2a_2-6_5*NCC/3=O][a2112h-1b_1-5_2*NCC/3=O][a2112h-1b_1-5]/1-2-2-2-3-4-2-2/a3-b2_a4-e1_b8-c2_c8-d2_e3-f1_f3-g2_g8-h2" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "000104" } ,
+        "name": { "type": "literal" , "value": "B-GD1b" } ,
+        "aglycon": { "type": "literal" , "value": "Cer" } ,
+        "alignment": { "type": "literal" , "value": "Whole-Glycan" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/6,8,7/[a2122h-1b_1-5][a2112h-1b_1-5][Aad21122h-2a_2-6_5*NCC/3=O][a2112h-1b_1-5_2*NCC/3=O][a1221m-1a_1-5][a2112h-1a_1-5]/1-2-3-3-4-2-5-6/a4-b1_b3-c2_b4-e1_c8-d2_e3-f1_f2-g1_f3-h1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "001016" } ,
+        "name": { "type": "literal" , "value": "O-Glycan core 6 fuzzy" } ,
+        "aglycon": { "type": "literal" , "value": "Ser/Thr" } ,
+        "alignment": { "type": "literal" , "value": "Core" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/2,2,1/[u2112h_2*NCC/3=O][a2122h-1b_1-5_2*NCC/3=O]/1-2/a6-b1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "000033" } ,
+        "name": { "type": "literal" , "value": "VIM-2" } ,
+        "aglycon": { "type": "literal" , "value": "R" } ,
+        "alignment": { "type": "literal" , "value": "Nonreducing-End" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/4,6,5/[a2122h-1b_1-5_2*NCC/3=O][a1221m-1a_1-5][a2112h-1b_1-5][Aad21122h-2a_2-6_5*NCC/3=O]/1-2-3-1-3-4/a3-b1_a4-c1_c3-d1_d4-e1_e3-f2" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "000029" } ,
+        "name": { "type": "literal" , "value": "3'-Sulfo-Lewis x" } ,
+        "aglycon": { "type": "literal" , "value": "R" } ,
+        "alignment": { "type": "literal" , "value": "Substructure" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/3,3,2/[a2122h-1b_1-5_2*NCC/3=O][a1221m-1a_1-5][a2112h-1b_1-5_3*OSO/3=O/3=O]/1-2-3/a3-b1_a4-c1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "000051" } ,
+        "name": { "type": "literal" , "value": "Sda/CT antigen" } ,
+        "aglycon": { "type": "literal" , "value": "R" } ,
+        "alignment": { "type": "literal" , "value": "Substructure" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/4,4,3/[a2122h-1b_1-5_2*NCC/3=O][a2112h-1b_1-5][Aad21122h-2a_2-6_5*NCC/3=O][a2112h-1b_1-5_2*NCC/3=O]/1-2-3-4/a4-b1_b3-c2_b4-d1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "001109" } ,
+        "name": { "type": "literal" , "value": "Glycosphingolipid Globo series" } ,
+        "aglycon": { "type": "literal" , "value": "Cer" } ,
+        "alignment": { "type": "literal" , "value": "Core" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/4,4,3/[u2122h][a2112h-1b_1-5][a2112h-1a_1-5][a2112h-1b_1-5_2*NCC/3=O]/1-2-3-4/a4-b1_b4-c1_c3-d1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "001001" } ,
+        "name": { "type": "literal" , "value": "N-Glycan core basic" } ,
+        "aglycon": { "type": "literal" , "value": "Asn" } ,
+        "alignment": { "type": "literal" , "value": "Core" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/4,5,4/[u2122h_2*NCC/3=O][a2122h-1b_1-5_2*NCC/3=O][a1122h-1b_1-5][a1122h-1a_1-5]/1-2-3-4-4/a4-b1_b4-c1_c3-d1_c6-e1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "001003" } ,
+        "name": { "type": "literal" , "value": "N-Glycan hybrid" } ,
+        "aglycon": { "type": "literal" , "value": "Asn" } ,
+        "alignment": { "type": "literal" , "value": "Core" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/4,7,6/[u2122h_2*NCC/3=O][a2122h-1b_1-5_2*NCC/3=O][a1122h-1b_1-5][a1122h-1a_1-5]/1-2-3-4-2-4-4/a4-b1_b4-c1_c3-d1_c6-f1_e1-d2|d4_g1-f3|f6" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "000073" } ,
+        "name": { "type": "literal" , "value": "Mono-sulfated globotetraosylceramide" } ,
+        "aglycon": { "type": "literal" , "value": "Cer" } ,
+        "alignment": { "type": "literal" , "value": "Whole-Glycan" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/4,4,3/[a2122h-1b_1-5][a2112h-1b_1-5][a2112h-1a_1-5][a2112h-1b_1-5_2*NCC/3=O_3*OSO/3=O/3=O]/1-2-3-4/a4-b1_b4-c1_c3-d1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "000044" } ,
+        "name": { "type": "literal" , "value": "Blood group A (type 1)" } ,
+        "aglycon": { "type": "literal" , "value": "R" } ,
+        "alignment": { "type": "literal" , "value": "Substructure" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/4,4,3/[a2122h-1b_1-5_2*NCC/3=O][a2112h-1b_1-5][a1221m-1a_1-5][a2112h-1a_1-5_2*NCC/3=O]/1-2-3-4/a3-b1_b2-c1_b3-d1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "000005" } ,
+        "name": { "type": "literal" , "value": "Type 1 LN" } ,
+        "aglycon": { "type": "literal" , "value": "R" } ,
+        "alignment": { "type": "literal" , "value": "Substructure" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/2,2,1/[a2122h-1b_1-5_2*NCC/3=O][a2112h-1b_1-5]/1-2/a3-b1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "001024" } ,
+        "name": { "type": "literal" , "value": "N-Glycan core, core-fucosylated" } ,
+        "aglycon": { "type": "literal" , "value": "Asn" } ,
+        "alignment": { "type": "literal" , "value": "Core" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/5,6,5/[a2122h-1x_1-?_2*NCC/3=O][a1221m-1a_1-5][a2122h-1b_1-5_2*NCC/3=O][a1122h-1b_1-5][a1122h-1a_1-5]/1-2-3-4-5-5/a4-c1_c4-d1_d3-e1_d6-f1_a?-b1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "001103" } ,
+        "name": { "type": "literal" , "value": "Glycosphingolipid Arthro series" } ,
+        "aglycon": { "type": "literal" , "value": "Cer" } ,
+        "alignment": { "type": "literal" , "value": "Core" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/4,4,3/[u2122h][a1122h-1b_1-5][a2122h-1b_1-5_2*NCC/3=O][a2112h-1b_1-5_2*NCC/3=O]/1-2-3-4/a4-b1_b3-c1_c4-d1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "001105" } ,
+        "name": { "type": "literal" , "value": "Glycosphingolipid Gala series" } ,
+        "aglycon": { "type": "literal" , "value": "Cer" } ,
+        "alignment": { "type": "literal" , "value": "Core" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/2,2,1/[u2112h][a2112h-1a_1-5]/1-2/a4-b1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "000001" } ,
+        "name": { "type": "literal" , "value": "Type 2 LN" } ,
+        "aglycon": { "type": "literal" , "value": "R" } ,
+        "alignment": { "type": "literal" , "value": "Substructure" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/2,2,1/[a2122h-1b_1-5_2*NCC/3=O][a2112h-1b_1-5]/1-2/a4-b1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "001013" } ,
+        "name": { "type": "literal" , "value": "O-Glycan core 5" } ,
+        "aglycon": { "type": "literal" , "value": "Ser/Thr" } ,
+        "alignment": { "type": "literal" , "value": "Core" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/1,2,1/[a2112h-1a_1-5_2*NCC/3=O]/1-1/a3-b1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "001108" } ,
+        "name": { "type": "literal" , "value": "Glycosphingolipid Ganglio series" } ,
+        "aglycon": { "type": "literal" , "value": "Cer" } ,
+        "alignment": { "type": "literal" , "value": "Core" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/3,4,3/[u2122h][a2112h-1b_1-5][a2112h-1b_1-5_2*NCC/3=O]/1-2-3-2/a4-b1_b4-c1_c3-d1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "001027" } ,
+        "name": { "type": "literal" , "value": "N-Glycan core, superclass" } ,
+        "aglycon": { "type": "literal" , "value": "Asn" } ,
+        "alignment": { "type": "literal" , "value": "Core" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/2,5,4/[axxxxh-1x_1-?_2*NCC/3=O][axxxxh-1x_1-?]/1-1-2-2-2/a?-b1_b?-c1_c?-d1_c?-e1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "001006" } ,
+        "name": { "type": "literal" , "value": "O-Glycan core 1 fuzzy" } ,
+        "aglycon": { "type": "literal" , "value": "Ser/Thr" } ,
+        "alignment": { "type": "literal" , "value": "Core" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/2,2,1/[u2112h_2*NCC/3=O][a2112h-1b_1-5]/1-2/a3-b1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "001023" } ,
+        "name": { "type": "literal" , "value": "N-glycan core, bisected" } ,
+        "aglycon": { "type": "literal" , "value": "Asn" } ,
+        "alignment": { "type": "literal" , "value": "Core" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/4,6,5/[u2122h_2*NCC/3=O][a2122h-1b_1-5_2*NCC/3=O][a1122h-1b_1-5][a1122h-1a_1-5]/1-2-3-4-2-4/a4-b1_b4-c1_c3-d1_c4-e1_c6-f1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "001025" } ,
+        "name": { "type": "literal" , "value": "N-Glycan core, arm-fucosylated" } ,
+        "aglycon": { "type": "literal" , "value": "Asn" } ,
+        "alignment": { "type": "literal" , "value": "Core" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/5,7,6/[u2122h_2*NCC/3=O][a2122h-1b_1-5_2*NCC/3=O][a1122h-1b_1-5][a1122h-1a_1-5][a1221m-1a_1-5]/1-2-3-4-2-5-4/a4-b1_b4-c1_d1-c3|c6_g1-c3|c6_d?-e1_e?-f1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "001020" } ,
+        "name": { "type": "literal" , "value": "O-Fucose" } ,
+        "aglycon": { "type": "literal" , "value": "Ser/Thr" } ,
+        "alignment": { "type": "literal" , "value": "Core" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/2,2,1/[a1221m-1x_1-5][a2122h-1b_1-5]/1-2/a3-b1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "000054" } ,
+        "name": { "type": "literal" , "value": "Diphosphorylated Man6" } ,
+        "aglycon": { "type": "literal" , "value": "Asn" } ,
+        "alignment": { "type": "literal" , "value": "Core" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/4,8,7/[a2122h-1b_1-5_2*NCC/3=O][a1122h-1b_1-5][a1122h-1a_1-5][a1122h-1a_1-5_6*OPO/3O/3=O]/1-1-2-3-4-3-3-4/a4-b1_b4-c1_c3-d1_c6-f1_d2-e1_f3-g1_f6-h1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "001019" } ,
+        "name": { "type": "literal" , "value": "O-Mannose" } ,
+        "aglycon": { "type": "literal" , "value": "Ser/Thr" } ,
+        "alignment": { "type": "literal" , "value": "Core" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/3,3,2/[u1122h][a2122h-1b_1-5_2*NCC/3=O][a2112h-1b_1-5]/1-2-3/a2-b1_b4-c1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "001029" } ,
+        "name": { "type": "literal" , "value": "Human milk oligosaccharide" } ,
+        "aglycon": { "type": "literal" , "value": "Other" } ,
+        "alignment": { "type": "literal" , "value": "Core" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/2,2,1/[u2122h][a2112h-1b_1-5]/1-2/a4-b1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "001030" } ,
+        "name": { "type": "literal" , "value": "GPI anchor" } ,
+        "aglycon": { "type": "literal" , "value": "Other" } ,
+        "alignment": { "type": "literal" , "value": "Core" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/2,4,3/[a2122h-1a_1-5_2*N][a1122h-1a_1-5]/1-2-2-2/a4-b1_b6-c1_c2-d1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "000252" } ,
+        "name": { "type": "literal" , "value": "Polysialic acid" } ,
+        "aglycon": { "type": "literal" , "value": "R" } ,
+        "alignment": { "type": "literal" , "value": "Substructure" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/3,5,4/[a2122h-1b_1-5_2*NCC/3=O][a2112h-1b_1-5][Aad21122h-2a_2-6_5*NCC/3=O]/1-2-3-3-3/a4-b1_b3-c2_c8-d2_d8-e2" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "001201" } ,
+        "name": { "type": "literal" , "value": "GAG Core 1a" } ,
+        "aglycon": { "type": "literal" , "value": "Other" } ,
+        "alignment": { "type": "literal" , "value": "Core" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/2,2,1/[u2122h_2*NCC/3=O][a2122A-1x_1-5]/1-2/a?-b1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "001202" } ,
+        "name": { "type": "literal" , "value": "GAG Core 1b" } ,
+        "aglycon": { "type": "literal" , "value": "Other" } ,
+        "alignment": { "type": "literal" , "value": "Core" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/2,2,1/[u2122A][a2122h-1x_1-5_2*NCC/3=O]/1-2/a?-b1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "001203" } ,
+        "name": { "type": "literal" , "value": "GAG Core 2a" } ,
+        "aglycon": { "type": "literal" , "value": "Other" } ,
+        "alignment": { "type": "literal" , "value": "Core" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/2,2,1/[u2112h_2*NCC/3=O][a2122A-1x_1-5]/1-2/a?-b1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "001205" } ,
+        "name": { "type": "literal" , "value": "GAG Core 3a" } ,
+        "aglycon": { "type": "literal" , "value": "Other" } ,
+        "alignment": { "type": "literal" , "value": "Core" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/2,2,1/[u2122h_2*NCC/3=O][a2121A-1x_1-5]/1-2/a?-b1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "001207" } ,
+        "name": { "type": "literal" , "value": "GAG Core 4a" } ,
+        "aglycon": { "type": "literal" , "value": "Other" } ,
+        "alignment": { "type": "literal" , "value": "Core" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/2,2,1/[u2112h_2*NCC/3=O][a2121A-1x_1-5]/1-2/a?-b1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "001209" } ,
+        "name": { "type": "literal" , "value": "GAG Core 5a" } ,
+        "aglycon": { "type": "literal" , "value": "Other" } ,
+        "alignment": { "type": "literal" , "value": "Core" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/2,2,1/[u2122h_2*NCC/3=O_?*OSO/3=O/3=O][a2112h-1x_1-5_?*OSO/3=O/3=O]/1-2/a?-b1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "001204" } ,
+        "name": { "type": "literal" , "value": "GAG Core 2b" } ,
+        "aglycon": { "type": "literal" , "value": "Other" } ,
+        "alignment": { "type": "literal" , "value": "Core" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/2,2,1/[u2122A][a2112h-1x_1-5_2*NCC/3=O]/1-2/a?-b1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "001206" } ,
+        "name": { "type": "literal" , "value": "GAG Core 3b" } ,
+        "aglycon": { "type": "literal" , "value": "Other" } ,
+        "alignment": { "type": "literal" , "value": "Core" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/2,2,1/[u2121A][a2122h-1x_1-5_2*NCC/3=O]/1-2/a?-b1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "001208" } ,
+        "name": { "type": "literal" , "value": "GAG Core 4b" } ,
+        "aglycon": { "type": "literal" , "value": "Other" } ,
+        "alignment": { "type": "literal" , "value": "Core" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/2,2,1/[u2121A][a2112h-1x_1-5_2*NCC/3=O]/1-2/a?-b1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "001210" } ,
+        "name": { "type": "literal" , "value": "GAG Core 5b" } ,
+        "aglycon": { "type": "literal" , "value": "Other" } ,
+        "alignment": { "type": "literal" , "value": "Core" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/2,2,1/[u2112h_?*OSO/3=O/3=O][a2122h-1x_1-5_2*NCC/3=O_?*OSO/3=O/3=O]/1-2/a?-b1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "001211" } ,
+        "name": { "type": "literal" , "value": "GAG Core 6a" } ,
+        "aglycon": { "type": "literal" , "value": "Other" } ,
+        "alignment": { "type": "literal" , "value": "Core" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/2,2,1/[u2122h_2*NSO/3=O/3=O][a2122A-1x_1-5]/1-2/a?-b1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "001212" } ,
+        "name": { "type": "literal" , "value": "GAG Core 6b" } ,
+        "aglycon": { "type": "literal" , "value": "Other" } ,
+        "alignment": { "type": "literal" , "value": "Core" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/2,2,1/[u2122A][a2122h-1x_1-5_2*NSO/3=O/3=O]/1-2/a?-b1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "001213" } ,
+        "name": { "type": "literal" , "value": "GAG Core 7a" } ,
+        "aglycon": { "type": "literal" , "value": "Other" } ,
+        "alignment": { "type": "literal" , "value": "Core" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/2,2,1/[u2122h_2*NSO/3=O/3=O][a2121A-1x_1-5]/1-2/a?-b1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "001214" } ,
+        "name": { "type": "literal" , "value": "GAG Core 7b" } ,
+        "aglycon": { "type": "literal" , "value": "Other" } ,
+        "alignment": { "type": "literal" , "value": "Core" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/2,2,1/[u2121A][a2122h-1x_1-5_2*NSO/3=O/3=O]/1-2/a?-b1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "000201" } ,
+        "name": { "type": "literal" , "value": "B antigen (type 3)" } ,
+        "aglycon": { "type": "literal" , "value": "Ser/Thr" } ,
+        "alignment": { "type": "literal" , "value": "Whole-Glycan" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/4,4,3/[a2112h-1a_1-5_2*NCC/3=O][a2112h-1b_1-5][a1221m-1a_1-5][a2112h-1a_1-5]/1-2-3-4/a3-b1_b2-c1_b3-d1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "001032" } ,
+        "name": { "type": "literal" , "value": "O-Glycan core 8" } ,
+        "aglycon": { "type": "literal" , "value": "Ser/Thr" } ,
+        "alignment": { "type": "literal" , "value": "Core" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/2,2,1/[a2112h-1a_1-5_2*NCC/3=O][a2112h-1a_1-5]/1-2/a3-b1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "001033" } ,
+        "name": { "type": "literal" , "value": "O-Glycan core 8 fuzzy" } ,
+        "aglycon": { "type": "literal" , "value": "Ser/Thr" } ,
+        "alignment": { "type": "literal" , "value": "Core" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/2,2,1/[u2112h_2*NCC/3=O][a2112h-1a_1-5]/1-2/a3-b1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "001034" } ,
+        "name": { "type": "literal" , "value": "O-Glycan O-GalNAc Core" } ,
+        "aglycon": { "type": "literal" , "value": "Ser/Thr" } ,
+        "alignment": { "type": "literal" , "value": "Core" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/1,1,0/[u2112h_2*NCC/3=O]/1/" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "001035" } ,
+        "name": { "type": "literal" , "value": "O-Glycan O-Fucose Core" } ,
+        "aglycon": { "type": "literal" , "value": "Ser/Thr" } ,
+        "alignment": { "type": "literal" , "value": "Core" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/1,1,0/[u1221m]/1/" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "001036" } ,
+        "name": { "type": "literal" , "value": "O-Glycan O-Mannose Core" } ,
+        "aglycon": { "type": "literal" , "value": "Ser/Thr" } ,
+        "alignment": { "type": "literal" , "value": "Core" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/1,1,0/[u1122h]/1/" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "001037" } ,
+        "name": { "type": "literal" , "value": "N-Glycan biantennary" } ,
+        "aglycon": { "type": "literal" , "value": "Asn" } ,
+        "alignment": { "type": "literal" , "value": "Core" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/4,7,6/[u2122h_2*NCC/3=O][a2122h-1b_1-5_2*NCC/3=O][a1122h-1b_1-5][a1122h-1a_1-5]/1-2-3-4-2-4-2/a4-b1_b4-c1_c?-d1_c?-f1_d?-e1_f?-g1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "001038" } ,
+        "name": { "type": "literal" , "value": "N-Glycan triantennary" } ,
+        "aglycon": { "type": "literal" , "value": "Asn" } ,
+        "alignment": { "type": "literal" , "value": "Core" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/4,8,7/[u2122h_2*NCC/3=O][a2122h-1b_1-5_2*NCC/3=O][a1122h-1b_1-5][a1122h-1a_1-5]/1-2-3-4-2-2-4-2/a4-b1_b4-c1_c?-d1_c?-g1_d?-e1_d?-f1_g?-h1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "001039" } ,
+        "name": { "type": "literal" , "value": "N-Glycan tetraantennary" } ,
+        "aglycon": { "type": "literal" , "value": "Asn" } ,
+        "alignment": { "type": "literal" , "value": "Core" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/4,9,8/[u2122h_2*NCC/3=O][a2122h-1b_1-5_2*NCC/3=O][a1122h-1b_1-5][a1122h-1a_1-5]/1-2-3-4-2-2-4-2-2/a4-b1_b4-c1_c?-d1_c?-g1_d?-e1_d?-f1_g?-h1_g?-i1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "001040" } ,
+        "name": { "type": "literal" , "value": "O-GlcNAc Core EGF Type" } ,
+        "aglycon": { "type": "literal" , "value": "Ser/Thr" } ,
+        "alignment": { "type": "literal" , "value": "Core" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/2,2,1/[u2122h_2*NCC/3=O][a2112h-1b_1-5]/1-2/a4-b1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "001041" } ,
+        "name": { "type": "literal" , "value": "N-glycan core, truncated" } ,
+        "aglycon": { "type": "literal" , "value": "Asn" } ,
+        "alignment": { "type": "literal" , "value": "Core" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/4,4,3/[u2122h_2*NCC/3=O][a2122h-1b_1-5_2*NCC/3=O][a1122h-1b_1-5][a1122h-1a_1-5]/1-2-3-4/a4-b1_b4-c1_d1-c3|c6" }
+      }
+    ]
+  }
+}
