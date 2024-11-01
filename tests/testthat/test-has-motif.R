@@ -1,88 +1,4 @@
-test_that("simple positive case for NE glycan", {
-  glycan <- glyrepr::o_glycan_core_2(mode = "ne")
-  motif <- glyparse::parse_iupac_condensed("Gal(b1-3)GalNAc", mode = "ne")
-  expect_true(has_motif(glycan, motif))
-})
-
-
-test_that("simple negative case for NE glycan", {
-  glycan <- glyrepr::o_glycan_core_2(mode = "ne")
-  motif <- glyparse::parse_iupac_condensed("Gal(b1-4)GalNAc", mode = "ne")
-  expect_false(has_motif(glycan, motif))
-})
-
-
-test_that("complex positive case for NE glycan", {
-  glycan <- glyrepr::n_glycan_core(mode = "ne")
-  motif <- glyparse::parse_iupac_condensed("Man(b1-4)GlcNAc(b1-4)GlcNAc", mode = "ne")
-  expect_true(has_motif(glycan, motif))
-})
-
-
-test_that("complex negative case for NE glycan", {
-  glycan <- glyrepr::n_glycan_core(mode = "ne")
-  motif <- glyparse::parse_iupac_condensed("Man(b1-4)GlcNAc(b1-4)[Fuc(a1-6)]GlcNAc", mode = "ne")
-  expect_false(has_motif(glycan, motif))
-})
-
-
-test_that("simple positive case for DN glycan", {
-  glycan <- glyrepr::o_glycan_core_2(mode = "dn")
-  motif <- glyparse::parse_iupac_condensed("Gal(b1-3)GalNAc", mode = "dn")
-  expect_true(has_motif(glycan, motif))
-})
-
-
-test_that("simple negative case for DN glycan", {
-  glycan <- glyrepr::o_glycan_core_2(mode = "dn")
-  motif <- glyparse::parse_iupac_condensed("Gal(b1-4)GalNAc", mode = "dn")
-  expect_false(has_motif(glycan, motif))
-})
-
-
-test_that("complex positive case for DN glycan", {
-  glycan <- glyrepr::n_glycan_core(mode = "dn")
-  motif <- glyparse::parse_iupac_condensed("Man(b1-4)GlcNAc(b1-4)GlcNAc", mode = "dn")
-  expect_true(has_motif(glycan, motif))
-})
-
-
-test_that("complex negative case for DN glycan", {
-  glycan <- glyrepr::n_glycan_core(mode = "dn")
-  motif <- glyparse::parse_iupac_condensed("Man(b1-4)GlcNAc(b1-4)[Fuc(a1-6)]GlcNAc", mode = "dn")
-  expect_false(has_motif(glycan, motif))
-})
-
-
-test_that("motif larger than glycan returns FALSE", {
-  glycan <- glyparse::parse_iupac_condensed("Gal(b1-3)GalNAc", mode = "ne")
-  motif <- glyparse::parse_iupac_condensed("Gal(b1-3)Gal(b1-3)GalNAc", mode = "ne")
-  expect_false(has_motif(glycan, motif))
-})
-
-
-test_that("multiple instances of motif in glycan", {
-  glycan <- glyparse::parse_iupac_condensed("Gal(b1-3)Gal(b1-3)GalNAc", mode = "ne")
-  motif <- glyparse::parse_iupac_condensed("Gal(b1-3)GalNAc", mode = "ne")
-  expect_true(has_motif(glycan, motif))
-})
-
-
-
-test_that("NE glycan ignore linkages", {
-  glycan <- glyrepr::o_glycan_core_2(mode = "ne")
-  motif <- glyparse::parse_iupac_condensed("Gal(b1-4)GalNAc", mode = "ne")
-  expect_true(has_motif(glycan, motif, ignore_linkages = TRUE))
-})
-
-
-test_that("DN glycan ignore linkages", {
-  glycan <- glyrepr::o_glycan_core_2(mode = "dn")
-  motif <- glyparse::parse_iupac_condensed("Gal(b1-4)GalNAc", mode = "dn")
-  expect_true(has_motif(glycan, motif, ignore_linkages = TRUE))
-})
-
-
+# ========== Input Data Types ==========
 test_that("wrong glycan types", {
   glycan <- igraph::make_empty_graph()
   motif <- glyparse::parse_iupac_condensed("Gal(b1-4)GalNAc", mode = "ne")
@@ -167,18 +83,98 @@ test_that("generic glycan and concrete motif", {
 })
 
 
-test_that("obscure linkages in glycan", {
+# ========== Basic Topologies ==========
+test_that("simple positive case for NE glycan", {
+  glycan <- glyrepr::o_glycan_core_2(mode = "ne")
+  motif <- glyparse::parse_iupac_condensed("Gal(b1-3)GalNAc", mode = "ne")
+  expect_true(has_motif(glycan, motif))
+})
+
+
+test_that("simple negative case for NE glycan", {
+  glycan <- glyrepr::o_glycan_core_2(mode = "ne")
+  motif <- glyparse::parse_iupac_condensed("Gal(b1-4)GalNAc", mode = "ne")
+  expect_false(has_motif(glycan, motif))
+})
+
+
+test_that("complex positive case for NE glycan", {
+  glycan <- glyrepr::n_glycan_core(mode = "ne")
+  motif <- glyparse::parse_iupac_condensed("Man(b1-4)GlcNAc(b1-4)GlcNAc", mode = "ne")
+  expect_true(has_motif(glycan, motif))
+})
+
+
+test_that("complex negative case for NE glycan", {
+  glycan <- glyrepr::n_glycan_core(mode = "ne")
+  motif <- glyparse::parse_iupac_condensed("Man(b1-4)GlcNAc(b1-4)[Fuc(a1-6)]GlcNAc", mode = "ne")
+  expect_false(has_motif(glycan, motif))
+})
+
+
+test_that("simple positive case for DN glycan", {
+  glycan <- glyrepr::o_glycan_core_2(mode = "dn")
+  motif <- glyparse::parse_iupac_condensed("Gal(b1-3)GalNAc", mode = "dn")
+  expect_true(has_motif(glycan, motif))
+})
+
+
+test_that("simple negative case for DN glycan", {
+  glycan <- glyrepr::o_glycan_core_2(mode = "dn")
+  motif <- glyparse::parse_iupac_condensed("Gal(b1-4)GalNAc", mode = "dn")
+  expect_false(has_motif(glycan, motif))
+})
+
+
+test_that("complex positive case for DN glycan", {
+  glycan <- glyrepr::n_glycan_core(mode = "dn")
+  motif <- glyparse::parse_iupac_condensed("Man(b1-4)GlcNAc(b1-4)GlcNAc", mode = "dn")
+  expect_true(has_motif(glycan, motif))
+})
+
+
+test_that("complex negative case for DN glycan", {
+  glycan <- glyrepr::n_glycan_core(mode = "dn")
+  motif <- glyparse::parse_iupac_condensed("Man(b1-4)GlcNAc(b1-4)[Fuc(a1-6)]GlcNAc", mode = "dn")
+  expect_false(has_motif(glycan, motif))
+})
+
+
+test_that("motif larger than glycan returns FALSE", {
+  glycan <- glyparse::parse_iupac_condensed("Gal(b1-3)GalNAc", mode = "ne")
+  motif <- glyparse::parse_iupac_condensed("Gal(b1-3)Gal(b1-3)GalNAc", mode = "ne")
+  expect_false(has_motif(glycan, motif))
+})
+
+
+test_that("multiple instances of motif in glycan", {
+  glycan <- glyparse::parse_iupac_condensed("Gal(b1-3)Gal(b1-3)GalNAc", mode = "ne")
+  motif <- glyparse::parse_iupac_condensed("Gal(b1-3)GalNAc", mode = "ne")
+  expect_true(has_motif(glycan, motif))
+})
+
+
+# ========== Linkages =========
+test_that("ignoring linkages", {
+  glycan <- glyrepr::o_glycan_core_2()
+  motif <- glyparse::parse_iupac_condensed("Gal(b1-4)GalNAc")
+  expect_true(has_motif(glycan, motif, ignore_linkages = TRUE))
+})
+
+
+patrick::with_parameters_test_that("obscure linkages in glycan", {
   glycan <- glyparse::parse_iupac_condensed("Gal(b1-3)Gal(b1-?)GalNAc")
   motif <- glyparse::parse_iupac_condensed("Gal(b1-3)GalNAc")
   expect_false(has_motif(glycan, motif))
 })
 
 
-test_that("obscure linkages in motif", {
+patrick::with_parameters_test_that("obscure linkages in motif", {
   glycan <- glyparse::parse_iupac_condensed("Gal(b1-3)Gal(b1-3)GalNAc")
-  motif <- glyparse::parse_iupac_condensed("Gal(b1-?)GalNAc")
+  motif_iupac <- stringr::str_glue("Gal({linkage})GalNAc")
+  motif <- glyparse::parse_iupac_condensed(motif_iupac)
   expect_true(has_motif(glycan, motif))
-})
+}, linkage = c("b1-?", "b?-3", "b?-?", "??-?", "b1-3/6"))
 
 
 test_that("many obscure linkages in motif", {
@@ -202,20 +198,21 @@ test_that("obscure linkage in both motif and glycan", {
 })
 
 
-test_that("obscure linkage in DN motif", {
-  glycan <- glyparse::parse_iupac_condensed("Gal(b1-3)Gal(b1-3)GalNAc", mode = "dn")
-  motif <- glyparse::parse_iupac_condensed("Gal(b1-?)GalNAc", mode = "dn")
+test_that("obscure linkages on the same edge", {
+  glycan <- glyparse::parse_iupac_condensed("Gal(b1-3)Gal(b1-?)GalNAc")
+  motif <- glyparse::parse_iupac_condensed("Gal(b1-?)GalNAc")
   expect_true(has_motif(glycan, motif))
 })
 
 
-test_that("obscure linkage in DN motif but false", {
-  glycan <- glyparse::parse_iupac_condensed("Gal(b1-3)Gal(b1-3)GalNAc", mode = "dn")
-  motif <- glyparse::parse_iupac_condensed("Gal(b2-?)GalNAc", mode = "dn")
-  expect_false(has_motif(glycan, motif))
+test_that("obscure linkages on the same edge, motif obscurer", {
+  glycan <- glyparse::parse_iupac_condensed("Gal(b1-3)Gal(b1-?)GalNAc")
+  motif <- glyparse::parse_iupac_condensed("Gal(?1-?)GalNAc")
+  expect_true(has_motif(glycan, motif))
 })
 
 
+# ========== Alignment ==========
 test_that("whole alignment simple positive case", {
   glycan <- glyrepr::o_glycan_core_2()
   motif <- glyrepr::o_glycan_core_2()
@@ -328,6 +325,7 @@ test_that("terminal alignment more complex negative case", {
 })
 
 
+# ========== Substituents ==========
 test_that("substituents are considered", {
   glycan1 <- glyparse::parse_iupac_condensed("Neu5Ac9Ac(a2-3)Gal(b1-4)GlcNAc")
   glycan2 <- glyparse::parse_iupac_condensed("Neu5Ac(a2-3)Gal(b1-4)GlcNAc")
@@ -339,75 +337,62 @@ test_that("substituents are considered", {
 })
 
 
-test_that("anomer right for substructure alignment", {
+test_that("obscure substituent linkages in motif", {
+  glycan <- glyparse::parse_iupac_condensed("Neu5Ac9Ac(a2-3)Gal(b1-4)GlcNAc")
+  motif <- glyparse::parse_iupac_condensed("Neu5Ac?Ac(a2-3)Gal(b1-4)GlcNAc")
+  expect_true(has_motif(glycan, motif))
+})
+
+
+test_that("obscure substituent linkages in glycan", {
+  glycan <- glyparse::parse_iupac_condensed("Neu5Ac9Ac(a2-3)Gal(b1-4)GlcNAc")
+  motif <- glyparse::parse_iupac_condensed("Neu5Ac(a2-3)Gal(b1-4)GlcNAc")
+  expect_false(has_motif(glycan, motif))
+})
+
+
+# ========== Anomers ==========
+test_that("anomer right for inside motif", {
   glycan <- glyparse::parse_iupac_condensed("Neu5Ac(a2-3)Gal(b1-4)GlcNAc")
   motif <- glyparse::parse_iupac_condensed("Gal(b1-")
-  expect_true(has_motif(glycan, motif, alignment = "substructure"))
+  expect_true(has_motif(glycan, motif))
 })
 
 
 patrick::with_parameters_test_that(
-  "obscure anomer right for substructure alignment",
+  "obscure anomer right for inside motifs",
   {
     glycan <- glyparse::parse_iupac_condensed("Neu5Ac(a2-3)Gal(b1-4)GlcNAc")
     motif <- glyparse::parse_iupac_condensed(motif_iupac)
-    expect_true(has_motif(glycan, motif, alignment = "substructure"))
+    expect_true(has_motif(glycan, motif))
   },
   motif_iupac = c("Gal(?1-", "Gal(b?-", "Gal(??-")
 )
 
 
-test_that("anomer wrong for substructure alignment", {
+test_that("anomer wrong for inside motif", {
   glycan <- glyparse::parse_iupac_condensed("Neu5Ac(a2-3)Gal(b1-4)GlcNAc")
   motif <- glyparse::parse_iupac_condensed("Gal(a1-")
-  expect_false(has_motif(glycan, motif, alignment = "substructure"))
+  expect_false(has_motif(glycan, motif))
 })
 
 
-test_that("obscure anomer wrong for substructure alignment", {
+test_that("obscure anomer wrong for inside motif", {
   glycan <- glyparse::parse_iupac_condensed("Neu5Ac(a2-3)Gal(b1-4)GlcNAc")
   motif <- glyparse::parse_iupac_condensed("Gal(a?-")
-  expect_false(has_motif(glycan, motif, alignment = "substructure"))
+  expect_false(has_motif(glycan, motif))
 })
 
 
-test_that("anomer right for core alignment", {
+test_that("anomer right for core motif", {
   glycan <- glyparse::parse_iupac_condensed("Neu5Ac(a2-3)Gal(b1-4)GlcNAc(b1-")
   motif <- glyparse::parse_iupac_condensed("Gal(b1-4)GlcNAc(b1-")
-  expect_true(has_motif(glycan, motif, alignment = "core"))
+  expect_true(has_motif(glycan, motif))
 })
 
 
-test_that("anomer wrong for core alignment", {
+test_that("anomer wrong for core motif", {
   glycan <- glyparse::parse_iupac_condensed("Neu5Ac(a2-3)Gal(b1-4)GlcNAc(b1-")
   motif <- glyparse::parse_iupac_condensed("Gal(b1-4)GlcNAc(a1-")
-  expect_false(has_motif(glycan, motif, alignment = "core"))
-})
-
-
-test_that("anomer right for terminal alignment", {
-  glycan <- glyparse::parse_iupac_condensed("Neu5Ac(a2-3)Gal(b1-4)GlcNAc")
-  motif <- glyparse::parse_iupac_condensed("Neu5Ac(a2-")
-  expect_true(has_motif(glycan, motif, alignment = "terminal"))
-})
-
-
-test_that("anomer wrong for terminal alignment", {
-  glycan <- glyparse::parse_iupac_condensed("Neu5Ac(a2-3)Gal(b1-4)GlcNAc")
-  motif <- glyparse::parse_iupac_condensed("Neu5Ac(b2-")
-  expect_false(has_motif(glycan, motif, alignment = "terminal"))
-})
-
-
-test_that("anomer right for whole alignment", {
-  glycan <- glyparse::parse_iupac_condensed("Neu5Ac(a2-")
-  motif <- glyparse::parse_iupac_condensed("Neu5Ac(a2-")
-  expect_true(has_motif(glycan, motif, alignment = "whole"))
-})
-
-
-test_that("anomer wrong for whole alignment", {
-  glycan <- glyparse::parse_iupac_condensed("Neu5Ac(a2-")
-  motif <- glyparse::parse_iupac_condensed("Neu5Ac(b2-")
-  expect_false(has_motif(glycan, motif, alignment = "whole"))
+  expect_false(has_motif(glycan, motif))
 })

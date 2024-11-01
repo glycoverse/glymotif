@@ -4,7 +4,7 @@
 #' This function checks if a `glycan` has a given `motif`.
 #' Technically speaking, it performs a subgraph isomorphism test to
 #' determine if the `motif` is a subgraph of the `glycan`.
-#' Both monosaccharides and linkages are considered in the comparison by default.
+#' Monosaccharides, linkages , and substituents are all considered.
 #'
 #' @details
 #' # Graph mode and monosaccharide type
@@ -27,6 +27,12 @@
 #' so it will match any linkage in the `glycan` graph.
 #' However, "?" in a `glycan` graph will only match "?" in the `motif` graph.
 #' You can set `ignore_linkages = TRUE` to ignore linkages in the comparison.
+#'
+#' Both motifs and glycans can have a "half-linkage" at the reducing end,
+#' e.g. "GlcNAc(b1-".
+#' The half linkage in the motif will be matched to any linkage in the glycan,
+#' or the half linkage of the glycan.
+#' e.g. Glycan "GlcNAc(b1-4)Gal(a1-" will have both "GlcNAc(b1-" and "Gal(a1-" motifs.
 #'
 #' # Alignment
 #'
@@ -52,25 +58,20 @@
 #' Substituents (e.g. "Ac", "SO3") are matched in strict mode.
 #' "Neu5Ac-9Ac" will only match "Neu5Ac-9Ac" but not "Neu5Ac",
 #' and "Neu5Ac" will not match "Neu5Ac-9Ac".
+#' Obscure linkage in the motif will match any linkage in the glycan.
+#' e.g. Motif "Neu5Ac-?Ac" will match "Neu5Ac-9Ac" in the glycan.
 #'
 #' # Implementation
 #'
-#' Under the hood, if `alignment` is "whole", the function uses
-#' [igraph::isomorphic()] with "vf2" method to perform the isomorphism test.
-#' Otherwise, it uses [igraph::graph.get.subisomorphisms.vf2()] to get all possible
-#' subgraph isomorphisms between the `glycan` and `motif` graphs.
-#' Vextex attributes and edge attributes of the `glycan` and `motif` graphs are colorized
-#' to add "color" attributes to the vertices and edges of the graphs.
-#'
-#' To allow obscure linkage matching, [glyrepr::possible_linkages()] is used to
-#' generate all possible versions of the `motif` graph.
-#' Then, the subgraph isomorphism test is performed for each version,
-#' returning `TRUE` if any of them is isomorphic to the `glycan` graph.
-#' This implementation could suffer from performance issues when the `motif` graph
-#' has many obscure linkages.
-#' However, it is the most straightforward way to handle obscure linkages.
-#' Future improvements may fine-tune the "vf2" method or use other methods
-#' to support wildcard matching directly.
+#' Under the hood, the function uses [igraph::graph.get.subisomorphisms.vf2()]
+#' to get all possible subgraph isomorphisms between `glycan` and `motif`.
+#' `color` vertex attributes are added to the graphs to distinguish monosaccharides.
+#' For all possible matches, the function checks the following:
+#' - Alignment: using `alignment_check()`
+#' - Substituents: using `substituent_check()`
+#' - Linkages: using `linkage_check()`
+#' - Anomer: using `anomer_check()`
+#' The function returns `TRUE` if any of the matches pass all checks.
 #'
 #' @param glycan A 'glycan_graph' object.
 #' @param motif A 'glycan_graph' object.
@@ -157,28 +158,36 @@ has_motif <- function(glycan, motif, ..., alignment = "substructure", ignore_lin
     rlang::abort("`alignment` must be one of 'substructure', 'core', 'terminal' or 'whole'.")
   }
 
-  # Ensure that `glycan` and `motif` are all "DN" type
-  glycan <- glyrepr::convert_graph_mode(glycan, to = "dn", strict = FALSE)
-  motif <- glyrepr::convert_graph_mode(motif, to = "dn", strict = FALSE)
+  # Ensure that `glycan` and `motif` are all "NE" type
+  glycan <- glyrepr::convert_graph_mode(glycan, to = "ne", strict = FALSE)
+  motif <- glyrepr::convert_graph_mode(motif, to = "ne", strict = FALSE)
 
   # Ensure that `glycan` and `motif` have the same monosaccharide type
   # To ensure strict comparison, if the glycan type is lower than the motif type,
   # an error will be raised by `ensure_glycan_mono_type()`.
   glycan <- ensure_glycan_mono_type(glycan, motif)
 
-  # Check if the motif is a subgraph of the glycan
-  if (ignore_linkages) {
-    glycan <- glyrepr::remove_linkages(glycan)
-    motif <- glyrepr::remove_linkages(motif)
-    vf2_subgraph_isomorphic(glycan, motif, alignment, ignore_linkages)
-  } else {
-    # Impute the "?" in the linkage of the motif graph with every possibility
-    motif_candidates <- impute_linkages(motif)
-    any(purrr::map_lgl(
-      motif_candidates,
-      ~ vf2_subgraph_isomorphic(glycan, .x, alignment, ignore_linkages)
-    ))
-  }
+  # Colorize the graphs
+  c_graphs <- colorize_graphs(glycan, motif)
+  glycan <- c_graphs$glycan
+  motif <- c_graphs$motif
+
+  # Perform "VF2" algorithm
+  # `res` is a list of all possible matches between `glycan` and `motif`.
+  # Each match is an integer vector, with the same length as `vcount(motif)`.
+  # The `i`-th element of the vector is the index of the vertex in `glycan`
+  # that matches the `i`-th vertex in `motif`.
+  # e.g. If `res[[1]] = c(2, 3)`,
+  # it means the 1st vertex in `motif` matches the 2nd vertex in `glycan`,
+  # and the 2nd vertex in `motif` matches the 3rd vertex in `glycan`.
+  res <- igraph::graph.get.subisomorphisms.vf2(glycan, motif)
+
+  # Check each result in `res` for the following:
+  # alignment, linkages, anomer, substituents
+  any(purrr::map_lgl(
+    res, is_vaild_result, glycan = glycan, motif = motif,
+    alignment = alignment, ignore_linkages = ignore_linkages
+  ))
 }
 
 
@@ -204,164 +213,164 @@ ensure_glycan_mono_type <- function(glycan, motif) {
 }
 
 
-colorize_glycan_graphs <- function(glycan, motif) {
-  # Add "color" attributes to the vertices and edges of a glycan graph.
-  # The "color" attrs wiil be usd by `igraph::subgraph_isomorphic()`
-  # to compare glycan graphs (with method = "vf2").
-  get_labels <- function(graph) {
-    dplyr::if_else(
-      igraph::V(graph)$type == "mono",
-      stringr::str_c(igraph::V(graph)$mono, igraph::V(graph)$sub),
-      igraph::V(graph)$linkage
-    )
-  }
-  glycan_labels <- get_labels(glycan)
-  motif_labels <- get_labels(motif)
-  colors <- colorize_labels(glycan_labels, motif_labels)
-  igraph::V(glycan)$color <- colors[["glycan"]]
-  igraph::V(motif)$color <- colors[["motif"]]
-
+colorize_graphs <- function(glycan, motif) {
+  # Add "color" vevtex attributes to the graph.
+  # The colors are converted from the "mono" vertex attributes.
+  unique_monos <- unique(c(igraph::V(glycan)$mono, igraph::V(motif)$mono))
+  color_map <- seq_along(unique_monos)
+  names(color_map) <- unique_monos
+  glycan_colors <- color_map[igraph::V(glycan)$mono]
+  motif_colors <- color_map[igraph::V(motif)$mono]
+  names(glycan_colors) <- NULL
+  names(motif_colors) <- NULL
+  igraph::V(glycan)$color <- glycan_colors
+  igraph::V(motif)$color <- motif_colors
   list(glycan = glycan, motif = motif)
 }
 
 
-colorize_labels <- function(glycan_labels, motif_labels) {
-  # Helper function to colorize labels.
-  unique_values <- unique(c(glycan_labels, motif_labels))
-  color_map <- seq_along(unique_values)
-  names(color_map) <- unique_values
-
-  glycan_colors <- color_map[glycan_labels]
-  names(glycan_colors) <- NULL
-  motif_colors <- color_map[motif_labels]
-  names(motif_colors) <- NULL
-
-  list(glycan = glycan_colors, motif = motif_colors)
-}
-
-
-impute_linkages <- function(motif) {
-  # Impute the "?" in the linkage of the motif graph with every possibility.
-  # Return a list of motif graphs with different linkage imputations.
-  if (igraph::vcount(motif) == 1) {
-    return(list(motif))
+is_vaild_result <- function(r, glycan, motif, alignment, ignore_linkages) {
+  # This function actually allocate each check to different functions,
+  # including: `alignment_check`, `substituent_check`, `linkage_check`, `anomer_check`.
+  # If any of them returns `FALSE`, the result is invalid.
+  if (ignore_linkages) {
+    check_funs <- list(alignment_check, substituent_check)
+  } else {
+    check_funs <- list(alignment_check, substituent_check, linkage_check, anomer_check)
   }
-  ne_motif <- glyrepr::convert_graph_mode(motif, to = "ne")
-  ne_result <- impute_ne_linkages(ne_motif)
-  return(purrr::map(ne_result, glyrepr::convert_graph_mode, to = "dn"))
+  all(purrr::map_lgl(check_funs, ~ .x(r, glycan, motif, alignment = alignment)))
 }
 
 
-impute_ne_linkages <- function(motif) {
-  linkages <- igraph::E(motif)$linkage
-  candidates <- expand.grid(
-    purrr::map(linkages, glyrepr::possible_linkages, include_unknown = TRUE),
-    stringsAsFactors = FALSE
-  )
-  candidates <- purrr::list_transpose(unclass(candidates))
-  candidates <- purrr::map(candidates, ~ unname(.x))
-  purrr::map(candidates, ~ igraph::set_edge_attr(motif, "linkage", value = .x))
-}
+alignment_check <- function(r, glycan, motif, alignment) {
+  if (alignment == "substructure") return(TRUE)
 
-
-vf2_subgraph_isomorphic <- function(glycan, motif, alignment, ignore_linkage) {
-  # Colorize the glycan and motif graphs.
-  # This is to add "color" attributes to the vertices and edges of a glycan graph,
-  # which is demanded by the "vf2" method of `igraph::subgraph_isomorphic()`.
-  colored_graphs <- colorize_glycan_graphs(glycan, motif)
-  c_glycan <- colored_graphs[["glycan"]]
-  c_motif <- colored_graphs[["motif"]]
-
-  # Perform the subgraph isomorphism test with the "vf2" method.
-  # Possible `alignment`: "substructure", "core", "terminal", "whole"
   if (alignment == "whole") {
-    return(has_whole_motif(c_glycan, c_motif, ignore_linkage))
+    return(igraph::isomorphic(glycan, motif, method = "vf2"))
   }
 
-  # `res` below is a list of integer vectors, each of which is a mapping
-  # from the vertices of the motif graph to the vertices of the glycan graph.
-  # For example, for a two-nodes motif, if `res[[1]]` is c(2, 3),
-  # that means node 2 in the glycan graph matches node 1 in the motif graph,
-  # and node 3 in the glycan graph matches node 2 in the motif graph.
-  res <- igraph::graph.get.subisomorphisms.vf2(c_glycan, c_motif)
-  if (length(res) == 0) return(FALSE)
-
-  if (alignment == "substructure") {
-    return(process_substructure_res(res, glycan, motif, ignore_linkage))
-  }
   if (alignment == "core") {
-    return(process_core_res(res, glycan, motif, ignore_linkage))
+    glycan_core <- core_node(glycan)
+    motif_core <- core_node(motif)
+    return(r[[motif_core]] == glycan_core)
   }
+
   if (alignment == "terminal") {
-    return(process_terminal_res(res, glycan, motif, ignore_linkage))
+    glycan_terminals <- terminal_nodes(glycan)
+    motif_terminals <- terminal_nodes(motif)
+    return(all(r[motif_terminals] %in% glycan_terminals))
   }
 }
 
 
-has_whole_motif <- function(c_glycan, c_motif, ignore_linkage) {
-  is_isomo <- igraph::isomorphic(c_glycan, c_motif, method = "vf2")
-  if (ignore_linkage) {
-    is_isomo
+substituent_check <- function(r, glycan, motif, ...) {
+  glycan_subs <- igraph::V(glycan)$sub[r]
+  motif_subs <- igraph::V(motif)$sub
+  all(purrr::map2_lgl(glycan_subs, motif_subs, match_sub))
+}
+
+
+match_sub <- function(glycan_sub, motif_sub) {
+  if (stringr::str_sub(motif_sub, 1, 1) == "?") {
+    stringr::str_sub(glycan_sub, 2) == stringr::str_sub(motif_sub, 2)
   } else {
-    is_isomo && match_anomer(c_glycan$anomer, c_motif$anomer)
+    glycan_sub == motif_sub
   }
 }
 
 
-process_substructure_res <- function(res, glycan, motif, ignore_linkage) {
-  if (ignore_linkage) {
-    return(TRUE)
+linkage_check <- function(r, glycan, motif, ...) {
+  edges <- get_corresponding_edges(r, glycan, motif)
+  glycan_linkages <- edges$glycan$linkage
+  motif_linkages <- edges$motif$linkage
+  all(purrr::map2_lgl(glycan_linkages, motif_linkages, match_linkage))
+}
+
+
+get_corresponding_edges <- function(r, glycan, motif) {
+  motif_edge_list <- igraph::as_edgelist(motif, names = FALSE)
+
+  glycan_edge_ids <- vector("integer", length = nrow(motif_edge_list))
+  for (i in seq_len(nrow(motif_edge_list))) {
+    motif_edge <- motif_edge_list[i, ]  # c(node_id_1, node_id_2)
+    glycan_edge <- r[motif_edge]
+    glycan_edge_ids[[i]] <- igraph::get.edge.ids(glycan, glycan_edge)
+  }
+
+  motif_edges <- igraph::E(motif)
+  glycan_edges <- igraph::E(glycan)[glycan_edge_ids]
+  list(glycan = glycan_edges, motif = motif_edges)
+}
+
+
+match_linkage <- function(glycan_linkage, motif_linkage) {
+  gl <- parse_linkage(glycan_linkage)
+  ml <- parse_linkage(motif_linkage)
+
+  anomer_ok <- (ml[["anomer"]] == "?" || ml[["anomer"]] == gl[["anomer"]])
+  pos1_ok <- (ml[["pos1"]] == "?" || ml[["pos1"]] == gl[["pos1"]])
+  pos2_ok <- (ml[["pos2"]] == "?" || all(parse_pos2(gl[["pos2"]]) %in% parse_pos2(ml[["pos2"]])))
+
+  anomer_ok && pos1_ok && pos2_ok
+}
+
+
+parse_linkage <- function(linkage) {
+  c(
+    anomer = stringr::str_sub(linkage, 1, 1),
+    pos1   = stringr::str_sub(linkage, 2, 2),
+    pos2   = stringr::str_sub(linkage, 4, 4)
+  )
+}
+
+
+parse_pos2 <- function(pos2) {
+  if (stringr::str_detect(pos2, "/")) {
+    stringr::str_split(pos2, "/")[[1]]
   } else {
-    for (r in res) {
-      if (check_motif_anomer(r, glycan, motif)) return(TRUE)
-    }
-    return(FALSE)
+    pos2
   }
 }
 
 
-check_motif_anomer <- function(r, glycan, motif) {
-  # Check if the anomer of the motif is right.
-  motif_core_node <- core_node(motif)
-  glycan_core_node <- core_node(glycan)
-  if (r[[motif_core_node]] == glycan_core_node) {
-    # 1. When two core nodes overlap, check if the anomer matches.
-    return(match_anomer(glycan$anomer, motif$anomer))
+anomer_check <- function(r, glycan, motif, ...) {
+  glycan_core <- core_node(glycan)
+  motif_core <- core_node(motif)
+  matched_g_node <- r[[motif_core]]
+
+  if (matched_g_node == glycan_core) {
+    # This means two cores are matched.
+    match_anomer(glycan$anomer, motif$anomer)
   } else {
-    # 2. When motif is within glycan, check if anomer of motif
-    # matches the linkage.
-    glycan_node_to_motif_core <- r[[motif_core_node]]
-    linkage_node <- igraph::neighbors(glycan, glycan_node_to_motif_core, mode = "in")
-    linkage <- igraph::V(glycan)[linkage_node]$linkage
-    return(match_anomer(stringr::str_sub(linkage, 1, 2), motif$anomer))
+    # The motif anomer should match a linkage in the glycan.
+    linkage <- igraph::incident(glycan, matched_g_node, mode = "in")$linkage
+    linkage_anomer <- stringr::str_split_1(linkage, "-")[[1]]
+    match_anomer(linkage_anomer, motif$anomer)
   }
 }
 
 
-process_core_res <- function(res, glycan, motif, ignore_linkage) {
-  glycan_core_node <- core_node(glycan)
-  motif_core_node <- core_node(motif)
-  if (!ignore_linkage) {
-    if (!match_anomer(glycan$anomer, motif$anomer)) return(FALSE)
-  }
-  return(any(purrr::map_lgl(res, ~ .x[[motif_core_node]] == glycan_core_node)))
+match_anomer <- function(glycan_anomer, motif_anomer) {
+  # Check if the anomer of the glycan and motif are matched.
+  # - "??" in motif will match any anomer and position in glycan.
+  # - "?1" in motif will match any anomer at position 1 in glycan.
+  # - "a?" in motif will match anomer "a" at any position in glycan.
+  # - "a1" in motif will only match anomer "a" at position 1 in glycan.
+  ga <- parse_anomer(glycan_anomer)
+  ma <- parse_anomer(motif_anomer)
+
+  anomer_ok <- ma[["anomer"]] == "?" || ma[["anomer"]] == ga[["anomer"]]
+  position_ok <- ma[["pos"]] == "?" || ma[["pos"]] == ga[["pos"]]
+
+  anomer_ok && position_ok
 }
 
 
-process_terminal_res <- function(res, glycan, motif, ignore_linkage) {
-  glycan_terminal_nodes <- terminal_nodes(glycan)
-  motif_terminal_nodes <- terminal_nodes(motif)
-  if (ignore_linkage) {
-    return(any(purrr::map_lgl(
-      res, ~ all(.x[motif_terminal_nodes] %in% glycan_terminal_nodes)))
-    )
-  } else {
-    return(any(purrr::map_lgl(
-      res,
-      ~ all(.x[motif_terminal_nodes] %in% glycan_terminal_nodes) &&
-        check_motif_anomer(.x, glycan, motif)
-    )))
-  }
+parse_anomer <- function(anomer) {
+  c(
+    anomer = stringr::str_sub(anomer, 1, 1),
+    pos = stringr::str_sub(anomer, 2)
+  )
 }
 
 
@@ -374,22 +383,4 @@ terminal_nodes <- function(glycan) {
 core_node <- function(glycan) {
   in_degree <- igraph::degree(glycan, mode = "in")
   igraph::V(glycan)[in_degree == 0]
-}
-
-
-match_anomer <- function(glycan_anomer, motif_anomer) {
-  # Check if the anomer of the glycan and motif are matched.
-  # - "??" in motif will match any anomer and position in glycan.
-  # - "?1" in motif will match any anomer at position 1 in glycan.
-  # - "a?" in motif will match anomer "a" at any position in glycan.
-  # - "a1" in motif will only match anomer "a" at position 1 in glycan.
-  anomer_ok <- (
-    stringr::str_sub(motif_anomer, 1, 1) == "?" ||
-    stringr::str_sub(glycan_anomer, 1, 1) == stringr::str_sub(motif_anomer, 1, 1)
-  )
-  position_ok <- (
-    stringr::str_sub(motif_anomer, 2) == "?" ||
-    stringr::str_sub(glycan_anomer, 2) == stringr::str_sub(motif_anomer, 2)
-  )
-  anomer_ok && position_ok
 }

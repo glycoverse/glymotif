@@ -31,7 +31,7 @@ A logical value indicating if the \code{glycan} has the \code{motif}.
 This function checks if a \code{glycan} has a given \code{motif}.
 Technically speaking, it performs a subgraph isomorphism test to
 determine if the \code{motif} is a subgraph of the \code{glycan}.
-Both monosaccharides and linkages are considered in the comparison by default.
+Monosaccharides, linkages , and substituents are all considered.
 }
 \section{Graph mode and monosaccharide type}{
 Both \code{glycan} and \code{motif} should be 'glycan_graph' objects
@@ -52,6 +52,12 @@ Obscure linkages (e.g. "??-?") are allowed in the \code{motif} graph
 so it will match any linkage in the \code{glycan} graph.
 However, "?" in a \code{glycan} graph will only match "?" in the \code{motif} graph.
 You can set \code{ignore_linkages = TRUE} to ignore linkages in the comparison.
+
+Both motifs and glycans can have a "half-linkage" at the reducing end,
+e.g. "GlcNAc(b1-".
+The half linkage in the motif will be matched to any linkage in the glycan,
+or the half linkage of the glycan.
+e.g. Glycan "GlcNAc(b1-4)Gal(a1-" will have both "GlcNAc(b1-" and "Gal(a1-" motifs.
 }
 
 \section{Alignment}{
@@ -79,25 +85,22 @@ for details.
 Substituents (e.g. "Ac", "SO3") are matched in strict mode.
 "Neu5Ac-9Ac" will only match "Neu5Ac-9Ac" but not "Neu5Ac",
 and "Neu5Ac" will not match "Neu5Ac-9Ac".
+Obscure linkage in the motif will match any linkage in the glycan.
+e.g. Motif "Neu5Ac-?Ac" will match "Neu5Ac-9Ac" in the glycan.
 }
 
 \section{Implementation}{
-Under the hood, if \code{alignment} is "whole", the function uses
-\code{\link[igraph:isomorphic]{igraph::isomorphic()}} with "vf2" method to perform the isomorphism test.
-Otherwise, it uses \code{\link[igraph:subgraph_isomorphisms]{igraph::graph.get.subisomorphisms.vf2()}} to get all possible
-subgraph isomorphisms between the \code{glycan} and \code{motif} graphs.
-Vextex attributes and edge attributes of the \code{glycan} and \code{motif} graphs are colorized
-to add "color" attributes to the vertices and edges of the graphs.
-
-To allow obscure linkage matching, \code{\link[glyrepr:possible_linkages]{glyrepr::possible_linkages()}} is used to
-generate all possible versions of the \code{motif} graph.
-Then, the subgraph isomorphism test is performed for each version,
-returning \code{TRUE} if any of them is isomorphic to the \code{glycan} graph.
-This implementation could suffer from performance issues when the \code{motif} graph
-has many obscure linkages.
-However, it is the most straightforward way to handle obscure linkages.
-Future improvements may fine-tune the "vf2" method or use other methods
-to support wildcard matching directly.
+Under the hood, the function uses \code{\link[igraph:subgraph_isomorphisms]{igraph::graph.get.subisomorphisms.vf2()}}
+to get all possible subgraph isomorphisms between \code{glycan} and \code{motif}.
+\code{color} vertex attributes are added to the graphs to distinguish monosaccharides.
+For all possible matches, the function checks the following:
+\itemize{
+\item Alignment: using \code{alignment_check()}
+\item Substituents: using \code{substituent_check()}
+\item Linkages: using \code{linkage_check()}
+\item Anomer: using \code{anomer_check()}
+The function returns \code{TRUE} if any of the matches pass all checks.
+}
 }
 
 \examples{
