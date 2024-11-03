@@ -35,11 +35,11 @@ is_known_motif <- function(name) {
 #' @return A `glycan_graph` object.
 #'
 #' @examples
-#' get_motif("N-Glycan core basic")
-#' get_motif("O-Glycan core 1")
+#' get_motif_graph("N-Glycan core basic")
+#' get_motif_graph("O-Glycan core 1")
 #'
 #' @export
-get_motif <- function(name) {
+get_motif_graph <- function(name) {
   if (!name %in% glygen_motifs$name) {
     cli::cli_abort("Unknown motif: {.val {name}}.")
   }

@@ -213,7 +213,7 @@ ensure_motif_is_graph <- function(motif, alignment, alignment_provided) {
   # If not, try to parse it as an IUPAC-condensed structure.
   if (is.character(motif)) {
     if (is_known_motif(motif)) {
-      motif_data <- get_motif(motif)
+      motif_data <- get_motif_graph(motif)
       motif <- motif_data$graph
       if (!alignment_provided) {
         alignment <- motif_data$alignment

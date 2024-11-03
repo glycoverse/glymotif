@@ -10,12 +10,12 @@ test_that("check if motif is known", {
 
 
 test_that("get known motif", {
-  expect_error(get_motif("bad motif"), 'Unknown motif: "bad motif".')
+  expect_error(get_motif_graph("bad motif"), 'Unknown motif: "bad motif".')
 })
 
 
 test_that("getting motif works", {
-  result <- get_motif("N-Glycan core basic")
+  result <- get_motif_graph("N-Glycan core basic")
   expect_length(result, 3)
   expect_s3_class(result$graph, "glycan_graph")
   expect_identical(result$aglycon, "Asn")
