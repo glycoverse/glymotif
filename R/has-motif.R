@@ -220,9 +220,8 @@ ensure_motif_is_graph <- function(motif, alignment, alignment_provided) {
       } else {
         if (alignment != motif_data$alignment) {
           cli::cli_warn(
-            "The provided alignment type {.val {alignment}} is different
-            from the motif's alignment type {.val {motif_data$alignment}}
-            in database.",
+            "The provided alignment type {.val {alignment}} is different from the motif's alignment type {.val {motif_data$alignment}} in database.",
+            class = "warning_custom_alignment"
           )
         }
       }
@@ -230,9 +229,7 @@ ensure_motif_is_graph <- function(motif, alignment, alignment_provided) {
       tryCatch(
         motif <- glyparse::parse_iupac_condensed(motif),
         error = function(e) {
-          cli::cli_abort(
-            "{.val {motif}} is neither a known motif
-            nor a valid IUPAC-condensed structure.")
+          cli::cli_abort("{.val {motif}} is neither a known motif nor a valid IUPAC-condensed structure.")
         }
       )
     }

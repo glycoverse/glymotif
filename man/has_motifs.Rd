@@ -2,12 +2,15 @@
 % Please edit documentation in R/has-motif-vectorized.R
 \name{has_motifs}
 \alias{has_motifs}
-\alias{have_motif}
-\title{Check if Glycan(s) have the Given Motif(s)}
+\title{Check if a Glycan have the Given Motifs}
 \usage{
-has_motifs(glycan, motifs = NULL, ...)
-
-have_motif(glycans, motif, ...)
+has_motifs(
+  glycan,
+  motifs = NULL,
+  ...,
+  alignments = "substructure",
+  ignore_linkages = FALSE
+)
 }
 \arguments{
 \item{glycan}{A 'glycan_graph' object, or an IUPAC-condensed structure string.}
@@ -15,56 +18,52 @@ have_motif(glycans, motif, ...)
 \item{motifs}{A list of 'glycan_graph' objects, a character vector of
 IUPAC-condensed structure strings, or a character vector of known motif names.}
 
-\item{...}{Additional arguments passed to \code{\link[=has_motif]{has_motif()}}.}
+\item{...}{Ignored.}
 
-\item{glycans}{A list of 'glycan_graph' objects, or a character vector of
-IUPAC-condensed structure strings.}
+\item{alignments}{A character vector of alignment names for the motifs,
+either of the same length as \code{motifs}, or a single character string.
+Could be "substructure", "core", "terminal", or "whole".
+Default to "substructure".
+If not provided and \code{motifs} are known motif names or missing,
+the alignments in the GlycoMotif GlyGen Collection will be used.}
 
-\item{motif}{A 'glycan_graph' object, an IUPAC-condensed structure string,
-or a known motif name (use \code{\link[=available_motifs]{available_motifs()}} to see all available motifs).}
+\item{ignore_linkages}{A logical value. If \code{TRUE}, linkages will be ignored in the comparison.}
 }
 \value{
-A logical vector, indicating if the glycan(s) have the motif(s).
+A logical vector, indicating if the glycan has the motifs.
 }
 \description{
-These are vectorized versions of \code{\link[=has_motif]{has_motif()}}, vectorizing over
-motifs (\code{has_motifs()}) and glycans (\code{have_motif()}), respectively.
-They can be told apart by English grammar :).
+This is a vectorized versions of \code{\link[=has_motif]{has_motif()}}.
+It checks if a glycan has the given motifs, or all known motifs
+in the GlycoMotif GlyGen Collection if \code{motifs} is missing.
 
-Names of glycans or motifs
-are preserved as names of the output logical vectors.
+A logical vector is returned.
+Names of \code{motifs} are preserved as names of the output logical vectors.
 If no names are provided, and the input is a character vector, the names
 will be the vector itself.
-It is always recommended to provide names for the input vectors.
-
-If \code{motifs} are missing in \code{has_motifs()}, all known motifs from
-GlycoMotif GlyGen Collection will be used.
 }
 \examples{
 library(glyparse)
 
-# Check if a glycan has the given motifs using names
+# Check if a glycan has the given motifs using names.
+# Note that the `motifs` vector will become names of the result vector.
 glycan <- "Gal(b1-3)GlcNAc(b1-3)Gal(b1-3)GalNAc(a1-"
 has_motifs(glycan, c("O-Glycan core 1", "O-Glycan core 2"))
 
-# using IUPAC-condensed structure strings
-has_motifs(glycan, c("Gal(b1-3)GalNAc(a1-", "GlcNAc(b1-4)GlcNAc(a1-"))
+# Using IUPAC-condensed structure strings.
+# Note that names of `motifs` are preserved in the result vector.
+motifs <- c(M1 = "Gal(b1-3)GalNAc(a1-", M2 = "GlcNAc(b1-4)GlcNAc(a1-")
+has_motifs(glycan, motifs)
 
-# or using 'glycan_graph' objects
+# Or using 'glycan_graph' objects.
 motifs <- list(
   M1 = parse_iupac_condensed("Gal(b1-3)GalNAc(a1-"),
   M2 = parse_iupac_condensed("GlcNAc(b1-4)GlcNAc(a1-")
 )
 has_motifs(glycan, motifs)
 
-# If motifs are missing, use all known motifs
+# If motifs are missing, use all known motifs in the
+# GlycoMotif GlyGen Collection.
 has_motifs(glycan)[1:5]
-
-# Check if glycans have the given motif
-glycans <- c(
-  G1 = "Gal(b1-3)GlcNAc(b1-3)Gal(b1-3)Gal",
-  G2 = "Gal(b1-3)GlcNAc(b1-3)Gal(b1-3)GalNAc(a1-"
-)
-have_motif(glycans, "Gal(b1-3)Gal")
 
 }
