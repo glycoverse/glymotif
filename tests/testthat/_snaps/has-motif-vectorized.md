@@ -1,4 +1,4 @@
-# `has_motifs()` works for motif names with custom alignments
+# has_motifs: motif names with custom alignments
 
     Code
       has_motifs(glycan, motifs, alignments = "substructure")
@@ -9,7 +9,7 @@
       O-Glycan core 1 O-Glycan core 2 
                  TRUE            TRUE 
 
-# some bad IUPAC
+# has_motifs: some bad IUPAC
 
     Code
       has_motifs(glycan, motifs)
@@ -17,7 +17,7 @@
       Error in `ensure_motifs_are_graphs()`:
       ! Motifs at indices 2 and 3 are neither known motif names or able to be parsed as IUPAC-condensed structure strings.
 
-# some bad motif names
+# has_motifs: some bad motif names
 
     Code
       has_motifs(glycan, motifs)
@@ -25,7 +25,7 @@
       Error in `get_motifs_type()`:
       ! Motifs "bad1" and "bad2" are not known motif names.
 
-# wrong types
+# has_motifs: wrong types
 
     Code
       has_motifs(glycan, motifs)
@@ -33,7 +33,7 @@
       Error in `get_motifs_type()`:
       ! `motifs` must be either 'glycan_graph' objects, a character vector of IUPAC-condensed structure strings, or a character vector of known motif names.
 
-# missing motifs uses default motifs
+# has_motifs: missing motifs uses default motifs
 
     Code
       result[1:10]
@@ -49,7 +49,7 @@
                     A antigen (type 3)                       Type 1 LN2 
                                  FALSE                            FALSE 
 
-# `have_motif()` with motif name and custom alignment
+# have_motif: motif names and custom alignment
 
     Code
       have_motif(glycans, motif, alignment = "whole")
@@ -60,7 +60,7 @@
          G1    G2 
       FALSE FALSE 
 
-# some bad glycans
+# have_motif: some bad glycans
 
     Code
       have_motif(glycans, motif)

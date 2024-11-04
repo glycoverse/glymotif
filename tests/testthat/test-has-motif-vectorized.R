@@ -1,5 +1,5 @@
 # ----- has_motifs() -----
-test_that("`has_motifs()` works for IUPAC-condensed", {
+test_that("has_motifs: IUPAC-condensed", {
   motifs <- c("Gal", "GlcNAc", "GalNAc")
   glycan <- "Gal(b1-3)GlcNAc"
   result <- has_motifs(glycan, motifs)
@@ -7,7 +7,7 @@ test_that("`has_motifs()` works for IUPAC-condensed", {
 })
 
 
-test_that("`has_motifs()` works for motif names", {
+test_that("has_motifs: motif names", {
   motifs <- c("O-Glycan core 1", "O-Glycan core 2")
   # `glycan` is actually o-glycan core 2, with an additional
   # GlcNAc at the reducing end.
@@ -19,7 +19,7 @@ test_that("`has_motifs()` works for motif names", {
 })
 
 
-test_that("`has_motifs()` works for motif names with custom alignments", {
+test_that("has_motifs: motif names with custom alignments", {
   motifs <- c("O-Glycan core 1", "O-Glycan core 2")
   glycan <- "Gal(b1-3)[GlcNAc(b1-6)]GalNAc(a1-3)GlcNAc"
   # Output should be c("O-Glycan core 1" = TRUE, "O-Glycan core 2" = TRUE)
@@ -27,7 +27,7 @@ test_that("`has_motifs()` works for motif names with custom alignments", {
 })
 
 
-test_that("`has_motifs()` works for glycan graphs", {
+test_that("has_motifs: glycan graphs", {
   motifs <- c("Gal", "GlcNAc", "GalNAc")
   motifs <- purrr::map(motifs, glyparse::parse_iupac_condensed)
   glycan <- "Gal(b1-3)GlcNAc"
@@ -36,28 +36,28 @@ test_that("`has_motifs()` works for glycan graphs", {
 })
 
 
-test_that("some bad IUPAC", {
+test_that("has_motifs: some bad IUPAC", {
   motifs <- c("Gal", "bad1", "bad2")
   glycan <- "Gal(b1-3)GlcNAc"
   expect_snapshot(has_motifs(glycan, motifs), error = TRUE)
 })
 
 
-test_that("some bad motif names", {
+test_that("has_motifs: some bad motif names", {
   motifs <- c("GM1", "bad1", "bad2")
   glycan <- "Gal(b1-3)GlcNAc"
   expect_snapshot(has_motifs(glycan, motifs), error = TRUE)
 })
 
 
-test_that("wrong types", {
+test_that("has_motifs: wrong types", {
   motifs <- 1:3
   glycan <- "Gal(b1-3)GlcNAc"
   expect_snapshot(has_motifs(glycan, motifs), error = TRUE)
 })
 
 
-test_that("empty motifs", {
+test_that("has_motifs: empty motifs", {
   glycan <- "Gal(b1-3)GlcNAc"
   expected <- logical(0)
   names(expected) <- character(0)
@@ -65,14 +65,14 @@ test_that("empty motifs", {
 })
 
 
-test_that("motif names are kept for IUPAC-condensed motifs", {
+test_that("has_motifs: motif names are kept for IUPAC-condensed motifs", {
   glycan <- "Gal(b1-3)GlcNAc"
   motifs <- c(M1 = "Gal", M2 = "GlcNAc", M3 = "GalNAc")
   expect_equal(names(has_motifs(glycan, motifs)), names(motifs))
 })
 
 
-test_that("motif names are kept for glycan graph motifs", {
+test_that("has_motifs: motif names are kept for glycan graph motifs", {
   glycan <- "Gal(b1-3)GlcNAc"
   motifs <- c(M1 = "Gal", M2 = "GlcNAc", M3 = "GalNAc")
   motifs <- purrr::map(motifs, glyparse::parse_iupac_condensed)
@@ -80,14 +80,14 @@ test_that("motif names are kept for glycan graph motifs", {
 })
 
 
-test_that("motif names are kept for motif names", {
+test_that("has_motifs: motif names are kept for motif names", {
   glycan <- "Gal(b1-3)GlcNAc"
   motifs <- c(M1 = "O-Glycan core 1", M2 = "O-Glycan core 2")
   expect_equal(names(has_motifs(glycan, motifs)), names(motifs))
 })
 
 
-test_that("missing motifs uses default motifs", {
+test_that("has_motifs: missing motifs uses default motifs", {
   glycan <- "Gal(b1-3)GlcNAc"
   result <- has_motifs(glycan)
   expect_snapshot(result[1:10])
@@ -95,7 +95,7 @@ test_that("missing motifs uses default motifs", {
 
 
 # ----- have_motif() -----
-test_that("`have_motif()` works for IUPAC-condensed", {
+test_that("have_motif: IUPAC-condensed", {
   motif <- "Gal"
   glycans <- c("Gal(b1-3)GlcNAc", "Man(b1-4)GlcNAc", "GlcNAc")
   result <- have_motif(glycans, motif)
@@ -104,7 +104,7 @@ test_that("`have_motif()` works for IUPAC-condensed", {
 })
 
 
-test_that("`have_motif()` works for glycan graphs", {
+test_that("have_motif: glycan graphs", {
   motif <- glyparse::parse_iupac_condensed("Gal")
   glycans <- c("Gal(b1-3)GlcNAc", "Man(b1-4)GlcNAc", "GlcNAc")
   glycans <- purrr::map(glycans, glyparse::parse_iupac_condensed)
@@ -112,7 +112,7 @@ test_that("`have_motif()` works for glycan graphs", {
 })
 
 
-test_that("`have_motif()` works for motif name", {
+test_that("have_motif: motif names", {
   glycans <- c(
     G1 = "Gal(b1-3)Gal(b1-3)GalNAc(a1-",
     G2 = "Gal(b1-3)GalNAc(a1-?)GlcNAc"
@@ -124,7 +124,7 @@ test_that("`have_motif()` works for motif name", {
 })
 
 
-test_that("`have_motif()` with motif name and custom alignment", {
+test_that("have_motif: motif names and custom alignment", {
   glycans <- c(
     G1 = "Gal(b1-3)Gal(b1-3)GalNAc(a1-",
     G2 = "Gal(b1-3)GalNAc(a1-?)GlcNAc"
@@ -134,14 +134,14 @@ test_that("`have_motif()` with motif name and custom alignment", {
 })
 
 
-test_that("some bad glycans", {
+test_that("have_motif: some bad glycans", {
   motif <- "Gal"
   glycans <- c("Gal", "bad1", "bad2")
   expect_snapshot(have_motif(glycans, motif), error = TRUE)
 })
 
 
-test_that("empty glycans", {
+test_that("have_motif: empty glycans", {
   motif <- "Gal"
   expected <- logical(0)
   names(expected) <- character(0)
@@ -149,7 +149,7 @@ test_that("empty glycans", {
 })
 
 
-test_that("glycan names are kept for IUPAC-condensed", {
+test_that("have_motif: glycan names are kept for IUPAC-condensed", {
   motif <- "Gal"
   glycans <- c(G1 = "Gal(b1-3)GlcNAc", G2 = "Man(b1-4)GlcNAc", G3 = "GlcNAc")
   result <- have_motif(glycans, motif)
@@ -157,7 +157,7 @@ test_that("glycan names are kept for IUPAC-condensed", {
 })
 
 
-test_that("glycan names are kept for glycan graphs", {
+test_that("have_motif: glycan names are kept for glycan graphs", {
   motif <- glyparse::parse_iupac_condensed("Gal")
   glycans <- c(G1 = "Gal(b1-3)GlcNAc", G2 = "Man(b1-4)GlcNAc", G3 = "GlcNAc")
   glycans <- purrr::map(glycans, glyparse::parse_iupac_condensed)
