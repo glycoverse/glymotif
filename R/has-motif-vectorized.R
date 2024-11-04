@@ -52,6 +52,13 @@
 has_motifs <- function(glycan, motifs = NULL, ..., alignments = "substructure", ignore_linkages = FALSE) {
   alignment_provided <- !missing(alignments)
 
+  # Check input arguments
+  if (!alignments %in% c("substructure", "core", "terminal", "whole")) {
+    rlang::abort("`alignment` must be one of 'substructure', 'core', 'terminal' or 'whole'.")
+  }
+  valid_glycan_arg(glycan)
+
+  # Get motif type and default motifs
   if (missing(motifs)) {
     motifs <- available_motifs()
     motif_type <- "known"
@@ -59,50 +66,19 @@ has_motifs <- function(glycan, motifs = NULL, ..., alignments = "substructure", 
     motif_type <- get_motifs_type(motifs)
   }
 
-  if (motif_type == "known" && alignment_provided) {
-    rlang::warn("Use user-provided alignments, not the ones in the database.")
+  # Decide alignments
+  if (motif_type == "known") {
+    alignments <- decide_alignments(motifs, alignments, alignment_provided)
   }
 
-  suppressWarnings({
-    if (alignment_provided) {
-      res <- purrr::map2_lgl(motifs, alignments, ~ try_has_motif(
-        glycan, .x, alignment = .y, ignore_linkages = ignore_linkages
-      ))
-    } else {
-      res <- purrr::map_lgl(motifs, ~ try_has_motif(
-        glycan, .x, ignore_linkages = ignore_linkages
-      ))
-    }
-  }, classes = "warning_custom_alignment"
+  # Ensure motifs are graphs
+  glycan <- ensure_glycan_is_graph(glycan)
+  motifs <- ensure_motifs_are_graphs(motifs, motif_type)
+
+  purrr::map2_lgl(
+    motifs, alignments,
+    ~ has_motif_(glycan, .x, alignment = .y, ignore_linkages = ignore_linkages)
   )
-
-  if (any(is.na(res))) {
-    cli::cli_abort("Motifs at indices {.val {which(is.na(res))}} are neither known motif names or able to be parsed as IUPAC-condensed structure strings.")
-  }
-  if (is.null(names(res)) && is.character(motifs)) {
-    names(res) <- motifs
-  }
-  res
-}
-
-
-get_motifs_type <- function(motifs) {
-  if (purrr::every(motifs, glyrepr::is_glycan)) {
-    return("glycan_graph")
-  } else if (all(is.character(motifs))) {
-    if (purrr::every(motifs, is_known_motif)) {
-      return("known")
-    } else if (purrr::some(motifs, is_known_motif)) {
-      unknown_motifs <- motifs[!purrr::map_lgl(motifs, is_known_motif)]
-      cli::cli_abort("Motifs {.val {unknown_motifs}} are not known motif names.")
-    } else {
-      # If all motifs are characters but not known motif names,
-      # assume they are IUPAC-condensed structure strings.
-      return("iupac")
-    }
-  } else {
-    rlang::abort("`motifs` must be either 'glycan_graph' objects, a character vector of IUPAC-condensed structure strings, or a character vector of known motif names.")
-  }
 }
 
 
@@ -137,53 +113,92 @@ get_motifs_type <- function(motifs) {
 #' @export
 have_motif <- function(glycans, motif, ..., alignment = "substructure", ignore_linkages = FALSE) {
   alignment_provided <- !missing(alignment)
+  valid_motif_arg(motif)
+
   motif_type <- get_motif_type(motif)
-
-  if (motif_type == "known" && alignment_provided) {
-    db_alignment <- glygen_motifs$alignment[glygen_motifs$name == motif]
-    if (alignment != db_alignment) {
-      cli::cli_warn("The provided alignment type {.val {alignment}} is different from the motif's alignment type {.val {db_alignment}} in database.")
-    }
+  if (motif_type == "known") {
+    alignment <- decide_alignment(motif, alignment, alignment_provided)
   }
 
-  suppressWarnings({
-    if (alignment_provided) {
-      res <- purrr::map_lgl(
-        glycans, try_has_motif, motif, alignment = alignment, ignore_linkages = ignore_linkages
-      )
-    } else {
-      res <- purrr::map_lgl(
-        glycans, try_has_motif, motif, ignore_linkages = ignore_linkages
-      )
-    }
-  }, classes = "warning_custom_alignment"
-  )
+  glycans <- ensure_glycans_are_graphs(glycans)
+  motif <- ensure_motif_is_graph(motif, motif_type)
 
-  if (any(is.na(res))) {
-    cli::cli_abort("Glycans at indices {.val {which(is.na(res))}} are not able to be parsed as IUPAC-condensed structure strings.")
-  }
-  if (is.null(names(res)) && is.character(glycans)) {
-    names(res) <- glycans
-  }
-  res
+  purrr::map_lgl(glycans, has_motif_, motif, alignment = alignment, ignore_linkages = ignore_linkages)
 }
 
 
-get_motif_type <- function(motif) {
-  if (glyrepr::is_glycan(motif)) {
+get_motifs_type <- function(motifs) {
+  if (purrr::every(motifs, glyrepr::is_glycan)) {
     return("glycan_graph")
-  } else if (is.character(motif)) {
-    if (is_known_motif(motif)) {
+  } else if (all(is.character(motifs))) {
+    if (purrr::every(motifs, is_known_motif)) {
       return("known")
+    } else if (purrr::some(motifs, is_known_motif)) {
+      unknown_motifs <- motifs[!purrr::map_lgl(motifs, is_known_motif)]
+      cli::cli_abort("Motifs {.val {unknown_motifs}} are not known motif names.")
     } else {
+      # If all motifs are characters but not known motif names,
+      # assume they are IUPAC-condensed structure strings.
       return("iupac")
     }
   } else {
-    rlang::abort("`motif` must be either a 'glycan_graph' object, an IUPAC-condensed structure string, or a known motif name.")
+    rlang::abort("`motifs` must be either 'glycan_graph' objects, a character vector of IUPAC-condensed structure strings, or a character vector of known motif names.")
   }
 }
 
 
-try_has_motif <- function(glycan, motif, ...) {
-  tryCatch(has_motif(glycan, motif, ...), error = function(e) NA)
+decide_alignments <- function(motif_names, alignments, alignments_provided) {
+  db_alignments <- glygen_motifs$alignment[glygen_motifs$name %in% motif_names]
+  if (alignments_provided) {
+    rlang::warn("Use user-provided alignments, not the ones in the database.")
+    alignments
+  } else {
+    db_alignments
+  }
+}
+
+
+ensure_motifs_are_graphs <- function(motifs, motif_type) {
+  # Convert to graphs
+  if (motif_type == "glycan_graph") {
+    graph_list <- motifs
+  } else if (motif_type == "iupac") {
+    graph_list <- purrr::map(motifs, try_parse_iupac_condensed)
+    if (any(is.na(graph_list))) {
+      invalid_indices <- which(is.na(graph_list))
+      cli::cli_abort("Motifs at indices {.val {invalid_indices}} are neither known motif names or able to be parsed as IUPAC-condensed structure strings.")
+    }
+  } else if (motif_type == "known") {
+    graph_list <- purrr::map(motifs, ~ get_motif_graph(.x)$graph)
+  }
+
+  # Add names
+  if (is.null(names(motifs)) && is.character(motifs)) {
+    names(graph_list) <- motifs
+  }
+  graph_list
+}
+
+
+ensure_glycans_are_graphs <- function(glycans) {
+  if(is.character(glycans)) {
+    graph_list <- purrr::map(glycans, try_parse_iupac_condensed)
+    if (any(is.na(graph_list))) {
+      invalid_indices <- which(is.na(graph_list))
+      cli::cli_abort("Glycans at indices {.val {invalid_indices}} are not able to be parsed as IUPAC-condensed structure strings.")
+    }
+    if (is.null(names(graph_list))) {
+      names(graph_list) <- glycans
+    }
+  } else {
+    graph_list <- glycans
+  }
+  graph_list
+}
+
+
+try_parse_iupac_condensed <- function(iupac) {
+  tryCatch({
+    glyparse::parse_iupac_condensed(iupac)
+  }, error = function(e) NA)
 }

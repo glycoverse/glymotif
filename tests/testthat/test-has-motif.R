@@ -9,7 +9,7 @@ test_that("wrong glycan types", {
 test_that("wrong motif types", {
   glycan <- glyrepr::o_glycan_core_2(mode = "ne")
   motif <- igraph::make_empty_graph()
-  expect_error(has_motif(glycan, motif), "`motif` must be a 'glycan_graph' object or an IUPAC-condensed structure string")
+  expect_error(has_motif(glycan, motif), "`motif` must be either a 'glycan_graph' object, an IUPAC-condensed structure string, or a known motif name")
 })
 
 
@@ -30,7 +30,14 @@ test_that("motif name used as input", {
 test_that("unkown motif name used as input", {
   glycan <- glyrepr::o_glycan_core_2(mode = "ne")
   motif <- "unknown motif name"
-  expect_error(has_motif(glycan, motif), '"unknown motif name" is neither a known motif nor a valid IUPAC-condensed structure')
+  expect_error(has_motif(glycan, motif), "`motif` must be either a 'glycan_graph' object, an IUPAC-condensed structure string, or a known motif name")
+})
+
+
+test_that("bad glycan IUPAC", {
+  glycan <- "bad IUPAC"
+  motif <- glyparse::parse_iupac_condensed("Gal(b1-3)GalNAc")
+  expect_error(has_motif(glycan, motif), "`glycan` could not be parsed as a valid IUPAC-condensed structure")
 })
 
 
@@ -356,6 +363,17 @@ test_that("terminal alignment more complex negative case", {
   glycan <- glyparse::parse_iupac_condensed("Neu5Ac(a2-3)Gal(b1-4)[Fuc(a1-3)]GlcNAc(b1-4)GlcNAc")
   motif <- glyparse::parse_iupac_condensed("Gal(b1-4)[Fuc(a1-3)]GlcNAc")
   expect_false(has_motif(glycan, motif, alignment = "terminal"))
+})
+
+
+test_that("custom alignment is same as database", {
+  expect_false(has_motif("Gal(b1-3)GalNAc(a1-3)GlcNAc", "O-Glycan core 1", alignment = "core"))
+  expect_true(has_motif("Gal(b1-3)GalNAc(a1-", "O-Glycan core 1", alignment = "core"))
+})
+
+
+test_that("custom alignment is different from database", {
+  expect_snapshot(has_motif("Gal(b1-3)GalNAc(a1-3)GlcNAc", "O-Glycan core 1", alignment = "substructure"))
 })
 
 

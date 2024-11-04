@@ -14,7 +14,7 @@
     Code
       has_motifs(glycan, motifs)
     Condition
-      Error in `has_motifs()`:
+      Error in `ensure_motifs_are_graphs()`:
       ! Motifs at indices 2 and 3 are neither known motif names or able to be parsed as IUPAC-condensed structure strings.
 
 # some bad motif names
@@ -65,6 +65,6 @@
     Code
       have_motif(glycans, motif)
     Condition
-      Error in `have_motif()`:
+      Error in `ensure_glycans_are_graphs()`:
       ! Glycans at indices 2 and 3 are not able to be parsed as IUPAC-condensed structure strings.
 

@@ -35,3 +35,13 @@
       ! The monosaccharide type of `glycan` cannot be obscurer than `motif`.
       x "generic" is obscurer than "concrete".
 
+# custom alignment is different from database
+
+    Code
+      has_motif("Gal(b1-3)GalNAc(a1-3)GlcNAc", "O-Glycan core 1", alignment = "substructure")
+    Condition
+      Warning:
+      The provided alignment type "substructure" is different from the motif's alignment type "core" in database.
+    Output
+      [1] TRUE
+

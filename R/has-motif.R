@@ -143,21 +143,23 @@
 #'
 #' @export
 has_motif <- function(glycan, motif, ..., alignment = "substructure", ignore_linkages = FALSE) {
+  alignment_provided <- !missing(alignment)
+
   # Check input arguments
-  if (!alignment %in% c("substructure", "core", "terminal", "whole")) {
-    rlang::abort("`alignment` must be one of 'substructure', 'core', 'terminal' or 'whole'.")
-  }
-  if (!glyrepr::is_glycan(glycan) && !is.character(glycan)) {
-    rlang::abort("`glycan` must be a 'glycan_graph' object or an IUPAC-condensed structure string.")
-  }
-  if (!glyrepr::is_glycan(motif) && !is.character(motif)) {
-    rlang::abort("`motif` must be a 'glycan_graph' object or an IUPAC-condensed structure string.")
+  valid_glycan_arg(glycan)
+  valid_motif_arg(motif)
+  valid_alignment_arg(alignment)
+
+  motif_type <- get_motif_type(motif)
+
+  # Deal with `alignment` when `motif` is a known motif name
+  if (motif_type == "known") {
+    alignment <- decide_alignment(motif, alignment, alignment_provided)
   }
 
+  # Make sure `glycan` and `motif` are graphs
   glycan <- ensure_glycan_is_graph(glycan)
-  motif_data <- ensure_motif_is_graph(motif, alignment, !missing(alignment))
-  motif <- motif_data$motif
-  alignment <- motif_data$alignment
+  motif <- ensure_motif_is_graph(motif, motif_type)
 
   # Ensure that `glycan` and `motif` are all "NE" type
   glycan <- glyrepr::convert_graph_mode(glycan, to = "ne", strict = FALSE)
@@ -170,6 +172,27 @@ has_motif <- function(glycan, motif, ..., alignment = "substructure", ignore_lin
 
   # Check if the glycan has the motif
   has_motif_(glycan, motif, ..., alignment = alignment, ignore_linkages = ignore_linkages)
+}
+
+
+valid_alignment_arg <- function(x) {
+  if (!x %in% c("substructure", "core", "terminal", "whole")) {
+    rlang::abort("`alignment` must be one of 'substructure', 'core', 'terminal' or 'whole'.")
+  }
+}
+
+
+valid_glycan_arg <- function(x) {
+  if (!glyrepr::is_glycan(x) && !is.character(x)) {
+    rlang::abort("`glycan` must be a 'glycan_graph' object or an IUPAC-condensed structure string.")
+  }
+}
+
+
+valid_motif_arg <- function(x) {
+  if (!glyrepr::is_glycan(x) && !is.character(x)) {
+    rlang::abort("`motif` must be either a 'glycan_graph' object, an IUPAC-condensed structure string, or a known motif name.")
+  }
 }
 
 
@@ -200,41 +223,77 @@ has_motif_ <- function(glycan, motif, ..., alignment = "substructure", ignore_li
 }
 
 
+get_motif_type <- function(motif) {
+  # Decide if the `motif` argument is a known motif,
+  # an IUPAC-condensed structure string, or a 'glycan_graph' object.
+  # If it is neither a glycan graph or a known motif, it is assumed to
+  # be an IUPAC-condensed structure string.
+  # This assumption may not be correct, for it is possible that a wrong
+  # motif name is passed in.
+  if (glyrepr::is_glycan(motif)) {
+    return("glycan_graph")
+  } else if (is.character(motif)) {
+    if (is_known_motif(motif)) {
+      return("known")
+    } else {
+      return("iupac")
+    }
+  } else {
+    rlang::abort("`motif` must be either a 'glycan_graph' object, an IUPAC-condensed structure string, or a known motif name.")
+  }
+}
+
+
+decide_alignment <- function(motif_name, alignment, alignment_provided) {
+  # Decide which alignment type to use.
+  # If the alignment is provided, check if it is the same as the motif's
+  # alignment type in the database and issue a warning if not.
+  # If not provided, use the motif's alignment type in the database.
+  db_alignment <- get_motif_graph(motif_name)$alignment
+  if (alignment_provided) {
+    if (alignment != db_alignment) {
+      cli::cli_warn(
+        "The provided alignment type {.val {alignment}} is different from the motif's alignment type {.val {db_alignment}} in database.",
+        class = "warning_custom_alignment"
+      )
+    }
+  } else {
+    alignment <- db_alignment
+  }
+  alignment
+}
+
+
 ensure_glycan_is_graph <- function(glycan) {
+  # Make sure `glycan` is a graph.
   if (is.character(glycan)) {
-    glycan <- glyparse::parse_iupac_condensed(glycan)
+    tryCatch(
+      glycan <- glyparse::parse_iupac_condensed(glycan),
+      error = function(e) {
+        rlang::abort("`glycan` could not be parsed as a valid IUPAC-condensed structure.")
+      }
+    )
   }
   glycan
 }
 
 
-ensure_motif_is_graph <- function(motif, alignment, alignment_provided) {
-  # If motif is a character, first assume it is a known motif.
-  # If not, try to parse it as an IUPAC-condensed structure.
-  if (is.character(motif)) {
-    if (is_known_motif(motif)) {
-      motif_data <- get_motif_graph(motif)
-      motif <- motif_data$graph
-      if (!alignment_provided) {
-        alignment <- motif_data$alignment
-      } else {
-        if (alignment != motif_data$alignment) {
-          cli::cli_warn(
-            "The provided alignment type {.val {alignment}} is different from the motif's alignment type {.val {motif_data$alignment}} in database.",
-            class = "warning_custom_alignment"
-          )
-        }
+ensure_motif_is_graph <- function(motif, motif_type) {
+  # Make sure `motif` is a graph.
+  if (motif_type == "known") {
+    motif <- get_motif_graph(motif)$graph
+  } else if (motif_type == "iupac") {
+    tryCatch(
+      motif <- glyparse::parse_iupac_condensed(motif),
+      error = function(e) {
+        rlang::abort("`motif` must be either a 'glycan_graph' object, an IUPAC-condensed structure string, or a known motif name.")
       }
-    } else {
-      tryCatch(
-        motif <- glyparse::parse_iupac_condensed(motif),
-        error = function(e) {
-          cli::cli_abort("{.val {motif}} is neither a known motif nor a valid IUPAC-condensed structure.")
-        }
-      )
-    }
+    )
+  } else {  # motif_type == "glycan_graph"
+    motif <- motif
   }
-  list(motif = motif, alignment = alignment)
+
+  motif
 }
 
 
