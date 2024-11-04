@@ -149,6 +149,7 @@ has_motif <- function(glycan, motif, ..., alignment = "substructure", ignore_lin
   valid_glycan_arg(glycan)
   valid_motif_arg(motif)
   valid_alignment_arg(alignment)
+  valid_ignore_linkages_arg(ignore_linkages)
 
   motif_type <- get_motif_type(motif)
 
@@ -192,6 +193,13 @@ valid_glycan_arg <- function(x) {
 valid_motif_arg <- function(x) {
   if (!glyrepr::is_glycan(x) && !is.character(x)) {
     rlang::abort("`motif` must be either a 'glycan_graph' object, an IUPAC-condensed structure string, or a known motif name.")
+  }
+}
+
+
+valid_ignore_linkages_arg <- function(x) {
+  if (!is.logical(x)) {
+    rlang::abort("`ignore_linkages` must be a logical value.")
   }
 }
 

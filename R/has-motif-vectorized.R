@@ -56,6 +56,7 @@ has_motifs <- function(glycan, motifs = NULL, ..., alignments = "substructure", 
   valid_glycan_arg(glycan)
   valid_motifs_arg(motifs)
   valid_alignments_arg(alignments, motifs)
+  valid_ignore_linkages_arg(ignore_linkages)
 
   # Get motif type and default motifs
   if (missing(motifs)) {
@@ -113,15 +114,19 @@ has_motifs <- function(glycan, motifs = NULL, ..., alignments = "substructure", 
 have_motif <- function(glycans, motif, ..., alignment = "substructure", ignore_linkages = FALSE) {
   alignment_provided <- !missing(alignment)
 
+  # Check input arguments
   valid_glycans_arg(glycans)
   valid_motif_arg(motif)
   valid_alignment_arg(alignment)
+  valid_ignore_linkages_arg(ignore_linkages)
 
+  # Decide motif type and alignment
   motif_type <- get_motif_type(motif)
   if (motif_type == "known") {
     alignment <- decide_alignment(motif, alignment, alignment_provided)
   }
 
+  # Ensure glycans and motif are graphs
   glycans <- ensure_glycans_are_graphs(glycans)
   motif <- ensure_motif_is_graph(motif, motif_type)
 
