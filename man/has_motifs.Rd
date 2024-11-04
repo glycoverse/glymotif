@@ -24,7 +24,7 @@ IUPAC-condensed structure strings, or a character vector of known motif names.}
 either of the same length as \code{motifs}, or a single character string.
 Could be "substructure", "core", "terminal", or "whole".
 Default to "substructure".
-If not provided and \code{motifs} are known motif names or missing,
+If not provided and \code{motifs} are known motif names or missing (using all known motifs),
 the alignments in the GlycoMotif GlyGen Collection will be used.}
 
 \item{ignore_linkages}{A logical value. If \code{TRUE}, linkages will be ignored in the comparison.}

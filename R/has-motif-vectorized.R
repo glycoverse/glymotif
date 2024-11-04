@@ -18,7 +18,7 @@
 #' either of the same length as `motifs`, or a single character string.
 #' Could be "substructure", "core", "terminal", or "whole".
 #' Default to "substructure".
-#' If not provided and `motifs` are known motif names or missing,
+#' If not provided and `motifs` are known motif names or missing (using all known motifs),
 #' the alignments in the GlycoMotif GlyGen Collection will be used.
 #' @param ignore_linkages A logical value. If `TRUE`, linkages will be ignored in the comparison.
 #'
@@ -50,6 +50,8 @@
 #'
 #' @export
 has_motifs <- function(glycan, motifs = NULL, ..., alignments = "substructure", ignore_linkages = FALSE) {
+  alignment_provided <- !missing(alignments)
+
   if (missing(motifs)) {
     motifs <- available_motifs()
     motif_type <- "known"
@@ -57,20 +59,21 @@ has_motifs <- function(glycan, motifs = NULL, ..., alignments = "substructure", 
     motif_type <- get_motifs_type(motifs)
   }
 
-  if (motif_type == "known") {
-    if (missing(alignments)) {
-      alignments <- glygen_motifs$alignment[match(motifs, glygen_motifs$name)]
-    } else {
-      rlang::warn("Use user-provided alignments, not the ones in the database.")
-    }
+  if (motif_type == "known" && alignment_provided) {
+    rlang::warn("Use user-provided alignments, not the ones in the database.")
   }
 
-  suppressWarnings(
-    res <- purrr::map2_lgl(
-      motifs, alignments,
-      ~ try_has_motif(glycan, .x, alignment = .y, ignore_linkages = ignore_linkages)
-    ),
-    classes = "warning_custom_alignment"
+  suppressWarnings({
+    if (alignment_provided) {
+      res <- purrr::map2_lgl(motifs, alignments, ~ try_has_motif(
+        glycan, .x, alignment = .y, ignore_linkages = ignore_linkages
+      ))
+    } else {
+      res <- purrr::map_lgl(motifs, ~ try_has_motif(
+        glycan, .x, ignore_linkages = ignore_linkages
+      ))
+    }
+  }, classes = "warning_custom_alignment"
   )
 
   if (any(is.na(res))) {
@@ -133,27 +136,27 @@ get_motifs_type <- function(motifs) {
 #'
 #' @export
 have_motif <- function(glycans, motif, ..., alignment = "substructure", ignore_linkages = FALSE) {
+  alignment_provided <- !missing(alignment)
   motif_type <- get_motif_type(motif)
 
-  if (missing(alignment) && motif_type == "known") {
-    alignment = glygen_motifs$alignment[glygen_motifs$name == motif]
-  }
-
-  if (motif_type == "known") {
+  if (motif_type == "known" && alignment_provided) {
     db_alignment <- glygen_motifs$alignment[glygen_motifs$name == motif]
-    if (missing(alignment)) {
-      alignment <- db_alignment
-    } else if (alignment != db_alignment) {
+    if (alignment != db_alignment) {
       cli::cli_warn("The provided alignment type {.val {alignment}} is different from the motif's alignment type {.val {db_alignment}} in database.")
     }
   }
 
-  suppressWarnings(
-    res <- purrr::map_lgl(
-      glycans, try_has_motif, motif,
-      alignment = alignment, ignore_linkages = ignore_linkages
-    ),
-    classes = "warning_custom_alignment"
+  suppressWarnings({
+    if (alignment_provided) {
+      res <- purrr::map_lgl(
+        glycans, try_has_motif, motif, alignment = alignment, ignore_linkages = ignore_linkages
+      )
+    } else {
+      res <- purrr::map_lgl(
+        glycans, try_has_motif, motif, ignore_linkages = ignore_linkages
+      )
+    }
+  }, classes = "warning_custom_alignment"
   )
 
   if (any(is.na(res))) {
