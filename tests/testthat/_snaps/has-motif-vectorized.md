@@ -9,6 +9,15 @@
       O-Glycan core 1 O-Glycan core 2 
                  TRUE            TRUE 
 
+# has_motifs: custom alignments with wrong length
+
+    Code
+      has_motifs(glycan, motifs, alignments = alignments)
+    Condition
+      Error in `valid_alignments_arg()`:
+      ! `alignments` must be either a single character string or a character vector of the same length as `motifs`.
+      i `motif` length: 3, `alignments` length: 2
+
 # has_motifs: some bad IUPAC
 
     Code
@@ -30,7 +39,7 @@
     Code
       has_motifs(glycan, motifs)
     Condition
-      Error in `get_motifs_type()`:
+      Error in `valid_motifs_arg()`:
       ! `motifs` must be either 'glycan_graph' objects, a character vector of IUPAC-condensed structure strings, or a character vector of known motif names.
 
 # has_motifs: missing motifs uses default motifs

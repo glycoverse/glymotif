@@ -27,6 +27,14 @@ test_that("has_motifs: motif names with custom alignments", {
 })
 
 
+test_that("has_motifs: custom alignments with wrong length", {
+  motifs <- c("Gal", "GlcNAc", "GalNAc")
+  glycan <- "Gal(b1-3)GlcNAc"
+  alignments <- c("substructure", "core")
+  expect_snapshot(has_motifs(glycan, motifs, alignments = alignments), error = TRUE)
+})
+
+
 test_that("has_motifs: glycan graphs", {
   motifs <- c("Gal", "GlcNAc", "GalNAc")
   motifs <- purrr::map(motifs, glyparse::parse_iupac_condensed)

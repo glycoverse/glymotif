@@ -53,10 +53,9 @@ has_motifs <- function(glycan, motifs = NULL, ..., alignments = "substructure", 
   alignment_provided <- !missing(alignments)
 
   # Check input arguments
-  if (!alignments %in% c("substructure", "core", "terminal", "whole")) {
-    rlang::abort("`alignment` must be one of 'substructure', 'core', 'terminal' or 'whole'.")
-  }
   valid_glycan_arg(glycan)
+  valid_motifs_arg(motifs)
+  valid_alignments_arg(alignments, motifs)
 
   # Get motif type and default motifs
   if (missing(motifs)) {
@@ -113,7 +112,10 @@ has_motifs <- function(glycan, motifs = NULL, ..., alignments = "substructure", 
 #' @export
 have_motif <- function(glycans, motif, ..., alignment = "substructure", ignore_linkages = FALSE) {
   alignment_provided <- !missing(alignment)
+
+  valid_glycans_arg(glycans)
   valid_motif_arg(motif)
+  valid_alignment_arg(alignment)
 
   motif_type <- get_motif_type(motif)
   if (motif_type == "known") {
@@ -124,6 +126,50 @@ have_motif <- function(glycans, motif, ..., alignment = "substructure", ignore_l
   motif <- ensure_motif_is_graph(motif, motif_type)
 
   purrr::map_lgl(glycans, has_motif_, motif, alignment = alignment, ignore_linkages = ignore_linkages)
+}
+
+
+valid_glycans_arg <- function(x) {
+  error_msg <- "`glycans` must be either 'glycan_graph' objects or a character vector of IUPAC-condensed structure strings."
+  if (is.character(x)) {
+    NULL
+  } else if (is.list(x)) {
+    if (!purrr::every(x, glyrepr::is_glycan)) {
+      rlang::abort(error_msg)
+    }
+  } else {
+    rlang::abort(error_msg)
+  }
+}
+
+
+valid_motifs_arg <- function(x) {
+  error_msg <- "`motifs` must be either 'glycan_graph' objects, a character vector of IUPAC-condensed structure strings, or a character vector of known motif names."
+  if (is.null(x) || is.character(x)) {
+    NULL
+  } else if (is.list(x)) {
+    if (!purrr::every(x, glyrepr::is_glycan)) {
+      rlang::abort(error_msg)
+    }
+  } else {
+    rlang::abort(error_msg)
+  }
+}
+
+
+valid_alignments_arg <- function(x, motifs) {
+  if (!is.character(x)) {
+    rlang::abort("`alignments` must be a character vector.")
+  }
+  if (length(x) != 1 && length(x) != length(motifs)) {
+    cli::cli_abort(c(
+      "`alignments` must be either a single character string or a character vector of the same length as `motifs`.",
+      i = "`motif` length: {.val {length(motifs)}}, `alignments` length: {.val {length(x)}}"
+    ))
+  }
+  if (!all(x %in% c("substructure", "core", "terminal", "whole"))) {
+    rlang::abort("`alignments` must be one of 'substructure', 'core', 'terminal' or 'whole'.")
+  }
 }
 
 
