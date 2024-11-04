@@ -77,3 +77,48 @@
       Error in `ensure_glycans_are_graphs()`:
       ! Glycans at indices 2 and 3 are not able to be parsed as IUPAC-condensed structure strings.
 
+# have_motifs: alignments provided for known motif names
+
+    Code
+      have_motifs(glycans, motifs, alignments = "whole")
+    Condition
+      Warning:
+      Use user-provided alignments, not the ones in the database.
+    Output
+                                                    O-Glycan core 1 O-Glycan core 2
+      Gal(b1-3)GalNAc(a1-3)GlcNAc(b1-                         FALSE           FALSE
+      GalNAc(a1-3)Gal(b1-3)[GlcNAc(b1-6)]GalNAc(a1-           FALSE           FALSE
+
+# have_motifs: alignments have wrong length
+
+    Code
+      have_motifs(glycans, motifs, alignments = alignments)
+    Condition
+      Error in `valid_alignments_arg()`:
+      ! `alignments` must be either a single character string or a character vector of the same length as `motifs`.
+      i `motif` length: 3, `alignments` length: 2
+
+# have_motifs: bad motif names
+
+    Code
+      have_motifs(glycans, motifs)
+    Condition
+      Error in `get_motifs_type()`:
+      ! Motifs "bad1" and "bad2" are not known motif names.
+
+# have_motifs: bad IUPAC in motifs
+
+    Code
+      have_motifs(glycans, motifs)
+    Condition
+      Error in `ensure_motifs_are_graphs()`:
+      ! Motifs at indices 2 and 3 are neither known motif names or able to be parsed as IUPAC-condensed structure strings.
+
+# have_motifs: bad IUPAC in glycans
+
+    Code
+      have_motifs(glycans, motifs)
+    Condition
+      Error in `ensure_glycans_are_graphs()`:
+      ! Glycans at indices 2 and 3 are not able to be parsed as IUPAC-condensed structure strings.
+

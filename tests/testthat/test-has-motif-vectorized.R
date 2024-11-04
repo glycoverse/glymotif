@@ -172,3 +172,166 @@ test_that("have_motif: glycan names are kept for glycan graphs", {
   result <- have_motif(glycans, motif)
   expect_equal(names(result), names(glycans))
 })
+
+
+# ----- have_motifs() -----
+test_that("have_motifs: IUPAC-condensed (no names)", {
+  motifs <- c("Gal", "GlcNAc", "GalNAc")
+  glycans <- c("Gal(b1-3)GlcNAc", "Man(b1-4)GlcNAc", "GlcNAc")
+
+  result <- have_motifs(glycans, motifs)
+
+  expected <- matrix(c(
+    TRUE, TRUE, FALSE,
+    FALSE, TRUE, FALSE,
+    FALSE, TRUE, FALSE
+  ), nrow = 3, byrow = TRUE)
+  colnames(expected) <- motifs
+  rownames(expected) <- glycans
+  expect_equal(result, expected)
+})
+
+
+test_that("have_motifs: IUPAC-condensed (with names)", {
+  motifs <- c(M1 = "Gal", M2 = "GlcNAc", M3 = "GalNAc")
+  glycans <- c(G1 = "Gal(b1-3)GlcNAc", G2 = "Man(b1-4)GlcNAc", G3 = "GlcNAc")
+
+  result <- have_motifs(glycans, motifs)
+
+  expected <- matrix(c(
+    TRUE, TRUE, FALSE,
+    FALSE, TRUE, FALSE,
+    FALSE, TRUE, FALSE
+  ), nrow = 3, byrow = TRUE)
+  colnames(expected) <- c("M1", "M2", "M3")
+  rownames(expected) <- c("G1", "G2", "G3")
+  expect_equal(result, expected)
+})
+
+
+test_that("have_motifs: glycan graphs (no names)", {
+  motifs <- c("Gal", "GlcNAc", "GalNAc")
+  glycans <- c("Gal(b1-3)GlcNAc", "Man(b1-4)GlcNAc", "GlcNAc")
+  motifs <- purrr::map(motifs, glyparse::parse_iupac_condensed)
+  glycans <- purrr::map(glycans, glyparse::parse_iupac_condensed)
+
+  result <- have_motifs(glycans, motifs)
+
+  expected <- matrix(c(
+    TRUE, TRUE, FALSE,
+    FALSE, TRUE, FALSE,
+    FALSE, TRUE, FALSE
+  ), nrow = 3, byrow = TRUE)
+  expect_equal(result, expected)
+})
+
+
+test_that("have_motifs: glycan graphs (with names)", {
+  motifs <- c(M1 = "Gal", M2 = "GlcNAc", M3 = "GalNAc")
+  glycans <- c(G1 = "Gal(b1-3)GlcNAc", G2 = "Man(b1-4)GlcNAc", G3 = "GlcNAc")
+  motifs <- purrr::map(motifs, glyparse::parse_iupac_condensed)
+  glycans <- purrr::map(glycans, glyparse::parse_iupac_condensed)
+
+  result <- have_motifs(glycans, motifs)
+
+  expected <- matrix(c(
+    TRUE, TRUE, FALSE,
+    FALSE, TRUE, FALSE,
+    FALSE, TRUE, FALSE
+  ), nrow = 3, byrow = TRUE)
+  colnames(expected) <- c("M1", "M2", "M3")
+  rownames(expected) <- c("G1", "G2", "G3")
+  expect_equal(result, expected)
+})
+
+
+test_that("have_motifs: motif names (no names)", {
+  motifs <- c("O-Glycan core 1", "O-Glycan core 2")
+  glycans <- c("Gal(b1-3)GalNAc(a1-3)GlcNAc(b1-", "Gal(b1-3)GalNAc(a1-")
+
+  result <- have_motifs(glycans, motifs)
+
+  expected <- matrix(c(
+    FALSE, FALSE,
+    TRUE, FALSE
+  ), nrow = 2, byrow = TRUE)
+  colnames(expected) <- motifs
+  rownames(expected) <- glycans
+  expect_equal(result, expected)
+})
+
+
+test_that("have_motifs: motif names (with names)", {
+  motifs <- c(M1 = "O-Glycan core 1", M2 = "O-Glycan core 2")
+  glycans <- c(G1 = "Gal(b1-3)GalNAc(a1-3)GlcNAc(b1-", G2 = "Gal(b1-3)GalNAc(a1-")
+
+  result <- have_motifs(glycans, motifs)
+
+  expected <- matrix(c(
+    FALSE, FALSE,
+    TRUE, FALSE
+  ), nrow = 2, byrow = TRUE)
+  colnames(expected) <- c("M1", "M2")
+  rownames(expected) <- c("G1", "G2")
+  expect_equal(result, expected)
+})
+
+
+test_that("have_motifs: custom alignments", {
+  motifs <- c(M1 = "Gal", M2 = "GlcNAc", M3 = "GalNAc")
+  glycans <- c(G1 = "Gal(b1-3)GlcNAc", G2 = "GlcNAc(b1-4)GalNAc", G3 = "GlcNAc")
+
+  result <- have_motifs(glycans, motifs, alignments = c("whole", "core", "terminal"))
+
+  # If `alignments` are not specified, the result will be:
+  # TRUE  TRUE FALSE
+  # FALSE TRUE TRUE
+  # FALSE TRUE FALSE
+
+  expected <- matrix(c(
+    FALSE, TRUE, FALSE,
+    FALSE, FALSE, FALSE,
+    FALSE, TRUE, FALSE
+  ), nrow = 3, byrow = TRUE)
+  colnames(expected) <- c("M1", "M2", "M3")
+  rownames(expected) <- c("G1", "G2", "G3")
+  expect_equal(result, expected)
+})
+
+
+test_that("have_motifs: alignments provided for known motif names", {
+  motifs <- c("O-Glycan core 1", "O-Glycan core 2")
+  glycans <- c("Gal(b1-3)GalNAc(a1-3)GlcNAc(b1-", "GalNAc(a1-3)Gal(b1-3)[GlcNAc(b1-6)]GalNAc(a1-")
+
+  # should be all FALSE
+  expect_snapshot(have_motifs(glycans, motifs, alignments = "whole"))
+})
+
+
+test_that("have_motifs: alignments have wrong length", {
+  motifs <- c(M1 = "Gal", M2 = "GlcNAc", M3 = "GalNAc")
+  glycans <- c(G1 = "Gal(b1-3)GlcNAc", G2 = "Man(b1-4)GlcNAc", G3 = "GlcNAc")
+  alignments <- c("substructure", "core")
+  expect_snapshot(have_motifs(glycans, motifs, alignments = alignments), error = TRUE)
+})
+
+
+test_that("have_motifs: bad motif names", {
+  motifs <- c("GM1", "bad1", "bad2")
+  glycans <- c("Gal(b1-3)GlcNAc", "Man(b1-4)GlcNAc", "GlcNAc")
+  expect_snapshot(have_motifs(glycans, motifs), error = TRUE)
+})
+
+
+test_that("have_motifs: bad IUPAC in motifs", {
+  motifs <- c("Gal", "bad1", "bad2")
+  glycans <- c("Gal(b1-3)GlcNAc", "Man(b1-4)GlcNAc", "GlcNAc")
+  expect_snapshot(have_motifs(glycans, motifs), error = TRUE)
+})
+
+
+test_that("have_motifs: bad IUPAC in glycans", {
+  motifs <- c("Gal", "GlcNAc", "GalNAc")
+  glycans <- c("Gal(b1-3)GlcNAc", "bad1", "bad2")
+  expect_snapshot(have_motifs(glycans, motifs), error = TRUE)
+})

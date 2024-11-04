@@ -1,28 +1,38 @@
-#' Check if a Glycan have the Given Motifs
+#' Check if the Glycan(s) have the Given Motif(s)
 #'
 #' @description
-#' This is a vectorized versions of [has_motif()].
-#' It checks if a glycan has the given motifs, or all known motifs
-#' in the GlycoMotif GlyGen Collection if `motifs` is missing.
+#' These are vectorized versions of [has_motif()].
+#' - `has_motif()` checks if a motif is present in a glycan.
+#' - `has_motifs()` checks if a list of motifs are present in a glycans.
+#' - `have_motif()` checks if a motif is present in a list of glycans.
+#' - `have_motifs()` checks if a list of motifs are present in a list of glycans.
 #'
-#' A logical vector is returned.
-#' Names of `motifs` are preserved as names of the output logical vectors.
-#' If no names are provided, and the input is a character vector, the names
-#' will be the vector itself.
+#' They can be told apart by English grammar:
+#' - Functions starting with "has" work with one glycan, "have" with multiple glycans.
+#' - Functions ending with "motif" work with one motif, "motifs" with multiple motifs.
+#'
+#' `has_motifs()` and `have_motif()` return a logical vector of the same length
+#' as the input motifs or glycans, respectively.
+#' `have_motifs()` returns a matrix of logical values, indicating if each glycan has each motif.
+#' Rows are glycans and columns are motifs.
 #'
 #' @param glycan A 'glycan_graph' object, or an IUPAC-condensed structure string.
+#' @param motif A 'glycan_graph' object, an IUPAC-condensed structure string, or a known motif name.
+#' @param glycans A list of 'glycan_graph' objects, or a character vector of IUPAC-condensed structure strings.
 #' @param motifs A list of 'glycan_graph' objects, a character vector of
 #' IUPAC-condensed structure strings, or a character vector of known motif names.
-#' @param ... Ignored.
+#' @param alignment A single character, one of 'substructure', 'core', 'terminal' or 'whole'.
+#' If not provided and `motif` is a known motif name,
+#' the alignment in the GlycoMotif GlyGen Collection will be used.
 #' @param alignments A character vector of alignment names for the motifs,
 #' either of the same length as `motifs`, or a single character string.
-#' Could be "substructure", "core", "terminal", or "whole".
-#' Default to "substructure".
 #' If not provided and `motifs` are known motif names or missing (using all known motifs),
 #' the alignments in the GlycoMotif GlyGen Collection will be used.
 #' @param ignore_linkages A logical value. If `TRUE`, linkages will be ignored in the comparison.
 #'
-#' @return A logical vector, indicating if the glycan has the motifs.
+#' @return A logical vector or matrix. The dimension names are determined by the input arguments.
+#' If `glycans` or `motifs` have names, they will be preserved in the result.
+#' If not, but `glycans` or `motifs` are character vectors, they will be used as names.
 #'
 #' @examples
 #' library(glyparse)
@@ -48,8 +58,17 @@
 #' # GlycoMotif GlyGen Collection.
 #' has_motifs(glycan)[1:5]
 #'
+#' # Check if a list of glycans have the given motif.
+#' glycans <- c(G1 = "Gal(b1-3)GalNAc(a1-", G2 = "GlcNAc(b1-4)GlcNAc(a1-")
+#' have_motif(glycans, "O-Glycan core 1")
+#'
+#' # Check if a list of glycans have the given motifs.
+#' glycans <- c(G1 = "Gal(b1-3)GalNAc(a1-", G2 = "GlcNAc(b1-4)GlcNAc(a1-")
+#' motifs <- c(M1 = "Gal(b1-", M2 = "GlcNAc(b1-")
+#' have_motifs(glycans, motifs)
+#'
 #' @export
-has_motifs <- function(glycan, motifs = NULL, ..., alignments = "substructure", ignore_linkages = FALSE) {
+has_motifs <- function(glycan, motifs = NULL, alignments = "substructure", ignore_linkages = FALSE) {
   alignment_provided <- !missing(alignments)
 
   # Check input arguments
@@ -75,43 +94,13 @@ has_motifs <- function(glycan, motifs = NULL, ..., alignments = "substructure", 
   glycan <- ensure_glycan_is_graph(glycan)
   motifs <- ensure_motifs_are_graphs(motifs, motif_type)
 
-  purrr::map2_lgl(
-    motifs, alignments,
-    ~ has_motif_(glycan, .x, alignment = .y, ignore_linkages = ignore_linkages)
-  )
+  simple_has_motifs(glycan, motifs, alignments, ignore_linkages)
 }
 
 
-#' Check if these Glycans have the Given Motif
-#'
-#' @description
-#' This is a vectorized version of [has_motif()].
-#' It checks if a list of glycans (or a character vector of IUPAC-condensed structure strings)
-#' have the given motif.
-#'
-#' A logical vector is returned.
-#' Names of `glycans` are preserved as names of the output logical vectors.
-#' If no names are provided, and the input is a character vector, the names
-#' will be the vector itself.
-#'
-#' @param glycans A list of 'glycan_graph' objects, or a character vector of IUPAC-condensed structure strings.
-#' @param motif A 'glycan_graph' object, an IUPAC-condensed structure string, or a known motif name.
-#' @param ... Ignored.
-#' @param alignment A character string of alignment name for the motif.
-#' Could be "substructure", "core", "terminal", or "whole".
-#' Default to "substructure".
-#' If not provided and `motif` is a known motif name,
-#' the alignment in the GlycoMotif GlyGen Collection will be used.
-#' @param ignore_linkages A logical value. If `TRUE`, linkages will be ignored in the comparison.
-#'
-#' @return A logical vector, indicating if the glycans have the motif.
-#'
-#' @examples
-#' glycan <- c(G1 = "Gal(b1-3)GlcNAc", G2 = "Man(b1-4)GlcNAc", G3 = "GlcNAc")
-#' have_motif(glycan, "Gal")
-#'
+#' @rdname has_motifs
 #' @export
-have_motif <- function(glycans, motif, ..., alignment = "substructure", ignore_linkages = FALSE) {
+have_motif <- function(glycans, motif, alignment = "substructure", ignore_linkages = FALSE) {
   alignment_provided <- !missing(alignment)
 
   # Check input arguments
@@ -131,6 +120,39 @@ have_motif <- function(glycans, motif, ..., alignment = "substructure", ignore_l
   motif <- ensure_motif_is_graph(motif, motif_type)
 
   purrr::map_lgl(glycans, has_motif_, motif, alignment = alignment, ignore_linkages = ignore_linkages)
+}
+
+
+#' @rdname has_motifs
+#' @export
+have_motifs <- function(glycans, motifs = NULL, alignments = "substructure", ignore_linkages = FALSE) {
+  alignment_provided <- !missing(alignments)
+
+  # Check input arguments
+  valid_glycans_arg(glycans)
+  valid_motifs_arg(motifs)
+  valid_alignments_arg(alignments, motifs)
+  valid_ignore_linkages_arg(ignore_linkages)
+
+  # Get motif type and default motifs
+  if (missing(motifs)) {
+    motifs <- available_motifs()
+    motif_type <- "known"
+  } else {
+    motif_type <- get_motifs_type(motifs)
+  }
+
+  # Decide alignments
+  if (motif_type == "known") {
+    alignments <- decide_alignments(motifs, alignments, alignment_provided)
+  }
+
+  # Ensure glycans and motifs are graphs
+  glycans <- ensure_glycans_are_graphs(glycans)
+  motifs <- ensure_motifs_are_graphs(motifs, motif_type)
+
+  lgl_list <- purrr::map(glycans, simple_has_motifs, motifs, alignments = alignments, ignore_linkages = ignore_linkages)
+  do.call(rbind, lgl_list)
 }
 
 
@@ -175,6 +197,14 @@ valid_alignments_arg <- function(x, motifs) {
   if (!all(x %in% c("substructure", "core", "terminal", "whole"))) {
     rlang::abort("`alignments` must be one of 'substructure', 'core', 'terminal' or 'whole'.")
   }
+}
+
+
+simple_has_motifs <- function(glycan, motifs, alignments, ignore_linkages) {
+  purrr::map2_lgl(
+    motifs, alignments,
+    ~ has_motif_(glycan, .x, alignment = .y, ignore_linkages = ignore_linkages)
+  )
 }
 
 
