@@ -11,16 +11,27 @@
 #' - Functions starting with "has" work with one glycan, "have" with multiple glycans.
 #' - Functions ending with "motif" work with one motif, "motifs" with multiple motifs.
 #'
-#' `has_motifs()` and `have_motif()` return a logical vector of the same length
-#' as the input motifs or glycans, respectively.
-#' `have_motifs()` returns a matrix of logical values, indicating if each glycan has each motif.
-#' Rows are glycans and columns are motifs.
+#' @details
+#' When using known motifs in the GlycoMotif GlyGen Collection,
+#' the best practice is to not provide the alignment arguments,
+#' and let the function decide the alignment based on the motif name.
+#' However, it is still possible to override the default alignments.
+#' In this case, the user-provided alignments will be used,
+#' but a warning will be issued.
+#'
+#' Internally, all glycan and motif inputs are converted to 'glycan_graph' objects.
+#' Therefore, if performance matters and you need to repeatedly use the same glycans or motifs,
+#' it is recommended to convert them to 'glycan_graph' objects beforehand.
+#' [get_motif_graph()] can be used to get the 'glycan_graph' object of a known motif.
+#' [glyparse::parse_iupac_condensed()] can be used to convert IUPAC-condensed
+#' structure strings to 'glycan_graph' objects.
 #'
 #' @param glycan A 'glycan_graph' object, or an IUPAC-condensed structure string.
 #' @param motif A 'glycan_graph' object, an IUPAC-condensed structure string, or a known motif name.
 #' @param glycans A list of 'glycan_graph' objects, or a character vector of IUPAC-condensed structure strings.
 #' @param motifs A list of 'glycan_graph' objects, a character vector of
 #' IUPAC-condensed structure strings, or a character vector of known motif names.
+#' If missing, all known motifs in the GlycoMotif GlyGen Collection will be used.
 #' @param alignment A single character, one of 'substructure', 'core', 'terminal' or 'whole'.
 #' If not provided and `motif` is a known motif name,
 #' the alignment in the GlycoMotif GlyGen Collection will be used.
@@ -30,9 +41,17 @@
 #' the alignments in the GlycoMotif GlyGen Collection will be used.
 #' @param ignore_linkages A logical value. If `TRUE`, linkages will be ignored in the comparison.
 #'
-#' @return A logical vector or matrix. The dimension names are determined by the input arguments.
+#' @return #' `has_motifs()` and `have_motif()` return a logical vector
+#' of the same length as the input motifs or glycans, respectively.
+#' `have_motifs()` returns a matrix of logical values,
+#' indicating if each glycan has each motif.
+#' Rows are glycans and columns are motifs.
+#'
+#' The dimension names are determined by the input arguments.
 #' If `glycans` or `motifs` have names, they will be preserved in the result.
 #' If not, but `glycans` or `motifs` are character vectors, they will be used as names.
+#'
+#' @seealso [has_motif()]
 #'
 #' @examples
 #' library(glyparse)

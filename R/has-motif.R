@@ -28,6 +28,13 @@
 #' However, "?" in a `glycan` graph will only match "?" in the `motif` graph.
 #' You can set `ignore_linkages = TRUE` to ignore linkages in the comparison.
 #'
+#' Some examples:
+#' - "b1-?" in motif will match "b1-4" in glycan.
+#' - "b1-?" in motif will match "b1-?" in glycan.
+#' - "b1-4" in motif will NOT match "b1-?" in glycan.
+#' - "a1-?" in motif will NOT match "b1-4" in glycan.
+#' - "a1-?" in motif will NOT match "a?-4" in glycan.
+#'
 #' Both motifs and glycans can have a "half-linkage" at the reducing end,
 #' e.g. "GlcNAc(b1-".
 #' The half linkage in the motif will be matched to any linkage in the glycan,
@@ -53,6 +60,13 @@
 #' See [whole-glycan](https://glycomotif.glyomics.org/glycomotif/Whole-Glycan_Alignment)
 #' for details.
 #'
+#' When using known motifs in the GlycoMotif GlyGen Collection,
+#' the best practice is to not provide the `alignment` argument,
+#' and let the function decide the alignment based on the motif name.
+#' However, it is still possible to override the default alignments.
+#' In this case, the user-provided alignments will be used,
+#' but a warning will be issued.
+#'
 #' # Substituents
 #'
 #' Substituents (e.g. "Ac", "SO3") are matched in strict mode.
@@ -76,12 +90,15 @@
 #' @param glycan A 'glycan_graph' object, or an IUPAC-condensed structure string.
 #' @param motif A 'glycan_graph' object, an IUPAC-condensed structure string,
 #' or a known motif name (use [available_motifs()] to see all available motifs).
-#' @param ... Not used.
 #' @param alignment A character string. Possible values are "substructure", "core", "terminal" and "whole".
-#' See description for details. Default is "substructure".
+#' Default is "substructure".
+#' When `motif` is a known motif name and `alignment` is not provided,
+#' the alignment type in the database will be used.
 #' @param ignore_linkages A logical value. If `TRUE`, linkages will be ignored in the comparison.
 #'
 #' @return A logical value indicating if the `glycan` has the `motif`.
+#'
+#' @seealso [has_motifs()], [have_motif()], [have_motifs()]
 #'
 #' @examples
 #' library(glyparse)
@@ -142,7 +159,7 @@
 #' has_motif(glycan_5, glycan_5)
 #'
 #' @export
-has_motif <- function(glycan, motif, ..., alignment = "substructure", ignore_linkages = FALSE) {
+has_motif <- function(glycan, motif, alignment = "substructure", ignore_linkages = FALSE) {
   alignment_provided <- !missing(alignment)
 
   # Check input arguments
@@ -172,7 +189,7 @@ has_motif <- function(glycan, motif, ..., alignment = "substructure", ignore_lin
   glycan <- ensure_glycan_mono_type(glycan, motif)
 
   # Check if the glycan has the motif
-  has_motif_(glycan, motif, ..., alignment = alignment, ignore_linkages = ignore_linkages)
+  has_motif_(glycan, motif, alignment = alignment, ignore_linkages = ignore_linkages)
 }
 
 
@@ -204,7 +221,7 @@ valid_ignore_linkages_arg <- function(x) {
 }
 
 
-has_motif_ <- function(glycan, motif, ..., alignment = "substructure", ignore_linkages = FALSE) {
+has_motif_ <- function(glycan, motif, alignment = "substructure", ignore_linkages = FALSE) {
   # This function is the logic part of `has_motif()`.
 
   # Colorize the graphs

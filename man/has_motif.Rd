@@ -4,13 +4,7 @@
 \alias{has_motif}
 \title{Check if a Glycan has the Given Motif}
 \usage{
-has_motif(
-  glycan,
-  motif,
-  ...,
-  alignment = "substructure",
-  ignore_linkages = FALSE
-)
+has_motif(glycan, motif, alignment = "substructure", ignore_linkages = FALSE)
 }
 \arguments{
 \item{glycan}{A 'glycan_graph' object, or an IUPAC-condensed structure string.}
@@ -18,10 +12,10 @@ has_motif(
 \item{motif}{A 'glycan_graph' object, an IUPAC-condensed structure string,
 or a known motif name (use \code{\link[=available_motifs]{available_motifs()}} to see all available motifs).}
 
-\item{...}{Not used.}
-
 \item{alignment}{A character string. Possible values are "substructure", "core", "terminal" and "whole".
-See description for details. Default is "substructure".}
+Default is "substructure".
+When \code{motif} is a known motif name and \code{alignment} is not provided,
+the alignment type in the database will be used.}
 
 \item{ignore_linkages}{A logical value. If \code{TRUE}, linkages will be ignored in the comparison.}
 }
@@ -54,6 +48,15 @@ so it will match any linkage in the \code{glycan} graph.
 However, "?" in a \code{glycan} graph will only match "?" in the \code{motif} graph.
 You can set \code{ignore_linkages = TRUE} to ignore linkages in the comparison.
 
+Some examples:
+\itemize{
+\item "b1-?" in motif will match "b1-4" in glycan.
+\item "b1-?" in motif will match "b1-?" in glycan.
+\item "b1-4" in motif will NOT match "b1-?" in glycan.
+\item "a1-?" in motif will NOT match "b1-4" in glycan.
+\item "a1-?" in motif will NOT match "a?-4" in glycan.
+}
+
 Both motifs and glycans can have a "half-linkage" at the reducing end,
 e.g. "GlcNAc(b1-".
 The half linkage in the motif will be matched to any linkage in the glycan,
@@ -80,6 +83,13 @@ for details.
 See \href{https://glycomotif.glyomics.org/glycomotif/Whole-Glycan_Alignment}{whole-glycan}
 for details.
 }
+
+When using known motifs in the GlycoMotif GlyGen Collection,
+the best practice is to not provide the \code{alignment} argument,
+and let the function decide the alignment based on the motif name.
+However, it is still possible to override the default alignments.
+In this case, the user-provided alignments will be used,
+but a warning will be issued.
 }
 
 \section{Substituents}{
@@ -162,4 +172,7 @@ has_motif(glycan_5, glycan_4)
 has_motif(glycan_4, glycan_4)
 has_motif(glycan_5, glycan_5)
 
+}
+\seealso{
+\code{\link[=has_motifs]{has_motifs()}}, \code{\link[=have_motif]{have_motif()}}, \code{\link[=have_motifs]{have_motifs()}}
 }

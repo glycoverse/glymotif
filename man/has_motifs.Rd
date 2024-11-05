@@ -26,7 +26,8 @@ have_motifs(
 \item{glycan}{A 'glycan_graph' object, or an IUPAC-condensed structure string.}
 
 \item{motifs}{A list of 'glycan_graph' objects, a character vector of
-IUPAC-condensed structure strings, or a character vector of known motif names.}
+IUPAC-condensed structure strings, or a character vector of known motif names.
+If missing, all known motifs in the GlycoMotif GlyGen Collection will be used.}
 
 \item{alignments}{A character vector of alignment names for the motifs,
 either of the same length as \code{motifs}, or a single character string.
@@ -44,7 +45,13 @@ If not provided and \code{motif} is a known motif name,
 the alignment in the GlycoMotif GlyGen Collection will be used.}
 }
 \value{
-A logical vector or matrix. The dimension names are determined by the input arguments.
+#' \code{has_motifs()} and \code{have_motif()} return a logical vector
+of the same length as the input motifs or glycans, respectively.
+\code{have_motifs()} returns a matrix of logical values,
+indicating if each glycan has each motif.
+Rows are glycans and columns are motifs.
+
+The dimension names are determined by the input arguments.
 If \code{glycans} or \code{motifs} have names, they will be preserved in the result.
 If not, but \code{glycans} or \code{motifs} are character vectors, they will be used as names.
 }
@@ -62,11 +69,21 @@ They can be told apart by English grammar:
 \item Functions starting with "has" work with one glycan, "have" with multiple glycans.
 \item Functions ending with "motif" work with one motif, "motifs" with multiple motifs.
 }
+}
+\details{
+When using known motifs in the GlycoMotif GlyGen Collection,
+the best practice is to not provide the alignment arguments,
+and let the function decide the alignment based on the motif name.
+However, it is still possible to override the default alignments.
+In this case, the user-provided alignments will be used,
+but a warning will be issued.
 
-\code{has_motifs()} and \code{have_motif()} return a logical vector of the same length
-as the input motifs or glycans, respectively.
-\code{have_motifs()} returns a matrix of logical values, indicating if each glycan has each motif.
-Rows are glycans and columns are motifs.
+Internally, all glycan and motif inputs are converted to 'glycan_graph' objects.
+Therefore, if performance matters and you need to repeatedly use the same glycans or motifs,
+it is recommended to convert them to 'glycan_graph' objects beforehand.
+\code{\link[=get_motif_graph]{get_motif_graph()}} can be used to get the 'glycan_graph' object of a known motif.
+\code{\link[glyparse:parse_iupac_condensed]{glyparse::parse_iupac_condensed()}} can be used to convert IUPAC-condensed
+structure strings to 'glycan_graph' objects.
 }
 \examples{
 library(glyparse)
@@ -101,4 +118,7 @@ glycans <- c(G1 = "Gal(b1-3)GalNAc(a1-", G2 = "GlcNAc(b1-4)GlcNAc(a1-")
 motifs <- c(M1 = "Gal(b1-", M2 = "GlcNAc(b1-")
 have_motifs(glycans, motifs)
 
+}
+\seealso{
+\code{\link[=has_motif]{has_motif()}}
 }
