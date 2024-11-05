@@ -298,7 +298,5 @@ ensure_glycans_are_graphs <- function(glycans) {
 
 
 try_parse_iupac_condensed <- function(iupac) {
-  tryCatch({
-    glyparse::parse_iupac_condensed(iupac)
-  }, error = function(e) NA)
+  purrr::possibly(glyparse::parse_iupac_condensed, NA)(iupac)
 }
