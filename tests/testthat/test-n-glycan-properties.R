@@ -156,15 +156,33 @@ test_that("paucimannose H3N2", {
 })
 
 
+test_that("paucimannose H3N2 strict", {
+  glycan <- paucimannose_H3N2("concrete", linkage = TRUE)
+  expect_identical(n_glycan_type(glycan, strict = TRUE), "paucimannose")
+})
+
+
 patrick::with_parameters_test_that("paucimannose H4N2a3", {
   glycan <- paucimannose_H4N2a3(mono_type, linkage)
   expect_identical(n_glycan_type(glycan), "paucimannose")
 }, param_grid())
 
 
+test_that("paucimannose H4N2a3 strict", {
+  glycan <- paucimannose_H4N2a3("concrete", linkage = TRUE)
+  expect_identical(n_glycan_type(glycan, strict = TRUE), "paucimannose")
+})
+
+
 test_that("paucimannose H4N2a6", {
   glycan <- paucimannose_H4N2a6("simple", linkage = TRUE)
   expect_identical(n_glycan_type(glycan), "paucimannose")
+})
+
+
+test_that("paucimannose H4N2a6 strict", {
+  glycan <- paucimannose_H4N2a6("concrete", linkage = TRUE)
+  expect_identical(n_glycan_type(glycan, strict = TRUE), "paucimannose")
 })
 
 
@@ -174,9 +192,21 @@ patrick::with_parameters_test_that("highmannose H5N2", {
 }, param_grid())
 
 
+test_that("highmannose H5N2 strict", {
+  glycan <- highmannose_H5N2("concrete", linkage = TRUE)
+  expect_identical(n_glycan_type(glycan, strict = TRUE), "highmannose")
+})
+
+
 test_that("highmannose H6N2", {
   glycan <- highmannose_H6N2("simple", linkage = TRUE)
   expect_identical(n_glycan_type(glycan), "highmannose")
+})
+
+
+test_that("highmannose H6N2 strict", {
+  glycan <- highmannose_H6N2("concrete", linkage = TRUE)
+  expect_identical(n_glycan_type(glycan, strict = TRUE), "highmannose")
 })
 
 
@@ -186,10 +216,22 @@ test_that("hybrid H5N3", {
 })
 
 
+test_that("hybrid H5N3 strict", {
+  glycan <- hybrid_H5N3("concrete", linkage = TRUE)
+  expect_identical(n_glycan_type(glycan, strict = TRUE), "hybrid")
+})
+
+
 patrick::with_parameters_test_that("hybrid H4N3a3", {
   glycan <- hybrid_H4N3a3(mono_type, linkage)
   expect_identical(n_glycan_type(glycan), "hybrid")
 }, param_grid())
+
+
+test_that("hybrid H4N3a3 strict", {
+  glycan <- hybrid_H4N3a3("concrete", linkage = TRUE)
+  expect_identical(n_glycan_type(glycan, strict = TRUE), "hybrid")
+})
 
 
 test_that("hybrid H4N3a3F1", {
@@ -198,10 +240,28 @@ test_that("hybrid H4N3a3F1", {
 })
 
 
+test_that("hybrid H4N3a3F1 strict", {
+  glycan <- hybrid_H4N3a3F1("concrete", linkage = TRUE)
+  expect_identical(n_glycan_type(glycan, strict = TRUE), "hybrid")
+})
+
+
 patrick::with_parameters_test_that("complex H3N3", {
   glycan <- complex_H3N3(mono_type, linkage)
   expect_identical(n_glycan_type(glycan), "complex")
 }, param_grid())
+
+
+test_that("complex H3N3 strict", {
+  glycan <- complex_H3N3("concrete", linkage = TRUE)
+  expect_identical(n_glycan_type(glycan, strict = TRUE), "complex")
+})
+
+
+test_that("complex H3N4", {
+  glycan <- complex_H3N4("simple", linkage = TRUE)
+  expect_identical(n_glycan_type(glycan), "complex")
+})
 
 
 test_that("complex H3N4", {
@@ -213,4 +273,10 @@ test_that("complex H3N4", {
 test_that("complex H4N4", {
   glycan <- complex_H4N4("simple", linkage = TRUE)
   expect_identical(n_glycan_type(glycan), "complex")
+})
+
+
+test_that("complex H4N4 strict", {
+  glycan <- complex_H4N4("concrete", linkage = TRUE)
+  expect_identical(n_glycan_type(glycan, strict = TRUE), "complex")
 })

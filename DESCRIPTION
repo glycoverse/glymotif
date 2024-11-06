@@ -24,8 +24,7 @@ Imports:
     igraph,
     purrr,
     rlang,
-    stringr,
-    magrittr
+    stringr
 Remotes: 
     fubin1999/glyrepr,
     fubin1999/glyparse
