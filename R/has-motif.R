@@ -450,7 +450,7 @@ parse_linkage <- function(linkage) {
   c(
     anomer = stringr::str_sub(linkage, 1, 1),
     pos1   = stringr::str_sub(linkage, 2, 2),
-    pos2   = stringr::str_sub(linkage, 4, 4)
+    pos2   = stringr::str_sub(linkage, 4, -1)
   )
 }
 

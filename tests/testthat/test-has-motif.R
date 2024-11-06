@@ -215,7 +215,7 @@ patrick::with_parameters_test_that("obscure linkages in motif", {
   motif_iupac <- stringr::str_glue("Gal({linkage})GalNAc")
   motif <- glyparse::parse_iupac_condensed(motif_iupac)
   expect_true(has_motif(glycan, motif))
-}, linkage = c("b1-?", "b?-3", "b?-?", "??-?", "b1-3/6"))
+}, linkage = c("b1-?", "b?-3", "b?-?", "??-?", "b1-3/6", "b1-6/3"))
 
 
 test_that("many obscure linkages in motif", {
