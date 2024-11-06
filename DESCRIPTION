@@ -19,8 +19,8 @@ RoxygenNote: 7.3.2
 URL: https://fubin1999.github.io/glymotif/
 Imports: 
     cli,
-    glyrepr (>= 0.1.0.9009),
-    glyparse (>= 0.0.0.9012),
+    glyrepr (>= 0.1.0.9010),
+    glyparse (>= 0.0.0.9013),
     igraph,
     purrr,
     rlang,
