@@ -294,10 +294,10 @@ test_that("complex H4N4 strict", {
 
 
 # ========== Bisecting N-glycan ==========
-test_that("complex H3N5 bisect", {
-  glycan <- complex_H3N5_bisect("simple", linkage = TRUE)
+patrick::with_parameters_test_that("complex H3N5 bisect", {
+  glycan <- complex_H3N5_bisect(mono_type, linkage)
   expect_true(has_bisecting(glycan))
-})
+}, param_grid())
 
 
 test_that("complex H3N5 bisect strict", {
