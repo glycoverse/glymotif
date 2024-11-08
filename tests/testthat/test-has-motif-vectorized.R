@@ -335,3 +335,18 @@ test_that("have_motifs: bad IUPAC in glycans", {
   glycans <- c("Gal(b1-3)GlcNAc", "bad1", "bad2")
   expect_snapshot(have_motifs(glycans, motifs), error = TRUE)
 })
+
+
+test_that("have_motifs: simplify", {
+  motifs <- c("Gal", "GlcNAc", "Xyl")
+  glycans <- c("Gal(b1-3)GlcNAc", "Man(b1-4)GlcNAc", "GlcNAc")
+  result <- have_motifs(glycans, motifs, simplify = TRUE)
+  expected <- matrix(c(
+    TRUE, TRUE,
+    FALSE, TRUE,
+    FALSE, TRUE
+  ), nrow = 3, byrow = TRUE)
+  colnames(expected) <- c("Gal", "GlcNAc")
+  rownames(expected) <- glycans
+  expect_equal(result, expected)
+})

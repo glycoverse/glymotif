@@ -19,7 +19,8 @@ have_motifs(
   glycans,
   motifs = NULL,
   alignments = "substructure",
-  ignore_linkages = FALSE
+  ignore_linkages = FALSE,
+  simplify = FALSE
 )
 }
 \arguments{
@@ -43,6 +44,9 @@ the alignments in the GlycoMotif GlyGen Collection will be used.}
 \item{alignment}{A single character, one of 'substructure', 'core', 'terminal' or 'whole'.
 If not provided and \code{motif} is a known motif name,
 the alignment in the GlycoMotif GlyGen Collection will be used.}
+
+\item{simplify}{A logical value. Only used in \code{have_motifs()}.
+If \code{TRUE}, drop columns (motifs) with all FALSE values. Default is \code{FALSE}.}
 }
 \value{
 #' \code{has_motifs()} and \code{have_motif()} return a logical vector

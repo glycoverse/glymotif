@@ -40,6 +40,8 @@
 #' If not provided and `motifs` are known motif names or missing (using all known motifs),
 #' the alignments in the GlycoMotif GlyGen Collection will be used.
 #' @param ignore_linkages A logical value. If `TRUE`, linkages will be ignored in the comparison.
+#' @param simplify A logical value. Only used in `have_motifs()`.
+#' If `TRUE`, drop columns (motifs) with all FALSE values. Default is `FALSE`.
 #'
 #' @return #' `has_motifs()` and `have_motif()` return a logical vector
 #' of the same length as the input motifs or glycans, respectively.
@@ -144,7 +146,7 @@ have_motif <- function(glycans, motif, alignment = "substructure", ignore_linkag
 
 #' @rdname has_motifs
 #' @export
-have_motifs <- function(glycans, motifs = NULL, alignments = "substructure", ignore_linkages = FALSE) {
+have_motifs <- function(glycans, motifs = NULL, alignments = "substructure", ignore_linkages = FALSE, simplify = FALSE) {
   alignment_provided <- !missing(alignments)
 
   # Check input arguments
@@ -171,7 +173,14 @@ have_motifs <- function(glycans, motifs = NULL, alignments = "substructure", ign
   motifs <- ensure_motifs_are_graphs(motifs, motif_type)
 
   lgl_list <- purrr::map(glycans, simple_has_motifs, motifs, alignments = alignments, ignore_linkages = ignore_linkages)
-  do.call(rbind, lgl_list)
+  result <- do.call(rbind, lgl_list)
+
+  if (simplify) {
+    # Drop columns will all FALSE
+    result <- result[, colSums(result) > 0]
+  }
+
+  result
 }
 
 
