@@ -10,11 +10,7 @@ They can be told apart by English grammar:
 Functions starting with "has" work with one glycan, "have" with multiple glycans.
 Functions ending with "motif" work with one motif, "motifs" with multiple motifs.
 
-
-has_motifs() and have_motif() return a logical vector of the same length
-as the input motifs or glycans, respectively.
-have_motifs() returns a matrix of logical values, indicating if each glycan has each motif.
-Rows are glycans and columns are motifs.'><meta property="og:description" content='These are vectorized versions of has_motif().
+'><meta property="og:description" content='These are vectorized versions of has_motif().
 has_motif() checks if a motif is present in a glycan.
 has_motifs() checks if a list of motifs are present in a glycans.
 have_motif() checks if a motif is present in a list of glycans.
@@ -25,11 +21,7 @@ They can be told apart by English grammar:
 Functions starting with "has" work with one glycan, "have" with multiple glycans.
 Functions ending with "motif" work with one motif, "motifs" with multiple motifs.
 
-
-has_motifs() and have_motif() return a logical vector of the same length
-as the input motifs or glycans, respectively.
-have_motifs() returns a matrix of logical values, indicating if each glycan has each motif.
-Rows are glycans and columns are motifs.'><meta property="og:image" content="https://fubin1999.github.io/glymotif/logo.png"></head><body>
+'><meta property="og:image" content="https://fubin1999.github.io/glymotif/logo.png"></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
@@ -67,11 +59,7 @@ Rows are glycans and columns are motifs.'><meta property="og:image" content="htt
 <li><p><code>have_motifs()</code> checks if a list of motifs are present in a list of glycans.</p></li>
 </ul><p>They can be told apart by English grammar:</p><ul><li><p>Functions starting with "has" work with one glycan, "have" with multiple glycans.</p></li>
 <li><p>Functions ending with "motif" work with one motif, "motifs" with multiple motifs.</p></li>
-</ul><p><code>has_motifs()</code> and <code>have_motif()</code> return a logical vector of the same length
-as the input motifs or glycans, respectively.
-<code>have_motifs()</code> returns a matrix of logical values, indicating if each glycan has each motif.
-Rows are glycans and columns are motifs.</p>
-    </div>
+</ul></div>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
@@ -102,7 +90,8 @@ Rows are glycans and columns are motifs.</p>
 
 <dt id="arg-motifs">motifs<a class="anchor" aria-label="anchor" href="#arg-motifs"></a></dt>
 <dd><p>A list of 'glycan_graph' objects, a character vector of
-IUPAC-condensed structure strings, or a character vector of known motif names.</p></dd>
+IUPAC-condensed structure strings, or a character vector of known motif names.
+If missing, all known motifs in the GlycoMotif GlyGen Collection will be used.</p></dd>
 
 
 <dt id="arg-alignments">alignments<a class="anchor" aria-label="anchor" href="#arg-alignments"></a></dt>
@@ -132,9 +121,33 @@ the alignment in the GlycoMotif GlyGen Collection will be used.</p></dd>
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>A logical vector or matrix. The dimension names are determined by the input arguments.
+    <p>#' <code>has_motifs()</code> and <code>have_motif()</code> return a logical vector
+of the same length as the input motifs or glycans, respectively.
+<code>have_motifs()</code> returns a matrix of logical values,
+indicating if each glycan has each motif.
+Rows are glycans and columns are motifs.</p>
+<p>The dimension names are determined by the input arguments.
 If <code>glycans</code> or <code>motifs</code> have names, they will be preserved in the result.
 If not, but <code>glycans</code> or <code>motifs</code> are character vectors, they will be used as names.</p>
+    </div>
+    <div class="section level2">
+    <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
+    <p>When using known motifs in the GlycoMotif GlyGen Collection,
+the best practice is to not provide the alignment arguments,
+and let the function decide the alignment based on the motif name.
+However, it is still possible to override the default alignments.
+In this case, the user-provided alignments will be used,
+but a warning will be issued.</p>
+<p>Internally, all glycan and motif inputs are converted to 'glycan_graph' objects.
+Therefore, if performance matters and you need to repeatedly use the same glycans or motifs,
+it is recommended to convert them to 'glycan_graph' objects beforehand.
+<code><a href="get_motif_graph.html">get_motif_graph()</a></code> can be used to get the 'glycan_graph' object of a known motif.
+<code><a href="https://fubin1999.github.io/glyparse/reference/parse_iupac_condensed.html" class="external-link">glyparse::parse_iupac_condensed()</a></code> can be used to convert IUPAC-condensed
+structure strings to 'glycan_graph' objects.</p>
+    </div>
+    <div class="section level2">
+    <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
+    <div class="dont-index"><p><code><a href="has_motif.html">has_motif()</a></code></p></div>
     </div>
 
     <div class="section level2">

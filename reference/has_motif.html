@@ -45,13 +45,7 @@ Monosaccharides, linkages , and substituents are all considered.</p>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">has_motif</span><span class="op">(</span></span>
-<span>  <span class="va">glycan</span>,</span>
-<span>  <span class="va">motif</span>,</span>
-<span>  <span class="va">...</span>,</span>
-<span>  alignment <span class="op">=</span> <span class="st">"substructure"</span>,</span>
-<span>  ignore_linkages <span class="op">=</span> <span class="cn">FALSE</span></span>
-<span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">has_motif</span><span class="op">(</span><span class="va">glycan</span>, <span class="va">motif</span>, alignment <span class="op">=</span> <span class="st">"substructure"</span>, ignore_linkages <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -67,13 +61,11 @@ Monosaccharides, linkages , and substituents are all considered.</p>
 or a known motif name (use <code><a href="available_motifs.html">available_motifs()</a></code> to see all available motifs).</p></dd>
 
 
-<dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
-<dd><p>Not used.</p></dd>
-
-
 <dt id="arg-alignment">alignment<a class="anchor" aria-label="anchor" href="#arg-alignment"></a></dt>
 <dd><p>A character string. Possible values are "substructure", "core", "terminal" and "whole".
-See description for details. Default is "substructure".</p></dd>
+Default is "substructure".
+When <code>motif</code> is a known motif name and <code>alignment</code> is not provided,
+the alignment type in the database will be used.</p></dd>
 
 
 <dt id="arg-ignore-linkages">ignore_linkages<a class="anchor" aria-label="anchor" href="#arg-ignore-linkages"></a></dt>
@@ -103,7 +95,12 @@ For example, a "concrete" <code>glycan</code> can have a "generic" <code>motif</
 so it will match any linkage in the <code>glycan</code> graph.
 However, "?" in a <code>glycan</code> graph will only match "?" in the <code>motif</code> graph.
 You can set <code>ignore_linkages = TRUE</code> to ignore linkages in the comparison.</p>
-<p>Both motifs and glycans can have a "half-linkage" at the reducing end,
+<p>Some examples:</p><ul><li><p>"b1-?" in motif will match "b1-4" in glycan.</p></li>
+<li><p>"b1-?" in motif will match "b1-?" in glycan.</p></li>
+<li><p>"b1-4" in motif will NOT match "b1-?" in glycan.</p></li>
+<li><p>"a1-?" in motif will NOT match "b1-4" in glycan.</p></li>
+<li><p>"a1-?" in motif will NOT match "a?-4" in glycan.</p></li>
+</ul><p>Both motifs and glycans can have a "half-linkage" at the reducing end,
 e.g. "GlcNAc(b1-".
 The half linkage in the motif will be matched to any linkage in the glycan,
 or the half linkage of the glycan.
@@ -126,7 +123,13 @@ for details.</p></li>
 <li><p>"whole": The motif must align with the entire glycan.
 See <a href="https://glycomotif.glyomics.org/glycomotif/Whole-Glycan_Alignment" class="external-link">whole-glycan</a>
 for details.</p></li>
-</ul></div>
+</ul><p>When using known motifs in the GlycoMotif GlyGen Collection,
+the best practice is to not provide the <code>alignment</code> argument,
+and let the function decide the alignment based on the motif name.
+However, it is still possible to override the default alignments.
+In this case, the user-provided alignments will be used,
+but a warning will be issued.</p>
+    </div>
     <div class="section level2">
     <h2 id="substituents">Substituents<a class="anchor" aria-label="anchor" href="#substituents"></a></h2>
     <p>Substituents (e.g. "Ac", "SO3") are matched in strict mode.
@@ -146,6 +149,10 @@ For all possible matches, the function checks the following:</p><ul><li><p>Align
 <li><p>Anomer: using <code>anomer_check()</code>
 The function returns <code>TRUE</code> if any of the matches pass all checks.</p></li>
 </ul></div>
+    <div class="section level2">
+    <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
+    <div class="dont-index"><p><code><a href="has_motifs.html">has_motifs()</a></code>, <code><a href="has_motifs.html">have_motif()</a></code>, <code><a href="has_motifs.html">have_motifs()</a></code></p></div>
+    </div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
@@ -156,9 +163,9 @@ The function returns <code>TRUE</code> if any of the matches pass all checks.</p
 <span class="r-out co"><span class="r-pr">#&gt;</span> Glycan Graph (NE)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Gal: 1, GalNAc: 1, GlcNAc: 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ------------------</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> GalNAc (a1-)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> ├─Gal (b1-3)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> └─GlcNAc (b1-6)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #FFD700;">GalNAc</span> (a1-)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ├─<span style="color: #FFD700;">Gal</span> (b1-3)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> └─<span style="color: #0087D7;">GlcNAc</span> (b1-6)</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># The glycan has the motif "Gal(b1-3)GalNAc"</span></span></span>
 <span class="r-in"><span><span class="fu">has_motif</span><span class="op">(</span><span class="va">glycan</span>, <span class="st">"Gal(b1-3)GalNAc"</span><span class="op">)</span></span></span>
