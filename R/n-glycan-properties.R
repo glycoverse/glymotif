@@ -71,16 +71,11 @@ ng_s_motifs <- purrr::map(ng_motifs, glyrepr::convert_glycan_mono_type, to = "si
 #'
 #' @export
 n_glycan_type <- function(glycan, strict = FALSE) {
-  valid_glycan_arg(glycan)
-  glycan <- ensure_glycan_is_graph(glycan)
-  if (strict) {
-    motifs <- ng_motifs
-  } else {
-    motifs <- ng_s_motifs
-    glycan <- glyrepr::convert_glycan_mono_type(glycan, to = "simple", strict = FALSE)
-  }
-  has_motif_ <- purrr::partial(has_motif_, ignore_linkages = !strict)
+  processed <- process_glycan_and_motifs(glycan, strict)
+  glycan <- processed$glycan
+  motifs <- processed$motifs
 
+  has_motif_ <- purrr::partial(has_motif_, ignore_linkages = !strict)
   if (has_motif_(glycan, motifs$pman1, alignment = "whole") ||
       has_motif_(glycan, motifs$pman2, alignment = "whole")) {
     "paucimannose"
@@ -112,13 +107,19 @@ n_glycan_type <- function(glycan, strict = FALSE) {
 #' @return A logical value.
 #' @export
 has_bisecting <- function(glycan, strict = FALSE) {
+  processed <- process_glycan_and_motifs(glycan, strict)
+  glycan <- processed$glycan
+  motifs <- processed$motifs
+  has_motif_(glycan, motifs$bisecting_core, alignment = "core", ignore_linkages = !strict)
+}
+
+
+process_glycan_and_motifs <- function(glycan, strict) {
   valid_glycan_arg(glycan)
   glycan <- ensure_glycan_is_graph(glycan)
-  if (strict) {
-    motifs <- ng_motifs
-  } else {
-    motifs <- ng_s_motifs
+  motifs <- if (strict) ng_motifs else ng_s_motifs
+  if (!strict) {
     glycan <- glyrepr::convert_glycan_mono_type(glycan, to = "simple", strict = FALSE)
   }
-  has_motif_(glycan, motifs$bisecting_core, alignment = "core", ignore_linkages = !strict)
+  list(glycan = glycan, motifs = motifs)
 }
