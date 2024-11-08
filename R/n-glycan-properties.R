@@ -33,7 +33,15 @@ ng_motifs <- c(
   hybrid = "GlcNAc(b1-2)Man(a1-3)[Man(a1-3)Man(a1-6)]Man(b1-4)GlcNAc(b1-4)GlcNAc(?1-",
 
   # same as pman1
-  core = "Man(a1-3)[Man(a1-6)]Man(b1-4)GlcNAc(b1-4)GlcNAc(?1-"
+  core = "Man(a1-3)[Man(a1-6)]Man(b1-4)GlcNAc(b1-4)GlcNAc(?1-",
+
+  # GlcNAc (?1-)
+  # └─GlcNAc (b1-4)
+  #   └─Man (b1-4)
+  #     ├─Man (a1-6)
+  #     ├─GlcNAc (b1-4)
+  #     └─Man (a1-3)
+  bisecting_core = "Man(a1-3)[GlcNAc(b1-4)][Man(a1-6)]Man(b1-4)GlcNAc(b1-4)GlcNAc(?1-"
 )
 ng_motifs <- purrr::map(ng_motifs, glyparse::parse_iupac_condensed)
 ng_s_motifs <- purrr::map(ng_motifs, glyrepr::convert_glycan_mono_type, to = "simple")
@@ -72,6 +80,7 @@ n_glycan_type <- function(glycan, strict = FALSE) {
     glycan <- glyrepr::convert_glycan_mono_type(glycan, to = "simple", strict = FALSE)
   }
   has_motif_ <- purrr::partial(has_motif_, ignore_linkages = !strict)
+
   if (has_motif_(glycan, motifs$pman1, alignment = "whole") ||
       has_motif_(glycan, motifs$pman2, alignment = "whole")) {
     "paucimannose"
@@ -84,4 +93,32 @@ n_glycan_type <- function(glycan, strict = FALSE) {
   } else {
     rlang::abort("Not an N-glycan")
   }
+}
+
+
+#' Does the Glycan have Bisecting GlcNAc?
+#'
+#' Bisecting GlcNAc is a GlcNAc residue attached to the core mannose of N-glycans.
+#' ```
+#'      Man
+#'         \
+#' GlcNAc - Man - GlcNAc - GlcNAc
+#' ~~~~~~  /
+#'      Man
+#' ```
+#'
+#' @inheritParams n_glycan_type
+#'
+#' @return A logical value.
+#' @export
+has_bisecting <- function(glycan, strict = FALSE) {
+  valid_glycan_arg(glycan)
+  glycan <- ensure_glycan_is_graph(glycan)
+  if (strict) {
+    motifs <- ng_motifs
+  } else {
+    motifs <- ng_s_motifs
+    glycan <- glyrepr::convert_glycan_mono_type(glycan, to = "simple", strict = FALSE)
+  }
+  has_motif_(glycan, motifs$bisecting_core, alignment = "core", ignore_linkages = !strict)
 }

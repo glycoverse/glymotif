@@ -2,6 +2,7 @@
 
 export(available_motifs)
 export(get_motif_graph)
+export(has_bisecting)
 export(has_motif)
 export(has_motifs)
 export(have_motif)
