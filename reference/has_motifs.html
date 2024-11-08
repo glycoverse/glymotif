@@ -76,7 +76,8 @@ Functions ending with "motif" work with one motif, "motifs" with multiple motifs
 <span>  <span class="va">glycans</span>,</span>
 <span>  motifs <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  alignments <span class="op">=</span> <span class="st">"substructure"</span>,</span>
-<span>  ignore_linkages <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span>  ignore_linkages <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  simplify <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -117,6 +118,11 @@ the alignments in the GlycoMotif GlyGen Collection will be used.</p></dd>
 <dd><p>A single character, one of 'substructure', 'core', 'terminal' or 'whole'.
 If not provided and <code>motif</code> is a known motif name,
 the alignment in the GlycoMotif GlyGen Collection will be used.</p></dd>
+
+
+<dt id="arg-simplify">simplify<a class="anchor" aria-label="anchor" href="#arg-simplify"></a></dt>
+<dd><p>A logical value. Only used in <code>have_motifs()</code>.
+If <code>TRUE</code>, drop columns (motifs) with all FALSE values. Default is <code>FALSE</code>.</p></dd>
 
 </dl></div>
     <div class="section level2">
