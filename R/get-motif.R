@@ -52,12 +52,11 @@ is_known_motif <- function(name) {
 #' @export
 get_motif_graph <- function(name) {
   check_names(name)
-  iupac <- glygen_motifs$iupac[glygen_motifs$name %in% name]
-  if (length(iupac) == 1) {
-    glyparse::parse_iupac_condensed(iupac)
+  res <- glygen_motifs$graph[glygen_motifs$name %in% name]
+  if (length(res) > 1) {
+    rlang::set_names(res, name)
   } else {
-    graph_list <- purrr::map(iupac, glyparse::parse_iupac_condensed)
-    rlang::set_names(graph_list, name)
+    res[[1]]
   }
 }
 

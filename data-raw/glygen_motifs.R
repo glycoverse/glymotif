@@ -49,5 +49,6 @@ good_df[good_df$accession == "000106", "name"] <- "GD1alpha"
 good_df <- good_df[!good_df$accession %in% c("001026", "001027"), ]
 
 glygen_motifs <- select(good_df, -wurcs)
+glygen_motifs$graph <- map(glygen_motifs$iupac, glyparse::parse_iupac_condensed)
 
 usethis::use_data(glygen_motifs, internal = TRUE, overwrite = TRUE)

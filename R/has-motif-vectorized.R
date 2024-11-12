@@ -257,7 +257,7 @@ get_motifs_type <- function(motifs) {
 
 
 decide_alignments <- function(motif_names, alignments, alignments_provided) {
-  db_alignments <- glygen_motifs$alignment[glygen_motifs$name %in% motif_names]
+  db_alignments <- get_motif_alignment(motif_names)
   if (alignments_provided) {
     rlang::warn("Use user-provided alignments, not the ones in the database.")
     alignments
