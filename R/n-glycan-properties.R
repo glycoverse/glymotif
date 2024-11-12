@@ -1,52 +1,3 @@
-ng_motifs <- c(
-  # GlcNAc (?1-)
-  # └─GlcNAc (b1-4)
-  #   └─Man (b1-4)
-  #     ├─Man (a1-6)
-  #     └─Man (a1-3)
-  pman1 = "Man(a1-3)[Man(a1-6)]Man(b1-4)GlcNAc(b1-4)GlcNAc(?1-",
-
-  # GlcNAc (?1-)
-  # └─GlcNAc (b1-4)
-  #   └─Man (b1-4)
-  #     ├─Man (a1-6)
-  #     │ └─Man (a1-3/6)
-  #     └─Man (a1-3)
-  pman2 = "Man(a1-3)[Man(a1-3/6)Man(a1-6)]Man(b1-4)GlcNAc(b1-4)GlcNAc(?1-",
-
-  # GlcNAc (?1-)
-  # └─GlcNAc (b1-4)
-  #   └─Man (b1-4)
-  #     ├─Man (a1-3)
-  #     └─Man (a1-6)
-  #       ├─Man (a1-6)
-  #       └─Man (a1-3)
-  hman = "Man(a1-3)[Man(a1-6)]Man(a1-6)[Man(a1-3)]Man(b1-4)GlcNAc(b1-4)GlcNAc(?1-",
-
-  # GlcNAc (?1-)
-  # └─GlcNAc (b1-4)
-  #   └─Man (b1-4)
-  #     ├─Man (a1-6)
-  #     │ └─Man (a1-3)
-  #     └─Man (a1-3)
-  #       └─GlcNAc (b1-2)
-  hybrid = "GlcNAc(b1-2)Man(a1-3)[Man(a1-3)Man(a1-6)]Man(b1-4)GlcNAc(b1-4)GlcNAc(?1-",
-
-  # same as pman1
-  core = "Man(a1-3)[Man(a1-6)]Man(b1-4)GlcNAc(b1-4)GlcNAc(?1-",
-
-  # GlcNAc (?1-)
-  # └─GlcNAc (b1-4)
-  #   └─Man (b1-4)
-  #     ├─Man (a1-6)
-  #     ├─GlcNAc (b1-4)
-  #     └─Man (a1-3)
-  bisecting_core = "Man(a1-3)[GlcNAc(b1-4)][Man(a1-6)]Man(b1-4)GlcNAc(b1-4)GlcNAc(?1-"
-)
-ng_motifs <- purrr::map(ng_motifs, glyparse::parse_iupac_condensed)
-ng_s_motifs <- purrr::map(ng_motifs, glyrepr::convert_glycan_mono_type, to = "simple")
-
-
 #' Determine N-Glycan Type
 #'
 #' Four types of N-glycans are recognized: high mannose, hybrid, complex, and paucimannose.
@@ -71,23 +22,26 @@ ng_s_motifs <- purrr::map(ng_motifs, glyrepr::convert_glycan_mono_type, to = "si
 #'
 #' @export
 n_glycan_type <- function(glycan, strict = FALSE) {
-  processed <- process_glycan_and_motifs(glycan, strict)
-  glycan <- processed$glycan
-  motifs <- processed$motifs
-
-  has_motif_ <- purrr::partial(has_motif_, ignore_linkages = !strict)
-  if (has_motif_(glycan, motifs$pman1, alignment = "whole") ||
-      has_motif_(glycan, motifs$pman2, alignment = "whole")) {
-    "paucimannose"
-  } else if (has_motif_(glycan, motifs$hybrid, alignment = "core")) {
-    "hybrid"
-  } else if (has_motif_(glycan, motifs$hman, alignment = "core")) {
-    "highmannose"
-  } else if (has_motif_(glycan, motifs$core, alignment = "core")){
-    "complex"
-  } else {
-    rlang::abort("Not an N-glycan")
+  .n_glycan_type <- function(glycan, .has_motif) {
+    H4N2_iupac <- "Man(a1-3)[Man(a1-3/6)Man(a1-6)]Man(b1-4)GlcNAc(b1-4)GlcNAc(?1-"
+    H4N2_graph <- glyparse::parse_iupac_condensed(H4N2_iupac)
+    core_graph <- get_motif_graph("N-Glycan core basic")
+    hybrid_graph <- get_motif_graph("N-Glycan hybrid")
+    highman_graph <- get_motif_graph("N-Glycan high mannose")
+    if (.has_motif(glycan, core_graph, alignment = "whole") ||
+        .has_motif(glycan, H4N2_graph, alignment = "whole")) {
+      "paucimannose"
+    } else if (.has_motif(glycan, hybrid_graph, alignment = "core")) {
+      "hybrid"
+    } else if (.has_motif(glycan, highman_graph, alignment = "core")) {
+      "highmannose"
+    } else if (.has_motif(glycan, core_graph, alignment = "core")){
+      "complex"
+    } else {
+      rlang::abort("Not an N-glycan")
+    }
   }
+  n_glycan_property_wrapper(glycan, strict, .n_glycan_type)
 }
 
 
@@ -107,19 +61,47 @@ n_glycan_type <- function(glycan, strict = FALSE) {
 #' @return A logical value.
 #' @export
 has_bisecting <- function(glycan, strict = FALSE) {
-  processed <- process_glycan_and_motifs(glycan, strict)
-  glycan <- processed$glycan
-  motifs <- processed$motifs
-  has_motif_(glycan, motifs$bisecting_core, alignment = "core", ignore_linkages = !strict)
+  .has_bisecting <- function(glycan, .has_motif) {
+    bisect_graph <- get_motif_graph("N-glycan core, bisected")
+    .has_motif(glycan, bisect_graph, alignment = "core")
+  }
+  n_glycan_property_wrapper(glycan, strict, .has_bisecting)
 }
 
 
-process_glycan_and_motifs <- function(glycan, strict) {
+n_glycan_property_wrapper <- function(glycan, strict, func) {
+  # This function encapsulates the common pattern of checking N-glycan properties.
+  # To use it, write a function that takes a glycan graph and a function that checks a motif,
+  # and use that function to check if the glycan has the motif.
+  # For example:
+  # ```
+  # .has_bisecting <- function(glycan, .has_motif) {
+  #   bisect_graph <- get_motif_graph("N-glycan core, bisected")
+  #   .has_motif(glycan, bisect_graph, alignment = "core")
+  # }
+  # ```
+  # Then pass this function to `n_glycan_property_wrapper()`:
+  # ```
+  # n_glycan_property_wrapper(glycan, strict, .has_bisecting)
+  # ```
+  # This function will take care of converting the glycan to a graph and
+  # checking the motif with suitable strictness.
   valid_glycan_arg(glycan)
   glycan <- ensure_glycan_is_graph(glycan)
-  motifs <- if (strict) ng_motifs else ng_s_motifs
-  if (!strict) {
+  if (strict) {
+    has_motif_func <- has_motif_
+  } else {
     glycan <- glyrepr::convert_glycan_mono_type(glycan, to = "simple", strict = FALSE)
+    has_motif_func <- lenient_has_motif_
   }
-  list(glycan = glycan, motifs = motifs)
+  func(glycan, has_motif_func)
+}
+
+
+lenient_has_motif_ <- function(glycan, motif, alignment) {
+  # This function differs from `has_motif_()` in these ways:
+  # 1. It always converts the motif to "simple" monosaccharides.
+  # 2. It ignores linkage information.
+  motif <- glyrepr::convert_glycan_mono_type(motif, to = "simple", strict = FALSE)
+  has_motif_(glycan, motif, alignment = alignment, ignore_linkages = TRUE)
 }
