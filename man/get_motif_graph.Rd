@@ -4,7 +4,7 @@
 \alias{get_motif_graph}
 \alias{get_motif_alignment}
 \alias{get_motif_aglycon}
-\title{Get a Motif Structure Graph, Alignment, or Aglycon}
+\title{Get the Structure Graphs, Alignments, or Aglycons of Known Motifs}
 \usage{
 get_motif_graph(name)
 
@@ -13,24 +13,28 @@ get_motif_alignment(name)
 get_motif_aglycon(name)
 }
 \arguments{
-\item{name}{A character string of the motif name.}
+\item{name}{A character vector of the motif name.}
 }
 \value{
-\code{get_motif_graph()} returns a \code{glycan_graph} object,
-\code{get_motif_alignment()} returns a character string, and
-\code{get_motif_aglycon()} returns a character string.
+\code{get_motif_graph()} returns a \code{glycan_graph} when \code{name} is a character
+scalar, and a list of \code{glycan_graph} when \code{name} is a character vector.
+\code{get_motif_alignment()} returns a character vector of motif alignments.
+\code{get_motif_aglycon()} returns a character vector of motif aglycons.
+For all three functions, if \code{name} has length greater than 1,
+the return value is named with the motif names.
 }
 \description{
-Given a motif name in the GlycoMotif GlyGen Collection,
-\code{get_motif_graph()} returns a \code{glycan_graph} object of the motif structure,
-\code{get_motif_alignment()} returns the alignment of the motif, and
-\code{get_motif_aglycon()} returns the aglycon of the motif.
-For available motifs, use \code{\link[=availabel_motifs]{availabel_motifs()}}.
+Given a character vector of motifs names in GlycoMotif GlyGen Collection,
+these functions return the structure graphs, alignments, or aglycons of the motifs.
 }
 \examples{
 get_motif_graph("N-Glycan core basic")
 get_motif_alignment("N-Glycan core basic")
 get_motif_aglycon("N-Glycan core basic")
+
+get_motif_graph(c("O-Glycan core 1", "O-Glycan core 2"))
+get_motif_alignment(c("O-Glycan core 1", "O-Glycan core 2"))
+get_motif_aglycon(c("O-Glycan core 1", "O-Glycan core 2"))
 
 }
 \seealso{

@@ -201,3 +201,24 @@
           ├─Man (a1-6)
           └─Man (a1-3)
 
+# getting many motif graphs
+
+    Code
+      print(result)
+    Output
+      $`O-Glycan core 1`
+      Glycan Graph (NE)
+      Gal: 1, GalNAc: 1
+      ------------------
+      GalNAc (a1-)
+      └─Gal (b1-3)
+      
+      $`O-Glycan core 2`
+      Glycan Graph (NE)
+      Gal: 1, GalNAc: 1, GlcNAc: 1
+      ------------------
+      GalNAc (a1-)
+      ├─GlcNAc (b1-6)
+      └─Gal (b1-3)
+      
+
