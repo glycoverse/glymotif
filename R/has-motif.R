@@ -274,7 +274,7 @@ decide_alignment <- function(motif_name, alignment, alignment_provided) {
   # If the alignment is provided, check if it is the same as the motif's
   # alignment type in the database and issue a warning if not.
   # If not provided, use the motif's alignment type in the database.
-  db_alignment <- get_motif_graph(motif_name)$alignment
+  db_alignment <- get_motif_alignment(motif_name)
   if (alignment_provided) {
     if (alignment != db_alignment) {
       cli::cli_warn(
@@ -306,7 +306,7 @@ ensure_glycan_is_graph <- function(glycan) {
 ensure_motif_is_graph <- function(motif, motif_type) {
   # Make sure `motif` is a graph.
   if (motif_type == "known") {
-    motif <- get_motif_graph(motif)$graph
+    motif <- get_motif_graph(motif)
   } else if (motif_type == "iupac") {
     tryCatch(
       motif <- glyparse::parse_iupac_condensed(motif),

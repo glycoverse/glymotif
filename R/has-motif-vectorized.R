@@ -278,7 +278,7 @@ ensure_motifs_are_graphs <- function(motifs, motif_type) {
       cli::cli_abort("Motifs at indices {.val {invalid_indices}} are neither known motif names or able to be parsed as IUPAC-condensed structure strings.")
     }
   } else if (motif_type == "known") {
-    graph_list <- purrr::map(motifs, ~ get_motif_graph(.x)$graph)
+    graph_list <- purrr::map(motifs, ~ get_motif_graph(.x))
   }
 
   # Add names

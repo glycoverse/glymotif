@@ -14,10 +14,19 @@ test_that("get known motif", {
 })
 
 
-test_that("getting motif works", {
+test_that("getting motif graph works", {
   result <- get_motif_graph("N-Glycan core basic")
-  expect_length(result, 3)
-  expect_s3_class(result$graph, "glycan_graph")
-  expect_identical(result$aglycon, "Asn")
-  expect_identical(result$alignment, "core")
+  expect_snapshot(print(result))
+})
+
+
+test_that("getting motif alignment works", {
+  result <- get_motif_alignment("N-Glycan core basic")
+  expect_identical(result, "core")
+})
+
+
+test_that("getting motif aglycon works", {
+  result <- get_motif_aglycon("N-Glycan core basic")
+  expect_identical(result, "Asn")
 })

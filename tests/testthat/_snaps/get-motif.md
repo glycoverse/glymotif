@@ -187,3 +187,17 @@
       [182] "O-GlcNAc Core EGF Type"                
       [183] "N-glycan core, Man truncated"          
 
+# getting motif graph works
+
+    Code
+      print(result)
+    Output
+      Glycan Graph (NE)
+      GlcNAc: 2, Man: 3
+      ------------------
+      GlcNAc
+      └─GlcNAc (b1-4)
+        └─Man (b1-4)
+          ├─Man (a1-6)
+          └─Man (a1-3)
+
