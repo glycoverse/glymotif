@@ -1,3 +1,8 @@
+rlang::on_load({
+  glygen_motifs$graph <- purrr::map(glygen_motifs$iupac, glyparse::parse_iupac_condensed)
+  glygen_motifs <- tibble::as_tibble(glygen_motifs)
+})
+
 #' Get Available Motifs
 #'
 #' This function returns the names of the available motifs available in the package.
@@ -47,7 +52,7 @@ is_known_motif <- function(name) {
 #' get_motif_alignment(c("O-Glycan core 1", "O-Glycan core 2"))
 #' get_motif_aglycon(c("O-Glycan core 1", "O-Glycan core 2"))
 #'
-#' @seealso [availabel_motifs()], [is_known_motif()]
+#' @seealso [available_motifs()], [is_known_motif()]
 #'
 #' @export
 get_motif_graph <- function(name) {
