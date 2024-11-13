@@ -203,7 +203,8 @@ complex_H7N6 <- function(mono_type, linkage) {
 param_grid <- function() {
   expand.grid(
     mono_type = c("simple", "generic", "concrete"),
-    linkage = c(TRUE, FALSE)
+    linkage = c(TRUE, FALSE),
+    stringsAsFactors = FALSE
   )
 }
 
