@@ -151,6 +151,53 @@ complex_H3N5_bisect <- function(mono_type, linkage) {
   make_glycan("GlcNAc(b1-2)Man(a1-3)[GlcNAc(b1-4)][GlcNAc(b1-2)Man(a1-6)]Man(b1-4)GlcNAc(b1-4)GlcNAc(?1-", mono_type, linkage)
 }
 
+complex_H6N5a6 <- function(mono_type, linkage) {
+  # GlcNAc (?1-)
+  # └─GlcNAc (b1-4)
+  #   └─Man (b1-4)
+  #     ├─Man (a1-6)
+  #     │ ├─GlcNAc (b1-6)
+  #     │ │ └─Gal (b1-4)
+  #     │ └─GlcNAc (b1-2)
+  #     │   └─Gal (b1-4)
+  #     └─Man (a1-3)
+  #       └─GlcNAc (b1-2)
+  #         └─Gal (b1-4)
+  make_glycan("Gal(b1-4)GlcNAc(b1-2)Man(a1-3)[Gal(b1-4)GlcNAc(b1-2)[Gal(b1-4)GlcNAc(b1-6)]Man(a1-6)]Man(b1-4)GlcNAc(b1-4)GlcNAc(?1-", mono_type, linkage)
+}
+
+complex_H6N5a3 <- function(mono_type, linkage) {
+  # GlcNAc (?1-)
+  # └─GlcNAc (b1-4)
+  #   └─Man (b1-4)
+  #     ├─Man (a1-6)
+  #     │ └─GlcNAc (b1-2)
+  #     │   └─Gal (b1-4)
+  #     └─Man (a1-3)
+  #       ├─GlcNAc (b1-4)
+  #       │ └─Gal (b1-4)
+  #       └─GlcNAc (b1-2)
+  #         └─Gal (b1-4)
+  make_glycan("Gal(b1-4)GlcNAc(b1-2)[Gal(b1-4)GlcNAc(b1-4)]Man(a1-3)[Gal(b1-4)GlcNAc(b1-2)Man(a1-6)]Man(b1-4)GlcNAc(b1-4)GlcNAc(?1-", mono_type, linkage)
+}
+
+complex_H7N6 <- function(mono_type, linkage) {
+  # GlcNAc (b1-)
+  # └─GlcNAc (b1-4)
+  #   └─Man (b1-4)
+  #     ├─Man (a1-6)
+  #     │ ├─GlcNAc (b1-6)
+  #     │ │ └─Gal (b1-4)
+  #     │ └─GlcNAc (b1-2)
+  #     │   └─Gal (b1-4)
+  #     └─Man (a1-3)
+  #       ├─GlcNAc (b1-4)
+  #       │ └─Gal (b1-4)
+  #       └─GlcNAc (b1-2)
+  #         └─Gal (b1-4)
+  make_glycan("Gal(b1-4)GlcNAc(b1-2)[Gal(b1-4)GlcNAc(b1-4)]Man(a1-3)[Gal(b1-4)GlcNAc(b1-2)[Gal(b1-4)GlcNAc(b1-6)]Man(a1-6)]Man(b1-4)GlcNAc(b1-4)GlcNAc(b1-", mono_type, linkage)
+}
+
 
 # ========== N-glycan types ==========
 param_grid <- function() {
@@ -186,7 +233,7 @@ test_that("paucimannose H4N2a3 strict", {
 
 
 test_that("paucimannose H4N2a6", {
-  glycan <- paucimannose_H4N2a6("simple", linkage = TRUE)
+  glycan <- paucimannose_H4N2a6("simple", linkage = FALSE)
   expect_identical(n_glycan_type(glycan), "paucimannose")
 })
 
@@ -210,7 +257,7 @@ test_that("highmannose H5N2 strict", {
 
 
 test_that("highmannose H6N2", {
-  glycan <- highmannose_H6N2("simple", linkage = TRUE)
+  glycan <- highmannose_H6N2("simple", linkage = FALSE)
   expect_identical(n_glycan_type(glycan), "highmannose")
 })
 
@@ -222,7 +269,7 @@ test_that("highmannose H6N2 strict", {
 
 
 test_that("hybrid H5N3", {
-  glycan <- hybrid_H5N3("simple", linkage = TRUE)
+  glycan <- hybrid_H5N3("simple", linkage = FALSE)
   expect_identical(n_glycan_type(glycan), "hybrid")
 })
 
@@ -246,7 +293,7 @@ test_that("hybrid H4N3a3 strict", {
 
 
 test_that("hybrid H4N3a3F1", {
-  glycan <- hybrid_H4N3a3F1("simple", linkage = TRUE)
+  glycan <- hybrid_H4N3a3F1("simple", linkage = FALSE)
   expect_identical(n_glycan_type(glycan), "hybrid")
 })
 
@@ -270,19 +317,19 @@ test_that("complex H3N3 strict", {
 
 
 test_that("complex H3N4", {
-  glycan <- complex_H3N4("simple", linkage = TRUE)
+  glycan <- complex_H3N4("simple", linkage = FALSE)
   expect_identical(n_glycan_type(glycan), "complex")
 })
 
 
 test_that("complex H3N4", {
-  glycan <- complex_H3N4("simple", linkage = TRUE)
+  glycan <- complex_H3N4("simple", linkage = FALSE)
   expect_identical(n_glycan_type(glycan), "complex")
 })
 
 
 test_that("complex H4N4", {
-  glycan <- complex_H4N4("simple", linkage = TRUE)
+  glycan <- complex_H4N4("simple", linkage = FALSE)
   expect_identical(n_glycan_type(glycan), "complex")
 })
 
@@ -307,6 +354,61 @@ test_that("complex H3N5 bisect strict", {
 
 
 test_that("complex H4H4 not bisect", {
-  glycan <- complex_H4N4("simple", linkage = TRUE)
+  glycan <- complex_H4N4("simple", linkage = FALSE)
   expect_false(has_bisecting(glycan))
+})
+
+
+# ========== Number of antennae ==========
+test_that("one antenna: H3N3", {
+  glycan <- complex_H3N3("simple", linkage = FALSE)
+  expect_identical(n_antennae(glycan), 1L)
+})
+
+
+patrick::with_parameters_test_that("two antennae: H4N4", {
+  glycan <- complex_H4N4(mono_type, linkage)
+  expect_identical(n_antennae(glycan), 2L)
+}, param_grid())
+
+
+test_that("two antennae: H3N5, bisecting", {
+  glycan <- complex_H3N5_bisect("simple", linkage = FALSE)
+  expect_identical(n_antennae(glycan), 2L)
+})
+
+
+test_that("three antennae: H6N5, on a3 mannose", {
+  glycan <- complex_H6N5a3("simple", linkage = FALSE)
+  expect_identical(n_antennae(glycan), 3L)
+})
+
+
+test_that("three antennae: H6N5, on a3 mannose, strict", {
+  glycan <- complex_H6N5a3("concrete", linkage = TRUE)
+  expect_identical(n_antennae(glycan, strict = TRUE), 3L)
+})
+
+
+test_that("three antennae: H6N5, on a6 mannose, strict", {
+  glycan <- complex_H6N5a6("concrete", linkage = TRUE)
+  expect_identical(n_antennae(glycan, strict = TRUE), 3L)
+})
+
+
+test_that("hybrid H5N3 has NA antennae", {
+  glycan <- hybrid_H5N3("simple", linkage = FALSE)
+  expect_identical(n_antennae(glycan), NA_integer_)
+})
+
+
+test_that("highmannose H5N2 has NA antennae", {
+  glycan <- highmannose_H5N2("simple", linkage = FALSE)
+  expect_identical(n_antennae(glycan), NA_integer_)
+})
+
+
+test_that("paucimannose H3N2 has NA antennae", {
+  glycan <- paucimannose_H3N2("simple", linkage = FALSE)
+  expect_identical(n_antennae(glycan), NA_integer_)
 })

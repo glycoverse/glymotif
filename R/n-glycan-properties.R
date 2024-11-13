@@ -69,6 +69,37 @@ has_bisecting <- function(glycan, strict = FALSE) {
 }
 
 
+#' Number of Antennae
+#'
+#' The number of antennae is the number of branching GlcNAc to the core mannoses
+#' in a complex N-glycan. Bisecting GlcNAc is not counted as an antenna.
+#' This functions returns NA_integer_ for non-complex N-glycans.
+#'
+#' @inheritParams n_glycan_type
+#'
+#' @return An integer of the number of antennae.
+#' @export
+n_antennae <- function(glycan, strict = FALSE) {
+  .n_antennae <- function(glycan, .has_motif) {
+    ant2_graph <- get_motif_graph("N-Glycan biantennary")
+    ant3_graph <- get_motif_graph("N-Glycan triantennary")
+    ant4_graph <- get_motif_graph("N-Glycan tetraantennary")
+    if (n_glycan_type(glycan, strict) != "complex") {
+      NA_integer_
+    } else if (.has_motif(glycan, ant4_graph, alignment = "core")) {
+      4L
+    } else if (.has_motif(glycan, ant3_graph, alignment = "core")) {
+      3L
+    } else if (.has_motif(glycan, ant2_graph, alignment = "core")) {
+      2L
+    } else {
+      1L
+    }
+  }
+  n_glycan_property_wrapper(glycan, strict, .n_antennae)
+}
+
+
 n_glycan_property_wrapper <- function(glycan, strict, func) {
   # This function encapsulates the common pattern of checking N-glycan properties.
   # To use it, write a function that takes a glycan graph and a function that checks a motif,
