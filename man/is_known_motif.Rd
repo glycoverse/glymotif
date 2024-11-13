@@ -7,11 +7,11 @@
 is_known_motif(name)
 }
 \arguments{
-\item{name}{A character string of the motif name.}
+\item{name}{A character vector of the motif name.}
 }
 \value{
-A logical value.
+A logical vector.
 }
 \description{
-This function checks if a motif is a known motif in GlycoMotif GlyGen Collection.
+This function checks if motifs are known motifs in GlycoMotif GlyGen Collection.
 }

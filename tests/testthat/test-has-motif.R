@@ -2,14 +2,14 @@
 test_that("wrong glycan types", {
   glycan <- igraph::make_empty_graph()
   motif <- glyparse::parse_iupac_condensed("Gal(b1-4)GalNAc", mode = "ne")
-  expect_error(has_motif(glycan, motif), "`glycan` must be a 'glycan_graph' object or an IUPAC-condensed structure string")
+  expect_snapshot(has_motif(glycan, motif), error = TRUE)
 })
 
 
 test_that("wrong motif types", {
   glycan <- glyrepr::o_glycan_core_2(mode = "ne")
   motif <- igraph::make_empty_graph()
-  expect_error(has_motif(glycan, motif), "`motif` must be either a 'glycan_graph' object, an IUPAC-condensed structure string, or a known motif name")
+  expect_snapshot(has_motif(glycan, motif), error = TRUE)
 })
 
 
@@ -30,14 +30,14 @@ test_that("motif name used as input", {
 test_that("unkown motif name used as input", {
   glycan <- glyrepr::o_glycan_core_2(mode = "ne")
   motif <- "unknown motif name"
-  expect_error(has_motif(glycan, motif), "`motif` must be either a 'glycan_graph' object, an IUPAC-condensed structure string, or a known motif name")
+  expect_snapshot(has_motif(glycan, motif), error = TRUE)
 })
 
 
 test_that("bad glycan IUPAC", {
   glycan <- "bad IUPAC"
   motif <- glyparse::parse_iupac_condensed("Gal(b1-3)GalNAc")
-  expect_error(has_motif(glycan, motif), "`glycan` could not be parsed as a valid IUPAC-condensed structure")
+  expect_snapshot(has_motif(glycan, motif), error = TRUE)
 })
 
 

@@ -40,7 +40,7 @@
       has_motifs(glycan, motifs)
     Condition
       Error in `valid_motifs_arg()`:
-      ! `motifs` must be either 'glycan_graph' objects, a character vector of IUPAC-condensed structure strings, or a character vector of known motif names.
+      ! `motifs` must be either a list of 'glycan_graph' objects, a character vector of IUPAC-condensed structure strings, or a character vector of known motif names.
 
 # has_motifs: missing motifs uses default motifs
 

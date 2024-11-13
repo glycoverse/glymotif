@@ -20,12 +20,13 @@ available_motifs <- function() {
 
 #' Check if a Motif is Known
 #'
-#' This function checks if a motif is a known motif in GlycoMotif GlyGen Collection.
+#' This function checks if motifs are known motifs in GlycoMotif GlyGen Collection.
 #'
-#' @param name A character string of the motif name.
-#' @return A logical value.
+#' @param name A character vector of the motif name.
+#' @return A logical vector.
 #' @export
 is_known_motif <- function(name) {
+  checkmate::assert_character(name)
   name %in% glygen_motifs$name
 }
 
@@ -87,6 +88,7 @@ get_motif_aglycon <- function(name) {
 
 
 check_names <- function(name) {
+  checkmate::assert_character(name)
   if (!all(name %in% glygen_motifs$name)) {
     unknown_names <- name[!name %in% glygen_motifs$name]
     cli::cli_abort("Unknown motif: {.val {unknown_names}}.")

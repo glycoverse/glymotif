@@ -118,6 +118,7 @@ n_glycan_property_wrapper <- function(glycan, strict, func) {
   # This function will take care of converting the glycan to a graph and
   # checking the motif with suitable strictness.
   valid_glycan_arg(glycan)
+  checkmate::assert_flag(strict)
   glycan <- ensure_glycan_is_graph(glycan)
   if (strict) {
     has_motif_func <- has_motif_

@@ -185,46 +185,43 @@ have_motifs <- function(glycans, motifs = NULL, alignments = "substructure", ign
 
 
 valid_glycans_arg <- function(x) {
-  error_msg <- "`glycans` must be either 'glycan_graph' objects or a character vector of IUPAC-condensed structure strings."
-  if (is.character(x)) {
-    NULL
-  } else if (is.list(x)) {
-    if (!purrr::every(x, glyrepr::is_glycan)) {
-      rlang::abort(error_msg)
-    }
-  } else {
+  error_msg <- paste(
+    "`glycans` must be either a list of 'glycan_graph' objects",
+    "or a character vector of IUPAC-condensed structure strings."
+  )
+  if (
+    !checkmate::test_character(x) &&
+    !checkmate::test_list(x, types = "glycan_graph")
+  ) {
     rlang::abort(error_msg)
   }
 }
 
 
 valid_motifs_arg <- function(x) {
-  error_msg <- "`motifs` must be either 'glycan_graph' objects, a character vector of IUPAC-condensed structure strings, or a character vector of known motif names."
-  if (is.null(x) || is.character(x)) {
-    NULL
-  } else if (is.list(x)) {
-    if (!purrr::every(x, glyrepr::is_glycan)) {
-      rlang::abort(error_msg)
-    }
-  } else {
+  error_msg <- paste(
+    "`motifs` must be either a list of 'glycan_graph' objects,",
+    "a character vector of IUPAC-condensed structure strings,",
+    "or a character vector of known motif names."
+  )
+  if (
+    !checkmate::test_null(x) &&
+    !checkmate::test_character(x) &&
+    !checkmate::test_list(x, types = "glycan_graph")
+  ) {
     rlang::abort(error_msg)
   }
 }
 
 
 valid_alignments_arg <- function(x, motifs) {
-  if (!is.character(x)) {
-    rlang::abort("`alignments` must be a character vector.")
-  }
   if (length(x) != 1 && length(x) != length(motifs)) {
     cli::cli_abort(c(
       "`alignments` must be either a single character string or a character vector of the same length as `motifs`.",
       i = "`motif` length: {.val {length(motifs)}}, `alignments` length: {.val {length(x)}}"
     ))
   }
-  if (!all(x %in% c("substructure", "core", "terminal", "whole"))) {
-    rlang::abort("`alignments` must be one of 'substructure', 'core', 'terminal' or 'whole'.")
-  }
+  checkmate::assert_subset(x, c("substructure", "core", "terminal", "whole"))
 }
 
 

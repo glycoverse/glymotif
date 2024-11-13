@@ -194,30 +194,47 @@ has_motif <- function(glycan, motif, alignment = "substructure", ignore_linkages
 
 
 valid_alignment_arg <- function(x) {
-  if (!x %in% c("substructure", "core", "terminal", "whole")) {
-    rlang::abort("`alignment` must be one of 'substructure', 'core', 'terminal' or 'whole'.")
-  }
+  checkmate::assert_choice(x, c("substructure", "core", "terminal", "whole"))
 }
 
 
+test_graph_arg <- function(x) {
+  (
+    checkmate::test_class(x, "glycan_graph") ||
+    checkmate::test_character(x, len = 1)
+  )
+}
+
+
+glycan_type_err_msg <- paste(
+  "`glycan` must be a 'glycan_graph' object",
+  "or an IUPAC-condensed structure string."
+)
+
+
+motif_type_err_msg <- paste(
+  "`motif` must be either a 'glycan_graph' object,",
+  "an IUPAC-condensed structure string,",
+  "or a known motif name."
+)
+
+
 valid_glycan_arg <- function(x) {
-  if (!glyrepr::is_glycan(x) && !is.character(x)) {
-    rlang::abort("`glycan` must be a 'glycan_graph' object or an IUPAC-condensed structure string.")
+  if (!test_graph_arg(x)) {
+    rlang::abort(glycan_type_err_msg)
   }
 }
 
 
 valid_motif_arg <- function(x) {
-  if (!glyrepr::is_glycan(x) && !is.character(x)) {
-    rlang::abort("`motif` must be either a 'glycan_graph' object, an IUPAC-condensed structure string, or a known motif name.")
+  if (!test_graph_arg(x)) {
+    rlang::abort(motif_type_err_msg)
   }
 }
 
 
 valid_ignore_linkages_arg <- function(x) {
-  if (!is.logical(x)) {
-    rlang::abort("`ignore_linkages` must be a logical value.")
-  }
+  checkmate::assert_flag(x)
 }
 
 
@@ -264,7 +281,7 @@ get_motif_type <- function(motif) {
       return("iupac")
     }
   } else {
-    rlang::abort("`motif` must be either a 'glycan_graph' object, an IUPAC-condensed structure string, or a known motif name.")
+    rlang::abort(motif_type_err_msg)
   }
 }
 
@@ -311,7 +328,7 @@ ensure_motif_is_graph <- function(motif, motif_type) {
     tryCatch(
       motif <- glyparse::parse_iupac_condensed(motif),
       error = function(e) {
-        rlang::abort("`motif` must be either a 'glycan_graph' object, an IUPAC-condensed structure string, or a known motif name.")
+        rlang::abort(motif_type_err_msg)
       }
     )
   } else {  # motif_type == "glycan_graph"
