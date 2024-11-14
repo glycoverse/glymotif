@@ -139,6 +139,19 @@ complex_H4N4 <- function(mono_type, linkage) {
   make_glycan("Gal(b1-4)GlcNAc(b1-2)Man(a1-3)[GlcNAc(b1-2)Man(a1-6)]Man(b1-4)GlcNAc(b1-4)GlcNAc(?1-", mono_type, linkage)
 }
 
+complex_H4N4S1 <- function(mono_type, linkage) {
+  # GlcNAc (?1-)
+  # └─GlcNAc (b1-4)
+  #   └─Man (b1-4)
+  #     ├─Man (a1-6)
+  #     │ └─GlcNAc (b1-2)
+  #     └─Man (a1-3)
+  #       └─GlcNAc (b1-2)
+  #         └─Gal (b1-4)
+  #           └─Neu5Ac (a2-3)
+  make_glycan("Neu5Ac(a2-3)Gal(b1-4)GlcNAc(b1-2)Man(a1-3)[GlcNAc(b1-2)Man(a1-6)]Man(b1-4)GlcNAc(b1-4)GlcNAc(?1-", mono_type, linkage)
+}
+
 complex_H3N5_bisect <- function(mono_type, linkage) {
   # GlcNAc (?1-)
   # └─GlcNAc (b1-4)
@@ -164,6 +177,22 @@ complex_H6N5a6 <- function(mono_type, linkage) {
   #       └─GlcNAc (b1-2)
   #         └─Gal (b1-4)
   make_glycan("Gal(b1-4)GlcNAc(b1-2)Man(a1-3)[Gal(b1-4)GlcNAc(b1-2)[Gal(b1-4)GlcNAc(b1-6)]Man(a1-6)]Man(b1-4)GlcNAc(b1-4)GlcNAc(?1-", mono_type, linkage)
+}
+
+complex_H6N5S1a6 <- function(mono_type, linkage) {
+  # GlcNAc (?1-)
+  # └─GlcNAc (b1-4)
+  #   └─Man (b1-4)
+  #     ├─Man (a1-6)
+  #     │ ├─GlcNAc (b1-6)
+  #     │ │ └─Gal (b1-4)
+  #     │ └─GlcNAc (b1-2)
+  #     │   └─Gal (b1-4)
+  #     └─Man (a1-3)
+  #       └─GlcNAc (b1-2)
+  #         └─Gal (b1-4)
+  #           └─Neu5Ac (a2-3)
+  make_glycan("Neu5Ac(a2-3)Gal(b1-4)GlcNAc(b1-2)Man(a1-3)[Gal(b1-4)GlcNAc(b1-2)[Gal(b1-4)GlcNAc(b1-6)]Man(a1-6)]Man(b1-4)GlcNAc(b1-4)GlcNAc(?1-", mono_type, linkage)
 }
 
 complex_H6N5a3 <- function(mono_type, linkage) {
@@ -549,4 +578,29 @@ test_that("one arm fucose: H3N4F1, strict", {
 test_that("no arm fucose: H3N4F1", {
   glycan <- complex_H3N4F1_coreF("simple", linkage = FALSE)
   expect_identical(n_arm_fuc(glycan), 0L)
+})
+
+
+# ========== Number of terminal galaactoses ==========
+patrick::with_parameters_test_that("one terminal galactose: H4N4", {
+  glycan <- complex_H4N4(mono_type, linkage)
+  expect_identical(n_terminal_gal(glycan), 1L)
+}, param_grid())
+
+
+test_that("two terminal galactoses: H6N5S1", {
+  glycan <- complex_H6N5S1a6("simple", linkage = FALSE)
+  expect_identical(n_terminal_gal(glycan), 2L)
+})
+
+
+test_that("two terminal galactoses: H6N5S1, strict", {
+  glycan <- complex_H6N5S1a6("concrete", linkage = TRUE)
+  expect_identical(n_terminal_gal(glycan), 2L)
+})
+
+
+test_that("no terminal galactose: H4N4S1", {
+  glycan <- complex_H4N4S1("simple", linkage = FALSE)
+  expect_identical(n_terminal_gal(glycan), 0L)
 })

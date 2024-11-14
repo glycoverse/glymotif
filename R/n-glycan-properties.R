@@ -151,6 +151,33 @@ n_arm_fuc <- function(glycan, strict = FALSE) {
 }
 
 
+#' Number of Terminal Galactoses
+#'
+#' Terminal galactoses are those galactose residues on the non-reducing end
+#' without sialic acid capping.
+#' ```
+#'          Gal - GlcNAc - Man
+#'          ~~~               \
+#'      terminal Gal           GlcNAc - GlcNAc
+#'                            /
+#' Neu5Ac - Gal - GlcNAc - Man
+#'          ~~~
+#'    not terminal Gal
+#' ```
+#'
+#' @inheritParams n_glycan_type
+#'
+#' @return An integer of the number of terminal galactoses.
+#' @export
+n_terminal_gal <- function(glycan, strict = FALSE) {
+  .n_terminal_gal <- function(glycan, .has_motif, .counts_motif) {
+    terminal_gal_graph <- glyparse::parse_iupac_condensed("Gal(?1-")
+    .counts_motif(glycan, terminal_gal_graph, alignment = "terminal")
+  }
+  n_glycan_property_wrapper(glycan, strict, .n_terminal_gal)
+}
+
+
 n_glycan_property_wrapper <- function(glycan, strict, func) {
   # This function encapsulates the common pattern of checking N-glycan properties.
   # To use it, write a function that takes a glycan graph,
