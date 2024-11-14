@@ -19,6 +19,9 @@
 #' In this case, the user-provided alignments will be used,
 #' but a warning will be issued.
 #'
+#' Monosaccharide types must be the same within `glycans` or `motifs`.
+#' However, an holistic obscurer monosaccharide type in `motifs` than in `glycans` is allowed.
+#'
 #' Internally, all glycan and motif inputs are converted to 'glycan_graph' objects.
 #' Therefore, if performance matters and you need to repeatedly use the same glycans or motifs,
 #' it is recommended to convert them to 'glycan_graph' objects beforehand.
