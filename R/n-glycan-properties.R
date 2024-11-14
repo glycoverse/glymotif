@@ -102,8 +102,7 @@ n_antennae <- function(glycan, strict = FALSE) {
 
 #' Number of Core Fucoses
 #'
-#' The number of core fucoses is the number of fucose residues attached to the
-#' core GlcNAc of an N-glycan.
+#' Core fucoses are those fucose residues attached to the core GlcNAc of an N-glycan.
 #' ```
 #' Man           Fuc  <- core fucose
 #'    \           |
@@ -117,11 +116,38 @@ n_antennae <- function(glycan, strict = FALSE) {
 #' @return An integer of the number of core fucoses.
 #' @export
 n_core_fuc <- function(glycan, strict = FALSE) {
-  .n_core_func <- function(glycan, .has_motif, .counts_motif) {
+  .n_core_fuc <- function(glycan, .has_motif, .counts_motif) {
     core_fuc_graph <- get_motif_graph("N-Glycan core, core-fucosylated")
     .counts_motif(glycan, core_fuc_graph, alignment = "core")
   }
-  n_glycan_property_wrapper(glycan, strict, .n_core_func)
+  n_glycan_property_wrapper(glycan, strict, .n_core_fuc)
+}
+
+
+#' Number of Arm Focuses
+#'
+#' Arm focuses are thoses focuse residues attached to the branching GlcNAc
+#' of an N-glycan.
+#' ```
+#'  Fuc  <- arm fucose
+#'   |
+#' GlcNAc - Man
+#'             \
+#'              GlcNAc - GlcNAc
+#'             /
+#' GlcNAc - Man
+#' ```
+#'
+#' @inheritParams n_glycan_type
+#'
+#' @return An integer of the number of arm fucoses.
+#' @export
+n_arm_fuc <- function(glycan, strict = FALSE) {
+  .n_arm_fuc <- function(glycan, .has_motif, .counts_motif) {
+    arm_fuc_graph <- get_motif_graph("N-Glycan core, arm-fucosylated")
+    .counts_motif(glycan, arm_fuc_graph, alignment = "core")
+  }
+  n_glycan_property_wrapper(glycan, strict, .n_arm_fuc)
 }
 
 

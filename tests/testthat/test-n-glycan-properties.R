@@ -222,6 +222,45 @@ complex_H3N4F1_armF <- function(mono_type, linkage) {
   make_glycan("Fuc(a1-3)GlcNAc(b1-2)Man(a1-3)[GlcNAc(b1-2)Man(a1-6)]Man(b1-4)GlcNAc(b1-4)GlcNAc(?1-", mono_type, linkage)
 }
 
+complex_H3N4F2_2coreF <- function(mono_type, linkage) {
+  # GlcNAc (?1-)
+  # ├─Fuc (a1-8)
+  # ├─Fuc (a1-6)
+  # └─GlcNAc (b1-4)
+  #   └─Man (b1-4)
+  #     ├─Man (a1-6)
+  #     │ └─GlcNAc (b1-2)
+  #     └─Man (a1-3)
+  #       └─GlcNAc (b1-2)
+  make_glycan("GlcNAc(b1-2)Man(a1-3)[GlcNAc(b1-2)Man(a1-6)]Man(b1-4)GlcNAc(b1-4)[Fuc(a1-6)][Fuc(a1-8)]GlcNAc(?1-", mono_type, linkage)
+}
+
+complex_H3N4F2_2armF <- function(mono_type, linkage) {
+  # GlcNAc (?1-)
+  # └─GlcNAc (b1-4)
+  #   └─Man (b1-4)
+  #     ├─Man (a1-6)
+  #     │ └─GlcNAc (b1-2)
+  #     │   └─Fuc (a1-3)
+  #     └─Man (a1-3)
+  #       └─GlcNAc (b1-2)
+  #         └─Fuc (a1-3)
+  make_glycan("Fuc(a1-3)GlcNAc(b1-2)Man(a1-3)[Fuc(a1-3)GlcNAc(b1-2)Man(a1-6)]Man(b1-4)GlcNAc(b1-4)GlcNAc(?1-", mono_type, linkage)
+}
+
+complex_H3N4F2_1coreF_1armF <- function(mono_type, linkage) {
+  # GlcNAc (?1-)
+  # ├─Fuc (a1-6)
+  # └─GlcNAc (b1-4)
+  #   └─Man (b1-4)
+  #     ├─Man (a1-6)
+  #     │ └─GlcNAc (b1-2)
+  #     └─Man (a1-3)
+  #       └─GlcNAc (b1-2)
+  #         └─Fuc (a1-3)
+  make_glycan("Fuc(a1-3)GlcNAc(b1-2)Man(a1-3)[GlcNAc(b1-2)Man(a1-6)]Man(b1-4)GlcNAc(b1-4)[Fuc(a1-6)]GlcNAc(?1-", mono_type, linkage)
+}
+
 
 # ========== N-glycan types ==========
 param_grid <- function() {
@@ -452,13 +491,62 @@ patrick::with_parameters_test_that("one core fucose: H3N4F1", {
 }, param_grid())
 
 
+test_that("two core fucoses: H3N4F2", {
+  glycan <- complex_H3N4F2_2coreF("simple", linkage = FALSE)
+  expect_identical(n_core_fuc(glycan), 2L)
+})
+
+
+test_that("one core fucose: H3N4F2", {
+  glycan <- complex_H3N4F2_1coreF_1armF("simple", linkage = FALSE)
+  expect_identical(n_core_fuc(glycan), 1L)
+})
+
+
 test_that("one core fucose: H3N4F1, strict", {
   glycan <- complex_H3N4F1_coreF("concrete", linkage = TRUE)
   expect_identical(n_core_fuc(glycan, strict = TRUE), 1L)
 })
 
 
-test_that("one arm fucose: H3N4F1", {
+test_that("no core fucose: H3N4F1", {
   glycan <- complex_H3N4F1_armF("simple", linkage = FALSE)
   expect_identical(n_core_fuc(glycan), 0L)
+})
+
+
+# ========== Number of arm fucoses ==========
+test_that("no arm fucose: H3N3", {
+  glycan <- complex_H3N3("simple", linkage = FALSE)
+  expect_identical(n_arm_fuc(glycan), 0L)
+})
+
+
+patrick::with_parameters_test_that("one arm focuse: H3N4F1", {
+  glycan <- complex_H3N4F1_armF(mono_type, linkage)
+  expect_identical(n_arm_fuc(glycan), 1L)
+}, param_grid())
+
+
+test_that("two arm fucoses: H3N4F2", {
+  glycan <- complex_H3N4F2_2armF("simple", linkage = FALSE)
+  expect_identical(n_arm_fuc(glycan), 2L)
+})
+
+
+test_that("one arm fucose: H3N4F2", {
+  glycan <- complex_H3N4F2_1coreF_1armF("simple", linkage = FALSE)
+  expect_identical(n_arm_fuc(glycan), 1L)
+})
+
+
+test_that("one arm fucose: H3N4F1, strict", {
+  glycan <- complex_H3N4F1_armF("concrete", linkage = TRUE)
+  expect_identical(n_arm_fuc(glycan, strict = TRUE), 1L)
+})
+
+
+test_that("no arm fucose: H3N4F1", {
+  glycan <- complex_H3N4F1_coreF("simple", linkage = FALSE)
+  expect_identical(n_arm_fuc(glycan), 0L)
 })
