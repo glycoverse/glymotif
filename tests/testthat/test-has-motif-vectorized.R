@@ -123,6 +123,14 @@ test_that("has_motifs: glycan has obscurer mono type than motifs", {
 })
 
 
+test_that("has_motifs: glycan and motifs have different graph modes", {
+  glycan <- glyparse::parse_iupac_condensed("Gal(b1-3)GlcNAc", mode = "ne")
+  motifs <- c(G1 = "Gal(b1-3)GlcNAc", G2 = "Gal(b1-4)GlcNAc")
+  motifs <- purrr::map(motifs, glyparse::parse_iupac_condensed, mode = "dn")
+  expect_equal(has_motifs(glycan, motifs), c(G1 = TRUE, G2 = FALSE))
+})
+
+
 # ----- have_motif() -----
 test_that("have_motif: IUPAC-condensed", {
   motif <- "Gal"
@@ -213,6 +221,14 @@ test_that("have_motif: glycans have obscurer mono types than motif", {
   motif <- "Gal"
   glycans <- c("Hex", "HexNAc")
   expect_snapshot(have_motif(glycans, motif), error = TRUE)
+})
+
+
+test_that("have_motif: glycans and motif have different graph modes", {
+  motif <- glyparse::parse_iupac_condensed("Gal(b1-3)Gal", mode = "ne")
+  glycans <- c(G1 = "Gal(b1-3)Gal", G2 = "Gal(b1-4)Gal")
+  glycans <- purrr::map(glycans, glyparse::parse_iupac_condensed, mode = "dn")
+  expect_equal(have_motif(glycans, motif), c(G1 = TRUE, G2 = FALSE))
 })
 
 
@@ -425,4 +441,19 @@ test_that("have_motifs: glycans have obscurer mono types than motifs", {
   motifs <- c("Gal", "GlcNAc")
   glycans <- c("Hex", "HexNAc")
   expect_snapshot(have_motifs(glycans, motifs), error = TRUE)
+})
+
+
+test_that("have_motifs: glycans and motifs have different graph modes", {
+  motifs <- c(M1 = "Gal(b1-3)GlcNAc", M2 = "Gal(b1-4)GlcNAc")
+  motifs <- purrr::map(motifs, glyparse::parse_iupac_condensed, mode = "ne")
+  glycans <- c(G1 = "Gal(b1-3)GlcNAc", G2 = "Gal(b1-4)GlcNAc")
+  glycans <- purrr::map(glycans, glyparse::parse_iupac_condensed, mode = "dn")
+  expected <- matrix(c(
+    TRUE, FALSE,
+    FALSE, TRUE
+  ), nrow = 2, byrow = TRUE)
+  colnames(expected) <- c("M1", "M2")
+  rownames(expected) <- c("G1", "G2")
+  expect_equal(have_motifs(glycans, motifs), expected)
 })

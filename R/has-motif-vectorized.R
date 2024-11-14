@@ -119,6 +119,10 @@ has_motifs <- function(glycan, motifs = NULL, alignments = "substructure", ignor
   glycan <- ensure_glycan_is_graph(glycan)
   motifs <- ensure_motifs_are_graphs(motifs, motif_type)
 
+  # Ensure NE graphs
+  glycan <- ensure_ne_graph(glycan)
+  motifs <- ensure_ne_graphs(motifs)
+
   # Ensure mono types are the same
   if (motif_type != "known" && !same_mono_types(motifs)) {
     rlang::abort("All motifs must have the same monosaccharide type.")
@@ -153,6 +157,10 @@ have_motif <- function(glycans, motif, alignment = "substructure", ignore_linkag
   # Ensure glycans and motif are graphs
   glycans <- ensure_glycans_are_graphs(glycans)
   motif <- ensure_motif_is_graph(motif, motif_type)
+
+  # Ensure NE graphs
+  glycans <- ensure_ne_graphs(glycans)
+  motif <- ensure_ne_graph(motif)
 
   # Ensure mono types are the same
   if (!same_mono_types(glycans)) {
@@ -191,6 +199,10 @@ have_motifs <- function(glycans, motifs = NULL, alignments = "substructure", ign
   # Ensure glycans and motifs are graphs
   glycans <- ensure_glycans_are_graphs(glycans)
   motifs <- ensure_motifs_are_graphs(motifs, motif_type)
+
+  # Ensure NE graphs
+  glycans <- ensure_ne_graphs(glycans)
+  motifs <- ensure_ne_graphs(motifs)
 
   # Ensure mono types are the same
   if (motif_type != "known" && !same_mono_types(motifs)) {
