@@ -198,6 +198,30 @@ complex_H7N6 <- function(mono_type, linkage) {
   make_glycan("Gal(b1-4)GlcNAc(b1-2)[Gal(b1-4)GlcNAc(b1-4)]Man(a1-3)[Gal(b1-4)GlcNAc(b1-2)[Gal(b1-4)GlcNAc(b1-6)]Man(a1-6)]Man(b1-4)GlcNAc(b1-4)GlcNAc(b1-", mono_type, linkage)
 }
 
+complex_H3N4F1_coreF <- function(mono_type, linkage) {
+  # GlcNAc (?1-)
+  # ├─Fuc (a1-6)
+  # └─GlcNAc (b1-4)
+  #   └─Man (b1-4)
+  #     ├─Man (a1-6)
+  #     │ └─GlcNAc (b1-2)
+  #     └─Man (a1-3)
+  #       └─GlcNAc (b1-2)
+  make_glycan("GlcNAc(b1-2)Man(a1-3)[GlcNAc(b1-2)Man(a1-6)]Man(b1-4)GlcNAc(b1-4)[Fuc(a1-6)]GlcNAc(?1-", mono_type, linkage)
+}
+
+complex_H3N4F1_armF <- function(mono_type, linkage) {
+  # GlcNAc (?1-)
+  # └─GlcNAc (b1-4)
+  #   └─Man (b1-4)
+  #     ├─Man (a1-6)
+  #     │ └─GlcNAc (b1-2)
+  #     └─Man (a1-3)
+  #       └─GlcNAc (b1-2)
+  #         └─Fuc (a1-3)
+  make_glycan("Fuc(a1-3)GlcNAc(b1-2)Man(a1-3)[GlcNAc(b1-2)Man(a1-6)]Man(b1-4)GlcNAc(b1-4)GlcNAc(?1-", mono_type, linkage)
+}
+
 
 # ========== N-glycan types ==========
 param_grid <- function() {
@@ -412,4 +436,29 @@ test_that("highmannose H5N2 has NA antennae", {
 test_that("paucimannose H3N2 has NA antennae", {
   glycan <- paucimannose_H3N2("simple", linkage = FALSE)
   expect_identical(n_antennae(glycan), NA_integer_)
+})
+
+
+# ========== Number of core fucoses ==========
+test_that("no core fucose: H3N3", {
+  glycan <- complex_H3N3("simple", linkage = FALSE)
+  expect_identical(n_core_fuc(glycan), 0L)
+})
+
+
+patrick::with_parameters_test_that("one core fucose: H3N4F1", {
+  glycan <- complex_H3N4F1_coreF(mono_type, linkage)
+  expect_identical(n_core_fuc(glycan), 1L)
+}, param_grid())
+
+
+test_that("one core fucose: H3N4F1, strict", {
+  glycan <- complex_H3N4F1_coreF("concrete", linkage = TRUE)
+  expect_identical(n_core_fuc(glycan, strict = TRUE), 1L)
+})
+
+
+test_that("one arm fucose: H3N4F1", {
+  glycan <- complex_H3N4F1_armF("simple", linkage = FALSE)
+  expect_identical(n_core_fuc(glycan), 0L)
 })

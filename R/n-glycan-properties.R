@@ -22,7 +22,7 @@
 #'
 #' @export
 n_glycan_type <- function(glycan, strict = FALSE) {
-  .n_glycan_type <- function(glycan, .has_motif) {
+  .n_glycan_type <- function(glycan, .has_motif, .counts_motif) {
     H4N2_iupac <- "Man(a1-3)[Man(a1-3/6)Man(a1-6)]Man(b1-4)GlcNAc(b1-4)GlcNAc(?1-"
     H4N2_graph <- glyparse::parse_iupac_condensed(H4N2_iupac)
     core_graph <- get_motif_graph("N-Glycan core basic")
@@ -61,7 +61,7 @@ n_glycan_type <- function(glycan, strict = FALSE) {
 #' @return A logical value.
 #' @export
 has_bisecting <- function(glycan, strict = FALSE) {
-  .has_bisecting <- function(glycan, .has_motif) {
+  .has_bisecting <- function(glycan, .has_motif, .counts_motif) {
     bisect_graph <- get_motif_graph("N-glycan core, bisected")
     .has_motif(glycan, bisect_graph, alignment = "core")
   }
@@ -80,7 +80,7 @@ has_bisecting <- function(glycan, strict = FALSE) {
 #' @return An integer of the number of antennae.
 #' @export
 n_antennae <- function(glycan, strict = FALSE) {
-  .n_antennae <- function(glycan, .has_motif) {
+  .n_antennae <- function(glycan, .has_motif, .counts_motif) {
     ant2_graph <- get_motif_graph("N-Glycan biantennary")
     ant3_graph <- get_motif_graph("N-Glycan triantennary")
     ant4_graph <- get_motif_graph("N-Glycan tetraantennary")
@@ -100,13 +100,42 @@ n_antennae <- function(glycan, strict = FALSE) {
 }
 
 
+#' Number of Core Fucoses
+#'
+#' The number of core fucoses is the number of fucose residues attached to the
+#' core GlcNAc of an N-glycan.
+#' ```
+#' Man           Fuc  <- core fucose
+#'    \           |
+#'     GlcNAc - GlcNAc
+#'    /
+#' Man
+#' ```
+#'
+#' @inheritParams n_glycan_type
+#'
+#' @return An integer of the number of core fucoses.
+#' @export
+n_core_fuc <- function(glycan, strict = FALSE) {
+  .n_core_func <- function(glycan, .has_motif, .counts_motif) {
+    core_fuc_graph <- get_motif_graph("N-Glycan core, core-fucosylated")
+    .counts_motif(glycan, core_fuc_graph, alignment = "core")
+  }
+  n_glycan_property_wrapper(glycan, strict, .n_core_func)
+}
+
+
 n_glycan_property_wrapper <- function(glycan, strict, func) {
   # This function encapsulates the common pattern of checking N-glycan properties.
-  # To use it, write a function that takes a glycan graph and a function that checks a motif,
-  # and use that function to check if the glycan has the motif.
+  # To use it, write a function that takes a glycan graph,
+  # a `.has_motif` argument taking a function that checks for a motif,
+  # and a `.counts_motif` argument taking a function that counts motifs.
+  # Inside the function, use `.has_motif` and `.count_motif` to check for motifs,
+  # instead of calling `has_motif_()` and `counts_motif_()` directly.
+  #
   # For example:
   # ```
-  # .has_bisecting <- function(glycan, .has_motif) {
+  # .has_bisecting <- function(glycan, .has_motif, .counts_motif) {
   #   bisect_graph <- get_motif_graph("N-glycan core, bisected")
   #   .has_motif(glycan, bisect_graph, alignment = "core")
   # }
@@ -122,11 +151,13 @@ n_glycan_property_wrapper <- function(glycan, strict, func) {
   glycan <- ensure_glycan_is_graph(glycan)
   if (strict) {
     has_motif_func <- has_motif_
+    counts_motif_func <- counts_motif_
   } else {
     glycan <- glyrepr::convert_glycan_mono_type(glycan, to = "simple", strict = FALSE)
     has_motif_func <- lenient_has_motif_
+    counts_motif_func <- lenient_count_motif_
   }
-  func(glycan, has_motif_func)
+  func(glycan, has_motif_func, counts_motif_func)
 }
 
 
@@ -136,4 +167,10 @@ lenient_has_motif_ <- function(glycan, motif, alignment) {
   # 2. It ignores linkage information.
   motif <- glyrepr::convert_glycan_mono_type(motif, to = "simple", strict = FALSE)
   has_motif_(glycan, motif, alignment = alignment, ignore_linkages = TRUE)
+}
+
+
+lenient_count_motif_ <- function(glycan, motif, alignment) {
+  motif <- glyrepr::convert_glycan_mono_type(motif, to = "simple", strict = FALSE)
+  counts_motif_(glycan, motif, alignment = alignment, ignore_linkages = TRUE)
 }
