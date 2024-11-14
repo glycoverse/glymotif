@@ -58,6 +58,23 @@
                     A antigen (type 3)                       Type 1 LN2 
                                  FALSE                            FALSE 
 
+# has_motifs: motifs have different mono types
+
+    Code
+      has_motifs(glycan, motifs)
+    Condition
+      Error in `has_motifs()`:
+      ! All motifs must have the same monosaccharide type.
+
+# has_motifs: glycan has obscurer mono type than motifs
+
+    Code
+      has_motifs(glycan, motifs)
+    Condition
+      Error in `ensure_glycan_mono_type()`:
+      ! The monosaccharide type of `glycan` cannot be obscurer than `motif`.
+      x "generic" is obscurer than "concrete".
+
 # have_motif: motif names and custom alignment
 
     Code
@@ -76,6 +93,23 @@
     Condition
       Error in `ensure_glycans_are_graphs()`:
       ! Glycans at indices 2 and 3 are not able to be parsed as IUPAC-condensed structure strings.
+
+# have_motif: glycans have different mono types
+
+    Code
+      have_motif(glycans, motif)
+    Condition
+      Error in `have_motif()`:
+      ! All glycans must have the same monosaccharide type.
+
+# have_motif: glycans have obscurer mono types than motif
+
+    Code
+      have_motif(glycans, motif)
+    Condition
+      Error in `ensure_glycans_mono_type()`:
+      ! The monosaccharide type of `glycans` cannot be obscurer than `motif`.
+      x "generic" is obscurer than "concrete".
 
 # have_motifs: alignments provided for known motif names
 
@@ -121,4 +155,29 @@
     Condition
       Error in `ensure_glycans_are_graphs()`:
       ! Glycans at indices 2 and 3 are not able to be parsed as IUPAC-condensed structure strings.
+
+# have_motifs: glycans have different mono types
+
+    Code
+      have_motifs(glycans, motifs)
+    Condition
+      Error in `have_motifs()`:
+      ! All glycans must have the same monosaccharide type.
+
+# have_motifs: motifs have different mono types
+
+    Code
+      have_motifs(glycans, motifs)
+    Condition
+      Error in `have_motifs()`:
+      ! All motifs must have the same monosaccharide type.
+
+# have_motifs: glycans have obscurer mono types than motifs
+
+    Code
+      have_motifs(glycans, motifs)
+    Condition
+      Error in `ensure_glycans_mono_type()`:
+      ! The monosaccharide type of `glycans` cannot be obscurer than `motif`.
+      x "generic" is obscurer than "concrete".
 

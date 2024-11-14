@@ -102,6 +102,27 @@ test_that("has_motifs: missing motifs uses default motifs", {
 })
 
 
+test_that("has_motifs: motifs have different mono types", {
+  glycan <- "Gal(b1-3)GlcNAc"
+  motifs <- c("Gal", "Hex")
+  expect_snapshot(has_motifs(glycan, motifs), error = TRUE)
+})
+
+
+test_that("has_motifs: glycan has different mono types with motifs", {
+  glycan <- "Gal"
+  motifs <- c(M1 = "Hex", M2 = "HexNAc")
+  expect_equal(has_motifs(glycan, motifs), c(M1 = TRUE, M2 = FALSE))
+})
+
+
+test_that("has_motifs: glycan has obscurer mono type than motifs", {
+  glycan <- "Hex"
+  motifs <- c("Gal", "GlcNAc")
+  expect_snapshot(has_motifs(glycan, motifs), error = TRUE)
+})
+
+
 # ----- have_motif() -----
 test_that("have_motif: IUPAC-condensed", {
   motif <- "Gal"
@@ -171,6 +192,27 @@ test_that("have_motif: glycan names are kept for glycan graphs", {
   glycans <- purrr::map(glycans, glyparse::parse_iupac_condensed)
   result <- have_motif(glycans, motif)
   expect_equal(names(result), names(glycans))
+})
+
+
+test_that("have_motif: glycans have different mono types", {
+  motif <- "Gal"
+  glycans <- c("Gal", "Hex")
+  expect_snapshot(have_motif(glycans, motif), error = TRUE)
+})
+
+
+test_that("have_motif: glycans have different mono types with motif", {
+  motif <- "Hex"
+  glycans <- c(G1 = "Gal", G2 = "GlcNAc")
+  expect_equal(have_motif(glycans, motif), c(G1 = TRUE, G2 = FALSE))
+})
+
+
+test_that("have_motif: glycans have obscurer mono types than motif", {
+  motif <- "Gal"
+  glycans <- c("Hex", "HexNAc")
+  expect_snapshot(have_motif(glycans, motif), error = TRUE)
 })
 
 
@@ -349,4 +391,38 @@ test_that("have_motifs: simplify", {
   colnames(expected) <- c("Gal", "GlcNAc")
   rownames(expected) <- glycans
   expect_equal(result, expected)
+})
+
+
+test_that("have_motifs: glycans have different mono types", {
+  motifs <- c("Gal", "Gal")
+  glycans <- c("Gal", "Hex")
+  expect_snapshot(have_motifs(glycans, motifs), error = TRUE)
+})
+
+
+test_that("have_motifs: motifs have different mono types", {
+  motifs <- c("Gal", "Hex")
+  glycans <- c("Gal", "Gal")
+  expect_snapshot(have_motifs(glycans, motifs), error = TRUE)
+})
+
+
+test_that("have_motifs: glycans have different mono types with motifs", {
+  motifs <- c(M1 = "HexNAc", M2 = "Hex")
+  glycans <- c(G1 = "Gal", G2 = "GlcNAc")
+  expected <- matrix(c(
+    FALSE, TRUE,
+    TRUE, FALSE
+  ), nrow = 2, byrow = TRUE)
+  colnames(expected) <- c("M1", "M2")
+  rownames(expected) <- c("G1", "G2")
+  expect_equal(have_motifs(glycans, motifs), expected)
+})
+
+
+test_that("have_motifs: glycans have obscurer mono types than motifs", {
+  motifs <- c("Gal", "GlcNAc")
+  glycans <- c("Hex", "HexNAc")
+  expect_snapshot(have_motifs(glycans, motifs), error = TRUE)
 })

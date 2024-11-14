@@ -191,7 +191,7 @@ decide_alignments <- function(motif_names, alignments, alignments_provided) {
 }
 
 
-# ----- Necessary data conversion -----
+# ----- Make sure glycans and motifs are graphs -----
 ensure_glycan_is_graph <- function(glycan) {
   # Make sure `glycan` is a graph.
   if (is.character(glycan)) {
@@ -233,7 +233,11 @@ ensure_motifs_are_graphs <- function(motifs, motif_type) {
     graph_list <- purrr::map(motifs, try_parse_iupac_condensed)
     if (any(is.na(graph_list))) {
       invalid_indices <- which(is.na(graph_list))
-      cli::cli_abort("Motifs at indices {.val {invalid_indices}} are neither known motif names or able to be parsed as IUPAC-condensed structure strings.")
+      msg <- paste(
+        "Motifs at indices {.val {invalid_indices}} are neither known motif",
+        "names or able to be parsed as IUPAC-condensed structure strings."
+      )
+      cli::cli_abort(msg)
     }
   } else if (motif_type == "known") {
     graph_list <- purrr::map(motifs, ~ get_motif_graph(.x))
@@ -252,7 +256,11 @@ ensure_glycans_are_graphs <- function(glycans) {
     graph_list <- purrr::map(glycans, try_parse_iupac_condensed)
     if (any(is.na(graph_list))) {
       invalid_indices <- which(is.na(graph_list))
-      cli::cli_abort("Glycans at indices {.val {invalid_indices}} are not able to be parsed as IUPAC-condensed structure strings.")
+      msg <- paste(
+        "Glycans at indices {.val {invalid_indices}} are not able to be",
+        "parsed as IUPAC-condensed structure strings."
+      )
+      cli::cli_abort(msg)
     }
     if (is.null(names(graph_list))) {
       names(graph_list) <- glycans
@@ -264,6 +272,7 @@ ensure_glycans_are_graphs <- function(glycans) {
 }
 
 
+# ----- Check and align mono types -----
 ensure_glycan_mono_type <- function(glycan, motif) {
   # Make the glycan the same monosaccharide type (concrete, generic or simple) as the motif.
   # If the glycan type is lower than the motif type, an error will be raised.
@@ -283,4 +292,35 @@ ensure_glycan_mono_type <- function(glycan, motif) {
     ))
   }
   return(glycan)
+}
+
+
+ensure_glycans_mono_type <- function(glycans, motif) {
+  # Make sure all glycans have the same monosaccharide type as the motif.
+  # This function assumes that all glycans have the same monosaccharide type.
+  glycan_type <- glyrepr::decide_glycan_mono_type(glycans[[1]])
+  motif_type <- glyrepr::decide_glycan_mono_type(motif)
+
+  conditions <- (
+    (glycan_type == "concrete" && motif_type != "concrete") ||
+      (glycan_type == "generic" && motif_type == "simple")
+  )
+  if (conditions) {
+    return(purrr::map(glycans, glyrepr::convert_glycan_mono_type, to = motif_type))
+  }
+
+  if (glycan_type != motif_type) {
+    cli::cli_abort(c(
+      "The monosaccharide type of `glycans` cannot be obscurer than `motif`.",
+      "x" = "{.val {glycan_type}} is obscurer than {.val {motif_type}}."
+    ))
+  }
+  return(glycans)
+}
+
+
+same_mono_types <- function(graphs) {
+  # Check if all graphs have the same monosaccharide type.
+  mono_types <- purrr::map(graphs, glyrepr::decide_glycan_mono_type)
+  dplyr::n_distinct(mono_types) <= 1
 }

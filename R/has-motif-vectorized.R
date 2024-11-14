@@ -98,6 +98,10 @@ has_motifs <- function(glycan, motifs = NULL, alignments = "substructure", ignor
   valid_alignments_arg(alignments, motifs)
   valid_ignore_linkages_arg(ignore_linkages)
 
+  if (!is.null(motifs) && length(motifs) == 0) {
+    return(rlang::set_names(logical(0L), character(0L)))
+  }
+
   # Get motif type and default motifs
   if (missing(motifs)) {
     motifs <- available_motifs()
@@ -115,6 +119,12 @@ has_motifs <- function(glycan, motifs = NULL, alignments = "substructure", ignor
   glycan <- ensure_glycan_is_graph(glycan)
   motifs <- ensure_motifs_are_graphs(motifs, motif_type)
 
+  # Ensure mono types are the same
+  if (motif_type != "known" && !same_mono_types(motifs)) {
+    rlang::abort("All motifs must have the same monosaccharide type.")
+  }
+  glycan <- ensure_glycan_mono_type(glycan, motifs[[1]])
+
   simple_has_motifs(glycan, motifs, alignments, ignore_linkages)
 }
 
@@ -130,6 +140,10 @@ have_motif <- function(glycans, motif, alignment = "substructure", ignore_linkag
   valid_alignment_arg(alignment)
   valid_ignore_linkages_arg(ignore_linkages)
 
+  if (length(glycans) == 0) {
+    return(rlang::set_names(logical(0L), character(0L)))
+  }
+
   # Decide motif type and alignment
   motif_type <- get_motif_type(motif)
   if (motif_type == "known") {
@@ -139,6 +153,12 @@ have_motif <- function(glycans, motif, alignment = "substructure", ignore_linkag
   # Ensure glycans and motif are graphs
   glycans <- ensure_glycans_are_graphs(glycans)
   motif <- ensure_motif_is_graph(motif, motif_type)
+
+  # Ensure mono types are the same
+  if (!same_mono_types(glycans)) {
+    rlang::abort("All glycans must have the same monosaccharide type.")
+  }
+  glycans <- ensure_glycans_mono_type(glycans, motif)
 
   purrr::map_lgl(glycans, has_motif_, motif, alignment = alignment, ignore_linkages = ignore_linkages)
 }
@@ -171,6 +191,15 @@ have_motifs <- function(glycans, motifs = NULL, alignments = "substructure", ign
   # Ensure glycans and motifs are graphs
   glycans <- ensure_glycans_are_graphs(glycans)
   motifs <- ensure_motifs_are_graphs(motifs, motif_type)
+
+  # Ensure mono types are the same
+  if (motif_type != "known" && !same_mono_types(motifs)) {
+    rlang::abort("All motifs must have the same monosaccharide type.")
+  }
+  if (!same_mono_types(glycans)) {
+    rlang::abort("All glycans must have the same monosaccharide type.")
+  }
+  glycans <- ensure_glycans_mono_type(glycans, motifs[[1]])
 
   lgl_list <- purrr::map(glycans, simple_has_motifs, motifs, alignments = alignments, ignore_linkages = ignore_linkages)
   result <- do.call(rbind, lgl_list)
