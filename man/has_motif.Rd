@@ -174,5 +174,5 @@ has_motif(glycan_5, glycan_5)
 
 }
 \seealso{
-\code{\link[=has_motifs]{has_motifs()}}, \code{\link[=have_motif]{have_motif()}}, \code{\link[=have_motifs]{have_motifs()}}
+\code{\link[=has_motifs]{has_motifs()}}, \code{\link[=have_motif]{have_motif()}}, \code{\link[=have_motifs]{have_motifs()}}, \code{\link[=counts_motif]{counts_motif()}}
 }
