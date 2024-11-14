@@ -23,9 +23,9 @@ An integer of the number of core fucoses.
 \description{
 Core fucoses are those fucose residues attached to the core GlcNAc of an N-glycan.
 
-\if{html}{\out{<div class="sourceCode">}}\preformatted{Man           Fuc  <- core fucose
-   \\           |
-    GlcNAc - GlcNAc
+\if{html}{\out{<div class="sourceCode">}}\preformatted{Man             Fuc  <- core fucose
+   \\             |
+    Man - GlcNAc - GlcNAc
    /
 Man
 }\if{html}{\out{</div>}}

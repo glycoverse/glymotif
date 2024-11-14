@@ -28,7 +28,7 @@ of an N-glycan.
   |
 GlcNAc - Man
             \\
-             GlcNAc - GlcNAc
+             Man - GlcNAc - GlcNAc
             /
 GlcNAc - Man
 }\if{html}{\out{</div>}}

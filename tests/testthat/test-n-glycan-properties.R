@@ -290,8 +290,11 @@ complex_H3N4F2_1coreF_1armF <- function(mono_type, linkage) {
   make_glycan("Fuc(a1-3)GlcNAc(b1-2)Man(a1-3)[GlcNAc(b1-2)Man(a1-6)]Man(b1-4)GlcNAc(b1-4)[Fuc(a1-6)]GlcNAc(?1-", mono_type, linkage)
 }
 
+o_glycan_core_1 <- function(mono_type, linkage) {
+  make_glycan("Gal(b1-3)GalNAc(a1-", mono_type, linkage)
+}
 
-# ========== N-glycan types ==========
+
 param_grid <- function() {
   expand.grid(
     mono_type = c("simple", "generic", "concrete"),
@@ -301,6 +304,20 @@ param_grid <- function() {
 }
 
 
+# ========== Is N-glycan ==========
+patrick::with_parameters_test_that("H4N4 is N-glycan", {
+  glycan <- complex_H4N4(mono_type, linkage)
+  expect_true(is_n_glycan(glycan))
+}, param_grid())
+
+
+patrick::with_parameters_test_that("O-glycan core 1 is not N-glycan", {
+  glycan <- o_glycan_core_1(mono_type, linkage)
+  expect_false(is_n_glycan(glycan))
+}, param_grid())
+
+
+# ========== N-glycan types ==========
 test_that("paucimannose H3N2", {
   glycan <- paucimannose_H3N2("simple", linkage = FALSE)
   expect_identical(n_glycan_type(glycan), "paucimannose")

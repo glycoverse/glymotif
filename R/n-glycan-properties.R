@@ -1,3 +1,27 @@
+#' Check if a Glycan is an N-Glycan
+#'
+#' This function checks if a glycan has the N-glycan core motif:
+#' ```
+#' Man
+#'    \
+#'     Man - GlcNAc - GlcNAc
+#'    /
+#' Man
+#' ```
+#'
+#' @inheritParams n_glycan_type
+#'
+#' @return A logical value.
+#' @export
+is_n_glycan <- function(glycan, strict = FALSE) {
+  .is_n_glycan <- function(glycan, .has_motif, .counts_motif) {
+    core_graph <- get_motif_graph("N-Glycan core basic")
+    .has_motif(glycan, core_graph, alignment = "core")
+  }
+  n_glycan_property_wrapper(glycan, strict, .is_n_glycan)
+}
+
+
 #' Determine N-Glycan Type
 #'
 #' Four types of N-glycans are recognized: high mannose, hybrid, complex, and paucimannose.
@@ -104,9 +128,9 @@ n_antennae <- function(glycan, strict = FALSE) {
 #'
 #' Core fucoses are those fucose residues attached to the core GlcNAc of an N-glycan.
 #' ```
-#' Man           Fuc  <- core fucose
-#'    \           |
-#'     GlcNAc - GlcNAc
+#' Man             Fuc  <- core fucose
+#'    \             |
+#'     Man - GlcNAc - GlcNAc
 #'    /
 #' Man
 #' ```
@@ -133,7 +157,7 @@ n_core_fuc <- function(glycan, strict = FALSE) {
 #'   |
 #' GlcNAc - Man
 #'             \
-#'              GlcNAc - GlcNAc
+#'              Man - GlcNAc - GlcNAc
 #'             /
 #' GlcNAc - Man
 #' ```
@@ -158,7 +182,7 @@ n_arm_fuc <- function(glycan, strict = FALSE) {
 #' ```
 #'          Gal - GlcNAc - Man
 #'          ~~~               \
-#'      terminal Gal           GlcNAc - GlcNAc
+#'      terminal Gal           Man - GlcNAc - GlcNAc
 #'                            /
 #' Neu5Ac - Gal - GlcNAc - Man
 #'          ~~~
