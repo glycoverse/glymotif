@@ -266,7 +266,7 @@ n_terminal_gal <- function(glycan, strict = FALSE) {
 
 
 .n_terminal_gal <- function(glycan, .has_motif, .counts_motif) {
-  terminal_gal_graph <- glyparse::parse_iupac_condensed("Gal(?1-")
+  terminal_gal_graph <- glyparse::parse_iupac_condensed("Gal(?1-?)GlcNAc")
   .counts_motif(glycan, terminal_gal_graph, alignment = "terminal")
 }
 

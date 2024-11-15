@@ -6,7 +6,7 @@
       # A tibble: 3 x 7
         glycan glycan_type bisecting antennae core_fuc arm_fuc terminal_gal
         <chr>  <chr>       <lgl>        <int>    <int>   <int>        <int>
-      1 H5N2   highmannose FALSE           NA        0       0            3
+      1 H5N2   highmannose FALSE           NA        0       0            0
       2 H4N4   complex     FALSE            2        0       0            1
       3 H3N4F2 complex     FALSE            2        1       1            0
 

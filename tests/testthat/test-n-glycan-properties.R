@@ -72,6 +72,19 @@ hybrid_H5N3 <- function(mono_type, linkage) {
   make_glycan("GlcNAc(b1-2)Man(a1-3)[Man(a1-3)[Man(a1-6)]Man(a1-6)]Man(b1-4)GlcNAc(b1-4)GlcNAc(?1-", mono_type, linkage)
 }
 
+hybrid_H6N3 <- function(mono_type, linkage) {
+  # GlcNAc (?1-)
+  # └─GlcNAc (b1-4)
+  #   └─Man (b1-4)
+  #     ├─Man (a1-6)
+  #     │ ├─Man (a1-6)
+  #     │ └─Man (a1-3)
+  #     └─Man (a1-3)
+  #       └─GlcNAc (b1-2)
+  #         └─Gal (b1-4)
+  make_glycan("Gal(b1-4)GlcNAc(b1-2)Man(a1-3)[Man(a1-3)[Man(a1-6)]Man(a1-6)]Man(b1-4)GlcNAc(b1-4)GlcNAc(?1-", mono_type, linkage)
+}
+
 hybrid_H4N3a3 <- function(mono_type, linkage) {
   # GlcNAc
   # └─GlcNAc (b1-4)
@@ -650,6 +663,24 @@ test_that("two terminal galactoses: H6N5S1, strict", {
 test_that("no terminal galactose: H4N4S1", {
   glycan <- complex_H4N4S1("simple", linkage = FALSE)
   expect_identical(n_terminal_gal(glycan), 0L)
+})
+
+
+test_that("no terminal galactose on high-mannose glycan", {
+  glycan <- highmannose_H5N2("simple", linkage = FALSE)
+  expect_identical(n_terminal_gal(glycan), 0L)
+})
+
+
+test_that("no terminal galactose: hybrid H5N3", {
+  glycan <- hybrid_H5N3("simple", linkage = FALSE)
+  expect_identical(n_terminal_gal(glycan), 0L)
+})
+
+
+test_that("one terminal galactose: hybrid H6N3", {
+  glycan <- hybrid_H6N3("simple", linkage = FALSE)
+  expect_identical(n_terminal_gal(glycan), 1L)
 })
 
 
