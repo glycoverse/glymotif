@@ -450,6 +450,12 @@ test_that("complex H4N4 strict", {
 })
 
 
+test_that("check glycan type not for N-glycan", {
+  glycan <- o_glycan_core_1("simple", linkage = FALSE)
+  expect_error(n_glycan_type(glycan), "Not an N-glycan")
+})
+
+
 # ========== Bisecting N-glycan ==========
 patrick::with_parameters_test_that("complex H3N5 bisect", {
   glycan <- complex_H3N5_bisect(mono_type, linkage)
@@ -466,6 +472,12 @@ test_that("complex H3N5 bisect strict", {
 test_that("complex H4H4 not bisect", {
   glycan <- complex_H4N4("simple", linkage = FALSE)
   expect_false(has_bisecting(glycan))
+})
+
+
+test_that("check bisecting not for N-glycan", {
+  glycan <- o_glycan_core_1("simple", linkage = FALSE)
+  expect_error(has_bisecting(glycan), "Not an N-glycan")
 })
 
 
@@ -524,6 +536,12 @@ test_that("paucimannose H3N2 has NA antennae", {
 })
 
 
+test_that("check antennae not for N-glycan", {
+  glycan <- o_glycan_core_1("simple", linkage = FALSE)
+  expect_error(n_antennae(glycan), "Not an N-glycan")
+})
+
+
 # ========== Number of core fucoses ==========
 test_that("no core fucose: H3N3", {
   glycan <- complex_H3N3("simple", linkage = FALSE)
@@ -558,6 +576,12 @@ test_that("one core fucose: H3N4F1, strict", {
 test_that("no core fucose: H3N4F1", {
   glycan <- complex_H3N4F1_armF("simple", linkage = FALSE)
   expect_identical(n_core_fuc(glycan), 0L)
+})
+
+
+test_that("check core fucose not for N-glycan", {
+  glycan <- o_glycan_core_1("simple", linkage = FALSE)
+  expect_error(n_core_fuc(glycan), "Not an N-glycan")
 })
 
 
@@ -598,6 +622,12 @@ test_that("no arm fucose: H3N4F1", {
 })
 
 
+test_that("check arm fucose not for N-glycan", {
+  glycan <- o_glycan_core_1("simple", linkage = FALSE)
+  expect_error(n_arm_fuc(glycan), "Not an N-glycan")
+})
+
+
 # ========== Number of terminal galaactoses ==========
 patrick::with_parameters_test_that("one terminal galactose: H4N4", {
   glycan <- complex_H4N4(mono_type, linkage)
@@ -620,4 +650,10 @@ test_that("two terminal galactoses: H6N5S1, strict", {
 test_that("no terminal galactose: H4N4S1", {
   glycan <- complex_H4N4S1("simple", linkage = FALSE)
   expect_identical(n_terminal_gal(glycan), 0L)
+})
+
+
+test_that("check terminal galactose not for N-glycan", {
+  glycan <- o_glycan_core_1("simple", linkage = FALSE)
+  expect_error(n_terminal_gal(glycan), "Not an N-glycan")
 })
