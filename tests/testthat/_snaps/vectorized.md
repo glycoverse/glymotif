@@ -63,7 +63,7 @@
     Code
       has_motifs(glycan, motifs)
     Condition
-      Error in `has_motifs()`:
+      Error in `one_glycan_many_motifs_wrapper()`:
       ! All motifs must have the same monosaccharide type.
 
 # has_motifs: glycan has obscurer mono type than motifs
@@ -99,7 +99,7 @@
     Code
       have_motif(glycans, motif)
     Condition
-      Error in `have_motif()`:
+      Error in `many_glycans_one_motif_wrapper()`:
       ! All glycans must have the same monosaccharide type.
 
 # have_motif: glycans have obscurer mono types than motif
@@ -161,7 +161,7 @@
     Code
       have_motifs(glycans, motifs)
     Condition
-      Error in `have_motifs()`:
+      Error in `many_glycans_many_motifs_wrapper()`:
       ! All glycans must have the same monosaccharide type.
 
 # have_motifs: motifs have different mono types
@@ -169,7 +169,7 @@
     Code
       have_motifs(glycans, motifs)
     Condition
-      Error in `have_motifs()`:
+      Error in `many_glycans_many_motifs_wrapper()`:
       ! All motifs must have the same monosaccharide type.
 
 # have_motifs: glycans have obscurer mono types than motifs

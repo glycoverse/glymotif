@@ -457,3 +457,40 @@ test_that("have_motifs: glycans and motifs have different graph modes", {
   rownames(expected) <- c("G1", "G2")
   expect_equal(have_motifs(glycans, motifs), expected)
 })
+
+
+# ----- counts_motifs() -----
+# As "counts_motif" functions use the same argument processing code
+# as "have_motif" functions, we only need to test the main functionality.
+
+test_that("counts_motifs: basic test", {
+  motifs <- c(M1 = "Gal", M2 = "GlcNAc", M3 = "GalNAc")
+  glycan <- c("Gal(b1-3)GlcNAc")
+  result <- counts_motifs(glycan, motifs)
+  expected <- c(M1 = 1, M2 = 1, M3 = 0)
+  expect_equal(result, expected)
+})
+
+
+test_that("count_motif: basic test", {
+  motif <- "Gal"
+  glycans <- c(G1 = "Gal", G2 = "GlcNAc", G3 = "Gal(b1-3)Gal")
+  result <- count_motif(glycans, motif)
+  expected <- c(G1 = 1, G2 = 0, G3 = 2)
+  expect_equal(result, expected)
+})
+
+
+test_that("count_motifs: basic test", {
+  motifs <- c(M1 = "Gal", M2 = "GlcNAc", M3 = "GalNAc")
+  glycans <- c(G1 = "Gal(b1-3)GlcNAc", G2 = "Gal(b1-3)Gal", G3 = "GlcNAc")
+  result <- count_motifs(glycans, motifs)
+  expected <- matrix(c(
+    1, 1, 0,
+    2, 0, 0,
+    0, 1, 0
+  ), nrow = 3, byrow = TRUE)
+  colnames(expected) <- c("M1", "M2", "M3")
+  rownames(expected) <- c("G1", "G2", "G3")
+  expect_equal(result, expected)
+})

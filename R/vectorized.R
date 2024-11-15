@@ -1,17 +1,53 @@
-#' Check if the Glycan(s) have the Given Motif(s)
+#' Vectorized Motif Checking Functions
 #'
 #' @description
-#' These are vectorized versions of [has_motif()].
-#' - `has_motif()` checks if a motif is present in a glycan.
-#' - `has_motifs()` checks if a list of motifs are present in a glycans.
-#' - `have_motif()` checks if a motif is present in a list of glycans.
-#' - `have_motifs()` checks if a list of motifs are present in a list of glycans.
+#' Vectorized versions of [has_motif()]:
+#' - `has_motifs()`: one glycan, many motifs.
+#' - `have_motif()`: many glycans, one motif.
+#' - `have_motifs()`: many glycans, many motifs.
+#'
+#' Vectorized versions of [counts_motif()]:
+#' - `counts_motifs()`: one glycan, many motifs.
+#' - `count_motif()`: many glycans, one motif.
+#' - `count_motifs()`: many glycans, many motifs.
 #'
 #' They can be told apart by English grammar:
-#' - Functions starting with "has" work with one glycan, "have" with multiple glycans.
+#' - Functions starting with "has" and "counts" work with one glycan,
+#'   "have" and "count" with multiple glycans.
 #' - Functions ending with "motif" work with one motif, "motifs" with multiple motifs.
 #'
 #' @details
+#' # Why not `purrr`?
+#'
+#' These functions have performance benefits over simply using `purrr` functions
+#' on `has_motif()` and `counts_motif()`.
+#' These two functions have many internal checks and conversions,
+#' which can be redundant using `purrr`.
+#' For example, when passing N motifs to `has_motifs()`,
+#' the checks and conversions will be performed N + 1 times
+#' (N for the motifs and 1 for the glycan).
+#' However, using `purrr::map_lgl(motifs, has_motif, glycan)`
+#' will perform the checks and conversions N + N times.
+#' The glycan will be processed repeatedly for each motif,
+#' even thought N - 1 of them are redundant.
+#' The situation is even worse if you are dealing with multiple glycans
+#' and multiple motifs.
+#' Using `purrr` functions will perform the checks and conversions
+#' N * M times (N for the motifs and M for the glycans),
+#' while using `have_motifs()` only need N + M times.
+#' A huge save!
+#'
+#' # Why so many?
+#'
+#' You may wonder why we can't just make `has_motif()` and `counts_motif()` vectorized.
+#' The reason is the the same between base "apply" family functions and `purrr` functions.
+#' These vectorized functions have consistent and predictable return types.
+#' - `has_motif()` and `counts_motif()` always return a scalar.
+#' - `has_motifs()`, `have_motif()`, `counts_motifs()`, and `count_motif()` always return a vector.
+#' - `have_motifs()` and `count_motifs()` always return a matrix.
+#'
+#' # More about arguments
+#'
 #' When using known motifs in the GlycoMotif GlyGen Collection,
 #' the best practice is to not provide the alignment arguments,
 #' and let the function decide the alignment based on the motif name.
@@ -21,13 +57,6 @@
 #'
 #' Monosaccharide types must be the same within `glycans` or `motifs`.
 #' However, an holistic obscurer monosaccharide type in `motifs` than in `glycans` is allowed.
-#'
-#' Internally, all glycan and motif inputs are converted to 'glycan_graph' objects.
-#' Therefore, if performance matters and you need to repeatedly use the same glycans or motifs,
-#' it is recommended to convert them to 'glycan_graph' objects beforehand.
-#' [get_motif_graph()] can be used to get the 'glycan_graph' object of a known motif.
-#' [glyparse::parse_iupac_condensed()] can be used to convert IUPAC-condensed
-#' structure strings to 'glycan_graph' objects.
 #'
 #' @param glycan A 'glycan_graph' object, or an IUPAC-condensed structure string.
 #' @param motif A 'glycan_graph' object, an IUPAC-condensed structure string, or a known motif name.
@@ -46,17 +75,16 @@
 #' @param simplify A logical value. Only used in `have_motifs()`.
 #' If `TRUE`, drop columns (motifs) with all FALSE values. Default is `FALSE`.
 #'
-#' @return #' `has_motifs()` and `have_motif()` return a logical vector
-#' of the same length as the input motifs or glycans, respectively.
-#' `have_motifs()` returns a matrix of logical values,
-#' indicating if each glycan has each motif.
+#' @return `has_motifs()`, `have_motif()`, `counts_motifs()`, and `count_motif()`
+#' return a logical vector of the same length as the input motifs or glycans, respectively.
+#' `have_motifs()` and `count_motifs()` return a matrix.
 #' Rows are glycans and columns are motifs.
 #'
 #' The dimension names are determined by the input arguments.
 #' If `glycans` or `motifs` have names, they will be preserved in the result.
 #' If not, but `glycans` or `motifs` are character vectors, they will be used as names.
 #'
-#' @seealso [has_motif()]
+#' @seealso [has_motif()], [counts_motif()]
 #'
 #' @examples
 #' library(glyparse)
@@ -93,6 +121,77 @@
 #'
 #' @export
 has_motifs <- function(glycan, motifs = NULL, alignments = NULL, ignore_linkages = FALSE) {
+  one_glycan_many_motifs_wrapper(glycan, motifs, alignments, ignore_linkages, simple_has_motifs)
+}
+
+
+#' @rdname has_motifs
+#' @export
+have_motif <- function(glycans, motif, alignment = NULL, ignore_linkages = FALSE) {
+  .f <- function(glycans, motif, alignment, ignore_linkages) {
+    purrr::map_lgl(glycans, has_motif_, motif, alignment = alignment, ignore_linkages = ignore_linkages)
+  }
+  many_glycans_one_motif_wrapper(glycans, motif, alignment, ignore_linkages, .f)
+}
+
+
+#' @rdname has_motifs
+#' @export
+have_motifs <- function(glycans, motifs = NULL, alignments = NULL, ignore_linkages = FALSE, simplify = FALSE) {
+  .f <- function(glycans, motifs, alignments, ignore_linkages) {
+    lgl_list <- purrr::map(
+      glycans, simple_has_motifs, motifs,
+      alignments = alignments, ignore_linkages = ignore_linkages
+    )
+    do.call(rbind, lgl_list)
+  }
+  result <- many_glycans_many_motifs_wrapper(glycans, motifs, alignments, ignore_linkages, .f)
+  if (simplify) {
+    # Drop columns will all FALSE
+    result <- result[, colSums(result) > 0]
+  }
+  result
+}
+
+
+#' @rdname has_motifs
+#' @export
+counts_motifs <- function(glycan, motifs = NULL, alignments = NULL, ignore_linkages = FALSE) {
+  one_glycan_many_motifs_wrapper(glycan, motifs, alignments, ignore_linkages, simple_counts_motifs)
+}
+
+
+#' @rdname has_motifs
+#' @export
+count_motif <- function(glycans, motif, alignment = NULL, ignore_linkages = FALSE) {
+  .f <- function(glycans, motif, alignment, ignore_linkages) {
+    purrr::map_int(glycans, counts_motif_, motif, alignment = alignment, ignore_linkages = ignore_linkages)
+  }
+  many_glycans_one_motif_wrapper(glycans, motif, alignment, ignore_linkages, .f)
+}
+
+
+#' @rdname has_motifs
+#' @export
+count_motifs <- function(glycans, motifs = NULL, alignments = NULL, ignore_linkages = FALSE, simplify = FALSE) {
+  .f <- function(glycans, motifs, alignments, ignore_linkages) {
+    int_list <- purrr::map(
+      glycans, simple_counts_motifs, motifs,
+      alignments = alignments, ignore_linkages = ignore_linkages
+    )
+    do.call(rbind, int_list)
+  }
+  result <- many_glycans_many_motifs_wrapper(glycans, motifs, alignments, ignore_linkages, .f)
+  if (simplify) {
+    # Drop columns will all FALSE
+    result <- result[, colSums(result) > 0]
+  }
+  result
+}
+
+
+# ----- Argument Processing -----
+one_glycan_many_motifs_wrapper <- function(glycan, motifs, alignments, ignore_linkages, func) {
   # Check input arguments
   valid_glycan_arg(glycan)
   valid_motifs_arg(motifs)
@@ -132,13 +231,11 @@ has_motifs <- function(glycan, motifs = NULL, alignments = NULL, ignore_linkages
   }
   glycan <- ensure_glycan_mono_type(glycan, motifs[[1]])
 
-  simple_has_motifs(glycan, motifs, alignments, ignore_linkages)
+  func(glycan, motifs, alignments, ignore_linkages)
 }
 
 
-#' @rdname has_motifs
-#' @export
-have_motif <- function(glycans, motif, alignment = NULL, ignore_linkages = FALSE) {
+many_glycans_one_motif_wrapper <- function(glycans, motif, alignment, ignore_linkages, func) {
   # Check input arguments
   valid_glycans_arg(glycans)
   valid_motif_arg(motif)
@@ -171,13 +268,11 @@ have_motif <- function(glycans, motif, alignment = NULL, ignore_linkages = FALSE
   }
   glycans <- ensure_glycans_mono_type(glycans, motif)
 
-  purrr::map_lgl(glycans, has_motif_, motif, alignment = alignment, ignore_linkages = ignore_linkages)
+  func(glycans, motif, alignment, ignore_linkages)
 }
 
 
-#' @rdname has_motifs
-#' @export
-have_motifs <- function(glycans, motifs = NULL, alignments = NULL, ignore_linkages = FALSE, simplify = FALSE) {
+many_glycans_many_motifs_wrapper <- function(glycans, motifs, alignments, ignore_linkages, func) {
   # Check input arguments
   valid_glycans_arg(glycans)
   valid_motifs_arg(motifs)
@@ -216,22 +311,23 @@ have_motifs <- function(glycans, motifs = NULL, alignments = NULL, ignore_linkag
   }
   glycans <- ensure_glycans_mono_type(glycans, motifs[[1]])
 
-  lgl_list <- purrr::map(glycans, simple_has_motifs, motifs, alignments = alignments, ignore_linkages = ignore_linkages)
-  result <- do.call(rbind, lgl_list)
-
-  if (simplify) {
-    # Drop columns will all FALSE
-    result <- result[, colSums(result) > 0]
-  }
-
-  result
+  func(glycans, motifs, alignments, ignore_linkages)
 }
 
 
+# ----- Utility Functions -----
 simple_has_motifs <- function(glycan, motifs, alignments, ignore_linkages) {
   purrr::map2_lgl(
     motifs, alignments,
     ~ has_motif_(glycan, .x, alignment = .y, ignore_linkages = ignore_linkages)
+  )
+}
+
+
+simple_counts_motifs <- function(glycan, motifs, alignments, ignore_linkages) {
+  purrr::map2_int(
+    motifs, alignments,
+    ~ counts_motif_(glycan, .x, alignment = .y, ignore_linkages = ignore_linkages)
   )
 }
 
