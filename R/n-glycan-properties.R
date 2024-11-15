@@ -1,4 +1,49 @@
 # ----- Interface -----
+describe_n_glycans <- function(glycans, strict = FALSE) {
+  # Validate the input
+  valid_glycans_arg(glycans)
+  checkmate::assert_flag(strict)
+  glycans <- ensure_glycans_are_graphs(glycans)
+
+  # Deal with strictness
+  if (strict) {
+    hf <- has_motif_
+    cf <- counts_motif_
+  } else {
+    glycans <- purrr::map(
+      glycans, glyrepr::convert_glycan_mono_type,
+      to = "simple", strict = FALSE
+    )
+    hf <- lenient_has_motif_
+    cf <- lenient_count_motif_
+  }
+
+  # Check if the glycans are N-glycans
+  invalid_indices <- which(!purrr::map_lgl(glycans, .is_n_glycan, hf, cf))
+  if (length(invalid_indices) > 0) {
+    cli::cli_abort("Glycans at indices {.val {invalid_indices}} are not N-glycans.")
+  }
+
+  # Get the properties
+  res <- tibble::tibble(
+    glycan_type = purrr::map_chr(glycans, .n_glycan_type, hf, cf),
+    bisecting = purrr::map_lgl(glycans, .has_bisecting, hf, cf),
+    antennae = purrr::map_int(glycans, .n_antennae, hf, cf),
+    core_fuc = purrr::map_int(glycans, .n_core_fuc, hf, cf),
+    arm_fuc = purrr::map_int(glycans, .n_arm_fuc, hf, cf),
+    terminal_gal = purrr::map_int(glycans, .n_terminal_gal, hf, cf)
+  )
+
+  # Add the glycan name column
+  if (!is.null(names(glycans))) {
+    res <- tibble::add_column(res, glycan = names(glycans), .before = 1)
+  } else if (is.character(glycans)) {
+    res <- tibble::add_column(res, glycan = glycans, .before = 1)
+  }
+
+  res
+}
+
 
 #' Check if a Glycan is an N-Glycan
 #'

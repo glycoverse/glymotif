@@ -657,3 +657,44 @@ test_that("check terminal galactose not for N-glycan", {
   glycan <- o_glycan_core_1("simple", linkage = FALSE)
   expect_error(n_terminal_gal(glycan), "Not an N-glycan")
 })
+
+
+# ========== Describe N-glycan ==========
+test_that("describing glycans works", {
+  glycans <- list(
+    H5N2 = highmannose_H5N2("simple", linkage = FALSE),
+    H4N4 = complex_H4N4("simple", linkage = FALSE),
+    H3N4F2 = complex_H3N4F2_1coreF_1armF("simple", linkage = FALSE)
+  )
+  expect_snapshot(describe_n_glycans(glycans))
+})
+
+
+test_that("strictly describing glycans works", {
+  glycans <- list(
+    H5N2 = highmannose_H5N2("concrete", linkage = TRUE),
+    H4N4 = complex_H4N4("concrete", linkage = TRUE),
+    H3N4F2 = complex_H3N4F2_1coreF_1armF("concrete", linkage = TRUE)
+  )
+  expect_snapshot(describe_n_glycans(glycans, strict = TRUE))
+})
+
+
+test_that("describe not N-glycans", {
+  glycans <- list(
+    O_glycan = o_glycan_core_1("simple", linkage = FALSE),
+    H5N2 = highmannose_H5N2("simple", linkage = FALSE)
+  )
+  expect_snapshot(describe_n_glycans(glycans), error = TRUE)
+})
+
+
+test_that("describe N-glycans with no name", {
+  glycans <- list(
+    highmannose_H5N2("simple", linkage = FALSE),
+    complex_H4N4("simple", linkage = FALSE),
+    complex_H3N4F2_1coreF_1armF("simple", linkage = FALSE)
+  )
+  result <- describe_n_glycans(glycans)
+  expect_false("glycan" %in% colnames(result))
+})

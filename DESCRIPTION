@@ -26,7 +26,8 @@ Imports:
     rlang,
     stringr,
     checkmate,
-    dplyr
+    dplyr,
+    tibble
 Remotes: 
     fubin1999/glyrepr,
     fubin1999/glyparse
