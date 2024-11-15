@@ -92,9 +92,7 @@
 #' have_motifs(glycans, motifs)
 #'
 #' @export
-has_motifs <- function(glycan, motifs = NULL, alignments = "substructure", ignore_linkages = FALSE) {
-  alignment_provided <- !missing(alignments)
-
+has_motifs <- function(glycan, motifs = NULL, alignments = NULL, ignore_linkages = FALSE) {
   # Check input arguments
   valid_glycan_arg(glycan)
   valid_motifs_arg(motifs)
@@ -106,7 +104,7 @@ has_motifs <- function(glycan, motifs = NULL, alignments = "substructure", ignor
   }
 
   # Get motif type and default motifs
-  if (missing(motifs)) {
+  if (is.null(motifs)) {
     motifs <- available_motifs()
     motif_type <- "known"
   } else {
@@ -115,7 +113,9 @@ has_motifs <- function(glycan, motifs = NULL, alignments = "substructure", ignor
 
   # Decide alignments
   if (motif_type == "known") {
-    alignments <- decide_alignments(motifs, alignments, alignment_provided)
+    alignments <- decide_alignments(motifs, alignments)
+  } else if (is.null(alignments)) {
+    alignments <- "substructure"
   }
 
   # Ensure motifs are graphs
@@ -138,9 +138,7 @@ has_motifs <- function(glycan, motifs = NULL, alignments = "substructure", ignor
 
 #' @rdname has_motifs
 #' @export
-have_motif <- function(glycans, motif, alignment = "substructure", ignore_linkages = FALSE) {
-  alignment_provided <- !missing(alignment)
-
+have_motif <- function(glycans, motif, alignment = NULL, ignore_linkages = FALSE) {
   # Check input arguments
   valid_glycans_arg(glycans)
   valid_motif_arg(motif)
@@ -154,7 +152,9 @@ have_motif <- function(glycans, motif, alignment = "substructure", ignore_linkag
   # Decide motif type and alignment
   motif_type <- get_motif_type(motif)
   if (motif_type == "known") {
-    alignment <- decide_alignment(motif, alignment, alignment_provided)
+    alignment <- decide_alignment(motif, alignment)
+  } else if (is.null(alignment)) {
+    alignment <- "substructure"
   }
 
   # Ensure glycans and motif are graphs
@@ -177,9 +177,7 @@ have_motif <- function(glycans, motif, alignment = "substructure", ignore_linkag
 
 #' @rdname has_motifs
 #' @export
-have_motifs <- function(glycans, motifs = NULL, alignments = "substructure", ignore_linkages = FALSE, simplify = FALSE) {
-  alignment_provided <- !missing(alignments)
-
+have_motifs <- function(glycans, motifs = NULL, alignments = NULL, ignore_linkages = FALSE, simplify = FALSE) {
   # Check input arguments
   valid_glycans_arg(glycans)
   valid_motifs_arg(motifs)
@@ -196,7 +194,9 @@ have_motifs <- function(glycans, motifs = NULL, alignments = "substructure", ign
 
   # Decide alignments
   if (motif_type == "known") {
-    alignments <- decide_alignments(motifs, alignments, alignment_provided)
+    alignments <- decide_alignments(motifs, alignments)
+  } else if (is.null(alignments)) {
+    alignments <- "substructure"
   }
 
   # Ensure glycans and motifs are graphs

@@ -4,7 +4,7 @@
 \alias{has_motif}
 \title{Check if a Glycan has the Given Motif}
 \usage{
-has_motif(glycan, motif, alignment = "substructure", ignore_linkages = FALSE)
+has_motif(glycan, motif, alignment = NULL, ignore_linkages = FALSE)
 }
 \arguments{
 \item{glycan}{A 'glycan_graph' object, or an IUPAC-condensed structure string.}
@@ -12,10 +12,11 @@ has_motif(glycan, motif, alignment = "substructure", ignore_linkages = FALSE)
 \item{motif}{A 'glycan_graph' object, an IUPAC-condensed structure string,
 or a known motif name (use \code{\link[=available_motifs]{available_motifs()}} to see all available motifs).}
 
-\item{alignment}{A character string. Possible values are "substructure", "core", "terminal" and "whole".
-Default is "substructure".
-When \code{motif} is a known motif name and \code{alignment} is not provided,
-the alignment type in the database will be used.}
+\item{alignment}{A character string.
+Possible values are "substructure", "core", "terminal" and "whole".
+If not provided, the value will be decided based on the \code{motif} argument.
+If \code{motif} is a motif name, the alignment in the database will be used.
+Otherwise, "substructure" will be used.}
 
 \item{ignore_linkages}{A logical value. If \code{TRUE}, linkages will be ignored in the comparison.}
 }

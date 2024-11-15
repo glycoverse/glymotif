@@ -1,5 +1,5 @@
 # ----- Prepare arguments for `counts_motif()` and `has_motif()` -----
-prepare_has_motif_args <- function(glycan, motif, alignment, alignment_provided, ignore_linkages) {
+prepare_has_motif_args <- function(glycan, motif, alignment, ignore_linkages) {
   # Check input arguments
   valid_glycan_arg(glycan)
   valid_motif_arg(motif)
@@ -10,7 +10,9 @@ prepare_has_motif_args <- function(glycan, motif, alignment, alignment_provided,
 
   # Deal with `alignment` when `motif` is a known motif name
   if (motif_type == "known") {
-    alignment <- decide_alignment(motif, alignment, alignment_provided)
+    alignment <- decide_alignment(motif, alignment)
+  } else if (is.null(alignment)) {
+    alignment <- "substructure"
   }
 
   # Make sure `glycan` and `motif` are graphs
@@ -32,7 +34,10 @@ prepare_has_motif_args <- function(glycan, motif, alignment, alignment_provided,
 
 # ----- Argument validation -----
 valid_alignment_arg <- function(x) {
-  checkmate::assert_choice(x, c("substructure", "core", "terminal", "whole"))
+  checkmate::assert(
+    checkmate::test_null(x),
+    checkmate::test_choice(x, c("substructure", "core", "terminal", "whole"))
+  )
 }
 
 
@@ -107,13 +112,16 @@ valid_motifs_arg <- function(x) {
 
 
 valid_alignments_arg <- function(x, motifs) {
-  if (length(x) != 1 && length(x) != length(motifs)) {
+  checkmate::assert(
+    checkmate::test_null(x),
+    checkmate::test_subset(x, c("substructure", "core", "terminal", "whole"))
+  )
+  if (!is.null(x) && !length(x) %in% c(1, length(motifs))) {
     cli::cli_abort(c(
       "`alignments` must be either a single character string or a character vector of the same length as `motifs`.",
       i = "`motif` length: {.val {length(motifs)}}, `alignments` length: {.val {length(x)}}"
     ))
   }
-  checkmate::assert_subset(x, c("substructure", "core", "terminal", "whole"))
 }
 
 
@@ -160,13 +168,13 @@ get_motifs_type <- function(motifs) {
 
 
 # ----- Decide alignment type -----
-decide_alignment <- function(motif_name, alignment, alignment_provided) {
+decide_alignment <- function(motif_name, alignment) {
   # Decide which alignment type to use.
   # If the alignment is provided, check if it is the same as the motif's
   # alignment type in the database and issue a warning if not.
   # If not provided, use the motif's alignment type in the database.
   db_alignment <- get_motif_alignment(motif_name)
-  if (alignment_provided) {
+  if (!is.null(alignment)) {
     if (alignment != db_alignment) {
       cli::cli_warn(
         "The provided alignment type {.val {alignment}} is different from the motif's alignment type {.val {db_alignment}} in database.",
@@ -180,9 +188,9 @@ decide_alignment <- function(motif_name, alignment, alignment_provided) {
 }
 
 
-decide_alignments <- function(motif_names, alignments, alignments_provided) {
+decide_alignments <- function(motif_names, alignments) {
   db_alignments <- get_motif_alignment(motif_names)
-  if (alignments_provided) {
+  if (!is.null(alignments)) {
     rlang::warn("Use user-provided alignments, not the ones in the database.")
     alignments
   } else {

@@ -90,10 +90,11 @@
 #' @param glycan A 'glycan_graph' object, or an IUPAC-condensed structure string.
 #' @param motif A 'glycan_graph' object, an IUPAC-condensed structure string,
 #' or a known motif name (use [available_motifs()] to see all available motifs).
-#' @param alignment A character string. Possible values are "substructure", "core", "terminal" and "whole".
-#' Default is "substructure".
-#' When `motif` is a known motif name and `alignment` is not provided,
-#' the alignment type in the database will be used.
+#' @param alignment A character string.
+#' Possible values are "substructure", "core", "terminal" and "whole".
+#' If not provided, the value will be decided based on the `motif` argument.
+#' If `motif` is a motif name, the alignment in the database will be used.
+#' Otherwise, "substructure" will be used.
 #' @param ignore_linkages A logical value. If `TRUE`, linkages will be ignored in the comparison.
 #'
 #' @return A logical value indicating if the `glycan` has the `motif`.
@@ -159,14 +160,13 @@
 #' has_motif(glycan_5, glycan_5)
 #'
 #' @export
-has_motif <- function(glycan, motif, alignment = "substructure", ignore_linkages = FALSE) {
-  alignment_provided <- !missing(alignment)
-  params <- prepare_has_motif_args(glycan, motif, alignment, alignment_provided, ignore_linkages)
+has_motif <- function(glycan, motif, alignment = NULL, ignore_linkages = FALSE) {
+  params <- prepare_has_motif_args(glycan, motif, alignment, ignore_linkages)
   rlang::exec("has_motif_", !!!params)
 }
 
 
-has_motif_ <- function(glycan, motif, alignment = "substructure", ignore_linkages = FALSE) {
+has_motif_ <- function(glycan, motif, alignment, ignore_linkages = FALSE) {
   # This function is the logic part of `has_motif()`.
   c_graphs <- colorize_graphs(glycan, motif)
   glycan <- c_graphs$glycan

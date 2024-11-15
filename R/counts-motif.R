@@ -57,14 +57,13 @@
 #' counts_motif("Gal(b1-3)Gal", "Man")
 #'
 #' @export
-counts_motif <- function(glycan, motif, alignment = "substructure", ignore_linkages = FALSE) {
-  alignment_provided <- !missing(alignment)
-  params <- prepare_has_motif_args(glycan, motif, alignment, alignment_provided, ignore_linkages)
+counts_motif <- function(glycan, motif, alignment = NULL, ignore_linkages = FALSE) {
+  params <- prepare_has_motif_args(glycan, motif, alignment, ignore_linkages)
   rlang::exec("counts_motif_", !!!params)
 }
 
 
-counts_motif_ <- function(glycan, motif, alignment = "substructure", ignore_linkages = FALSE) {
+counts_motif_ <- function(glycan, motif, alignment, ignore_linkages = FALSE) {
   # This function is the logic part of `counts_motif()`.
   c_graphs <- colorize_graphs(glycan, motif)
   glycan <- c_graphs$glycan

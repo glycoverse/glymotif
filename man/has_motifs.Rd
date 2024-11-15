@@ -6,19 +6,14 @@
 \alias{have_motifs}
 \title{Check if the Glycan(s) have the Given Motif(s)}
 \usage{
-has_motifs(
-  glycan,
-  motifs = NULL,
-  alignments = "substructure",
-  ignore_linkages = FALSE
-)
+has_motifs(glycan, motifs = NULL, alignments = NULL, ignore_linkages = FALSE)
 
-have_motif(glycans, motif, alignment = "substructure", ignore_linkages = FALSE)
+have_motif(glycans, motif, alignment = NULL, ignore_linkages = FALSE)
 
 have_motifs(
   glycans,
   motifs = NULL,
-  alignments = "substructure",
+  alignments = NULL,
   ignore_linkages = FALSE,
   simplify = FALSE
 )
