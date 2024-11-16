@@ -27,7 +27,8 @@ Imports:
     stringr,
     checkmate,
     dplyr,
-    tibble
+    tibble,
+    memoise
 Remotes: 
     fubin1999/glyrepr,
     fubin1999/glyparse

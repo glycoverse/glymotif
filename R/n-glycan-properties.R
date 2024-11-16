@@ -6,17 +6,14 @@ describe_n_glycans <- function(glycans, strict = FALSE) {
   glycans <- ensure_glycans_are_graphs(glycans)
 
   # Deal with strictness
-  if (strict) {
-    hf <- has_motif_
-    cf <- counts_motif_
-  } else {
+  if (!strict) {
     glycans <- purrr::map(
       glycans, glyrepr::convert_glycan_mono_type,
       to = "simple", strict = FALSE
     )
-    hf <- lenient_has_motif_
-    cf <- lenient_count_motif_
   }
+  hf <- purrr::partial(has_n_glycan_motif, strict = strict)
+  cf <- purrr::partial(count_n_glycan_motif, strict = strict)
 
   # Check if the glycans are N-glycans
   invalid_indices <- which(!purrr::map_lgl(glycans, .is_n_glycan, hf, cf))
@@ -25,10 +22,14 @@ describe_n_glycans <- function(glycans, strict = FALSE) {
   }
 
   # Get the properties
+  glycan_type <- purrr::map_chr(glycans, .n_glycan_type, hf, cf)
   res <- tibble::tibble(
-    glycan_type = purrr::map_chr(glycans, .n_glycan_type, hf, cf),
+    glycan_type = glycan_type,
     bisecting = purrr::map_lgl(glycans, .has_bisecting, hf, cf),
-    antennae = purrr::map_int(glycans, .n_antennae, hf, cf),
+    antennae = purrr::map2_int(
+      glycans, glycan_type == "complex",
+      ~ .n_antennae(.x, hf, cf, is_complex = .y)
+    ),
     core_fuc = purrr::map_int(glycans, .n_core_fuc, hf, cf),
     arm_fuc = purrr::map_int(glycans, .n_arm_fuc, hf, cf),
     terminal_gal = purrr::map_int(glycans, .n_terminal_gal, hf, cf)
@@ -203,25 +204,18 @@ n_terminal_gal <- function(glycan, strict = FALSE) {
 #   It should have the signature `.counts_motif(glycan, motif, alignment)`.
 #
 # In these functions, use `.has_motif` and `.counts_motif` to check for motifs.
-
 .is_n_glycan <- function(glycan, .has_motif, .counts_motif) {
-  core_graph <- get_motif_graph("N-Glycan core basic")
-  .has_motif(glycan, core_graph, alignment = "core")
+  .has_motif(glycan, "core", alignment = "core")
 }
 
 
 .n_glycan_type <- function(glycan, .has_motif, .counts_motif) {
-  H4N2_iupac <- "Man(a1-3)[Man(a1-3/6)Man(a1-6)]Man(b1-4)GlcNAc(b1-4)GlcNAc(?1-"
-  H4N2_graph <- glyparse::parse_iupac_condensed(H4N2_iupac)
-  core_graph <- get_motif_graph("N-Glycan core basic")
-  hybrid_graph <- get_motif_graph("N-Glycan hybrid")
-  highman_graph <- get_motif_graph("N-Glycan high mannose")
-  if (.has_motif(glycan, core_graph, alignment = "whole") ||
-      .has_motif(glycan, H4N2_graph, alignment = "whole")) {
+  if (.has_motif(glycan, "core", alignment = "whole") ||
+      .has_motif(glycan, "pauciman", alignment = "whole")) {
     "paucimannose"
-  } else if (.has_motif(glycan, hybrid_graph, alignment = "core")) {
+  } else if (.has_motif(glycan, "hybrid", alignment = "core")) {
     "hybrid"
-  } else if (.has_motif(glycan, highman_graph, alignment = "core")) {
+  } else if (.has_motif(glycan, "highman", alignment = "core")) {
     "highmannose"
   } else {
     "complex"
@@ -230,22 +224,22 @@ n_terminal_gal <- function(glycan, strict = FALSE) {
 
 
 .has_bisecting <- function(glycan, .has_motif, .counts_motif) {
-  bisect_graph <- get_motif_graph("N-glycan core, bisected")
-  .has_motif(glycan, bisect_graph, alignment = "core")
+  .has_motif(glycan, "bisect", alignment = "core")
 }
 
 
-.n_antennae <- function(glycan, .has_motif, .counts_motif) {
-  ant2_graph <- get_motif_graph("N-Glycan biantennary")
-  ant3_graph <- get_motif_graph("N-Glycan triantennary")
-  ant4_graph <- get_motif_graph("N-Glycan tetraantennary")
-  if (.n_glycan_type(glycan, .has_motif, .counts_motif) != "complex") {
-    NA_integer_
-  } else if (.has_motif(glycan, ant4_graph, alignment = "core")) {
+.n_antennae <- function(glycan, .has_motif, .counts_motif, is_complex = NULL) {
+  if (is.null(is_complex)) {
+    is_complex <- .n_glycan_type(glycan, .has_motif, .counts_motif) == "complex"
+  }
+  if (!is_complex) {
+    return(NA_integer_)
+  }
+  if (.has_motif(glycan, "ant4", alignment = "core")) {
     4L
-  } else if (.has_motif(glycan, ant3_graph, alignment = "core")) {
+  } else if (.has_motif(glycan, "ant3", alignment = "core")) {
     3L
-  } else if (.has_motif(glycan, ant2_graph, alignment = "core")) {
+  } else if (.has_motif(glycan, "ant2", alignment = "core")) {
     2L
   } else {
     1L
@@ -254,20 +248,17 @@ n_terminal_gal <- function(glycan, strict = FALSE) {
 
 
 .n_core_fuc <- function(glycan, .has_motif, .counts_motif) {
-  core_fuc_graph <- get_motif_graph("N-Glycan core, core-fucosylated")
-  .counts_motif(glycan, core_fuc_graph, alignment = "core")
+  .counts_motif(glycan, "core_fuc", alignment = "core")
 }
 
 
 .n_arm_fuc <- function(glycan, .has_motif, .counts_motif) {
-  arm_fuc_graph <- get_motif_graph("N-Glycan core, arm-fucosylated")
-  .counts_motif(glycan, arm_fuc_graph, alignment = "core")
+  .counts_motif(glycan, "arm_fuc", alignment = "core")
 }
 
 
 .n_terminal_gal <- function(glycan, .has_motif, .counts_motif) {
-  terminal_gal_graph <- glyparse::parse_iupac_condensed("Gal(?1-?)GlcNAc")
-  .counts_motif(glycan, terminal_gal_graph, alignment = "terminal")
+  .counts_motif(glycan, "term_gal", alignment = "terminal")
 }
 
 
@@ -296,14 +287,11 @@ n_glycan_property_wrapper <- function(glycan, strict, func, check_n_glycan = TRU
   valid_glycan_arg(glycan)
   checkmate::assert_flag(strict)
   glycan <- ensure_glycan_is_graph(glycan)
-  if (strict) {
-    has_motif_func <- has_motif_
-    counts_motif_func <- counts_motif_
-  } else {
+  if (!strict) {
     glycan <- glyrepr::convert_glycan_mono_type(glycan, to = "simple", strict = FALSE)
-    has_motif_func <- lenient_has_motif_
-    counts_motif_func <- lenient_count_motif_
   }
+  has_motif_func <- purrr::partial(has_n_glycan_motif, strict = strict)
+  counts_motif_func <- purrr::partial(count_n_glycan_motif, strict = strict)
   if (check_n_glycan && !.is_n_glycan(glycan, has_motif_func, counts_motif_func)) {
     rlang::abort("Not an N-glycan.")
   }
@@ -311,16 +299,36 @@ n_glycan_property_wrapper <- function(glycan, strict, func, check_n_glycan = TRU
 }
 
 
-lenient_has_motif_ <- function(glycan, motif, alignment) {
-  # This function differs from `has_motif_()` in these ways:
-  # 1. It always converts the motif to "simple" monosaccharides.
-  # 2. It ignores linkage information.
-  motif <- glyrepr::convert_glycan_mono_type(motif, to = "simple", strict = FALSE)
-  has_motif_(glycan, motif, alignment = alignment, ignore_linkages = TRUE)
+has_n_glycan_motif <- function(glycan, motif_name, alignment, strict) {
+  motif <- get_n_glycan_motif(motif_name, simple = !strict)
+  has_motif_(glycan, motif, alignment, ignore_linkages = !strict)
 }
 
 
-lenient_count_motif_ <- function(glycan, motif, alignment) {
-  motif <- glyrepr::convert_glycan_mono_type(motif, to = "simple", strict = FALSE)
-  counts_motif_(glycan, motif, alignment = alignment, ignore_linkages = TRUE)
+count_n_glycan_motif <- function(glycan, motif_name, alignment, strict) {
+  motif <- get_n_glycan_motif(motif_name, simple = !strict)
+  counts_motif_(glycan, motif, alignment, ignore_linkages = !strict)
 }
+
+
+get_n_glycan_motif <- function(name, simple = FALSE) {
+  motifs <- list(
+    core     = get_motif_graph("N-Glycan core basic"),
+    pauciman = glyparse::parse_iupac_condensed("Man(a1-3)[Man(a1-3/6)Man(a1-6)]Man(b1-4)GlcNAc(b1-4)GlcNAc(?1-"),
+    hybrid   = get_motif_graph("N-Glycan hybrid"),
+    highman  = get_motif_graph("N-Glycan high mannose"),
+    bisect   = get_motif_graph("N-glycan core, bisected"),
+    ant2     = get_motif_graph("N-Glycan biantennary"),
+    ant3     = get_motif_graph("N-Glycan triantennary"),
+    ant4     = get_motif_graph("N-Glycan tetraantennary"),
+    core_fuc = get_motif_graph("N-Glycan core, core-fucosylated"),
+    arm_fuc  = get_motif_graph("N-Glycan core, arm-fucosylated"),
+    term_gal = glyparse::parse_iupac_condensed("Gal(?1-?)GlcNAc")
+  )
+  motif <- motifs[[name]]
+  if (simple) {
+    motif <- glyrepr::convert_glycan_mono_type(motif, to = "simple", strict = FALSE)
+  }
+  motif
+}
+get_n_glycan_motif <- memoise::memoise(get_n_glycan_motif)
