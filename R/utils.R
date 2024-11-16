@@ -343,3 +343,33 @@ same_mono_types <- function(graphs) {
   mono_types <- purrr::map(graphs, glyrepr::decide_glycan_mono_type)
   dplyr::n_distinct(mono_types) <= 1
 }
+
+
+# ----- Parallel processing -----
+prepare_map_funcs <- function(parallel) {
+  if (parallel) {
+    list(
+      list = furrr::future_map,
+      int = furrr::future_map_int,
+      int2 = furrr::future_map2_int,
+      lgl = furrr::future_map_lgl,
+      lgl2 = furrr::future_map2_lgl,
+      chr = furrr::future_map_chr,
+      chr2 = furrr::future_map2_chr,
+      dbl = furrr::future_map_dbl,
+      dbl2 = furrr::future_map2_dbl
+    )
+  } else {
+    list(
+      list = purrr::map,
+      int = purrr::map_int,
+      int2 = purrr::map2_int,
+      lgl = purrr::map_lgl,
+      lgl2 = purrr::map2_lgl,
+      chr = purrr::map_chr,
+      chr2 = purrr::map2_chr,
+      dbl = purrr::map_dbl,
+      dbl2 = purrr::map2_dbl
+    )
+  }
+}

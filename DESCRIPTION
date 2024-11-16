@@ -28,7 +28,9 @@ Imports:
     checkmate,
     dplyr,
     tibble,
-    memoise
+    memoise,
+    future,
+    furrr
 Remotes: 
     fubin1999/glyrepr,
     fubin1999/glyparse

@@ -1,13 +1,18 @@
 # ----- Interface -----
-describe_n_glycans <- function(glycans, strict = FALSE) {
+describe_n_glycans <- function(glycans, strict = FALSE, parallel = NULL) {
   # Validate the input
   valid_glycans_arg(glycans)
   checkmate::assert_flag(strict)
+  checkmate::assert(checkmate::check_null(parallel), checkmate::check_flag(parallel))
   glycans <- ensure_glycans_are_graphs(glycans)
+
+  # Ensure parallelism
+  if (is.null(parallel)) parallel <- length(glycans) > 200
+  map_funcs <- prepare_map_funcs(parallel)
 
   # Deal with strictness
   if (!strict) {
-    glycans <- purrr::map(
+    glycans <- map_funcs$list(
       glycans, glyrepr::convert_glycan_mono_type,
       to = "simple", strict = FALSE
     )
@@ -16,23 +21,23 @@ describe_n_glycans <- function(glycans, strict = FALSE) {
   cf <- purrr::partial(count_n_glycan_motif, strict = strict)
 
   # Check if the glycans are N-glycans
-  invalid_indices <- which(!purrr::map_lgl(glycans, .is_n_glycan, hf, cf))
+  invalid_indices <- which(!map_funcs$lgl(glycans, .is_n_glycan, hf, cf))
   if (length(invalid_indices) > 0) {
     cli::cli_abort("Glycans at indices {.val {invalid_indices}} are not N-glycans.")
   }
 
   # Get the properties
-  glycan_type <- purrr::map_chr(glycans, .n_glycan_type, hf, cf)
+  glycan_type <- map_funcs$chr(glycans, .n_glycan_type, hf, cf)
   res <- tibble::tibble(
     glycan_type = glycan_type,
-    bisecting = purrr::map_lgl(glycans, .has_bisecting, hf, cf),
-    antennae = purrr::map2_int(
+    bisecting = map_funcs$lgl(glycans, .has_bisecting, hf, cf),
+    antennae = map_funcs$int2(
       glycans, glycan_type == "complex",
       ~ .n_antennae(.x, hf, cf, is_complex = .y)
     ),
-    core_fuc = purrr::map_int(glycans, .n_core_fuc, hf, cf),
-    arm_fuc = purrr::map_int(glycans, .n_arm_fuc, hf, cf),
-    terminal_gal = purrr::map_int(glycans, .n_terminal_gal, hf, cf)
+    core_fuc = map_funcs$int(glycans, .n_core_fuc, hf, cf),
+    arm_fuc = map_funcs$int(glycans, .n_arm_fuc, hf, cf),
+    terminal_gal = map_funcs$int(glycans, .n_terminal_gal, hf, cf)
   )
 
   # Add the glycan name column
