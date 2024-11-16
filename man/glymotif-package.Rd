@@ -13,7 +13,7 @@ This package extracts glycan motifs (substructures) from glycan structures. It a
 \seealso{
 Useful links:
 \itemize{
-  \item \url{https://fubin1999.github.io/glymotif/}
+  \item \url{https://glycoverse.github.io/glymotif/}
 }
 
 }

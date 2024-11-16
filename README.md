@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# glymotif <a href="https://fubin1999.github.io/glymotif/"><img src="man/figures/logo.png" align="right" height="138" /></a>
+# glymotif <a href="https://glycoverse.github.io/glymotif/"><img src="man/figures/logo.png" align="right" height="138" /></a>
 
 <!-- badges: start -->
 
@@ -9,14 +9,14 @@
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 [![CRAN
 status](https://www.r-pkg.org/badges/version/glymotif)](https://CRAN.R-project.org/package=glymotif)
-[![R-CMD-check](https://github.com/fubin1999/glymotif/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/fubin1999/glymotif/actions/workflows/R-CMD-check.yaml)
+[![R-CMD-check](https://github.com/glycoverse/glymotif/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/glycoverse/glymotif/actions/workflows/R-CMD-check.yaml)
 [![Codecov test
-coverage](https://codecov.io/gh/fubin1999/glymotif/graph/badge.svg)](https://app.codecov.io/gh/fubin1999/glymotif)
+coverage](https://codecov.io/gh/glycoverse/glymotif/graph/badge.svg)](https://app.codecov.io/gh/glycoverse/glymotif)
 <!-- badges: end -->
 
 The goal of glymotif is to extract glycan motifs from glycan structures.
-It works seemlessly with [glyrepr](https://github.com/fubin1999/glyrepr)
-and [glyparse](https://github.com/fubin1999/glyparse).
+It works seemlessly with [glyrepr](https://github.com/glycoverse/glyrepr)
+and [glyparse](https://github.com/glycoverse/glyparse).
 
 ## Installation
 
@@ -25,7 +25,7 @@ You can install the development version of glymotif from
 
 ``` r
 # install.packages("pak")
-pak::pak("fubin1999/glymotif")
+pak::pak("glycoverse/glymotif")
 ```
 
 ## Example

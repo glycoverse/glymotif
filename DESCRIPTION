@@ -16,7 +16,7 @@ Config/testthat/edition: 3
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
-URL: https://fubin1999.github.io/glymotif/
+URL: https://glycoverse.github.io/glymotif/
 Imports: 
     cli,
     glyrepr (>= 0.1.0.9011),
@@ -31,7 +31,7 @@ Imports:
     memoise,
     furrr
 Remotes: 
-    fubin1999/glyrepr,
-    fubin1999/glyparse
+    glycoverse/glyrepr,
+    glycoverse/glyparse
 Depends: 
     R (>= 4.0)
