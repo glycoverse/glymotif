@@ -336,4 +336,4 @@ get_n_glycan_motif <- function(name, simple = FALSE) {
   }
   motif
 }
-get_n_glycan_motif <- memoise::memoise(get_n_glycan_motif)
+get_n_glycan_motif <- memoise(get_n_glycan_motif)

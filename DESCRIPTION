@@ -29,7 +29,6 @@ Imports:
     dplyr,
     tibble,
     memoise,
-    future,
     furrr
 Remotes: 
     fubin1999/glyrepr,
