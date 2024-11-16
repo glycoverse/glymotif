@@ -1,5 +1,82 @@
 # ----- Interface -----
-describe_n_glycans <- function(glycans, strict = FALSE, parallel = NULL) {
+
+#' Describe N-Glycans Properties
+#'
+#' Extract key properties of N-glycans, including:
+#' - "glycan_type": N-glycan type: high mannose, hybrid, complex, or paucimannose.
+#' - "bisecting": Bisecting GlcNAc presence.
+#' - "antennae": Number of antennae.
+#' - "core_fuc": Number of core fucoses.
+#' - "arm_fuc": Number of arm fucoses.
+#' - "terminal_gal": Number of terminal galactoses.
+#'
+#' This function is designed to work with N-glycans only.
+#' If the glycans are not N-glycans, an error is thrown.
+#'
+#' @details
+#' # Strictness
+#'
+#' By default (`strict = FALSE`), the function is very lenient for motif checking.
+#' It only checks the monosaccharide types on the "simple" level (e.g. "H", "N", "F"),
+#' and ignores linkage information.
+#' This is preferred because in most cases the structural resolution could not be high,
+#' e.g. in most glycoproteomics studies.
+#' However, the glycans are guaranteed to be N-glycans by the glycosylation sites.
+#' In this case, we could make some assumptions about the glycan structures,
+#' and extract the key properties.
+#' For example, an `H-N` terminal motif is considered a terminal galactose.
+#' If you have high-resolution glycan structures, you can set `strict = TRUE`.
+#'
+#' # Enabling parallel processing
+#'
+#' This function can spend a lot of time on large datasets (e.g. > 500 glycans).
+#' To speed up, you can enable parallel processing by setting `parallel = TRUE`.
+#' However, changing the argument to `TRUE` only set the function "ready"
+#' for parallel processing.
+#' You still need to call [future::plan()] to change the parallel backend.
+#' For example, to use the "multisession" backend:
+#'
+#' ```r
+#' library(future)
+#' old_plan <- future::plan("multisession")  # Save the old plan
+#' describe_n_glycans(glycans, parallel = TRUE)
+#' future::plan(old_plan)  # Restore the old plan
+#' ```
+#'
+#' @param glycans A list of `glycan_graph` objects,
+#' or a character vector of IUPAC-condensed structure strings.
+#' @param strict A logical value. If `TRUE`, the glycan must have "concrete"
+#' monosaccharides (e.g. "GlcNAc", "Man", "Gal") and linkage information.
+#' If `FALSE`, the function is more lenient,
+#' checking monosaacharide identities on the "simple" level (e.g. "H", "N", "F")
+#' and ignoring linkage information.
+#' Default is `FALSE`. This is preferred because in most cases the
+#' structural resolution could not be high, but we known for sure the glycans are indeed N-glycans.
+#' @param parallel A logical value. If `TRUE`, the function will use parallel processing.
+#' Remember to call [future::plan()] before using this argument,
+#' otherwise the function will still use sequential processing.
+#'
+#' @return A tibble with the following columns: "glycan_type", "bisecting",
+#' "antennae", "core_fuc", "arm_fuc", "terminal_gal".
+#' If the input glycans have names, the tibble will have a "glycan" column.
+#' Otherwise, if IUPAC condensed strings are used, they will be used as the "glycan" column.
+#'
+#' @examples
+#' library(glyparse)
+#' library(purrr)
+#'
+#' glycans <- c(
+#'   "(N(F)(N(H(H(N))(H(N(H))))))",
+#'   "(N(N(H(H)(H(H)(H)))))",
+#'   "(N(F)(N(H(H(N))(H(N(H(H)))))))",
+#'   "(N(N(H(N)(H(N(H)(F)))(H(N(H)(F))(N(H)(F))))))",
+#'   "(N(N(H(H(N(H(A))))(H(N(H(A)))))))"
+#' )
+#' glycans <- map(glycans, parse_pglyco_struc)
+#' describe_n_glycans(glycans)
+#'
+#' @export
+describe_n_glycans <- function(glycans, strict = FALSE, parallel = FALSE) {
   # Validate the input
   valid_glycans_arg(glycans)
   checkmate::assert_flag(strict)
@@ -7,7 +84,6 @@ describe_n_glycans <- function(glycans, strict = FALSE, parallel = NULL) {
   glycans <- ensure_glycans_are_graphs(glycans)
 
   # Ensure parallelism
-  if (is.null(parallel)) parallel <- length(glycans) > 200
   map_funcs <- prepare_map_funcs(parallel)
 
   # Deal with strictness
@@ -62,21 +138,6 @@ describe_n_glycans <- function(glycans, strict = FALSE, parallel = NULL) {
 #' Man
 #' ```
 #'
-#' @inheritParams n_glycan_type
-#'
-#' @return A logical value.
-#' @export
-is_n_glycan <- function(glycan, strict = FALSE) {
-  n_glycan_property_wrapper(glycan, strict, .is_n_glycan, check_n_glycan = FALSE)
-}
-
-
-#' Determine N-Glycan Type
-#'
-#' Four types of N-glycans are recognized: high mannose, hybrid, complex, and paucimannose.
-#' For more information about N-glycan types,
-#' see [Essentials of Glycobiology](https://www.ncbi.nlm.nih.gov/books/NBK579964/#_s9_2_).
-#'
 #' @param glycan A `glycan_graph` object, or a character string of IUPAC condensed format.
 #' @param strict A logical value. If `TRUE`, the glycan must have "concrete"
 #' monosaccharides (e.g. "GlcNAc", "Man", "Gal") and linkage information.
@@ -86,20 +147,31 @@ is_n_glycan <- function(glycan, strict = FALSE) {
 #' Default is `FALSE`. This is preferred because in most cases the
 #' structural resolution could not be high, but we known for sure the glycans are indeed N-glycans.
 #'
-#' @return A character string of the N-glycan type,
-#' either "highmannose", "hybrid", "complex", or "paucimannose".
-#' If the glycan seems not to be any of the four types, an error is thrown
-#' with a message "Not an N-glycan".
-#' This doesn't necessarily mean the glycan is not an N-glycan.
-#' Maybe you have used the strict mode with a glycan that is not well resolved.
-#'
+#' @return A logical value.
 #' @export
-n_glycan_type <- function(glycan, strict = FALSE) {
-  n_glycan_property_wrapper(glycan, strict, .n_glycan_type)
+is_n_glycan <- function(glycan, strict = FALSE) {
+  n_glycan_property_wrapper(glycan, strict, .is_n_glycan, check_n_glycan = FALSE)
 }
 
 
-#' Does the Glycan have Bisecting GlcNAc?
+#' Determine N-Glycan Key Properties
+#'
+#' These functions check key properties of an N-glycan:
+#' - `n_glycan_type()`: Determine the N-glycan type.
+#' - `has_bisecting()`: Check if the glycan has a bisecting GlcNAc.
+#' - `n_antennae()`: Count the number of antennae.
+#' - `n_core_fuc()`: Count the number of core fucoses.
+#' - `n_arm_fuc()`: Count the number of arm fucoses.
+#' - `n_terminal_gal()`: Count the number of terminal galactoses.
+#'
+#' @details
+#' # N-Glycan Types
+#'
+#' Four types of N-glycans are recognized: high mannose, hybrid, complex, and paucimannose.
+#' For more information about N-glycan types,
+#' see [Essentials of Glycobiology](https://www.ncbi.nlm.nih.gov/books/NBK579964/#_s9_2_).
+#'
+#' # Bisecting GlcNAc
 #'
 #' Bisecting GlcNAc is a GlcNAc residue attached to the core mannose of N-glycans.
 #' ```
@@ -110,31 +182,13 @@ n_glycan_type <- function(glycan, strict = FALSE) {
 #'      Man
 #' ```
 #'
-#' @inheritParams n_glycan_type
-#'
-#' @return A logical value.
-#' @export
-has_bisecting <- function(glycan, strict = FALSE) {
-  n_glycan_property_wrapper(glycan, strict, .has_bisecting)
-}
-
-
-#' Number of Antennae
+#' # Number of Antennae
 #'
 #' The number of antennae is the number of branching GlcNAc to the core mannoses
 #' in a complex N-glycan. Bisecting GlcNAc is not counted as an antenna.
 #' This functions returns NA_integer_ for non-complex N-glycans.
 #'
-#' @inheritParams n_glycan_type
-#'
-#' @return An integer of the number of antennae.
-#' @export
-n_antennae <- function(glycan, strict = FALSE) {
-  n_glycan_property_wrapper(glycan, strict, .n_antennae)
-}
-
-
-#' Number of Core Fucoses
+#' # Number of Core Fucoses
 #'
 #' Core fucoses are those fucose residues attached to the core GlcNAc of an N-glycan.
 #' ```
@@ -145,16 +199,7 @@ n_antennae <- function(glycan, strict = FALSE) {
 #' Man
 #' ```
 #'
-#' @inheritParams n_glycan_type
-#'
-#' @return An integer of the number of core fucoses.
-#' @export
-n_core_fuc <- function(glycan, strict = FALSE) {
-  n_glycan_property_wrapper(glycan, strict, .n_core_fuc)
-}
-
-
-#' Number of Arm Focuses
+#' # Number of Arm Fucoses
 #'
 #' Arm focuses are thoses focuse residues attached to the branching GlcNAc
 #' of an N-glycan.
@@ -168,16 +213,7 @@ n_core_fuc <- function(glycan, strict = FALSE) {
 #' GlcNAc - Man
 #' ```
 #'
-#' @inheritParams n_glycan_type
-#'
-#' @return An integer of the number of arm fucoses.
-#' @export
-n_arm_fuc <- function(glycan, strict = FALSE) {
-  n_glycan_property_wrapper(glycan, strict, .n_arm_fuc)
-}
-
-
-#' Number of Terminal Galactoses
+#' # Number of Terminal Galactoses
 #'
 #' Terminal galactoses are those galactose residues on the non-reducing end
 #' without sialic acid capping.
@@ -191,9 +227,59 @@ n_arm_fuc <- function(glycan, strict = FALSE) {
 #'    not terminal Gal
 #' ```
 #'
-#' @inheritParams n_glycan_type
+#' @param glycan A `glycan_graph` object, or a character string of IUPAC condensed format.
+#' @param strict A logical value. If `TRUE`, the glycan must have "concrete"
+#' monosaccharides (e.g. "GlcNAc", "Man", "Gal") and linkage information.
+#' If `FALSE`, the function is more lenient,
+#' checking monosaacharide identities on the "simple" level (e.g. "H", "N", "F")
+#' and ignoring linkage information.
+#' Default is `FALSE`. This is preferred because in most cases the
+#' structural resolution could not be high, but we known for sure the glycans are indeed N-glycans.
 #'
-#' @return An integer of the number of terminal galactoses.
+#' @returns
+#' - `n_glycan_type()`: A character scalar indicating the N-glycan type,
+#'   either "highmannose", "hybrid", "complex", or "paucimannose".
+#' - `has_bisecting()`: A logical value indicating if the glycan has a bisecting GlcNAc.
+#' - `n_antennae()`: An integer scalar indicating the number of antennae.
+#' - `n_core_fuc()`: An integer scalar indicating the number of core fucoses.
+#' - `n_arm_fuc()`: An integer scalar indicating the number of arm fucoses.
+#' - `n_terminal_gal()`: An integer scalar indicating the number of terminal galactoses.
+#'
+#' @export
+n_glycan_type <- function(glycan, strict = FALSE) {
+  n_glycan_property_wrapper(glycan, strict, .n_glycan_type)
+}
+
+
+#' @rdname n_glycan_type
+#' @export
+has_bisecting <- function(glycan, strict = FALSE) {
+  n_glycan_property_wrapper(glycan, strict, .has_bisecting)
+}
+
+
+#' @rdname n_glycan_type
+#' @export
+n_antennae <- function(glycan, strict = FALSE) {
+  n_glycan_property_wrapper(glycan, strict, .n_antennae)
+}
+
+
+#' @rdname n_glycan_type
+#' @export
+n_core_fuc <- function(glycan, strict = FALSE) {
+  n_glycan_property_wrapper(glycan, strict, .n_core_fuc)
+}
+
+
+#' @rdname n_glycan_type
+#' @export
+n_arm_fuc <- function(glycan, strict = FALSE) {
+  n_glycan_property_wrapper(glycan, strict, .n_arm_fuc)
+}
+
+
+#' @rdname n_glycan_type
 #' @export
 n_terminal_gal <- function(glycan, strict = FALSE) {
   n_glycan_property_wrapper(glycan, strict, .n_terminal_gal)

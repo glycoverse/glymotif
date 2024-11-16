@@ -2,9 +2,24 @@
 % Please edit documentation in R/n-glycan-properties.R
 \name{n_glycan_type}
 \alias{n_glycan_type}
-\title{Determine N-Glycan Type}
+\alias{has_bisecting}
+\alias{n_antennae}
+\alias{n_core_fuc}
+\alias{n_arm_fuc}
+\alias{n_terminal_gal}
+\title{Determine N-Glycan Key Properties}
 \usage{
 n_glycan_type(glycan, strict = FALSE)
+
+has_bisecting(glycan, strict = FALSE)
+
+n_antennae(glycan, strict = FALSE)
+
+n_core_fuc(glycan, strict = FALSE)
+
+n_arm_fuc(glycan, strict = FALSE)
+
+n_terminal_gal(glycan, strict = FALSE)
 }
 \arguments{
 \item{glycan}{A \code{glycan_graph} object, or a character string of IUPAC condensed format.}
@@ -18,15 +33,86 @@ Default is \code{FALSE}. This is preferred because in most cases the
 structural resolution could not be high, but we known for sure the glycans are indeed N-glycans.}
 }
 \value{
-A character string of the N-glycan type,
+\itemize{
+\item \code{n_glycan_type()}: A character scalar indicating the N-glycan type,
 either "highmannose", "hybrid", "complex", or "paucimannose".
-If the glycan seems not to be any of the four types, an error is thrown
-with a message "Not an N-glycan".
-This doesn't necessarily mean the glycan is not an N-glycan.
-Maybe you have used the strict mode with a glycan that is not well resolved.
+\item \code{has_bisecting()}: A logical value indicating if the glycan has a bisecting GlcNAc.
+\item \code{n_antennae()}: An integer scalar indicating the number of antennae.
+\item \code{n_core_fuc()}: An integer scalar indicating the number of core fucoses.
+\item \code{n_arm_fuc()}: An integer scalar indicating the number of arm fucoses.
+\item \code{n_terminal_gal()}: An integer scalar indicating the number of terminal galactoses.
+}
 }
 \description{
+These functions check key properties of an N-glycan:
+\itemize{
+\item \code{n_glycan_type()}: Determine the N-glycan type.
+\item \code{has_bisecting()}: Check if the glycan has a bisecting GlcNAc.
+\item \code{n_antennae()}: Count the number of antennae.
+\item \code{n_core_fuc()}: Count the number of core fucoses.
+\item \code{n_arm_fuc()}: Count the number of arm fucoses.
+\item \code{n_terminal_gal()}: Count the number of terminal galactoses.
+}
+}
+\section{N-Glycan Types}{
 Four types of N-glycans are recognized: high mannose, hybrid, complex, and paucimannose.
 For more information about N-glycan types,
 see \href{https://www.ncbi.nlm.nih.gov/books/NBK579964/#_s9_2_}{Essentials of Glycobiology}.
 }
+
+\section{Bisecting GlcNAc}{
+Bisecting GlcNAc is a GlcNAc residue attached to the core mannose of N-glycans.
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{     Man
+        \\
+GlcNAc - Man - GlcNAc - GlcNAc
+~~~~~~  /
+     Man
+}\if{html}{\out{</div>}}
+}
+
+\section{Number of Antennae}{
+The number of antennae is the number of branching GlcNAc to the core mannoses
+in a complex N-glycan. Bisecting GlcNAc is not counted as an antenna.
+This functions returns NA_integer_ for non-complex N-glycans.
+}
+
+\section{Number of Core Fucoses}{
+Core fucoses are those fucose residues attached to the core GlcNAc of an N-glycan.
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{Man             Fuc  <- core fucose
+   \\             |
+    Man - GlcNAc - GlcNAc
+   /
+Man
+}\if{html}{\out{</div>}}
+}
+
+\section{Number of Arm Fucoses}{
+Arm focuses are thoses focuse residues attached to the branching GlcNAc
+of an N-glycan.
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{ Fuc  <- arm fucose
+  |
+GlcNAc - Man
+            \\
+             Man - GlcNAc - GlcNAc
+            /
+GlcNAc - Man
+}\if{html}{\out{</div>}}
+}
+
+\section{Number of Terminal Galactoses}{
+Terminal galactoses are those galactose residues on the non-reducing end
+without sialic acid capping.
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{         Gal - GlcNAc - Man
+         ~~~               \\
+     terminal Gal           Man - GlcNAc - GlcNAc
+                           /
+Neu5Ac - Gal - GlcNAc - Man
+         ~~~
+   not terminal Gal
+}\if{html}{\out{</div>}}
+}
+
