@@ -465,6 +465,21 @@ test_that("have_motifs: missing motifs", {
 })
 
 
+test_that("have_motifs: simplify to dim 1", {
+  # This is to test that, if only one motif is present,
+  # and `simplify = TRUE`, the return value is still a matrix.
+  # Note that subseting a matrix without `drop = FALSE` will reduce the result
+  # to the lowest dimension. (e.g. matrix -> vector)
+  # This is a bug in `have_motifs()` before.
+  glycans <- c(G1 = "Gal", G2 = "GlcNAc")
+  motifs <- c(M1 = "Gal", M2 = "Glc")
+  expected <- matrix(c(TRUE, FALSE), ncol = 1)
+  colnames(expected) <- "M1"
+  rownames(expected) <- c("G1", "G2")
+  expect_equal(have_motifs(glycans, motifs, simplify = TRUE), expected)
+})
+
+
 # ----- counts_motifs() -----
 # As "counts_motif" functions use the same argument processing code
 # as "have_motif" functions, we only need to test the main functionality.

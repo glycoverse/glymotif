@@ -148,7 +148,7 @@ have_motifs <- function(glycans, motifs = NULL, alignments = NULL, ignore_linkag
   result <- many_glycans_many_motifs_wrapper(glycans, motifs, alignments, ignore_linkages, .f)
   if (simplify) {
     # Drop columns will all FALSE
-    result <- result[, colSums(result) > 0]
+    result <- result[, colSums(result) > 0, drop = FALSE]
   }
   result
 }
@@ -184,7 +184,7 @@ count_motifs <- function(glycans, motifs = NULL, alignments = NULL, ignore_linka
   result <- many_glycans_many_motifs_wrapper(glycans, motifs, alignments, ignore_linkages, .f)
   if (simplify) {
     # Drop columns will all FALSE
-    result <- result[, colSums(result) > 0]
+    result <- result[, colSums(result) > 0, drop = FALSE]
   }
   result
 }
