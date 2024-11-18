@@ -107,13 +107,14 @@ describe_n_glycans <- function(glycans, strict = FALSE, parallel = FALSE) {
   res <- tibble::tibble(
     glycan_type = glycan_type,
     bisecting = map_funcs$lgl(glycans, .has_bisecting, hf, cf),
-    antennae = map_funcs$int2(
+    n_antennae = map_funcs$int2(
       glycans, glycan_type == "complex",
       ~ .n_antennae(.x, hf, cf, is_complex = .y)
     ),
-    core_fuc = map_funcs$int(glycans, .n_core_fuc, hf, cf),
-    arm_fuc = map_funcs$int(glycans, .n_arm_fuc, hf, cf),
-    terminal_gal = map_funcs$int(glycans, .n_terminal_gal, hf, cf)
+    n_core_fuc = map_funcs$int(glycans, .n_core_fuc, hf, cf),
+    n_arm_fuc = map_funcs$int(glycans, .n_arm_fuc, hf, cf),
+    n_gal = map_funcs$int(glycans, .n_gal, hf, cf),
+    n_terminal_gal = map_funcs$int(glycans, .n_terminal_gal, hf, cf)
   )
 
   # Add the glycan name column
@@ -162,16 +163,17 @@ is_n_glycan <- function(glycan, strict = FALSE) {
 #' - `n_antennae()`: Count the number of antennae.
 #' - `n_core_fuc()`: Count the number of core fucoses.
 #' - `n_arm_fuc()`: Count the number of arm fucoses.
+#' - `n_gal()`: Count the number of galactoses.
 #' - `n_terminal_gal()`: Count the number of terminal galactoses.
 #'
 #' @details
-#' # N-Glycan Types
+#' # `n_glycan_type()`: N-Glycan Types
 #'
 #' Four types of N-glycans are recognized: high mannose, hybrid, complex, and paucimannose.
 #' For more information about N-glycan types,
 #' see [Essentials of Glycobiology](https://www.ncbi.nlm.nih.gov/books/NBK579964/#_s9_2_).
 #'
-#' # Bisecting GlcNAc
+#' # `has_bisecting()`: Bisecting GlcNAc
 #'
 #' Bisecting GlcNAc is a GlcNAc residue attached to the core mannose of N-glycans.
 #' ```
@@ -182,13 +184,13 @@ is_n_glycan <- function(glycan, strict = FALSE) {
 #'      Man
 #' ```
 #'
-#' # Number of Antennae
+#' # `n_antennae()`: Number of Antennae
 #'
 #' The number of antennae is the number of branching GlcNAc to the core mannoses
 #' in a complex N-glycan. Bisecting GlcNAc is not counted as an antenna.
 #' This functions returns NA_integer_ for non-complex N-glycans.
 #'
-#' # Number of Core Fucoses
+#' # `n_core_fuc()`: Number of Core Fucoses
 #'
 #' Core fucoses are those fucose residues attached to the core GlcNAc of an N-glycan.
 #' ```
@@ -199,7 +201,7 @@ is_n_glycan <- function(glycan, strict = FALSE) {
 #' Man
 #' ```
 #'
-#' # Number of Arm Fucoses
+#' # `n_arm_fuc()`: Number of Arm Fucoses
 #'
 #' Arm focuses are thoses focuse residues attached to the branching GlcNAc
 #' of an N-glycan.
@@ -213,7 +215,21 @@ is_n_glycan <- function(glycan, strict = FALSE) {
 #' GlcNAc - Man
 #' ```
 #'
-#' # Number of Terminal Galactoses
+#' # `n_gal()`: Number of Galactoses
+#'
+#' This function seems useless and silly.
+#' It is, if you have a well-structured glycan with concrete monosaccharides.
+#' However, if you only have "Hex" or "H" at hand,
+#' it is tricky to know how many of them are "Gal" and how many are "Man".
+#' This function makes a simply assumption that all the rightmost "H" in a
+#' "H-H-N-H" unit is a galactose.
+#' The two "H" on the left are mannoses of the N-glycan core.
+#' The "N" is a GlcNAc attached to one core mannose.
+#'
+#' This method is only used when `strict = FALSE`.
+#' If `strict = TRUE`, the function will authentically check the number of "Gal".
+#'
+#' # `n_terminal_gal()`: Number of Terminal Galactoses
 #'
 #' Terminal galactoses are those galactose residues on the non-reducing end
 #' without sialic acid capping.
@@ -243,6 +259,7 @@ is_n_glycan <- function(glycan, strict = FALSE) {
 #' - `n_antennae()`: An integer scalar indicating the number of antennae.
 #' - `n_core_fuc()`: An integer scalar indicating the number of core fucoses.
 #' - `n_arm_fuc()`: An integer scalar indicating the number of arm fucoses.
+#' - `n_gal()`: An integer scalar indicating the number of galactoses.
 #' - `n_terminal_gal()`: An integer scalar indicating the number of terminal galactoses.
 #'
 #' @export
@@ -276,6 +293,13 @@ n_core_fuc <- function(glycan, strict = FALSE) {
 #' @export
 n_arm_fuc <- function(glycan, strict = FALSE) {
   n_glycan_property_wrapper(glycan, strict, .n_arm_fuc)
+}
+
+
+#' @rdname n_glycan_type
+#' @export
+n_gal <- function(glycan, strict = FALSE) {
+  n_glycan_property_wrapper(glycan, strict, .n_gal)
 }
 
 
@@ -348,8 +372,13 @@ n_terminal_gal <- function(glycan, strict = FALSE) {
 }
 
 
+.n_gal <- function(glycan, .has_motif, .counts_motif) {
+  .counts_motif(glycan, "gal", alignment = "substructure")
+}
+
+
 .n_terminal_gal <- function(glycan, .has_motif, .counts_motif) {
-  .counts_motif(glycan, "term_gal", alignment = "terminal")
+  .counts_motif(glycan, "gal", alignment = "terminal")
 }
 
 
@@ -413,9 +442,16 @@ get_n_glycan_motif <- function(name, simple = FALSE) {
     ant3     = get_motif_graph("N-Glycan triantennary"),
     ant4     = get_motif_graph("N-Glycan tetraantennary"),
     core_fuc = get_motif_graph("N-Glycan core, core-fucosylated"),
-    arm_fuc  = get_motif_graph("N-Glycan core, arm-fucosylated"),
-    term_gal = glyparse::parse_iupac_condensed("Gal(?1-?)GlcNAc")
+    arm_fuc  = get_motif_graph("N-Glycan core, arm-fucosylated")
   )
+  # add gal
+  if (simple) {
+    # Here we use H-H-N-H, not just H.
+    # This is for telling between Man and Gal.
+    motifs[["gal"]] <- glyparse::parse_pglyco_struc("(H(H(N(H))))")
+  } else {
+    motifs[["gal"]] <- glyparse::parse_iupac_condensed("Gal")
+  }
   motif <- motifs[[name]]
   if (simple) {
     motif <- glyrepr::convert_glycan_mono_type(motif, to = "simple", strict = FALSE)

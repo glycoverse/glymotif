@@ -641,7 +641,32 @@ test_that("check arm fucose not for N-glycan", {
 })
 
 
-# ========== Number of terminal galaactoses ==========
+# ========== Number of galactoses ==========
+patrick::with_parameters_test_that("one galactose: H4N4S1", {
+  glycan <- complex_H4N4S1(mono_type, linkage)
+  expect_identical(n_gal(glycan), 1L)
+})
+
+
+test_that("one galactose: H4N4S1, strict", {
+  glycan <- complex_H4N4S1("concrete", linkage = TRUE)
+  expect_identical(n_gal(glycan, strict = TRUE), 1L)
+})
+
+
+test_that("no galactose: hybrid ", {
+  glycan <- highmannose_H5N2("simple", linkage = TRUE)
+  expect_identical(n_gal(glycan), 0L)
+})
+
+
+test_that("check gal not for N-glycan", {
+  glycan <- o_glycan_core_1("simple", linkage = FALSE)
+  expect_error(n_gal(glycan), "Not an N-glycan")
+})
+
+
+# ========== Number of terminal galactoses ==========
 patrick::with_parameters_test_that("one terminal galactose: H4N4", {
   glycan <- complex_H4N4(mono_type, linkage)
   expect_identical(n_terminal_gal(glycan), 1L)

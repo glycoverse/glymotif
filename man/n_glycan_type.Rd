@@ -6,6 +6,7 @@
 \alias{n_antennae}
 \alias{n_core_fuc}
 \alias{n_arm_fuc}
+\alias{n_gal}
 \alias{n_terminal_gal}
 \title{Determine N-Glycan Key Properties}
 \usage{
@@ -18,6 +19,8 @@ n_antennae(glycan, strict = FALSE)
 n_core_fuc(glycan, strict = FALSE)
 
 n_arm_fuc(glycan, strict = FALSE)
+
+n_gal(glycan, strict = FALSE)
 
 n_terminal_gal(glycan, strict = FALSE)
 }
@@ -40,6 +43,7 @@ either "highmannose", "hybrid", "complex", or "paucimannose".
 \item \code{n_antennae()}: An integer scalar indicating the number of antennae.
 \item \code{n_core_fuc()}: An integer scalar indicating the number of core fucoses.
 \item \code{n_arm_fuc()}: An integer scalar indicating the number of arm fucoses.
+\item \code{n_gal()}: An integer scalar indicating the number of galactoses.
 \item \code{n_terminal_gal()}: An integer scalar indicating the number of terminal galactoses.
 }
 }
@@ -51,16 +55,17 @@ These functions check key properties of an N-glycan:
 \item \code{n_antennae()}: Count the number of antennae.
 \item \code{n_core_fuc()}: Count the number of core fucoses.
 \item \code{n_arm_fuc()}: Count the number of arm fucoses.
+\item \code{n_gal()}: Count the number of galactoses.
 \item \code{n_terminal_gal()}: Count the number of terminal galactoses.
 }
 }
-\section{N-Glycan Types}{
+\section{\code{n_glycan_type()}: N-Glycan Types}{
 Four types of N-glycans are recognized: high mannose, hybrid, complex, and paucimannose.
 For more information about N-glycan types,
 see \href{https://www.ncbi.nlm.nih.gov/books/NBK579964/#_s9_2_}{Essentials of Glycobiology}.
 }
 
-\section{Bisecting GlcNAc}{
+\section{\code{has_bisecting()}: Bisecting GlcNAc}{
 Bisecting GlcNAc is a GlcNAc residue attached to the core mannose of N-glycans.
 
 \if{html}{\out{<div class="sourceCode">}}\preformatted{     Man
@@ -71,13 +76,13 @@ GlcNAc - Man - GlcNAc - GlcNAc
 }\if{html}{\out{</div>}}
 }
 
-\section{Number of Antennae}{
+\section{\code{n_antennae()}: Number of Antennae}{
 The number of antennae is the number of branching GlcNAc to the core mannoses
 in a complex N-glycan. Bisecting GlcNAc is not counted as an antenna.
 This functions returns NA_integer_ for non-complex N-glycans.
 }
 
-\section{Number of Core Fucoses}{
+\section{\code{n_core_fuc()}: Number of Core Fucoses}{
 Core fucoses are those fucose residues attached to the core GlcNAc of an N-glycan.
 
 \if{html}{\out{<div class="sourceCode">}}\preformatted{Man             Fuc  <- core fucose
@@ -88,7 +93,7 @@ Man
 }\if{html}{\out{</div>}}
 }
 
-\section{Number of Arm Fucoses}{
+\section{\code{n_arm_fuc()}: Number of Arm Fucoses}{
 Arm focuses are thoses focuse residues attached to the branching GlcNAc
 of an N-glycan.
 
@@ -102,7 +107,21 @@ GlcNAc - Man
 }\if{html}{\out{</div>}}
 }
 
-\section{Number of Terminal Galactoses}{
+\section{\code{n_gal()}: Number of Galactoses}{
+This function seems useless and silly.
+It is, if you have a well-structured glycan with concrete monosaccharides.
+However, if you only have "Hex" or "H" at hand,
+it is tricky to know how many of them are "Gal" and how many are "Man".
+This function makes a simply assumption that all the rightmost "H" in a
+"H-H-N-H" unit is a galactose.
+The two "H" on the left are mannoses of the N-glycan core.
+The "N" is a GlcNAc attached to one core mannose.
+
+This method is only used when \code{strict = FALSE}.
+If \code{strict = TRUE}, the function will authentically check the number of "Gal".
+}
+
+\section{\code{n_terminal_gal()}: Number of Terminal Galactoses}{
 Terminal galactoses are those galactose residues on the non-reducing end
 without sialic acid capping.
 
