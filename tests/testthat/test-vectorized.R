@@ -459,6 +459,12 @@ test_that("have_motifs: glycans and motifs have different graph modes", {
 })
 
 
+test_that("have_motifs: missing motifs", {
+  glycans <- c(G1 = "Gal(b1-3)GalNAc", G2 = "Gal(b1-3)[GlcNAc(b1-6)]GalNAc")
+  expect_snapshot(have_motifs(glycans, simplify = TRUE))
+})
+
+
 # ----- counts_motifs() -----
 # As "counts_motif" functions use the same argument processing code
 # as "have_motif" functions, we only need to test the main functionality.

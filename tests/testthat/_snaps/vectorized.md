@@ -181,3 +181,15 @@
       ! The monosaccharide type of `glycans` cannot be obscurer than `motif`.
       x "generic" is obscurer than "concrete".
 
+# have_motifs: missing motifs
+
+    Code
+      have_motifs(glycans, simplify = TRUE)
+    Output
+         O-Glycan core 2 fuzzy O-Glycan core 6 fuzzy O-Glycan core 1 fuzzy
+      G1                 FALSE                 FALSE                  TRUE
+      G2                  TRUE                  TRUE                  TRUE
+         O-Glycan O-GalNAc Core
+      G1                   TRUE
+      G2                   TRUE
+

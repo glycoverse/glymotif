@@ -280,7 +280,7 @@ many_glycans_many_motifs_wrapper <- function(glycans, motifs, alignments, ignore
   valid_ignore_linkages_arg(ignore_linkages)
 
   # Get motif type and default motifs
-  if (missing(motifs)) {
+  if (is.null(motifs)) {
     motifs <- available_motifs()
     motif_type <- "known"
   } else {
