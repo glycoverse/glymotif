@@ -19,9 +19,7 @@ prepare_has_motif_args <- function(glycan, motif, alignment, ignore_linkages) {
   glycan <- ensure_glycan_is_graph(glycan)
   motif <- ensure_motif_is_graph(motif, motif_type)
 
-  # Ensure that `glycan` and `motif` are all "NE" type
-  glycan <- ensure_ne_graph(glycan)
-  motif <- ensure_ne_graph(motif)
+  # glycan and motif are already glycan_graph objects - no need to convert mode
 
   # Ensure that `glycan` and `motif` have the same monosaccharide type
   # To ensure strict comparison, if the glycan type is lower than the motif type,
@@ -280,15 +278,8 @@ ensure_glycans_are_graphs <- function(glycans) {
 }
 
 
-# ----- Ensure NE graphs -----
-ensure_ne_graph <- function(graph) {
-  glyrepr::convert_graph_mode(graph, to = "ne", strict = FALSE)
-}
-
-
-ensure_ne_graphs <- function(graphs) {
-  purrr::map(graphs, ensure_ne_graph)
-}
+# ----- Graph processing functions (no longer needed with unified glycan_graph) -----
+# These functions are no longer needed as glyrepr now uses a unified glycan_graph type
 
 
 # ----- Check and align mono types -----

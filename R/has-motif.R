@@ -105,7 +105,7 @@
 #' library(glyparse)
 #' library(glyrepr)
 #'
-#' (glycan <- o_glycan_core_2(mode = "ne", mono_type = "concrete"))
+#' (glycan <- o_glycan_core_2(mono_type = "concrete"))
 #'
 #' # The glycan has the motif "Gal(b1-3)GalNAc"
 #' has_motif(glycan, "Gal(b1-3)GalNAc")

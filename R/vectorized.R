@@ -221,9 +221,7 @@ one_glycan_many_motifs_wrapper <- function(glycan, motifs, alignments, ignore_li
   glycan <- ensure_glycan_is_graph(glycan)
   motifs <- ensure_motifs_are_graphs(motifs, motif_type)
 
-  # Ensure NE graphs
-  glycan <- ensure_ne_graph(glycan)
-  motifs <- ensure_ne_graphs(motifs)
+  # glycan and motifs are already glycan_graph objects - no need to convert mode
 
   # Ensure mono types are the same
   if (motif_type != "known" && !same_mono_types(motifs)) {
@@ -258,9 +256,7 @@ many_glycans_one_motif_wrapper <- function(glycans, motif, alignment, ignore_lin
   glycans <- ensure_glycans_are_graphs(glycans)
   motif <- ensure_motif_is_graph(motif, motif_type)
 
-  # Ensure NE graphs
-  glycans <- ensure_ne_graphs(glycans)
-  motif <- ensure_ne_graph(motif)
+  # glycans and motif are already glycan_graph objects - no need to convert mode
 
   # Ensure mono types are the same
   if (!same_mono_types(glycans)) {
@@ -298,9 +294,7 @@ many_glycans_many_motifs_wrapper <- function(glycans, motifs, alignments, ignore
   glycans <- ensure_glycans_are_graphs(glycans)
   motifs <- ensure_motifs_are_graphs(motifs, motif_type)
 
-  # Ensure NE graphs
-  glycans <- ensure_ne_graphs(glycans)
-  motifs <- ensure_ne_graphs(motifs)
+  # glycans and motifs are already glycan_graph objects - no need to convert mode
 
   # Ensure mono types are the same
   if (motif_type != "known" && !same_mono_types(motifs)) {

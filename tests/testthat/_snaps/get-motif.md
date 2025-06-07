@@ -192,10 +192,10 @@
     Code
       print(result)
     Output
-      Glycan Graph (NE)
+      Glycan Graph
       GlcNAc: 2, Man: 3
       ------------------
-      GlcNAc
+      GlcNAc (?1-)
       └─GlcNAc (b1-4)
         └─Man (b1-4)
           ├─Man (a1-6)
@@ -207,14 +207,14 @@
       print(result)
     Output
       $`O-Glycan core 1`
-      Glycan Graph (NE)
+      Glycan Graph
       Gal: 1, GalNAc: 1
       ------------------
       GalNAc (a1-)
       └─Gal (b1-3)
       
       $`O-Glycan core 2`
-      Glycan Graph (NE)
+      Glycan Graph
       Gal: 1, GalNAc: 1, GlcNAc: 1
       ------------------
       GalNAc (a1-)
