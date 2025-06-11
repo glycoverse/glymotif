@@ -7,6 +7,8 @@
 count_motif(glycans, motif, alignment = NULL, ignore_linkages = FALSE)
 }
 \arguments{
+\item{glycans}{A 'glyrepr_structure' object, or an IUPAC-condensed structure string.}
+
 \item{motif}{A 'glyrepr_structure' object, an IUPAC-condensed structure string,
 or a known motif name (use \code{\link[=available_motifs]{available_motifs()}} to see all available motifs).}
 

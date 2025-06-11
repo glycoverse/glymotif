@@ -7,6 +7,8 @@
 have_motif(glycans, motif, alignment = NULL, ignore_linkages = FALSE)
 }
 \arguments{
+\item{glycans}{A 'glyrepr_structure' object, or an IUPAC-condensed structure string.}
+
 \item{motif}{A 'glyrepr_structure' object, an IUPAC-condensed structure string,
 or a known motif name (use \code{\link[=available_motifs]{available_motifs()}} to see all available motifs).}
 
@@ -17,8 +19,6 @@ If \code{motif} is a motif name, the alignment in the database will be used.
 Otherwise, "substructure" will be used.}
 
 \item{ignore_linkages}{A logical value. If \code{TRUE}, linkages will be ignored in the comparison.}
-
-\item{glycan}{A 'glyrepr_structure' object, or an IUPAC-condensed structure string.}
 }
 \value{
 A logical value indicating if the \code{glycan} has the \code{motif}.
@@ -173,5 +173,5 @@ have_motif(glycans, motif)
 
 }
 \seealso{
-\code{\link[=has_motifs]{has_motifs()}}, \code{\link[=have_motif]{have_motif()}}, \code{\link[=have_motifs]{have_motifs()}}, \code{\link[=counts_motif]{counts_motif()}}
+\code{\link[=count_motif]{count_motif()}}
 }

@@ -28,8 +28,7 @@ Imports:
     checkmate,
     dplyr,
     tibble,
-    memoise,
-    furrr
+    memoise
 Remotes: 
     glycoverse/glyrepr,
     glycoverse/glyparse

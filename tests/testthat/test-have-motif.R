@@ -360,3 +360,125 @@ test_that("anomer wrong for core motif", {
   motif <- glyparse::parse_iupac_condensed("Gal(b1-4)GlcNAc(a1-")
   expect_false(have_motif(glycan, motif))
 })
+
+
+# ========== have_motifs ==========
+test_that("have_motifs works with multiple motifs", {
+  glycan1 <- glyrepr::o_glycan_core_2()
+  glycan2 <- glyparse::parse_iupac_condensed("Gal(b1-?)[GlcNAc(b1-6)]GalNAc")
+  glycans <- c(glycan1, glycan2)
+  names(glycans) <- c("core2", "test_glycan")
+  
+  motifs <- c("Gal(b1-3)GalNAc", "Gal(b1-4)GalNAc", "GlcNAc(b1-6)GalNAc")
+  
+  result <- have_motifs(glycans, motifs)
+  
+  expect_s3_class(result, "tbl_df")
+  expect_equal(nrow(result), 2)
+  expect_equal(ncol(result), 4)
+  expect_equal(names(result), c("glycan", "Gal(b1-3)GalNAc", "Gal(b1-4)GalNAc", "GlcNAc(b1-6)GalNAc"))
+  expect_equal(result$glycan, c("core2", "test_glycan"))
+  
+  # Check specific results
+  expect_true(result[1, "Gal(b1-3)GalNAc"][[1]])
+  expect_false(result[1, "Gal(b1-4)GalNAc"][[1]])
+  expect_true(result[1, "GlcNAc(b1-6)GalNAc"][[1]])
+  
+  expect_false(result[2, "Gal(b1-3)GalNAc"][[1]])
+  expect_false(result[2, "Gal(b1-4)GalNAc"][[1]])
+  expect_true(result[2, "GlcNAc(b1-6)GalNAc"][[1]])
+})
+
+
+test_that("have_motifs works without glycan names", {
+  glycan1 <- glyrepr::o_glycan_core_2()
+  glycan2 <- glyparse::parse_iupac_condensed("Gal(b1-?)[GlcNAc(b1-6)]GalNAc")
+  glycans <- c(glycan1, glycan2)
+  
+  motifs <- c("Gal(b1-3)GalNAc", "GlcNAc(b1-6)GalNAc")
+  
+  result <- have_motifs(glycans, motifs)
+  
+  expect_s3_class(result, "tbl_df")
+  expect_equal(nrow(result), 2)
+  expect_equal(ncol(result), 3)
+  expect_equal(names(result), c("glycan", "Gal(b1-3)GalNAc", "GlcNAc(b1-6)GalNAc"))
+  
+  # Check that glycan column contains IUPAC strings
+  expect_true(grepl("Gal\\(b1-3\\)", result$glycan[1]))
+  expect_true(grepl("Gal\\(b1-\\?\\)", result$glycan[2]))
+})
+
+
+test_that("have_motifs works with different alignments", {
+  glycan <- glyparse::parse_iupac_condensed("Gal(a1-3)Gal(a1-4)Gal(a1-6)Gal")
+  glycans <- c(glycan, glycan)
+  names(glycans) <- c("glycan1", "glycan2")
+  
+  motifs <- c("Gal(a1-3)Gal(a1-4)Gal", "Gal(a1-4)Gal(a1-6)Gal")
+  alignments <- c("core", "terminal")
+  
+  result <- have_motifs(glycans, motifs, alignments = alignments)
+  
+  expect_s3_class(result, "tbl_df")
+  expect_equal(nrow(result), 2)
+  expect_equal(ncol(result), 3)
+})
+
+
+test_that("have_motifs handles empty motifs", {
+  glycan <- glyrepr::o_glycan_core_2()
+  glycans <- c(glycan)
+  motifs <- character(0)
+  
+  expect_error(have_motifs(glycans, motifs), "`motifs` cannot be empty")
+})
+
+
+test_that("have_motifs handles invalid motifs argument", {
+  glycan <- glyrepr::o_glycan_core_2()
+  glycans <- c(glycan)
+  motifs <- 123
+  
+  expect_error(have_motifs(glycans, motifs), "`motifs` must be a character vector")
+})
+
+
+test_that("have_motifs handles mismatched alignments length", {
+  glycan <- glyrepr::o_glycan_core_2()
+  glycans <- c(glycan)
+  motifs <- c("Gal(b1-3)GalNAc", "GlcNAc(b1-6)GalNAc", "Gal(b1-4)GalNAc")
+  alignments <- c("substructure", "core")  # length 2, motifs length 3
+  
+  expect_error(have_motifs(glycans, motifs, alignments = alignments), 
+               "`alignments` must be NULL, a single value, or have the same length as `motifs`")
+})
+
+
+test_that("have_motifs works with single alignment for all motifs", {
+  glycan1 <- glyrepr::o_glycan_core_2()
+  glycan2 <- glyparse::parse_iupac_condensed("Gal(b1-?)[GlcNAc(b1-6)]GalNAc")
+  glycans <- c(glycan1, glycan2)
+  
+  motifs <- c("Gal(b1-3)GalNAc", "GlcNAc(b1-6)GalNAc")
+  
+  result <- have_motifs(glycans, motifs, alignments = "substructure")
+  
+  expect_s3_class(result, "tbl_df")
+  expect_equal(nrow(result), 2)
+  expect_equal(ncol(result), 3)
+})
+
+
+test_that("have_motifs works with ignore_linkages", {
+  glycan1 <- glyrepr::o_glycan_core_2()
+  glycans <- c(glycan1)
+  
+  motifs <- c("Gal(b1-3)GalNAc", "Gal(b1-4)GalNAc")
+  
+  result_normal <- have_motifs(glycans, motifs, ignore_linkages = FALSE)
+  result_ignore <- have_motifs(glycans, motifs, ignore_linkages = TRUE)
+  
+  expect_false(result_normal[1, "Gal(b1-4)GalNAc"][[1]])
+  expect_true(result_ignore[1, "Gal(b1-4)GalNAc"][[1]])
+})

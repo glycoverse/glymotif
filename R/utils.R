@@ -37,14 +37,23 @@ valid_alignment_arg <- function(x) {
 }
 
 
+motif_type_err_msg <- paste(
+  "`motif` must be either a 'glyrepr_structure' object with length 1,",
+  "an IUPAC-condensed structure character scalar,",
+  "or a known motif name."
+)
+
+
+glycan_type_err_msg <- paste(
+  "`glycans` must be a 'glyrepr_structure' object",
+  "or an IUPAC-condensed structure character."
+)
+
+
 valid_glycans_arg <- function(x) {
   # Must be a structure or a character vector
   if (!glyrepr::is_glycan_structure(x) && !is.character(x)) {
-    error_msg <- paste(
-      "`glycan` must be a 'glyrepr_structure' object",
-      "or an IUPAC-condensed structure character."
-    )
-    rlang::abort(error_msg)
+    rlang::abort(glycan_type_err_msg)
   }
 }
 
@@ -54,12 +63,7 @@ valid_motif_arg <- function(x) {
     (!glyrepr::is_glycan_structure(x) && length(x) != 1) ||
     (is.character(x) && length(x) != 1)
   ) {
-    error_msg <- paste(
-      "`motif` must be either a 'glyrepr_structure' object with length 1,",
-      "an IUPAC-condensed structure character scalar,",
-      "or a known motif name."
-    )
-    rlang::abort(error_msg)
+    rlang::abort(motif_type_err_msg)
   }
 }
 

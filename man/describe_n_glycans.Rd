@@ -7,13 +7,13 @@
 describe_n_glycans(glycans, strict = FALSE, parallel = FALSE)
 }
 \arguments{
-\item{glycans}{A list of \code{glycan_graph} objects,
+\item{glycans}{A \code{glyrepr_structure} object,
 or a character vector of IUPAC-condensed structure strings.}
 
 \item{strict}{A logical value. If \code{TRUE}, the glycan must have "concrete"
 monosaccharides (e.g. "GlcNAc", "Man", "Gal") and linkage information.
 If \code{FALSE}, the function is more lenient,
-checking monosaacharide identities on the "simple" level (e.g. "H", "N", "F")
+checking monosaacharide identities on the "generic" level (e.g. "Hex", "HexNAc")
 and ignoring linkage information.
 Default is \code{FALSE}. This is preferred because in most cases the
 structural resolution could not be high, but we known for sure the glycans are indeed N-glycans.}
@@ -26,7 +26,7 @@ otherwise the function will still use sequential processing.}
 A tibble with the following columns: "glycan_type", "bisecting",
 "antennae", "core_fuc", "arm_fuc", "terminal_gal".
 If the input glycans have names, the tibble will have a "glycan" column.
-Otherwise, if IUPAC condensed strings are used, they will be used as the "glycan" column.
+Otherwise, IUPAC-condensed strings will be used as the "glycan" column.
 }
 \description{
 Extract key properties of N-glycans, including:
@@ -45,7 +45,7 @@ If the glycans are not N-glycans, an error is thrown.
 }
 \section{Strictness}{
 By default (\code{strict = FALSE}), the function is very lenient for motif checking.
-It only checks the monosaccharide types on the "simple" level (e.g. "H", "N", "F"),
+It only checks the monosaccharide types on the "generic" level (e.g. "Hex", "HexNAc"),
 and ignores linkage information.
 This is preferred because in most cases the structural resolution could not be high,
 e.g. in most glycoproteomics studies.
@@ -72,17 +72,12 @@ future::plan(old_plan)  # Restore the old plan
 }
 
 \examples{
-library(glyparse)
 library(purrr)
 
 glycans <- c(
-  "(N(F)(N(H(H(N))(H(N(H))))))",
-  "(N(N(H(H)(H(H)(H)))))",
-  "(N(F)(N(H(H(N))(H(N(H(H)))))))",
-  "(N(N(H(N)(H(N(H)(F)))(H(N(H)(F))(N(H)(F))))))",
-  "(N(N(H(H(N(H(A))))(H(N(H(A)))))))"
+  "Man(a1-3)[Man(a1-3)Man(a1-6)]Man(b1-4)GlcNAc(b1-4)GlcNAc(?1-",
+  "Man(a1-3)[Man(a1-6)]Man(b1-4)GlcNAc(b1-4)GlcNAc(?1-"
 )
-glycans <- map(glycans, parse_pglyco_struc)
 describe_n_glycans(glycans)
 
 }

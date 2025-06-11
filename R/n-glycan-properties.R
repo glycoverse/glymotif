@@ -62,17 +62,12 @@
 #' Otherwise, IUPAC-condensed strings will be used as the "glycan" column.
 #'
 #' @examples
-#' library(glyparse)
 #' library(purrr)
 #'
 #' glycans <- c(
-#'   "(N(F)(N(H(H(N))(H(N(H))))))",
-#'   "(N(N(H(H)(H(H)(H)))))",
-#'   "(N(F)(N(H(H(N))(H(N(H(H)))))))",
-#'   "(N(N(H(N)(H(N(H)(F)))(H(N(H)(F))(N(H)(F))))))",
-#'   "(N(N(H(H(N(H(A))))(H(N(H(A)))))))"
+#'   "Man(a1-3)[Man(a1-3)Man(a1-6)]Man(b1-4)GlcNAc(b1-4)GlcNAc(?1-",
+#'   "Man(a1-3)[Man(a1-6)]Man(b1-4)GlcNAc(b1-4)GlcNAc(?1-"
 #' )
-#' glycans <- map(glycans, parse_pglyco_struc)
 #' describe_n_glycans(glycans)
 #'
 #' @export
@@ -313,16 +308,16 @@ n_terminal_gal <- function(glycan, strict = FALSE) {
 # - `glycan`: A `glycan_graph` object. It is the caller's responsibility to ensure this.
 # - `.has_motif`: A function that checks if a glycan has a motif.
 #   It should have the signature `.has_motif(glycan, motif, alignment)`.
-# - `.counts_motif`: A function that counts the number of motifs in a glycan.
-#   It should have the signature `.counts_motif(glycan, motif, alignment)`.
+# - `.count_motif`: A function that counts the number of motifs in a glycan.
+#   It should have the signature `.count_motif(glycan, motif, alignment)`.
 #
-# In these functions, use `.has_motif` and `.counts_motif` to check for motifs.
-.is_n_glycan <- function(glycan, .has_motif, .counts_motif) {
+# In these functions, use `.has_motif` and `.count_motif` to check for motifs.
+.is_n_glycan <- function(glycan, .has_motif, .count_motif) {
   .has_motif(glycan, "core", alignment = "core")
 }
 
 
-.n_glycan_type <- function(glycan, .has_motif, .counts_motif) {
+.n_glycan_type <- function(glycan, .has_motif, .count_motif) {
   if (.has_motif(glycan, "core", alignment = "whole") ||
       .has_motif(glycan, "pauciman", alignment = "whole")) {
     "paucimannose"
@@ -336,14 +331,14 @@ n_terminal_gal <- function(glycan, strict = FALSE) {
 }
 
 
-.has_bisecting <- function(glycan, .has_motif, .counts_motif) {
+.has_bisecting <- function(glycan, .has_motif, .count_motif) {
   .has_motif(glycan, "bisect", alignment = "core")
 }
 
 
-.n_antennae <- function(glycan, .has_motif, .counts_motif, is_complex = NULL) {
+.n_antennae <- function(glycan, .has_motif, .count_motif, is_complex = NULL) {
   if (is.null(is_complex)) {
-    is_complex <- .n_glycan_type(glycan, .has_motif, .counts_motif) == "complex"
+    is_complex <- .n_glycan_type(glycan, .has_motif, .count_motif) == "complex"
   }
   if (!is_complex) {
     return(NA_integer_)
@@ -360,23 +355,23 @@ n_terminal_gal <- function(glycan, strict = FALSE) {
 }
 
 
-.n_core_fuc <- function(glycan, .has_motif, .counts_motif) {
-  .counts_motif(glycan, "core_fuc", alignment = "core")
+.n_core_fuc <- function(glycan, .has_motif, .count_motif) {
+  .count_motif(glycan, "core_fuc", alignment = "core")
 }
 
 
-.n_arm_fuc <- function(glycan, .has_motif, .counts_motif) {
-  .counts_motif(glycan, "arm_fuc", alignment = "core")
+.n_arm_fuc <- function(glycan, .has_motif, .count_motif) {
+  .count_motif(glycan, "arm_fuc", alignment = "core")
 }
 
 
-.n_gal <- function(glycan, .has_motif, .counts_motif) {
-  .counts_motif(glycan, "gal", alignment = "substructure")
+.n_gal <- function(glycan, .has_motif, .count_motif) {
+  .count_motif(glycan, "gal", alignment = "substructure")
 }
 
 
-.n_terminal_gal <- function(glycan, .has_motif, .counts_motif) {
-  .counts_motif(glycan, "gal", alignment = "terminal")
+.n_terminal_gal <- function(glycan, .has_motif, .count_motif) {
+  .count_motif(glycan, "gal", alignment = "terminal")
 }
 
 
@@ -385,13 +380,13 @@ n_glycan_property_wrapper <- function(glycan, strict, func, check_n_glycan = TRU
   # This function encapsulates the common pattern of checking N-glycan properties.
   # To use it, write a function that takes a glycan graph,
   # a `.has_motif` argument taking a function that checks for a motif,
-  # and a `.counts_motif` argument taking a function that counts motifs.
+  # and a `.count_motif` argument taking a function that counts motifs.
   # Inside the function, use `.has_motif` and `.count_motif` to check for motifs,
-  # instead of calling `has_motif_()` and `counts_motif_()` directly.
+  # instead of calling `has_motif_()` and `count_motif_()` directly.
   #
   # For example:
   # ```
-  # .has_bisecting <- function(glycan, .has_motif, .counts_motif) {
+  # .has_bisecting <- function(glycan, .has_motif, .count_motif) {
   #   bisect_graph <- get_motif_graph("N-glycan core, bisected")
   #   .have_motif(glycan, bisect_graph, alignment = "core")
   # }

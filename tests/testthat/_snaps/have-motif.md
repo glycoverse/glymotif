@@ -4,7 +4,7 @@
       have_motif(glycan, motif)
     Condition
       Error in `valid_glycans_arg()`:
-      ! `glycan` must be a 'glyrepr_structure' object or an IUPAC-condensed structure character.
+      ! `glycans` must be a 'glyrepr_structure' object or an IUPAC-condensed structure character.
 
 # wrong motif types
 
@@ -20,7 +20,7 @@
       have_motif(glycan, motif)
     Condition
       Error in `value[[3L]]()`:
-      ! object 'motif_type_err_msg' not found
+      ! `motif` must be either a 'glyrepr_structure' object with length 1, an IUPAC-condensed structure character scalar, or a known motif name.
 
 # bad glycan IUPAC
 

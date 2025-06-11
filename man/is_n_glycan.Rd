@@ -12,7 +12,7 @@ is_n_glycan(glycan, strict = FALSE)
 \item{strict}{A logical value. If \code{TRUE}, the glycan must have "concrete"
 monosaccharides (e.g. "GlcNAc", "Man", "Gal") and linkage information.
 If \code{FALSE}, the function is more lenient,
-checking monosaacharide identities on the "simple" level (e.g. "H", "N", "F")
+checking monosaacharide identities on the "generic" level (e.g. "Hex", "HexNAc")
 and ignoring linkage information.
 Default is \code{FALSE}. This is preferred because in most cases the
 structural resolution could not be high, but we known for sure the glycans are indeed N-glycans.}
