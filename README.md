@@ -15,8 +15,9 @@ coverage](https://codecov.io/gh/glycoverse/glymotif/graph/badge.svg)](https://ap
 <!-- badges: end -->
 
 The goal of glymotif is to extract glycan motifs from glycan structures.
-It works seemlessly with [glyrepr](https://github.com/glycoverse/glyrepr)
-and [glyparse](https://github.com/glycoverse/glyparse).
+It works seemlessly with
+[glyrepr](https://github.com/glycoverse/glyrepr) and
+[glyparse](https://github.com/glycoverse/glyparse).
 
 ## Installation
 
@@ -39,25 +40,21 @@ Say we have a glycan, …
 
 ``` r
 (glycan <- parse_iupac_condensed("Gal(b1-3)GlcNAc(b1-3)Gal(b1-3)GalNAc(a1-"))
-#> Glycan Graph (NE)
-#> Gal: 2, GalNAc: 1, GlcNAc: 1
-#> ------------------
-#> GalNAc (a1-)
-#> └─Gal (b1-3)
-#>   └─GlcNAc (b1-3)
-#>     └─Gal (b1-3)
+#> <glycan_structure[1]>
+#> [1] Gal(b1-3)GlcNAc(b1-3)Gal(b1-3)GalNAc(a1-
+#> # Unique structures: 1
 ```
 
 … and we want to check if it has the O-Glycan core 1 motif.
 
 ``` r
-has_motif(glycan, "Gal(b1-3)GalNAc(a1-", alignment = "core")
+have_motif(glycan, "Gal(b1-3)GalNAc(a1-", alignment = "core")
 #> [1] TRUE
 ```
 
 Or use the motif name directly.
 
 ``` r
-has_motif(glycan, "O-Glycan core 1")
+have_motif(glycan, "O-Glycan core 1")
 #> [1] TRUE
 ```

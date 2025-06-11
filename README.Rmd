@@ -49,11 +49,11 @@ Say we have a glycan, ...
 
 ... and we want to check if it has the O-Glycan core 1 motif.
 ```{r}
-has_motif(glycan, "Gal(b1-3)GalNAc(a1-", alignment = "core")
+have_motif(glycan, "Gal(b1-3)GalNAc(a1-", alignment = "core")
 ```
 
 Or use the motif name directly.
 ```{r}
-has_motif(glycan, "O-Glycan core 1")
+have_motif(glycan, "O-Glycan core 1")
 ```
 
