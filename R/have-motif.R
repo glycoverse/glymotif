@@ -91,7 +91,7 @@
 #' @param motif A 'glyrepr_structure' object, an IUPAC-condensed structure string,
 #' or a known motif name (use [available_motifs()] to see all available motifs).
 #' @param motifs A character vector of motif names, IUPAC-condensed structure strings,
-#' or a list of 'glyrepr_structure' objects.
+#' or a 'glyrepr_structure' object.
 #' @param alignment A character string.
 #' Possible values are "substructure", "core", "terminal" and "whole".
 #' If not provided, the value will be decided based on the `motif` argument.
@@ -188,9 +188,7 @@ have_motif <- function(glycans, motif, alignment = NULL, ignore_linkages = FALSE
 
 
 have_motif_ <- function(glycans, motif, alignment, ignore_linkages = FALSE) {
-  # This function vectorizes `has_motif_()`.
-  motif_graph <- glyrepr::get_structure_graphs(motif)
-  glyrepr::smap_lgl(glycans, has_motif_, motif_graph, alignment, ignore_linkages)
+  apply_single_motif_to_glycans(glycans, motif, alignment, ignore_linkages, has_motif_, glyrepr::smap_lgl)
 }
 
 
@@ -206,66 +204,12 @@ has_motif_ <- function(glycan_graph, motif_graph, alignment, ignore_linkages = F
   ))
 }
 
-#' @rdname have_motif
-#' @export
-have_motifs <- function(glycans, motifs, alignments = NULL, ignore_linkages = FALSE) {
-  # Validate inputs
-  valid_glycans_arg(glycans)
-  if (!is.character(motifs) && !is.list(motifs)) {
-    rlang::abort("`motifs` must be a character vector or a list of 'glyrepr_structure' objects.")
-  }
+# ----- Generic function for single motif mapping -----
+apply_single_motif_to_glycans <- function(glycans, motif, alignment, ignore_linkages, single_glycan_func, smap_func) {
+  # Generic function to apply a single motif to multiple glycans
+  # single_glycan_func should be either has_motif_ or count_single_motif_
+  # smap_func should be either glyrepr::smap_lgl or glyrepr::smap_int
   
-  if (length(motifs) == 0) {
-    rlang::abort("`motifs` cannot be empty.")
-  }
-  
-  # Handle alignments parameter
-  if (!is.null(alignments)) {
-    if (length(alignments) == 1) {
-      alignments <- rep(alignments, length(motifs))
-    } else if (length(alignments) != length(motifs)) {
-      rlang::abort("`alignments` must be NULL, a single value, or have the same length as `motifs`.")
-    }
-    # Validate each alignment
-    purrr::walk(alignments, valid_alignment_arg)
-  }
-  
-  valid_ignore_linkages_arg(ignore_linkages)
-  
-  # Save names of the original input before processing
-  glycan_names <- names(glycans)
-  
-  # Ensure glycans are structures
-  glycans <- ensure_glycans_are_structures(glycans)
-  
-  # Prepare motif names for column names
-  if (is.character(motifs)) {
-    motif_names <- motifs
-  } else {
-    # For structure objects, create names
-    motif_names <- paste0("motif_", seq_along(motifs))
-  }
-  
-  # Create the glycan column similar to describe_n_glycans
-  if (!is.null(glycan_names)) {
-    glycan_col <- glycan_names
-  } else {
-    glycan_col <- as.character(glycans)
-  }
-  
-  # Create base tibble with glycan column
-  result_tibble <- tibble::tibble(glycan = glycan_col)
-  
-  # Add columns for each motif
-  for (i in seq_along(motifs)) {
-    motif <- motifs[[i]]
-    alignment <- if (is.null(alignments)) NULL else alignments[i]
-    
-    motif_results <- have_motif(glycans, motif, alignment = alignment, ignore_linkages = ignore_linkages)
-    
-    # Add column with motif name
-    result_tibble[[motif_names[i]]] <- motif_results
-  }
-  
-  result_tibble
+  motif_graph <- glyrepr::get_structure_graphs(motif)
+  smap_func(glycans, single_glycan_func, motif_graph, alignment, ignore_linkages)
 }

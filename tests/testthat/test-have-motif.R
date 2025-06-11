@@ -440,7 +440,7 @@ test_that("have_motifs handles invalid motifs argument", {
   glycans <- c(glycan)
   motifs <- 123
   
-  expect_error(have_motifs(glycans, motifs), "`motifs` must be a character vector")
+  expect_error(have_motifs(glycans, motifs), "`motifs` must be either a `glyrepr_structure` object")
 })
 
 

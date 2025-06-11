@@ -44,10 +44,10 @@ test_that("count_motifs works with multiple motifs", {
   expect_equal(result$glycan, c("double_gal", "single_gal"))
   
   # Check specific counts
-  expect_equal(result[1, "Gal(b1-3)GalNAc"][[1]], 1L)
-  expect_equal(result[1, "Gal(b1-"][[1]], 2L)
-  expect_equal(result[2, "Gal(b1-3)GalNAc"][[1]], 1L)
-  expect_equal(result[2, "Gal(b1-"][[1]], 1L)
+  expect_equal(unname(result[1, "Gal(b1-3)GalNAc"][[1]]), 1L)
+  expect_equal(unname(result[1, "Gal(b1-"][[1]]), 2L)
+  expect_equal(unname(result[2, "Gal(b1-3)GalNAc"][[1]]), 1L)
+  expect_equal(unname(result[2, "Gal(b1-"][[1]]), 1L)
 })
 
 
@@ -86,14 +86,14 @@ test_that("count_motifs works with complex branching motifs", {
   expect_equal(ncol(result), 4)
   
   # Check complex structure counts
-  expect_equal(result[1, "Man(b1-?)[Man(b1-?)]GalNAc"][[1]], 1L)
-  expect_equal(result[1, "Man(b1-"][[1]], 2L)
-  expect_equal(result[1, "Gal(b1-"][[1]], 0L)
+  expect_equal(unname(result[1, "Man(b1-?)[Man(b1-?)]GalNAc"][[1]]), 1L)
+  expect_equal(unname(result[1, "Man(b1-"][[1]]), 2L)
+  expect_equal(unname(result[1, "Gal(b1-"][[1]]), 0L)
   
   # Check simple structure counts
-  expect_equal(result[2, "Man(b1-?)[Man(b1-?)]GalNAc"][[1]], 0L)
-  expect_equal(result[2, "Man(b1-"][[1]], 0L)
-  expect_equal(result[2, "Gal(b1-"][[1]], 1L)
+  expect_equal(unname(result[2, "Man(b1-?)[Man(b1-?)]GalNAc"][[1]]), 0L)
+  expect_equal(unname(result[2, "Man(b1-"][[1]]), 0L)
+  expect_equal(unname(result[2, "Gal(b1-"][[1]]), 1L)
 })
 
 
@@ -142,7 +142,7 @@ test_that("count_motifs handles invalid motifs argument", {
   glycans <- c(glycan)
   motifs <- 123
   
-  expect_error(count_motifs(glycans, motifs), "`motifs` must be a character vector")
+  expect_error(count_motifs(glycans, motifs), "`motifs` must be either")
 })
 
 
@@ -181,6 +181,6 @@ test_that("count_motifs works with ignore_linkages", {
   result_normal <- count_motifs(glycans, motifs, ignore_linkages = FALSE)
   result_ignore <- count_motifs(glycans, motifs, ignore_linkages = TRUE)
   
-  expect_equal(result_normal[1, "Gal(b1-4)GalNAc"][[1]], 0L)
-  expect_equal(result_ignore[1, "Gal(b1-4)GalNAc"][[1]], 1L)
+  expect_equal(unname(result_normal[1, "Gal(b1-4)GalNAc"][[1]]), 0L)
+  expect_equal(unname(result_ignore[1, "Gal(b1-4)GalNAc"][[1]]), 1L)
 })

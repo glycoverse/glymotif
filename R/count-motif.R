@@ -54,6 +54,8 @@
 #'   and subsequent columns contain integer values indicating how many times each glycan has each motif.
 #'
 #' @examples
+#' library(glyparse)
+#' 
 #' count_motif("Gal(b1-3)Gal(b1-3)GalNAc", "Gal(b1-")
 #' count_motif(
 #'   "Man(b1-?)[Man(b1-?)]GalNAc(b1-4)GlcNAc",
@@ -82,9 +84,7 @@ count_motif <- function(glycans, motif, alignment = NULL, ignore_linkages = FALS
 
 
 count_motif_ <- function(glycans, motif, alignment, ignore_linkages = FALSE) {
-  # This function vectorizes `count_single_motif_()`.
-  motif_graph <- glyrepr::get_structure_graphs(motif)
-  glyrepr::smap_int(glycans, count_single_motif_, motif_graph, alignment, ignore_linkages)
+  apply_single_motif_to_glycans(glycans, motif, alignment, ignore_linkages, count_single_motif_, glyrepr::smap_int)
 }
 
 
@@ -113,69 +113,4 @@ count_set_unique <- function(lst) {
     }
   }
   length(unique_list)
-}
-
-
-#' @rdname count_motif
-#' @export
-count_motifs <- function(glycans, motifs, alignments = NULL, ignore_linkages = FALSE) {
-  # Validate inputs
-  valid_glycans_arg(glycans)
-  if (!is.character(motifs) && !is.list(motifs)) {
-    rlang::abort("`motifs` must be a character vector or a list of 'glyrepr_structure' objects.")
-  }
-  
-  if (length(motifs) == 0) {
-    rlang::abort("`motifs` cannot be empty.")
-  }
-  
-  # Handle alignments parameter
-  if (!is.null(alignments)) {
-    if (length(alignments) == 1) {
-      alignments <- rep(alignments, length(motifs))
-    } else if (length(alignments) != length(motifs)) {
-      rlang::abort("`alignments` must be NULL, a single value, or have the same length as `motifs`.")
-    }
-    # Validate each alignment
-    purrr::walk(alignments, valid_alignment_arg)
-  }
-  
-  valid_ignore_linkages_arg(ignore_linkages)
-  
-  # Save names of the original input before processing
-  glycan_names <- names(glycans)
-  
-  # Ensure glycans are structures
-  glycans <- ensure_glycans_are_structures(glycans)
-  
-  # Prepare motif names for column names
-  if (is.character(motifs)) {
-    motif_names <- motifs
-  } else {
-    # For structure objects, create names
-    motif_names <- paste0("motif_", seq_along(motifs))
-  }
-  
-  # Create the glycan column similar to describe_n_glycans
-  if (!is.null(glycan_names)) {
-    glycan_col <- glycan_names
-  } else {
-    glycan_col <- as.character(glycans)
-  }
-  
-  # Create base tibble with glycan column
-  result_tibble <- tibble::tibble(glycan = glycan_col)
-  
-  # Add columns for each motif
-  for (i in seq_along(motifs)) {
-    motif <- motifs[[i]]
-    alignment <- if (is.null(alignments)) NULL else alignments[i]
-    
-    motif_counts <- count_motif(glycans, motif, alignment = alignment, ignore_linkages = ignore_linkages)
-    
-    # Add column with motif name
-    result_tibble[[motif_names[i]]] <- motif_counts
-  }
-  
-  result_tibble
 }
