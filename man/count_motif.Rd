@@ -2,12 +2,15 @@
 % Please edit documentation in R/count-motif.R
 \name{count_motif}
 \alias{count_motif}
-\title{Count How Many Times Glycans have the Given Motif}
+\alias{count_motifs}
+\title{Count How Many Times Glycans have the Given Motif(s)}
 \usage{
 count_motif(glycans, motif, alignment = NULL, ignore_linkages = FALSE)
+
+count_motifs(glycans, motifs, alignments = NULL, ignore_linkages = FALSE)
 }
 \arguments{
-\item{glycans}{A 'glyrepr_structure' object, or an IUPAC-condensed structure string.}
+\item{glycans}{A 'glyrepr_structure' object, or an IUPAC-condensed structure string vector.}
 
 \item{motif}{A 'glyrepr_structure' object, an IUPAC-condensed structure string,
 or a known motif name (use \code{\link[=available_motifs]{available_motifs()}} to see all available motifs).}
@@ -19,14 +22,28 @@ If \code{motif} is a motif name, the alignment in the database will be used.
 Otherwise, "substructure" will be used.}
 
 \item{ignore_linkages}{A logical value. If \code{TRUE}, linkages will be ignored in the comparison.}
+
+\item{motifs}{A character vector of motif names, IUPAC-condensed structure strings,
+or a list of 'glyrepr_structure' objects.}
+
+\item{alignments}{A character vector specifying alignment types for each motif.
+Can be a single value (applied to all motifs) or a vector of the same length as motifs.}
 }
 \value{
-An integer vector indicating how many times each \code{glycan} has the \code{motif}.
+\itemize{
+\item \code{count_motif()}: An integer vector indicating how many times each \code{glycan} has the \code{motif}.
+\item \code{count_motifs()}: A tibble where the first column 'glycan' contains glycan identifiers,
+and subsequent columns contain integer values indicating how many times each glycan has each motif.
+}
 }
 \description{
-This function is closely related to \code{\link[=have_motif]{have_motif()}}.
-However, instead of returning a logical value, it returns the number of times
-the \code{glycans} have the \code{motif}.
+These functions are closely related to \code{\link[=have_motif]{have_motif()}}.
+However, instead of returning logical values, they return the number of times
+the \code{glycans} have the \code{motif}(s).
+\itemize{
+\item \code{count_motif()} counts a single motif in multiple glycans
+\item \code{count_motifs()} counts multiple motifs in multiple glycans
+}
 }
 \details{
 This function actually perform v2f algorithm to get all possible matches
@@ -79,10 +96,20 @@ count_motif(
 )
 count_motif("Gal(b1-3)Gal", "Man")
 
-# Vectorized usage
+# Vectorized usage with single motif
 count_motif(c("Gal(b1-3)Gal(b1-3)GalNAc", "Gal(b1-3)GalNAc"), "Gal(b1-")
+
+# Multiple motifs with count_motifs()
+glycan1 <- parse_iupac_condensed("Gal(b1-3)Gal(b1-3)GalNAc")
+glycan2 <- parse_iupac_condensed("Man(b1-?)[Man(b1-?)]GalNAc(b1-4)GlcNAc")
+glycans <- c(glycan1, glycan2)
+names(glycans) <- c("double_gal", "complex_man")
+
+motifs <- c("Gal(b1-3)GalNAc", "Gal(b1-", "Man(b1-")
+result <- count_motifs(glycans, motifs)
+print(result)
 
 }
 \seealso{
-\code{\link[=have_motif]{have_motif()}}, \code{\link[=count_motifs]{count_motifs()}}
+\code{\link[=have_motif]{have_motif()}}, \code{\link[=have_motifs]{have_motifs()}}
 }

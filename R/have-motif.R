@@ -1,10 +1,13 @@
-#' Check if the Glycans have the Given Motif
+#' Check if the Glycans have the Given Motif(s)
 #'
 #' @description
-#' This function checks if the given `glycan`s have the given `motif`.
-#' Technically speaking, it performs a subgraph isomorphism test to
-#' determine if the `motif` is a subgraph of the `glycan`.
-#' Monosaccharides, linkages , and substituents are all considered.
+#' These functions check if the given `glycan`s have the given `motif`(s).
+#' - `have_motif()` checks a single motif against multiple glycans
+#' - `have_motifs()` checks multiple motifs against multiple glycans
+#' 
+#' Technically speaking, they perform subgraph isomorphism tests to
+#' determine if the `motif`(s) are subgraphs of the `glycan`s.
+#' Monosaccharides, linkages, and substituents are all considered.
 #'
 #' @details
 #' # Graph mode and monosaccharide type
@@ -84,19 +87,26 @@
 #' - Anomer: using `anomer_check()`
 #' The function returns `TRUE` if any of the matches pass all checks.
 #'
-#' @param glycans A 'glyrepr_structure' object, or an IUPAC-condensed structure string.
+#' @param glycans A 'glyrepr_structure' object, or an IUPAC-condensed structure string vector.
 #' @param motif A 'glyrepr_structure' object, an IUPAC-condensed structure string,
 #' or a known motif name (use [available_motifs()] to see all available motifs).
+#' @param motifs A character vector of motif names, IUPAC-condensed structure strings,
+#' or a list of 'glyrepr_structure' objects.
 #' @param alignment A character string.
 #' Possible values are "substructure", "core", "terminal" and "whole".
 #' If not provided, the value will be decided based on the `motif` argument.
 #' If `motif` is a motif name, the alignment in the database will be used.
 #' Otherwise, "substructure" will be used.
+#' @param alignments A character vector specifying alignment types for each motif.
+#' Can be a single value (applied to all motifs) or a vector of the same length as motifs.
 #' @param ignore_linkages A logical value. If `TRUE`, linkages will be ignored in the comparison.
 #'
-#' @return A logical value indicating if the `glycan` has the `motif`.
+#' @return 
+#' - `have_motif()`: A logical vector indicating if each `glycan` has the `motif`.
+#' - `have_motifs()`: A tibble where the first column 'glycan' contains glycan identifiers,
+#'   and subsequent columns contain logical values indicating whether each glycan has each motif.
 #'
-#' @seealso [count_motif()]
+#' @seealso [count_motif()], [count_motifs()]
 #'
 #' @examples
 #' library(glyparse)
@@ -152,10 +162,23 @@
 #' have_motif(glycan_4, glycan_4)
 #' have_motif(glycan_5, glycan_5)
 #'
-#' # Vectorization
+#' # Vectorization with single motif
 #' glycans <- c(glycan, glycan_2, glycan_3)
 #' motif <- "Gal(b1-3)GalNAc"
 #' have_motif(glycans, motif)
+#'
+#' # Multiple motifs with have_motifs()
+#' glycan1 <- o_glycan_core_2(mono_type = "concrete")
+#' glycan2 <- parse_iupac_condensed("Gal(b1-?)[GlcNAc(b1-6)]GalNAc")
+#' glycans <- c(glycan1, glycan2)
+#' names(glycans) <- c("core2", "test_glycan")
+#'
+#' motifs <- c("Gal(b1-3)GalNAc", "Gal(b1-4)GalNAc", "GlcNAc(b1-6)GalNAc")
+#' result <- have_motifs(glycans, motifs)
+#' print(result)
+#'
+#' # Filter to see only positive matches
+#' result |> dplyr::filter(if_any(-glycan, ~ .x))
 #'
 #' @export
 have_motif <- function(glycans, motif, alignment = NULL, ignore_linkages = FALSE) {
@@ -183,52 +206,7 @@ has_motif_ <- function(glycan_graph, motif_graph, alignment, ignore_linkages = F
   ))
 }
 
-#' Check if the Glycans have Multiple Motifs
-#'
-#' @description
-#' This function checks if the given `glycan`s have the given `motif`s.
-#' It is a vectorized version of [have_motif()] that accepts multiple motifs.
-#' The function returns a logical matrix where rows represent glycans and
-#' columns represent motifs.
-#'
-#' @param glycans A 'glyrepr_structure' object, or an IUPAC-condensed structure string vector.
-#' @param motifs A character vector of motif names, IUPAC-condensed structure strings,
-#' or a list of 'glyrepr_structure' objects.
-#' @param alignments A character vector specifying alignment types for each motif.
-#' Possible values are "substructure", "core", "terminal" and "whole".
-#' If not provided, the values will be decided based on each motif.
-#' If a motif is a known motif name, the alignment in the database will be used.
-#' Otherwise, "substructure" will be used.
-#' Can be a single value (applied to all motifs) or a vector of the same length as motifs.
-#' @param ignore_linkages A logical value. If `TRUE`, linkages will be ignored in the comparison.
-#'
-#' @return A tibble where the first column 'glycan' contains glycan identifiers
-#' (names if available, otherwise IUPAC structure strings), and subsequent
-#' columns contain logical values indicating whether each glycan has each motif.
-#'
-#' @seealso [have_motif()]
-#'
-#' @examples
-#' library(glyparse)
-#' library(glyrepr)
-#'
-#' # Create some glycans
-#' glycan1 <- o_glycan_core_2(mono_type = "concrete")
-#' glycan2 <- parse_iupac_condensed("Gal(b1-?)[GlcNAc(b1-6)]GalNAc")
-#' glycans <- c(glycan1, glycan2)
-#'
-#' # Define multiple motifs
-#' motifs <- c("Gal(b1-3)GalNAc", "Gal(b1-4)GalNAc", "GlcNAc(b1-6)GalNAc")
-#'
-#' # Check which glycans have which motifs
-#' result <- have_motifs(glycans, motifs)
-#' print(result)
-#'
-#' # With different alignment types
-#' alignments <- c("substructure", "substructure", "core")
-#' result2 <- have_motifs(glycans, motifs, alignments = alignments)
-#' print(result2)
-#'
+#' @rdname have_motif
 #' @export
 have_motifs <- function(glycans, motifs, alignments = NULL, ignore_linkages = FALSE) {
   # Validate inputs

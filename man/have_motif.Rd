@@ -2,12 +2,15 @@
 % Please edit documentation in R/have-motif.R
 \name{have_motif}
 \alias{have_motif}
-\title{Check if the Glycans have the Given Motif}
+\alias{have_motifs}
+\title{Check if the Glycans have the Given Motif(s)}
 \usage{
 have_motif(glycans, motif, alignment = NULL, ignore_linkages = FALSE)
+
+have_motifs(glycans, motifs, alignments = NULL, ignore_linkages = FALSE)
 }
 \arguments{
-\item{glycans}{A 'glyrepr_structure' object, or an IUPAC-condensed structure string.}
+\item{glycans}{A 'glyrepr_structure' object, or an IUPAC-condensed structure string vector.}
 
 \item{motif}{A 'glyrepr_structure' object, an IUPAC-condensed structure string,
 or a known motif name (use \code{\link[=available_motifs]{available_motifs()}} to see all available motifs).}
@@ -19,15 +22,30 @@ If \code{motif} is a motif name, the alignment in the database will be used.
 Otherwise, "substructure" will be used.}
 
 \item{ignore_linkages}{A logical value. If \code{TRUE}, linkages will be ignored in the comparison.}
+
+\item{motifs}{A character vector of motif names, IUPAC-condensed structure strings,
+or a list of 'glyrepr_structure' objects.}
+
+\item{alignments}{A character vector specifying alignment types for each motif.
+Can be a single value (applied to all motifs) or a vector of the same length as motifs.}
 }
 \value{
-A logical value indicating if the \code{glycan} has the \code{motif}.
+\itemize{
+\item \code{have_motif()}: A logical vector indicating if each \code{glycan} has the \code{motif}.
+\item \code{have_motifs()}: A tibble where the first column 'glycan' contains glycan identifiers,
+and subsequent columns contain logical values indicating whether each glycan has each motif.
+}
 }
 \description{
-This function checks if the given \code{glycan}s have the given \code{motif}.
-Technically speaking, it performs a subgraph isomorphism test to
-determine if the \code{motif} is a subgraph of the \code{glycan}.
-Monosaccharides, linkages , and substituents are all considered.
+These functions check if the given \code{glycan}s have the given \code{motif}(s).
+\itemize{
+\item \code{have_motif()} checks a single motif against multiple glycans
+\item \code{have_motifs()} checks multiple motifs against multiple glycans
+}
+
+Technically speaking, they perform subgraph isomorphism tests to
+determine if the \code{motif}(s) are subgraphs of the \code{glycan}s.
+Monosaccharides, linkages, and substituents are all considered.
 }
 \section{Graph mode and monosaccharide type}{
 Both \code{glycan} and \code{motif} should be 'glyrepr_structure' objects
@@ -166,12 +184,25 @@ have_motif(glycan_5, glycan_4)
 have_motif(glycan_4, glycan_4)
 have_motif(glycan_5, glycan_5)
 
-# Vectorization
+# Vectorization with single motif
 glycans <- c(glycan, glycan_2, glycan_3)
 motif <- "Gal(b1-3)GalNAc"
 have_motif(glycans, motif)
 
+# Multiple motifs with have_motifs()
+glycan1 <- o_glycan_core_2(mono_type = "concrete")
+glycan2 <- parse_iupac_condensed("Gal(b1-?)[GlcNAc(b1-6)]GalNAc")
+glycans <- c(glycan1, glycan2)
+names(glycans) <- c("core2", "test_glycan")
+
+motifs <- c("Gal(b1-3)GalNAc", "Gal(b1-4)GalNAc", "GlcNAc(b1-6)GalNAc")
+result <- have_motifs(glycans, motifs)
+print(result)
+
+# Filter to see only positive matches
+result |> dplyr::filter(if_any(-glycan, ~ .x))
+
 }
 \seealso{
-\code{\link[=count_motif]{count_motif()}}
+\code{\link[=count_motif]{count_motif()}}, \code{\link[=count_motifs]{count_motifs()}}
 }

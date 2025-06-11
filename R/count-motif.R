@@ -1,8 +1,10 @@
-#' Count How Many Times Glycans have the Given Motif
+#' Count How Many Times Glycans have the Given Motif(s)
 #'
-#' This function is closely related to [have_motif()].
-#' However, instead of returning a logical value, it returns the number of times
-#' the `glycans` have the `motif`.
+#' These functions are closely related to [have_motif()].
+#' However, instead of returning logical values, they return the number of times
+#' the `glycans` have the `motif`(s).
+#' - `count_motif()` counts a single motif in multiple glycans
+#' - `count_motifs()` counts multiple motifs in multiple glycans
 #'
 #' @inheritParams have_motif
 #'
@@ -44,9 +46,12 @@
 #' For other details about the handling of monosaccharide, linkages, alignment,
 #' substituents, and implementation, see [have_motif()].
 #'
-#' @seealso [have_motif()], [count_motifs()]
+#' @seealso [have_motif()], [have_motifs()]
 #'
-#' @return An integer vector indicating how many times each `glycan` has the `motif`.
+#' @return 
+#' - `count_motif()`: An integer vector indicating how many times each `glycan` has the `motif`.
+#' - `count_motifs()`: A tibble where the first column 'glycan' contains glycan identifiers,
+#'   and subsequent columns contain integer values indicating how many times each glycan has each motif.
 #'
 #' @examples
 #' count_motif("Gal(b1-3)Gal(b1-3)GalNAc", "Gal(b1-")
@@ -56,8 +61,18 @@
 #' )
 #' count_motif("Gal(b1-3)Gal", "Man")
 #' 
-#' # Vectorized usage
+#' # Vectorized usage with single motif
 #' count_motif(c("Gal(b1-3)Gal(b1-3)GalNAc", "Gal(b1-3)GalNAc"), "Gal(b1-")
+#'
+#' # Multiple motifs with count_motifs()
+#' glycan1 <- parse_iupac_condensed("Gal(b1-3)Gal(b1-3)GalNAc")
+#' glycan2 <- parse_iupac_condensed("Man(b1-?)[Man(b1-?)]GalNAc(b1-4)GlcNAc")
+#' glycans <- c(glycan1, glycan2)
+#' names(glycans) <- c("double_gal", "complex_man")
+#'
+#' motifs <- c("Gal(b1-3)GalNAc", "Gal(b1-", "Man(b1-")
+#' result <- count_motifs(glycans, motifs)
+#' print(result)
 #'
 #' @export
 count_motif <- function(glycans, motif, alignment = NULL, ignore_linkages = FALSE) {
@@ -101,53 +116,7 @@ count_set_unique <- function(lst) {
 }
 
 
-#' Count How Many Times Glycans have Multiple Motifs
-#'
-#' @description
-#' This function is a vectorized version of [count_motif()] that accepts multiple motifs.
-#' It counts how many times the given `glycan`s have each of the given `motif`s.
-#' The function returns a tibble where rows represent glycans and
-#' columns represent motifs with their corresponding counts.
-#'
-#' @param glycans A 'glyrepr_structure' object, or an IUPAC-condensed structure string vector.
-#' @param motifs A character vector of motif names, IUPAC-condensed structure strings,
-#' or a list of 'glyrepr_structure' objects.
-#' @param alignments A character vector specifying alignment types for each motif.
-#' Possible values are "substructure", "core", "terminal" and "whole".
-#' If not provided, the values will be decided based on each motif.
-#' If a motif is a known motif name, the alignment in the database will be used.
-#' Otherwise, "substructure" will be used.
-#' Can be a single value (applied to all motifs) or a vector of the same length as motifs.
-#' @param ignore_linkages A logical value. If `TRUE`, linkages will be ignored in the comparison.
-#'
-#' @return A tibble where the first column 'glycan' contains glycan identifiers
-#' (names if available, otherwise IUPAC structure strings), and subsequent
-#' columns contain integer values indicating how many times each glycan has each motif.
-#'
-#' @seealso [count_motif()], [have_motifs()]
-#'
-#' @examples
-#' library(glyparse)
-#' library(glyrepr)
-#'
-#' # Create some glycans
-#' glycan1 <- parse_iupac_condensed("Gal(b1-3)Gal(b1-3)GalNAc")
-#' glycan2 <- parse_iupac_condensed("Gal(b1-3)GalNAc")
-#' glycans <- c(glycan1, glycan2)
-#' names(glycans) <- c("double_gal", "single_gal")
-#'
-#' # Define multiple motifs
-#' motifs <- c("Gal(b1-3)GalNAc", "Gal(b1-")
-#'
-#' # Count motifs in glycans
-#' result <- count_motifs(glycans, motifs)
-#' print(result)
-#'
-#' # With different alignment types
-#' alignments <- c("substructure", "terminal")
-#' result2 <- count_motifs(glycans, motifs, alignments = alignments)
-#' print(result2)
-#'
+#' @rdname count_motif
 #' @export
 count_motifs <- function(glycans, motifs, alignments = NULL, ignore_linkages = FALSE) {
   # Validate inputs
