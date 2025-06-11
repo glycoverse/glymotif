@@ -83,12 +83,9 @@ describe_n_glycans <- function(glycans, strict = FALSE, parallel = FALSE) {
   checkmate::assert(checkmate::check_null(parallel), checkmate::check_flag(parallel))
   glycans <- ensure_glycans_are_graphs(glycans)
 
-  # Ensure parallelism
-  map_funcs <- prepare_map_funcs(parallel)
-
   # Deal with strictness
   if (!strict) {
-    glycans <- map_funcs$list(
+    glycans <- purrr::map(
       glycans, glyrepr::convert_glycan_mono_type,
       to = "simple", strict = FALSE
     )
@@ -97,24 +94,24 @@ describe_n_glycans <- function(glycans, strict = FALSE, parallel = FALSE) {
   cf <- purrr::partial(count_n_glycan_motif, strict = strict)
 
   # Check if the glycans are N-glycans
-  invalid_indices <- which(!map_funcs$lgl(glycans, .is_n_glycan, hf, cf))
+  invalid_indices <- which(!purrr::map_lgl(glycans, .is_n_glycan, hf, cf))
   if (length(invalid_indices) > 0) {
     cli::cli_abort("Glycans at indices {.val {invalid_indices}} are not N-glycans.")
   }
 
   # Get the properties
-  glycan_type <- map_funcs$chr(glycans, .n_glycan_type, hf, cf)
+  glycan_type <- purrr::map_chr(glycans, .n_glycan_type, hf, cf)
   res <- tibble::tibble(
     glycan_type = glycan_type,
-    bisecting = map_funcs$lgl(glycans, .has_bisecting, hf, cf),
-    n_antennae = map_funcs$int2(
+    bisecting = purrr::map_lgl(glycans, .has_bisecting, hf, cf),
+    n_antennae = purrr::map2_int(
       glycans, glycan_type == "complex",
       ~ .n_antennae(.x, hf, cf, is_complex = .y)
     ),
-    n_core_fuc = map_funcs$int(glycans, .n_core_fuc, hf, cf),
-    n_arm_fuc = map_funcs$int(glycans, .n_arm_fuc, hf, cf),
-    n_gal = map_funcs$int(glycans, .n_gal, hf, cf),
-    n_terminal_gal = map_funcs$int(glycans, .n_terminal_gal, hf, cf)
+    n_core_fuc = purrr::map_int(glycans, .n_core_fuc, hf, cf),
+    n_arm_fuc = purrr::map_int(glycans, .n_arm_fuc, hf, cf),
+    n_gal = purrr::map_int(glycans, .n_gal, hf, cf),
+    n_terminal_gal = purrr::map_int(glycans, .n_terminal_gal, hf, cf)
   )
 
   # Add the glycan name column
@@ -433,16 +430,16 @@ count_n_glycan_motif <- function(glycan, motif_name, alignment, strict) {
 
 get_n_glycan_motif <- function(name, simple = FALSE) {
   motifs <- list(
-    core     = get_motif_graph("N-Glycan core basic"),
+    core     = get_motif_structure("N-Glycan core basic"),
     pauciman = glyparse::parse_iupac_condensed("Man(a1-3)[Man(a1-3/6)Man(a1-6)]Man(b1-4)GlcNAc(b1-4)GlcNAc(?1-"),
-    hybrid   = get_motif_graph("N-Glycan hybrid"),
-    highman  = get_motif_graph("N-Glycan high mannose"),
-    bisect   = get_motif_graph("N-glycan core, bisected"),
-    ant2     = get_motif_graph("N-Glycan biantennary"),
-    ant3     = get_motif_graph("N-Glycan triantennary"),
-    ant4     = get_motif_graph("N-Glycan tetraantennary"),
-    core_fuc = get_motif_graph("N-Glycan core, core-fucosylated"),
-    arm_fuc  = get_motif_graph("N-Glycan core, arm-fucosylated")
+    hybrid   = get_motif_structure("N-Glycan hybrid"),
+    highman  = get_motif_structure("N-Glycan high mannose"),
+    bisect   = get_motif_structure("N-glycan core, bisected"),
+    ant2     = get_motif_structure("N-Glycan biantennary"),
+    ant3     = get_motif_structure("N-Glycan triantennary"),
+    ant4     = get_motif_structure("N-Glycan tetraantennary"),
+    core_fuc = get_motif_structure("N-Glycan core, core-fucosylated"),
+    arm_fuc  = get_motif_structure("N-Glycan core, arm-fucosylated")
   )
   # add gal
   if (simple) {

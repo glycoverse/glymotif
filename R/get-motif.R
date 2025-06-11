@@ -1,7 +1,16 @@
 rlang::on_load({
-  glygen_motifs$graph <- purrr::map(glygen_motifs$iupac, glyparse::parse_iupac_condensed)
+  structures <- glyparse::parse_iupac_condensed(glygen_motifs$iupac)
+  glygen_motifs$graph <- glyrepr::get_structure_graphs(structures)
   glygen_motifs <- tibble::as_tibble(glygen_motifs)
 })
+
+# `glygen_motifs` is a tibble with the following columns:
+# - `accession`: the GlyGen accession number of the motif
+# - `name`: the name of the motif
+# - `aglycon`: the aglycon of the motif
+# - `alignment`: the alignment of the motif
+# - `iupac`: the IUPAC condensed string of the motif
+# - `graph`: the structure graph (igraph object) of the motif
 
 #' Get Available Motifs
 #'
@@ -31,13 +40,13 @@ is_known_motif <- function(name) {
 }
 
 
-#' Get the Structure Graphs, Alignments, or Aglycons of Known Motifs
+#' Get the Structures, Alignments, or Aglycons of Known Motifs
 #'
 #' Given a character vector of motifs names in GlycoMotif GlyGen Collection,
-#' these functions return the structure graphs, alignments, or aglycons of the motifs.
+#' these functions return the structures, alignments, or aglycons of the motifs.
 #'
 #' @param name A character vector of the motif name.
-#' @returns `get_motif_graph()` returns a `glycan_graph` when `name` is a character
+#' @returns `get_motif_structure()` returns a `glycan_graph` when `name` is a character
 #' scalar, and a list of `glycan_graph` when `name` is a character vector.
 #' `get_motif_alignment()` returns a character vector of motif alignments.
 #' `get_motif_aglycon()` returns a character vector of motif aglycons.
@@ -45,29 +54,25 @@ is_known_motif <- function(name) {
 #' the return value is named with the motif names.
 #'
 #' @examples
-#' get_motif_graph("N-Glycan core basic")
+#' get_motif_structure("N-Glycan core basic")
 #' get_motif_alignment("N-Glycan core basic")
 #' get_motif_aglycon("N-Glycan core basic")
 #'
-#' get_motif_graph(c("O-Glycan core 1", "O-Glycan core 2"))
+#' get_motif_structure(c("O-Glycan core 1", "O-Glycan core 2"))
 #' get_motif_alignment(c("O-Glycan core 1", "O-Glycan core 2"))
 #' get_motif_aglycon(c("O-Glycan core 1", "O-Glycan core 2"))
 #'
 #' @seealso [available_motifs()], [is_known_motif()]
 #'
 #' @export
-get_motif_graph <- function(name) {
+get_motif_structure <- function(name) {
   check_names(name)
   res <- glygen_motifs$graph[glygen_motifs$name %in% name]
-  if (length(res) > 1) {
-    rlang::set_names(res, name)
-  } else {
-    res[[1]]
-  }
+  glyrepr::as_glycan_structure(res)
 }
 
 
-#' @rdname get_motif_graph
+#' @rdname get_motif_structure
 #' @export
 get_motif_alignment <- function(name) {
   check_names(name)
@@ -77,7 +82,7 @@ get_motif_alignment <- function(name) {
 }
 
 
-#' @rdname get_motif_graph
+#' @rdname get_motif_structure
 #' @export
 get_motif_aglycon <- function(name) {
   check_names(name)

@@ -187,38 +187,22 @@
       [182] "O-GlcNAc Core EGF Type"                
       [183] "N-glycan core, Man truncated"          
 
-# getting motif graph works
+# getting motif structure works
 
     Code
-      print(result)
+      result
     Output
-      Glycan Graph
-      GlcNAc: 2, Man: 3
-      ------------------
-      GlcNAc (?1-)
-      └─GlcNAc (b1-4)
-        └─Man (b1-4)
-          ├─Man (a1-6)
-          └─Man (a1-3)
+      <glycan_structure[1]>
+      [1] Man(a1-3)[Man(a1-6)]Man(b1-4)GlcNAc(b1-4)GlcNAc(?1-
+      # Unique structures: 1
 
 # getting many motif graphs
 
     Code
-      print(result)
+      result
     Output
-      $`O-Glycan core 1`
-      Glycan Graph
-      Gal: 1, GalNAc: 1
-      ------------------
-      GalNAc (a1-)
-      └─Gal (b1-3)
-      
-      $`O-Glycan core 2`
-      Glycan Graph
-      Gal: 1, GalNAc: 1, GlcNAc: 1
-      ------------------
-      GalNAc (a1-)
-      ├─GlcNAc (b1-6)
-      └─Gal (b1-3)
-      
+      <glycan_structure[2]>
+      [1] Gal(b1-3)GalNAc(a1-
+      [2] Gal(b1-3)[GlcNAc(b1-6)]GalNAc(a1-
+      # Unique structures: 2
 

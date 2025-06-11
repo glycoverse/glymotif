@@ -1,7 +1,7 @@
-#' Check if a Glycan has the Given Motif
+#' Check if the Glycans have the Given Motif
 #'
 #' @description
-#' This function checks if a `glycan` has a given `motif`.
+#' This function checks if the given `glycan`s have the given `motif`.
 #' Technically speaking, it performs a subgraph isomorphism test to
 #' determine if the `motif` is a subgraph of the `glycan`.
 #' Monosaccharides, linkages , and substituents are all considered.
@@ -9,15 +9,12 @@
 #' @details
 #' # Graph mode and monosaccharide type
 #'
-#' Both `glycan` and `motif` should be 'glycan_graph' objects
-#' (see [glyrepr::as_glycan_graph()]).
-#' They can be either "NE" or "DN" glycan graphs (can be different).
+#' Both `glycan` and `motif` should be 'glyrepr_structure' objects
+#' (see [glyrepr::glycan_structure()]).
 #'
 #' Also, they can have different monosaccharide types
-#' ("concrete", "generic" or "simple", see [glyrepr::decide_mono_type()]).
-#' However, the monosaccharide type of `glycan` cannot be obscurer than that of `motif`,
-#' which will raise an error.
-#' For example, a "concrete" `glycan` can have a "generic" `motif`, but not vice versa.
+#' ("concrete" or "generic", see [glyrepr::get_mono_type()]).
+#' However, a "concrete" motif cannot be matched to a "generic" glycan.
 #'
 #' # Linkages
 #'
@@ -87,8 +84,8 @@
 #' - Anomer: using `anomer_check()`
 #' The function returns `TRUE` if any of the matches pass all checks.
 #'
-#' @param glycan A 'glycan_graph' object, or an IUPAC-condensed structure string.
-#' @param motif A 'glycan_graph' object, an IUPAC-condensed structure string,
+#' @param glycan A 'glyrepr_structure' object, or an IUPAC-condensed structure string.
+#' @param motif A 'glyrepr_structure' object, an IUPAC-condensed structure string,
 #' or a known motif name (use [available_motifs()] to see all available motifs).
 #' @param alignment A character string.
 #' Possible values are "substructure", "core", "terminal" and "whole".
@@ -108,31 +105,27 @@
 #' (glycan <- o_glycan_core_2(mono_type = "concrete"))
 #'
 #' # The glycan has the motif "Gal(b1-3)GalNAc"
-#' has_motif(glycan, "Gal(b1-3)GalNAc")
+#' have_motif(glycan, "Gal(b1-3)GalNAc")
 #'
 #' # But not "Gal(b1-4)GalNAc" (wrong linkage)
-#' has_motif(glycan, "Gal(b1-4)GalNAc")
+#' have_motif(glycan, "Gal(b1-4)GalNAc")
 #'
 #' # Set `ignore_linkages` to `TRUE` to ignore linkages
-#' has_motif(glycan, "Gal(b1-4)GalNAc", ignore_linkages = TRUE)
+#' have_motif(glycan, "Gal(b1-4)GalNAc", ignore_linkages = TRUE)
 #'
 #' # Different monosaccharide types are allowed
-#' has_motif(glycan, "Hex(b1-3)HexNAc")
-#'
-#' # However, the monosaccharide type of `glycan` cannot be obscurer than that of `motif`
-#' glycan_simple <- convert_glycan_mono_type(glycan, "simple")
-#' try(has_motif(glycan_simple, "Gal(b1-3)GalNAc"))
+#' have_motif(glycan, "Hex(b1-3)HexNAc")
 #'
 #' # Obscure linkages in the `motif` graph are allowed
-#' has_motif(glycan, "Gal(b1-?)GalNAc")
+#' have_motif(glycan, "Gal(b1-?)GalNAc")
 #'
 #' # However, obscure linkages in `glycan` will only match "?" in the `motif` graph
 #' glycan_2 <- parse_iupac_condensed("Gal(b1-?)[GlcNAc(b1-6)]GalNAc")
-#' has_motif(glycan_2, "Gal(b1-3)GalNAc")
-#' has_motif(glycan_2, "Gal(b1-?)GalNAc")
+#' have_motif(glycan_2, "Gal(b1-3)GalNAc")
+#' have_motif(glycan_2, "Gal(b1-?)GalNAc")
 #'
 #' # The anomer of the motif will be matched to linkages in the glycan
-#' has_motif(glycan_2, "GlcNAc(b1-")
+#' have_motif(glycan_2, "GlcNAc(b1-")
 #'
 #' # Alignment types
 #' # The default type is "substructure", which means the motif can be anywhere in the glycan.
@@ -145,35 +138,47 @@
 #'            "Gal(a1-4)Gal"
 #' )
 #'
-#' purrr::map_lgl(motifs, ~ has_motif(glycan_3, .x, alignment = "whole"))
-#' purrr::map_lgl(motifs, ~ has_motif(glycan_3, .x, alignment = "core"))
-#' purrr::map_lgl(motifs, ~ has_motif(glycan_3, .x, alignment = "terminal"))
-#' purrr::map_lgl(motifs, ~ has_motif(glycan_3, .x, alignment = "substructure"))
+#' purrr::map_lgl(motifs, ~ have_motif(glycan_3, .x, alignment = "whole"))
+#' purrr::map_lgl(motifs, ~ have_motif(glycan_3, .x, alignment = "core"))
+#' purrr::map_lgl(motifs, ~ have_motif(glycan_3, .x, alignment = "terminal"))
+#' purrr::map_lgl(motifs, ~ have_motif(glycan_3, .x, alignment = "substructure"))
 #'
 #' # Substituents
 #' glycan_4 <- "Neu5Ac9Ac(a2-3)Gal(b1-4)GlcNAc"
 #' glycan_5 <- "Neu5Ac(a2-3)Gal(b1-4)GlcNAc"
 #'
-#' has_motif(glycan_4, glycan_5)
-#' has_motif(glycan_5, glycan_4)
-#' has_motif(glycan_4, glycan_4)
-#' has_motif(glycan_5, glycan_5)
+#' have_motif(glycan_4, glycan_5)
+#' have_motif(glycan_5, glycan_4)
+#' have_motif(glycan_4, glycan_4)
+#' have_motif(glycan_5, glycan_5)
+#'
+#' # Vectorization
+#' glycans <- c(glycan, glycan_2, glycan_3)
+#' motif <- "Gal(b1-3)GalNAc"
+#' have_motif(glycans, motif)
 #'
 #' @export
-has_motif <- function(glycan, motif, alignment = NULL, ignore_linkages = FALSE) {
-  params <- prepare_has_motif_args(glycan, motif, alignment, ignore_linkages)
-  rlang::exec("has_motif_", !!!params)
+have_motif <- function(glycans, motif, alignment = NULL, ignore_linkages = FALSE) {
+  params <- prepare_have_motif_args(glycans, motif, alignment, ignore_linkages)
+  rlang::exec("have_motif_", !!!params)
 }
 
 
-has_motif_ <- function(glycan, motif, alignment, ignore_linkages = FALSE) {
-  # This function is the logic part of `has_motif()`.
-  c_graphs <- colorize_graphs(glycan, motif)
-  glycan <- c_graphs$glycan
-  motif <- c_graphs$motif
-  res <- perform_vf2(glycan, motif)
+have_motif_ <- function(glycans, motif, alignment, ignore_linkages = FALSE) {
+  # This function vectorizes `has_motif_()`.
+  motif_graph <- glyrepr::get_structure_graphs(motif)
+  glyrepr::structure_map_lgl(glycans, has_motif_, motif_graph, alignment, ignore_linkages)
+}
+
+
+has_motif_ <- function(glycan_graph, motif_graph, alignment, ignore_linkages = FALSE) {
+  # This function is the logic part of `have_motif()`.
+  c_graphs <- colorize_graphs(glycan_graph, motif_graph)
+  glycan_graph <- c_graphs$glycan
+  motif_graph <- c_graphs$motif
+  res <- perform_vf2(glycan_graph, motif_graph)
   any(purrr::map_lgl(
-    res, is_vaild_result, glycan = glycan, motif = motif,
+    res, is_vaild_result, glycan = glycan_graph, motif = motif_graph,
     alignment = alignment, ignore_linkages = ignore_linkages
   ))
 }

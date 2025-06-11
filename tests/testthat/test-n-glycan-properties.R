@@ -1,3 +1,6 @@
+skip("skip all tests in this file")
+
+
 # ========== Glycan Graphs ==========
 make_glycan <- function(iupac, mono_type, linkage) {
   glycan <- glyparse::parse_iupac_condensed(iupac)

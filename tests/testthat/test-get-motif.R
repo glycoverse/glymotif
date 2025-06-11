@@ -10,19 +10,19 @@ test_that("check if motif is known", {
 
 
 test_that("get known motif", {
-  expect_error(get_motif_graph("bad motif"), 'Unknown motif: "bad motif".')
+  expect_error(get_motif_structure("bad motif"), 'Unknown motif: "bad motif".')
 })
 
 
-test_that("getting motif graph works", {
-  result <- get_motif_graph("N-Glycan core basic")
-  expect_snapshot(print(result))  # A `glycan_graph`
+test_that("getting motif structure works", {
+  result <- get_motif_structure("N-Glycan core basic")
+  expect_snapshot(result)  # A `glyrepr_structure`
 })
 
 
 test_that("getting many motif graphs", {
-  result <- get_motif_graph(c("O-Glycan core 1", "O-Glycan core 2"))
-  expect_snapshot(print(result))  # A list of `glycan_graph`
+  result <- get_motif_structure(c("O-Glycan core 1", "O-Glycan core 2"))
+  expect_snapshot(result)  # A list of `glyrepr_structure`
 })
 
 
