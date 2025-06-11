@@ -2,6 +2,7 @@
 
 export(available_motifs)
 export(count_motif)
+export(count_motifs)
 export(describe_n_glycans)
 export(get_motif_aglycon)
 export(get_motif_alignment)

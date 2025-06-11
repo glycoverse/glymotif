@@ -84,5 +84,5 @@ count_motif(c("Gal(b1-3)Gal(b1-3)GalNAc", "Gal(b1-3)GalNAc"), "Gal(b1-")
 
 }
 \seealso{
-\code{\link[=have_motif]{have_motif()}}
+\code{\link[=have_motif]{have_motif()}}, \code{\link[=count_motifs]{count_motifs()}}
 }
