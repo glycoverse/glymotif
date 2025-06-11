@@ -167,7 +167,7 @@ have_motif <- function(glycans, motif, alignment = NULL, ignore_linkages = FALSE
 have_motif_ <- function(glycans, motif, alignment, ignore_linkages = FALSE) {
   # This function vectorizes `has_motif_()`.
   motif_graph <- glyrepr::get_structure_graphs(motif)
-  glyrepr::structure_map_lgl(glycans, has_motif_, motif_graph, alignment, ignore_linkages)
+  glyrepr::smap_lgl(glycans, has_motif_, motif_graph, alignment, ignore_linkages)
 }
 
 

@@ -17,7 +17,7 @@
 #' # Strictness
 #'
 #' By default (`strict = FALSE`), the function is very lenient for motif checking.
-#' It only checks the monosaccharide types on the "simple" level (e.g. "H", "N", "F"),
+#' It only checks the monosaccharide types on the "generic" level (e.g. "Hex", "HexNAc"),
 #' and ignores linkage information.
 #' This is preferred because in most cases the structural resolution could not be high,
 #' e.g. in most glycoproteomics studies.
@@ -43,12 +43,12 @@
 #' future::plan(old_plan)  # Restore the old plan
 #' ```
 #'
-#' @param glycans A list of `glycan_graph` objects,
+#' @param glycans A `glyrepr_structure` object,
 #' or a character vector of IUPAC-condensed structure strings.
 #' @param strict A logical value. If `TRUE`, the glycan must have "concrete"
 #' monosaccharides (e.g. "GlcNAc", "Man", "Gal") and linkage information.
 #' If `FALSE`, the function is more lenient,
-#' checking monosaacharide identities on the "simple" level (e.g. "H", "N", "F")
+#' checking monosaacharide identities on the "generic" level (e.g. "Hex", "HexNAc")
 #' and ignoring linkage information.
 #' Default is `FALSE`. This is preferred because in most cases the
 #' structural resolution could not be high, but we known for sure the glycans are indeed N-glycans.
@@ -59,7 +59,7 @@
 #' @return A tibble with the following columns: "glycan_type", "bisecting",
 #' "antennae", "core_fuc", "arm_fuc", "terminal_gal".
 #' If the input glycans have names, the tibble will have a "glycan" column.
-#' Otherwise, if IUPAC condensed strings are used, they will be used as the "glycan" column.
+#' Otherwise, IUPAC-condensed strings will be used as the "glycan" column.
 #'
 #' @examples
 #' library(glyparse)
@@ -81,44 +81,45 @@ describe_n_glycans <- function(glycans, strict = FALSE, parallel = FALSE) {
   valid_glycans_arg(glycans)
   checkmate::assert_flag(strict)
   checkmate::assert(checkmate::check_null(parallel), checkmate::check_flag(parallel))
-  glycans <- ensure_glycans_are_graphs(glycans)
+  
+  # Save names of the original input
+  glycan_names <- names(glycans)
+  
+  glycans <- ensure_glycans_are_structures(glycans)
 
   # Deal with strictness
   if (!strict) {
-    glycans <- purrr::map(
-      glycans, glyrepr::convert_glycan_mono_type,
-      to = "simple", strict = FALSE
-    )
+    glycans <- glyrepr::convert_mono_type(glycans, to = "generic")
   }
-  hf <- purrr::partial(has_n_glycan_motif, strict = strict)
+  hf <- purrr::partial(have_n_glycan_motif, strict = strict)
   cf <- purrr::partial(count_n_glycan_motif, strict = strict)
 
   # Check if the glycans are N-glycans
-  invalid_indices <- which(!purrr::map_lgl(glycans, .is_n_glycan, hf, cf))
+  invalid_indices <- which(!glyrepr::smap_lgl(glycans, ~ .is_n_glycan(.x, hf, cf)))
   if (length(invalid_indices) > 0) {
     cli::cli_abort("Glycans at indices {.val {invalid_indices}} are not N-glycans.")
   }
 
   # Get the properties
-  glycan_type <- purrr::map_chr(glycans, .n_glycan_type, hf, cf)
+  glycan_type <- glyrepr::smap_chr(glycans, ~ .n_glycan_type(.x, hf, cf))
   res <- tibble::tibble(
     glycan_type = glycan_type,
-    bisecting = purrr::map_lgl(glycans, .has_bisecting, hf, cf),
-    n_antennae = purrr::map2_int(
+    bisecting = glyrepr::smap_lgl(glycans, ~ .has_bisecting(.x, hf, cf)),
+    n_antennae = glyrepr::smap2_int(
       glycans, glycan_type == "complex",
       ~ .n_antennae(.x, hf, cf, is_complex = .y)
     ),
-    n_core_fuc = purrr::map_int(glycans, .n_core_fuc, hf, cf),
-    n_arm_fuc = purrr::map_int(glycans, .n_arm_fuc, hf, cf),
-    n_gal = purrr::map_int(glycans, .n_gal, hf, cf),
-    n_terminal_gal = purrr::map_int(glycans, .n_terminal_gal, hf, cf)
+    n_core_fuc = glyrepr::smap_int(glycans, ~ .n_core_fuc(.x, hf, cf)),
+    n_arm_fuc = glyrepr::smap_int(glycans, ~ .n_arm_fuc(.x, hf, cf)),
+    n_gal = glyrepr::smap_int(glycans, ~ .n_gal(.x, hf, cf)),
+    n_terminal_gal = glyrepr::smap_int(glycans, ~ .n_terminal_gal(.x, hf, cf))
   )
 
   # Add the glycan name column
-  if (!is.null(names(glycans))) {
-    res <- tibble::add_column(res, glycan = names(glycans), .before = 1)
-  } else if (is.character(glycans)) {
-    res <- tibble::add_column(res, glycan = glycans, .before = 1)
+  if (!is.null(glycan_names)) {
+    res <- tibble::add_column(res, glycan = glycan_names, .before = 1)
+  } else {
+    res <- tibble::add_column(res, glycan = as.character(glycans), .before = 1)
   }
 
   res
@@ -140,7 +141,7 @@ describe_n_glycans <- function(glycans, strict = FALSE, parallel = FALSE) {
 #' @param strict A logical value. If `TRUE`, the glycan must have "concrete"
 #' monosaccharides (e.g. "GlcNAc", "Man", "Gal") and linkage information.
 #' If `FALSE`, the function is more lenient,
-#' checking monosaacharide identities on the "simple" level (e.g. "H", "N", "F")
+#' checking monosaacharide identities on the "generic" level (e.g. "Hex", "HexNAc")
 #' and ignoring linkage information.
 #' Default is `FALSE`. This is preferred because in most cases the
 #' structural resolution could not be high, but we known for sure the glycans are indeed N-glycans.
@@ -244,7 +245,7 @@ is_n_glycan <- function(glycan, strict = FALSE) {
 #' @param strict A logical value. If `TRUE`, the glycan must have "concrete"
 #' monosaccharides (e.g. "GlcNAc", "Man", "Gal") and linkage information.
 #' If `FALSE`, the function is more lenient,
-#' checking monosaacharide identities on the "simple" level (e.g. "H", "N", "F")
+#' checking monosaacharide identities on the "generic" level (e.g. "Hex", "HexNAc")
 #' and ignoring linkage information.
 #' Default is `FALSE`. This is preferred because in most cases the
 #' structural resolution could not be high, but we known for sure the glycans are indeed N-glycans.
@@ -392,7 +393,7 @@ n_glycan_property_wrapper <- function(glycan, strict, func, check_n_glycan = TRU
   # ```
   # .has_bisecting <- function(glycan, .has_motif, .counts_motif) {
   #   bisect_graph <- get_motif_graph("N-glycan core, bisected")
-  #   .has_motif(glycan, bisect_graph, alignment = "core")
+  #   .have_motif(glycan, bisect_graph, alignment = "core")
   # }
   # ```
   # Then pass this function to `n_glycan_property_wrapper()`:
@@ -401,34 +402,42 @@ n_glycan_property_wrapper <- function(glycan, strict, func, check_n_glycan = TRU
   # ```
   # This function will take care of converting the glycan to a graph and
   # checking the motif with suitable strictness.
-  valid_glycan_arg(glycan)
+  valid_glycans_arg(glycan)
   checkmate::assert_flag(strict)
-  glycan <- ensure_glycan_is_graph(glycan)
+  glycan <- ensure_glycans_are_structures(glycan)
   if (!strict) {
-    glycan <- glyrepr::convert_glycan_mono_type(glycan, to = "simple", strict = FALSE)
+    glycan <- glyrepr::convert_mono_type(glycan, to = "generic")
   }
-  has_motif_func <- purrr::partial(has_n_glycan_motif, strict = strict)
-  counts_motif_func <- purrr::partial(count_n_glycan_motif, strict = strict)
-  if (check_n_glycan && !.is_n_glycan(glycan, has_motif_func, counts_motif_func)) {
+  have_motif_func <- purrr::partial(have_n_glycan_motif, strict = strict)
+  count_motif_func <- purrr::partial(count_n_glycan_motif, strict = strict)
+  if (check_n_glycan && !.is_n_glycan(glycan, have_motif_func, count_motif_func)) {
     rlang::abort("Not an N-glycan.")
   }
-  func(glycan, has_motif_func, counts_motif_func)
+  func(glycan, have_motif_func, count_motif_func)
 }
 
 
-has_n_glycan_motif <- function(glycan, motif_name, alignment, strict) {
-  motif <- get_n_glycan_motif(motif_name, simple = !strict)
-  has_motif_(glycan, motif, alignment, ignore_linkages = !strict)
+have_n_glycan_motif <- function(glycan, motif_name, alignment, strict) {
+  motif <- get_n_glycan_motif(motif_name, generic = !strict)
+  # If glycan is an igraph object (from smap), convert it to glyrepr_structure
+  if (inherits(glycan, "igraph")) {
+    glycan <- glyrepr::as_glycan_structure(glycan)
+  }
+  have_motif_(glycan, motif, alignment, ignore_linkages = !strict)
 }
 
 
 count_n_glycan_motif <- function(glycan, motif_name, alignment, strict) {
-  motif <- get_n_glycan_motif(motif_name, simple = !strict)
-  counts_motif_(glycan, motif, alignment, ignore_linkages = !strict)
+  motif <- get_n_glycan_motif(motif_name, generic = !strict)
+  # If glycan is an igraph object (from smap), convert it to glyrepr_structure
+  if (inherits(glycan, "igraph")) {
+    glycan <- glyrepr::as_glycan_structure(glycan)
+  }
+  count_motif_(glycan, motif, alignment, ignore_linkages = !strict)
 }
 
 
-get_n_glycan_motif <- function(name, simple = FALSE) {
+get_n_glycan_motif <- function(name, generic = FALSE) {
   motifs <- list(
     core     = get_motif_structure("N-Glycan core basic"),
     pauciman = glyparse::parse_iupac_condensed("Man(a1-3)[Man(a1-3/6)Man(a1-6)]Man(b1-4)GlcNAc(b1-4)GlcNAc(?1-"),
@@ -442,7 +451,7 @@ get_n_glycan_motif <- function(name, simple = FALSE) {
     arm_fuc  = get_motif_structure("N-Glycan core, arm-fucosylated")
   )
   # add gal
-  if (simple) {
+  if (generic) {
     # Here we use H-H-N-H, not just H.
     # This is for telling between Man and Gal.
     motifs[["gal"]] <- glyparse::parse_pglyco_struc("(H(H(N(H))))")
@@ -450,9 +459,9 @@ get_n_glycan_motif <- function(name, simple = FALSE) {
     motifs[["gal"]] <- glyparse::parse_iupac_condensed("Gal")
   }
   motif <- motifs[[name]]
-  if (simple) {
-    motif <- glyrepr::convert_glycan_mono_type(motif, to = "simple", strict = FALSE)
+  if (generic) {
+    motif <- glyrepr::convert_mono_type(motif, to = "generic")
   }
   motif
 }
-get_n_glycan_motif <- memoise(get_n_glycan_motif)
+get_n_glycan_motif <- memoise::memoise(get_n_glycan_motif)

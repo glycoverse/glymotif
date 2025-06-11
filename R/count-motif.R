@@ -69,7 +69,7 @@ count_motif <- function(glycans, motif, alignment = NULL, ignore_linkages = FALS
 count_motif_ <- function(glycans, motif, alignment, ignore_linkages = FALSE) {
   # This function vectorizes `count_single_motif_()`.
   motif_graph <- glyrepr::get_structure_graphs(motif)
-  glyrepr::structure_map_int(glycans, count_single_motif_, motif_graph, alignment, ignore_linkages)
+  glyrepr::smap_int(glycans, count_single_motif_, motif_graph, alignment, ignore_linkages)
 }
 
 
