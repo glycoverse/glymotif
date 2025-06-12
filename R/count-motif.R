@@ -105,7 +105,7 @@ count_motif_ <- function(glycans, motif, alignment, ignore_linkages = FALSE) {
   motif_graph <- c_graphs$motif
   res <- perform_vf2(glycan_graph, motif_graph)
   valid_mask <- purrr::map_lgl(
-    res, is_vaild_result, glycan = glycan_graph, motif = motif_graph,
+    res, is_valid_result, glycan = glycan_graph, motif = motif_graph,
     alignment = alignment, ignore_linkages = ignore_linkages
   )
   valid_res <- res[valid_mask]
@@ -115,12 +115,8 @@ count_motif_ <- function(glycans, motif, alignment, ignore_linkages = FALSE) {
 
 count_set_unique <- function(lst) {
   # Given a list of integer vectors, return the number of unique vectors.
-  # Uniqueness is determined by `setequal()`.
-  unique_list <- list()
-  for (vec in lst) {
-    if (purrr::none(unique_list, ~ setequal(.x, vec))) {
-      unique_list <- append(unique_list, list(vec))
-    }
-  }
-  length(unique_list)
+  if (length(lst) == 0) return(0)
+  sorted_lst <- purrr::map(lst, sort)
+  str_vectors <- purrr::map_chr(sorted_lst, ~ paste(.x, collapse = ","))
+  length(unique(str_vectors))
 }

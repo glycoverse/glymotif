@@ -210,7 +210,7 @@ have_motif_ <- function(glycans, motif, alignment, ignore_linkages = FALSE) {
   motif_graph <- c_graphs$motif
   res <- perform_vf2(glycan_graph, motif_graph)
   any(purrr::map_lgl(
-    res, is_vaild_result, glycan = glycan_graph, motif = motif_graph,
+    res, is_valid_result, glycan = glycan_graph, motif = motif_graph,
     alignment = alignment, ignore_linkages = ignore_linkages
   ))
 }

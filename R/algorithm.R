@@ -1,5 +1,5 @@
 colorize_graphs <- function(glycan, motif) {
-  # Add "color" vevtex attributes to the graph.
+  # Add "color" vertex attributes to the graph.
   # The colors are converted from the "mono" vertex attributes.
   unique_monos <- unique(c(igraph::V(glycan)$mono, igraph::V(motif)$mono))
   color_map <- seq_along(unique_monos)
@@ -27,16 +27,29 @@ perform_vf2 <- function(glycan, motif) {
 }
 
 
-is_vaild_result <- function(r, glycan, motif, alignment, ignore_linkages) {
-  # This function actually allocate each check to different functions,
-  # including: `alignment_check`, `substituent_check`, `linkage_check`, `anomer_check`.
-  # If any of them returns `FALSE`, the result is invalid.
-  if (ignore_linkages) {
-    check_funs <- list(alignment_check, substituent_check)
-  } else {
-    check_funs <- list(alignment_check, substituent_check, linkage_check, anomer_check)
+is_valid_result <- function(r, glycan, motif, alignment, ignore_linkages) {
+  # Early exit optimizations using short-circuit logic
+  # Check alignment first as it's usually the fastest
+  if (!alignment_check(r, glycan, motif, alignment = alignment)) {
+    return(FALSE)
   }
-  all(purrr::map_lgl(check_funs, ~ .x(r, glycan, motif, alignment = alignment)))
+  
+  # Check substituents
+  if (!substituent_check(r, glycan, motif, alignment = alignment)) {
+    return(FALSE)
+  }
+  
+  # Only check linkages and anomer if linkages are not ignored
+  if (!ignore_linkages) {
+    if (!linkage_check(r, glycan, motif, alignment = alignment)) {
+      return(FALSE)
+    }
+    if (!anomer_check(r, glycan, motif, alignment = alignment)) {
+      return(FALSE)
+    }
+  }
+  
+  return(TRUE)
 }
 
 
