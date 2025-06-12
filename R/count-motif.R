@@ -84,11 +84,21 @@ count_motif <- function(glycans, motif, alignment = NULL, ignore_linkages = FALS
 
 
 count_motif_ <- function(glycans, motif, alignment, ignore_linkages = FALSE) {
-  apply_single_motif_to_glycans(glycans, motif, alignment, ignore_linkages, count_single_motif_, glyrepr::smap_int)
+  # This function is a simpler version of `count_motif()`.
+  # It performs the logic directly without argument validations and conversions.
+  # It is a necessary abstraction for other functions.
+  apply_single_motif_to_glycans(
+    glycans = glycans,
+    motif = motif,
+    alignment = alignment,
+    ignore_linkages = ignore_linkages,
+    single_glycan_func = .count_motif_single,
+    smap_func = glyrepr::smap_int
+  )
 }
 
 
-count_single_motif_ <- function(glycan_graph, motif_graph, alignment, ignore_linkages = FALSE) {
+.count_motif_single <- function(glycan_graph, motif_graph, alignment, ignore_linkages = FALSE) {
   # This function is the logic part of `count_motif()`.
   c_graphs <- colorize_graphs(glycan_graph, motif_graph)
   glycan_graph <- c_graphs$glycan

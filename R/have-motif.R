@@ -188,12 +188,23 @@ have_motif <- function(glycans, motif, alignment = NULL, ignore_linkages = FALSE
 
 
 have_motif_ <- function(glycans, motif, alignment, ignore_linkages = FALSE) {
-  apply_single_motif_to_glycans(glycans, motif, alignment, ignore_linkages, has_motif_, glyrepr::smap_lgl)
+  # This function is a simpler version of `have_motif()`.
+  # It performs the logic directly without argument validations and conversions.
+  # It is a necessary abstraction for other functions.
+  apply_single_motif_to_glycans(
+    glycans = glycans,
+    motif = motif,
+    alignment = alignment,
+    ignore_linkages = ignore_linkages,
+    single_glycan_func = .have_motif_single,
+    smap_func = glyrepr::smap_lgl
+  )
 }
 
 
-has_motif_ <- function(glycan_graph, motif_graph, alignment, ignore_linkages = FALSE) {
-  # This function is the logic part of `have_motif()`.
+.have_motif_single <- function(glycan_graph, motif_graph, alignment, ignore_linkages = FALSE) {
+  # This function is the core logic part of `.have_motif_single()`.
+  # It is used to check if a single glycan has a single motif.
   c_graphs <- colorize_graphs(glycan_graph, motif_graph)
   glycan_graph <- c_graphs$glycan
   motif_graph <- c_graphs$motif
