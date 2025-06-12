@@ -1,37 +1,6 @@
-# ----- Prepare arguments for `count_motif()` and `have_motif()` -----
-prepare_have_motif_args <- function(glycans, motif, alignment, ignore_linkages) {
-  # Check input arguments
-  valid_glycans_arg(glycans)
-  valid_motif_arg(motif)
-  valid_alignment_arg(alignment)
-  valid_ignore_linkages_arg(ignore_linkages)
-
-  glycan_names <- get_structure_names(glycans)
-
-  motif_type <- get_motif_type(motif)
-
-  # Deal with `alignment` when `motif` is a known motif name
-  if (motif_type == "known") {
-    alignment <- decide_alignment(motif, alignment)
-  } else if (is.null(alignment)) {
-    alignment <- "substructure"
-  }
-
-  # Make sure `glycan` and `motif` are structures
-  glycans <- ensure_glycans_are_structures(glycans)
-  motif <- ensure_motif_is_structure(motif, motif_type)
-
-  # Ensure that `glycan` and `motif` have the same monosaccharide type
-  # To ensure strict comparison, if the glycan type is lower than the motif type,
-  # an error will be raised by `ensure_glycans_mono_type()`.
-  glycans <- ensure_glycans_mono_type(glycans, motif)
-
-  list(glycans = glycans, motif = motif, alignment = alignment, ignore_linkages = ignore_linkages)
-}
-
-
-# ----- Prepare arguments for `have_motifs()` and `count_motifs()` -----
+# ----- Prepare arguments -----
 prepare_have_motifs_args <- function(glycans, motifs, alignments, ignore_linkages) {
+  # for `have_motifs()`, `count_motifs()`
   valid_glycans_arg(glycans)
   valid_motifs_arg(motifs)
   valid_alignments_arg(alignments, motifs)
@@ -41,37 +10,8 @@ prepare_have_motifs_args <- function(glycans, motifs, alignments, ignore_linkage
   motif_names <- get_structure_names(motifs)
 
   motif_type <- get_motif_type(motifs)
-
-  # Deal with `alignments` when `motif` is a known motif name
-  if (motif_type == "known") {
-    # For multiple known motifs, handle alignments for each
-    if (is.null(alignments)) {
-      alignments <- purrr::map_chr(motifs, get_motif_alignment)
-    } else {
-      # Handle alignment parameter
-      if (length(alignments) == 1) {
-        alignments <- rep(alignments, length(motifs))
-      }
-      # Check each alignment against database
-      db_alignments <- purrr::map_chr(motifs, get_motif_alignment)
-      for (i in seq_along(alignments)) {
-        if (alignments[i] != db_alignments[i]) {
-          cli::cli_warn(
-            "The provided alignment type {.val {alignments[i]}} is different from the motif's alignment type {.val {db_alignments[i]}} in database for motif {.val {motifs[i]}}.",
-            class = "warning_custom_alignment"
-          )
-        }
-      }
-    }
-  } else if (is.null(alignments)) {
-    alignments <- rep("substructure", length(motifs))
-  } else {
-    # Handle alignment parameter
-    if (length(alignments) == 1) {
-      alignments <- rep(alignments, length(motifs))
-    }
-  }
-
+  alignments <- decide_alignments(motifs, motif_type, alignments)
+  
   # Make sure `glycan` and `motif` are structures
   glycans <- ensure_glycans_are_structures(glycans)
   motifs <- ensure_motifs_are_structures(motifs, motif_type)
@@ -87,6 +27,22 @@ prepare_have_motifs_args <- function(glycans, motifs, alignments, ignore_linkage
 
   list(glycans = glycans, motifs = motifs, alignments = alignments, ignore_linkages = ignore_linkages)
 }
+
+prepare_have_motif_args <- function(glycans, motif, alignment, ignore_linkages) {
+  # for `have_motif()`, `count_motif()`
+  if (length(motif) != 1) {
+    rlang::abort("`motif` must be a single structure.")
+  }
+  params <- prepare_have_motifs_args(glycans, motif, alignment, ignore_linkages)
+  params$motif <- params$motifs
+  params$alignment <- params$alignments
+  params$motifs <- NULL
+  params$alignments <- NULL
+  names(params$motif) <- NULL
+  names(params$glycans) <- NULL
+  params
+}
+
 
 # ----- Argument validation -----
 valid_alignment_arg <- function(x) {
@@ -133,16 +89,6 @@ valid_glycans_arg <- function(x) {
   # Must be a structure or a character vector
   if (!glyrepr::is_glycan_structure(x) && !is.character(x)) {
     rlang::abort(glycan_type_err_msg)
-  }
-}
-
-
-valid_motif_arg <- function(x) {
-  if (
-    (!glyrepr::is_glycan_structure(x) && length(x) != 1) ||
-    (is.character(x) && length(x) != 1)
-  ) {
-    rlang::abort(motif_type_err_msg)
   }
 }
 
@@ -197,23 +143,33 @@ get_motif_type <- function(motif) {
 
 
 # ----- Decide alignment type -----
-decide_alignment <- function(motif_name, alignment) {
+decide_alignments <- function(motifs, motif_type, alignments) {
   # Decide which alignment type to use.
-  # If the alignment is provided, check if it is the same as the motif's
-  # alignment type in the database and issue a warning if not.
-  # If not provided, use the motif's alignment type in the database.
-  db_alignment <- get_motif_alignment(motif_name)
-  if (!is.null(alignment)) {
-    if (alignment != db_alignment) {
-      cli::cli_warn(
-        "The provided alignment type {.val {alignment}} is different from the motif's alignment type {.val {db_alignment}} in database.",
-        class = "warning_custom_alignment"
-      )
+  # 1. If the motif is a known motif name: use the alignment type in the database unless provided.
+  # 2. If the motif is an IUPAC string or a 'glyrepr_structure' object: use "substructure" unless provided.
+  # In the first case, if the user-provided alignment is different from that in the database,
+  # issue a warning.
+  if (motif_type == "known") {
+    db_alignments <- get_motif_alignment(motifs)
+    if (!is.null(alignments)) {
+      inconsistent <- alignments != db_alignments
+      if (any(inconsistent)) {
+        warn_msg <- paste(
+          "The provided alignment type {.val {alignments[inconsistent]}} is different from",
+          "the motif's alignment type {.val {db_alignments[inconsistent]}} in database",
+          "for motif {.val {motifs[inconsistent]}}."
+        )
+        cli::cli_warn(warn_msg, class = "warning_custom_alignment")
+      }
+    } else {
+      alignments <- db_alignments
     }
   } else {
-    alignment <- db_alignment
+    if (is.null(alignments)) {
+      alignments <- "substructure"
+    }
   }
-  alignment
+  vctrs::vec_recycle(alignments, length(motifs))
 }
 
 # ----- Make sure glycans and motifs are structures -----
@@ -229,26 +185,6 @@ ensure_glycans_are_structures <- function(glycans) {
   }
   glycans
 }
-
-
-ensure_motif_is_structure <- function(motif, motif_type) {
-  # Make sure `motif` is a structure.
-  if (motif_type == "known") {
-    motif <- get_motif_structure(motif)
-  } else if (motif_type == "iupac") {
-    tryCatch(
-      motif <- glyparse::parse_iupac_condensed(motif),
-      error = function(e) {
-        rlang::abort(motif_type_err_msg)
-      }
-    )
-  } else {  # motif_type == "structure"
-    motif <- motif
-  }
-
-  motif
-}
-
 
 ensure_motifs_are_structures <- function(motifs, motif_type) {
   if (motif_type == "known") {

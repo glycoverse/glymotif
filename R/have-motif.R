@@ -218,9 +218,8 @@ have_motif_ <- function(glycans, motif, alignment, ignore_linkages = FALSE) {
 # ----- Generic function for single motif mapping -----
 apply_single_motif_to_glycans <- function(glycans, motif, alignment, ignore_linkages, single_glycan_func, smap_func) {
   # Generic function to apply a single motif to multiple glycans
-  # single_glycan_func should be either has_motif_ or count_single_motif_
+  # single_glycan_func should be either .have_motif_single or .count_motif_single
   # smap_func should be either glyrepr::smap_lgl or glyrepr::smap_int
-  
   motif_graph <- glyrepr::get_structure_graphs(motif)
   smap_func(glycans, single_glycan_func, motif_graph, alignment, ignore_linkages)
 }
