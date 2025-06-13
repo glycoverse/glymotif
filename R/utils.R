@@ -175,7 +175,9 @@ decide_alignments <- function(motifs, motif_type, alignments) {
 # ----- Make sure glycans and motifs are structures -----
 ensure_glycans_are_structures <- function(glycans) {
   # Make sure `glycans` is a `glyrepr_structure` object.
-  if (is.character(glycans)) {
+  # Fixed: Check if it's character AND not already a glyrepr_structure
+  # This prevents unnecessary parsing of already-parsed structures
+  if (is.character(glycans) && !glyrepr::is_glycan_structure(glycans)) {
     tryCatch(
       glycans <- glyparse::parse_iupac_condensed(glycans),
       error = function(e) {
