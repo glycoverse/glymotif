@@ -162,8 +162,6 @@ describe_n_glycans <- function(glycans, strict = FALSE, parallel = FALSE) {
     n_terminal_gal = as.integer(motif_count_matrix[, "terminal_gal"])
   )
 
-  # Add the glycan name column
-  res <- tibble::add_column(res, glycan = glycan_names, .before = 1)
   res
 }
 
