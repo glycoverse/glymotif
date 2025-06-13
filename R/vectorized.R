@@ -28,19 +28,22 @@ apply_motifs_to_glycans <- function(glycans, motifs, alignments, ignore_linkages
   glycan_names <- names(glycans)
   motif_names <- names(motifs)
 
-  # Create base tibble with glycan column
-  result_tibble <- tibble::tibble(glycan = glycan_names)
+  # Apply each motif to all glycans using purrr
+  motif_results_list <- purrr::map2(
+    motifs,
+    alignments,
+    ~ single_motif_func(
+      glycans, 
+      .x, 
+      alignment = .y, 
+      ignore_linkages = ignore_linkages
+    )
+  )
   
-  # Add columns for each motif
-  for (i in seq_along(motifs)) {
-    motif <- motifs[[i]]
-    alignment <- if (is.null(alignments)) NULL else alignments[i]
-    
-    motif_results <- single_motif_func(glycans, motif, alignment = alignment, ignore_linkages = ignore_linkages)
-    
-    # Add column with motif name
-    result_tibble[[motif_names[i]]] <- motif_results
-  }
+  # Set names for the results
+  names(motif_results_list) <- motif_names
   
-  result_tibble
+  # Combine results into tibble
+  result_tibble <- c(list(glycan = glycan_names), motif_results_list)
+  tibble::as_tibble(result_tibble)
 }
