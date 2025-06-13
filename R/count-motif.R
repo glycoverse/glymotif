@@ -70,7 +70,6 @@
 #' glycan1 <- parse_iupac_condensed("Gal(b1-3)Gal(b1-3)GalNAc")
 #' glycan2 <- parse_iupac_condensed("Man(b1-?)[Man(b1-?)]GalNAc(b1-4)GlcNAc")
 #' glycans <- c(glycan1, glycan2)
-#' names(glycans) <- c("double_gal", "complex_man")
 #'
 #' motifs <- c("Gal(b1-3)GalNAc", "Gal(b1-", "Man(b1-")
 #' result <- count_motifs(glycans, motifs)

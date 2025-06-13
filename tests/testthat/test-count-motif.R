@@ -1,36 +1,34 @@
 test_that("count motifs in glycan", {
-  glycan <- glyparse::parse_iupac_condensed("Gal(b1-3)Gal(b1-3)GalNAc")
-  motif <- glyparse::parse_iupac_condensed("Gal(b1-")
+  glycan <- "Gal(b1-3)Gal(b1-3)GalNAc"
+  motif <- "Gal(b1-"
   expect_equal(count_motif(glycan, motif), 2L)
 })
 
 
 test_that("count motifs with branching", {
-  glycan <- glyparse::parse_iupac_condensed("Man(b1-?)[Man(b1-?)]GalNAc(b1-4)GlcNAc")
-  motif <- glyparse::parse_iupac_condensed("Man(b1-?)[Man(b1-?)]GalNAc")
+  glycan <- "Man(b1-?)[Man(b1-?)]GalNAc(b1-4)GlcNAc"
+  motif <- "Man(b1-?)[Man(b1-?)]GalNAc"
   expect_equal(count_motif(glycan, motif), 1L)
 })
 
 
 test_that("count symmetrical motif", {
-  glycan <- glyparse::parse_iupac_condensed("Gal(b1-3)Gal(b1-3)GalNAc")
-  motif <- glyparse::parse_iupac_condensed("Gal(b1-3)Gal")
+  glycan <- "Gal(b1-3)Gal(b1-3)GalNAc"
+  motif <- "Gal(b1-3)Gal"
   expect_equal(count_motif(glycan, motif), 1L)
 })
 
 
 test_that("count 0 motif", {
-  glycan <- glyparse::parse_iupac_condensed("Gal(b1-3)Gal(b1-3)GalNAc")
-  motif <- glyparse::parse_iupac_condensed("Gal(b1-4)GalNAc")
+  glycan <- "Gal(b1-3)Gal(b1-3)GalNAc"
+  motif <- "Gal(b1-4)GalNAc"
   expect_equal(count_motif(glycan, motif), 0L)
 })
 
 
 # ========== count_motifs ==========
 test_that("count_motifs works with multiple motifs", {
-  glycan1 <- glyparse::parse_iupac_condensed("Gal(b1-3)Gal(b1-3)GalNAc")
-  glycan2 <- glyparse::parse_iupac_condensed("Gal(b1-3)GalNAc")
-  glycans <- c(glycan1, glycan2)
+  glycans <- c("Gal(b1-3)Gal(b1-3)GalNAc", "Gal(b1-3)GalNAc")
   names(glycans) <- c("double_gal", "single_gal")
   
   motifs <- c("Gal(b1-3)GalNAc", "Gal(b1-")
@@ -52,9 +50,7 @@ test_that("count_motifs works with multiple motifs", {
 
 
 test_that("count_motifs works without glycan names", {
-  glycan1 <- glyparse::parse_iupac_condensed("Gal(b1-3)Gal(b1-3)GalNAc")
-  glycan2 <- glyparse::parse_iupac_condensed("Gal(b1-3)GalNAc")
-  glycans <- c(glycan1, glycan2)
+  glycans <- c("Gal(b1-3)Gal(b1-3)GalNAc", "Gal(b1-3)GalNAc")
   
   motifs <- c("Gal(b1-3)GalNAc", "Gal(b1-")
   
@@ -72,9 +68,7 @@ test_that("count_motifs works without glycan names", {
 
 
 test_that("count_motifs works with complex branching motifs", {
-  glycan1 <- glyparse::parse_iupac_condensed("Man(b1-?)[Man(b1-?)]GalNAc(b1-4)GlcNAc")
-  glycan2 <- glyparse::parse_iupac_condensed("Gal(b1-3)Gal")
-  glycans <- c(glycan1, glycan2)
+  glycans <- c("Man(b1-?)[Man(b1-?)]GalNAc(b1-4)GlcNAc", "Gal(b1-3)Gal")
   names(glycans) <- c("complex", "simple")
   
   motifs <- c("Man(b1-?)[Man(b1-?)]GalNAc", "Man(b1-", "Gal(b1-")
@@ -98,8 +92,7 @@ test_that("count_motifs works with complex branching motifs", {
 
 
 test_that("count_motifs works with different alignments", {
-  glycan <- glyparse::parse_iupac_condensed("Gal(a1-3)Gal(a1-4)Gal(a1-6)Gal")
-  glycans <- c(glycan, glycan)
+  glycans <- c("Gal(a1-3)Gal(a1-4)Gal(a1-6)Gal", "Gal(a1-3)Gal(a1-4)Gal(a1-6)Gal")
   names(glycans) <- c("glycan1", "glycan2")
   
   motifs <- c("Gal(a1-3)Gal(a1-4)Gal", "Gal(a1-4)Gal(a1-6)Gal")
@@ -114,9 +107,7 @@ test_that("count_motifs works with different alignments", {
 
 
 test_that("count_motifs handles zero counts", {
-  glycan1 <- glyparse::parse_iupac_condensed("Gal(b1-3)GalNAc")
-  glycan2 <- glyparse::parse_iupac_condensed("GlcNAc(b1-4)GlcNAc")
-  glycans <- c(glycan1, glycan2)
+  glycans <- c("Gal(b1-3)GalNAc", "GlcNAc(b1-4)GlcNAc")
   
   motifs <- c("Man(b1-", "Fuc(a1-")
   
@@ -129,8 +120,7 @@ test_that("count_motifs handles zero counts", {
 
 
 test_that("count_motifs handles empty motifs", {
-  glycan <- glyparse::parse_iupac_condensed("Gal(b1-3)GalNAc")
-  glycans <- c(glycan)
+  glycans <- "Gal(b1-3)GalNAc"
   motifs <- character(0)
   
   expect_error(count_motifs(glycans, motifs), "`motifs` cannot be empty")
@@ -138,8 +128,7 @@ test_that("count_motifs handles empty motifs", {
 
 
 test_that("count_motifs handles invalid motifs argument", {
-  glycan <- glyparse::parse_iupac_condensed("Gal(b1-3)GalNAc")
-  glycans <- c(glycan)
+  glycans <- "Gal(b1-3)GalNAc"
   motifs <- 123
   
   expect_error(count_motifs(glycans, motifs), "`motifs` must be either")
@@ -147,8 +136,7 @@ test_that("count_motifs handles invalid motifs argument", {
 
 
 test_that("count_motifs handles mismatched alignments length", {
-  glycan <- glyparse::parse_iupac_condensed("Gal(b1-3)GalNAc")
-  glycans <- c(glycan)
+  glycans <- "Gal(b1-3)GalNAc"
   motifs <- c("Gal(b1-3)GalNAc", "Gal(b1-", "GalNAc")
   alignments <- c("substructure", "core")  # length 2, motifs length 3
   
@@ -158,9 +146,7 @@ test_that("count_motifs handles mismatched alignments length", {
 
 
 test_that("count_motifs works with single alignment for all motifs", {
-  glycan1 <- glyparse::parse_iupac_condensed("Gal(b1-3)Gal(b1-3)GalNAc")
-  glycan2 <- glyparse::parse_iupac_condensed("Gal(b1-3)GalNAc")
-  glycans <- c(glycan1, glycan2)
+  glycans <- c("Gal(b1-3)Gal(b1-3)GalNAc", "Gal(b1-3)GalNAc")
   
   motifs <- c("Gal(b1-3)GalNAc", "Gal(b1-")
   
@@ -173,8 +159,7 @@ test_that("count_motifs works with single alignment for all motifs", {
 
 
 test_that("count_motifs works with ignore_linkages", {
-  glycan1 <- glyparse::parse_iupac_condensed("Gal(b1-3)GalNAc")
-  glycans <- c(glycan1)
+  glycans <- "Gal(b1-3)GalNAc"
   
   motifs <- c("Gal(b1-3)GalNAc", "Gal(b1-4)GalNAc")
   

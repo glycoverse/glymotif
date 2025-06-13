@@ -718,9 +718,9 @@ test_that("check terminal galactose not for N-glycan", {
 # ========== Describe N-glycan ==========
 test_that("describing glycans works", {
   glycans <- c(
-    H5N2 = highmannose_H5N2("generic", linkage = FALSE),
-    H4N4 = complex_H4N4("generic", linkage = FALSE),
-    H3N4F2 = complex_H3N4F2_1coreF_1armF("generic", linkage = FALSE)
+    highmannose_H5N2("generic", linkage = FALSE),
+    complex_H4N4("generic", linkage = FALSE),
+    complex_H3N4F2_1coreF_1armF("generic", linkage = FALSE)
   )
   expect_snapshot(describe_n_glycans(glycans))
 })
@@ -728,9 +728,9 @@ test_that("describing glycans works", {
 
 test_that("strictly describing glycans works", {
   glycans <- c(
-    H5N2 = highmannose_H5N2("concrete", linkage = TRUE),
-    H4N4 = complex_H4N4("concrete", linkage = TRUE),
-    H3N4F2 = complex_H3N4F2_1coreF_1armF("concrete", linkage = TRUE)
+    highmannose_H5N2("concrete", linkage = TRUE),
+    complex_H4N4("concrete", linkage = TRUE),
+    complex_H3N4F2_1coreF_1armF("concrete", linkage = TRUE)
   )
   expect_snapshot(describe_n_glycans(glycans, strict = TRUE))
 })
@@ -738,8 +738,8 @@ test_that("strictly describing glycans works", {
 
 test_that("describe not N-glycans", {
   glycans <- c(
-    O_glycan = o_glycan_core_1("generic", linkage = FALSE),
-    H5N2 = highmannose_H5N2("generic", linkage = FALSE)
+    o_glycan_core_1("generic", linkage = FALSE),
+    highmannose_H5N2("generic", linkage = FALSE)
   )
   expect_snapshot(describe_n_glycans(glycans), error = TRUE)
 })

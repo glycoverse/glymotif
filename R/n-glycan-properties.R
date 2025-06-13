@@ -76,44 +76,51 @@ describe_n_glycans <- function(glycans, strict = FALSE, parallel = FALSE) {
   valid_glycans_arg(glycans)
   checkmate::assert_flag(strict)
   checkmate::assert(checkmate::check_null(parallel), checkmate::check_flag(parallel))
-  
-  # Save names of the original input
-  glycan_names <- names(glycans)
-  
-  glycans <- ensure_glycans_are_structures(glycans)
+
+  glycan_structures <- ensure_glycans_are_structures(glycans)
+  glycan_names <- prepare_struc_names(glycans, glycan_structures)
 
   # Deal with strictness
   if (!strict) {
-    glycans <- glyrepr::convert_mono_type(glycans, to = "generic")
+    glycan_structures <- glyrepr::convert_mono_type(glycan_structures, to = "generic")
   }
-  
+
   # Separate motifs that only need presence/absence from those that need counting
   have_motif_names <- c("core", "pauciman", "hybrid", "highman", "bisect", "ant2", "ant3", "ant4")
   have_motifs <- purrr::map(have_motif_names, ~ get_n_glycan_motif(.x, generic = !strict))
-  names(have_motifs) <- have_motif_names
-  
+
   have_alignments <- c(
     core = "core", pauciman = "whole", hybrid = "core", highman = "core",
     bisect = "core", ant2 = "core", ant3 = "core", ant4 = "core"
   )
-  
-  count_motif_names <- c("core_fuc", "arm_fuc", "gal")
+
+  count_motif_names <- c("core_fuc", "arm_fuc", "gal", "terminal_gal")
   count_motifs <- purrr::map(count_motif_names, ~ get_n_glycan_motif(.x, generic = !strict))
-  names(count_motifs) <- count_motif_names
-  
-  count_alignments <- c(
-    core_fuc = "core", arm_fuc = "core", gal = "substructure"
-  )
-  
+
+  count_alignments <- c(core_fuc = "core", arm_fuc = "core", gal = "substructure", terminal_gal = "terminal")
+
   # Use vectorized functions
-  motif_has_matrix <- have_motifs_(glycans, have_motifs, have_alignments, ignore_linkages = !strict)
-  motif_count_matrix <- count_motifs_(glycans, count_motifs, count_alignments, ignore_linkages = !strict)
-  
-  # Add terminal galactose counts (using gal motif with terminal alignment)
-  terminal_gal_motif <- list(gal = get_n_glycan_motif("gal", generic = !strict))
-  terminal_gal_counts <- count_motifs_(glycans, terminal_gal_motif, 
-                                       c(gal = "terminal"), ignore_linkages = !strict)
-  
+  motif_has_matrix <- have_motifs_(
+    glycans = glycan_structures, 
+    motifs = have_motifs, 
+    alignments = have_alignments, 
+    glycan_names = glycan_names, 
+    motif_names = have_motif_names, 
+    ignore_linkages = !strict
+  )
+  motif_count_matrix <- count_motifs_(
+    glycans = glycan_structures, 
+    motifs = count_motifs, 
+    alignments = count_alignments, 
+    glycan_names = glycan_names, 
+    motif_names = count_motif_names, 
+    ignore_linkages = !strict
+  )
+  rownames(motif_has_matrix) <- glycan_names
+  rownames(motif_count_matrix) <- glycan_names
+  colnames(motif_has_matrix) <- have_motif_names
+  colnames(motif_count_matrix) <- count_motif_names
+
   # Check if the glycans are N-glycans
   is_n_glycan <- motif_has_matrix[, "core"]
   invalid_indices <- which(!is_n_glycan)
@@ -152,16 +159,11 @@ describe_n_glycans <- function(glycans, strict = FALSE, parallel = FALSE) {
     n_core_fuc = motif_count_matrix[, "core_fuc"],
     n_arm_fuc = motif_count_matrix[, "arm_fuc"],
     n_gal = motif_count_matrix[, "gal"],
-    n_terminal_gal = as.integer(terminal_gal_counts[, "gal"])
+    n_terminal_gal = as.integer(motif_count_matrix[, "terminal_gal"])
   )
 
   # Add the glycan name column
-  if (!is.null(glycan_names)) {
-    res <- tibble::add_column(res, glycan = glycan_names, .before = 1)
-  } else {
-    res <- tibble::add_column(res, glycan = as.character(glycans), .before = 1)
-  }
-
+  res <- tibble::add_column(res, glycan = glycan_names, .before = 1)
   res
 }
 
@@ -495,8 +497,10 @@ get_n_glycan_motif <- function(name, generic = FALSE) {
     # Here we use H-H-N-H, not just H.
     # This is for telling between Man and Gal.
     motifs[["gal"]] <- glyparse::parse_pglyco_struc("(H(H(N(H))))")
+    motifs[["terminal_gal"]] <- motifs[["gal"]]
   } else {
     motifs[["gal"]] <- glyparse::parse_iupac_condensed("Gal")
+    motifs[["terminal_gal"]] <- motifs[["gal"]]
   }
   motif <- motifs[[name]]
   if (generic) {

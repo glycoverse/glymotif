@@ -193,7 +193,6 @@ have_motif(glycans, motif)
 glycan1 <- o_glycan_core_2(mono_type = "concrete")
 glycan2 <- parse_iupac_condensed("Gal(b1-?)[GlcNAc(b1-6)]GalNAc")
 glycans <- c(glycan1, glycan2)
-names(glycans) <- c("core2", "test_glycan")
 
 motifs <- c("Gal(b1-3)GalNAc", "Gal(b1-4)GalNAc", "GlcNAc(b1-6)GalNAc")
 result <- have_motifs(glycans, motifs)

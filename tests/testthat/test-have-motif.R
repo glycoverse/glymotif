@@ -364,8 +364,8 @@ test_that("anomer wrong for core motif", {
 
 # ========== have_motifs ==========
 test_that("have_motifs works with multiple motifs", {
-  glycan1 <- glyrepr::o_glycan_core_2()
-  glycan2 <- glyparse::parse_iupac_condensed("Gal(b1-?)[GlcNAc(b1-6)]GalNAc")
+  glycan1 <- as.character(glyrepr::o_glycan_core_2())
+  glycan2 <- "Gal(b1-?)[GlcNAc(b1-6)]GalNAc"
   glycans <- c(glycan1, glycan2)
   names(glycans) <- c("core2", "test_glycan")
   
@@ -413,7 +413,6 @@ test_that("have_motifs works without glycan names", {
 test_that("have_motifs works with different alignments", {
   glycan <- glyparse::parse_iupac_condensed("Gal(a1-3)Gal(a1-4)Gal(a1-6)Gal")
   glycans <- c(glycan, glycan)
-  names(glycans) <- c("glycan1", "glycan2")
   
   motifs <- c("Gal(a1-3)Gal(a1-4)Gal", "Gal(a1-4)Gal(a1-6)Gal")
   alignments <- c("core", "terminal")

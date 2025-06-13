@@ -6,9 +6,6 @@ prepare_have_motifs_args <- function(glycans, motifs, alignments, ignore_linkage
   valid_alignments_arg(alignments, motifs)
   valid_ignore_linkages_arg(ignore_linkages)
 
-  glycan_names <- get_structure_names(glycans)
-  motif_names <- get_structure_names(motifs)
-
   motif_type <- get_motif_type(motifs)
   alignments <- decide_alignments(motifs, motif_type, alignments)
   
@@ -20,10 +17,6 @@ prepare_have_motifs_args <- function(glycans, motifs, alignments, ignore_linkage
   # To ensure strict comparison, if the glycan type is lower than the motif type,
   # an error will be raised by `ensure_glycans_mono_type()`.
   glycans <- ensure_glycans_mono_type(glycans, motifs[[1]])
-
-  # Restore names after conversion
-  names(glycans) <- glycan_names
-  names(motifs) <- motif_names
 
   list(glycans = glycans, motifs = motifs, alignments = alignments, ignore_linkages = ignore_linkages)
 }
@@ -38,8 +31,6 @@ prepare_have_motif_args <- function(glycans, motif, alignment, ignore_linkages) 
   params$alignment <- params$alignments
   params$motifs <- NULL
   params$alignments <- NULL
-  names(params$motif) <- NULL
-  names(params$glycans) <- NULL
   params
 }
 
@@ -105,16 +96,6 @@ valid_motifs_arg <- function(x) {
 
 valid_ignore_linkages_arg <- function(x) {
   checkmate::assert_flag(x)
-}
-
-
-# ----- Get names -----
-get_structure_names <- function(x) {
-  if (is.null(names(x))) {
-    as.character(x)
-  } else {
-    names(x)
-  }
 }
 
 
