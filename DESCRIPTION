@@ -19,8 +19,8 @@ RoxygenNote: 7.3.2
 URL: https://glycoverse.github.io/glymotif/
 Imports: 
     cli,
-    glyrepr (>= 0.1.0.9011),
-    glyparse (>= 0.0.0.9015),
+    glyrepr (>= 0.3.6),
+    glyparse (>= 0.1.1),
     igraph,
     purrr,
     rlang,

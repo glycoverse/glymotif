@@ -200,16 +200,16 @@ have_motif_ <- function(glycans, motif, alignment, ignore_linkages = FALSE) {
 
 
 .have_motif_single <- function(glycan_graph, motif_graph, alignment, ignore_linkages = FALSE) {
-  # This function is the core logic part of `.have_motif_single()`.
-  # It is used to check if a single glycan has a single motif.
+  # Optimized version with early termination
+  # Check if any match is valid, returning immediately on first valid match
   c_graphs <- colorize_graphs(glycan_graph, motif_graph)
   glycan_graph <- c_graphs$glycan
   motif_graph <- c_graphs$motif
   res <- perform_vf2(glycan_graph, motif_graph)
-  any(purrr::map_lgl(
+  purrr::some(
     res, is_valid_result, glycan = glycan_graph, motif = motif_graph,
     alignment = alignment, ignore_linkages = ignore_linkages
-  ))
+  )
 }
 
 # ----- Generic function for single motif mapping -----

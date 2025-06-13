@@ -122,36 +122,27 @@ describe_n_glycans <- function(glycans, strict = FALSE, parallel = FALSE) {
   }
 
   # Determine glycan types based on motif presence
-  glycan_type <- purrr::pmap_chr(
-    list(
-      pauciman = motif_has_matrix[, "pauciman"],
-      hybrid = motif_has_matrix[, "hybrid"], 
-      highman = motif_has_matrix[, "highman"]
-    ),
-    function(pauciman, hybrid, highman) {
-      if (pauciman) return("paucimannose")
-      if (hybrid) return("hybrid")
-      if (highman) return("highmannose")
-      return("complex")
-    }
-  )
+  # Extract logical vectors for each motif check
+  pauciman_results <- motif_has_matrix[, "pauciman"]
+  hybrid_results <- motif_has_matrix[, "hybrid"]
+  highman_results <- motif_has_matrix[, "highman"]
+  
+  # Use vectorized operations instead of purrr for better performance
+  glycan_type <- ifelse(pauciman_results, "paucimannose", 
+                 ifelse(hybrid_results, "hybrid",
+                 ifelse(highman_results, "highmannose", "complex")))
   
   # Determine number of antennae for complex glycans
-  n_antennae <- purrr::pmap_int(
-    list(
-      glycan_type = glycan_type,
-      ant4 = motif_has_matrix[, "ant4"],
-      ant3 = motif_has_matrix[, "ant3"],
-      ant2 = motif_has_matrix[, "ant2"]
-    ),
-    function(glycan_type, ant4, ant3, ant2) {
-      if (glycan_type != "complex") return(NA_integer_)
-      if (ant4) return(4L)
-      if (ant3) return(3L)
-      if (ant2) return(2L)
-      return(1L)
-    }
-  )
+  # Extract logical vectors for antenna checks
+  ant4_results <- motif_has_matrix[, "ant4"]
+  ant3_results <- motif_has_matrix[, "ant3"]
+  ant2_results <- motif_has_matrix[, "ant2"]
+  
+  # Use vectorized operations for antenna counting
+  n_antennae <- ifelse(glycan_type != "complex", NA_integer_,
+                ifelse(ant4_results, 4L,
+                ifelse(ant3_results, 3L,
+                ifelse(ant2_results, 2L, 1L))))
 
   # Build the result tibble
   res <- tibble::tibble(

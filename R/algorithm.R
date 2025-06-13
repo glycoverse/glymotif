@@ -28,18 +28,19 @@ perform_vf2 <- function(glycan, motif) {
 
 
 is_valid_result <- function(r, glycan, motif, alignment, ignore_linkages) {
-  # Early exit optimizations using short-circuit logic
-  # Check alignment first as it's usually the fastest
+  # Optimized early exit using most selective checks first
+  # Alignment check is often the most selective and fastest
   if (!alignment_check(r, glycan, motif, alignment = alignment)) {
     return(FALSE)
   }
   
-  # Check substituents
+  # Substituent check is relatively fast and often selective
   if (!substituent_check(r, glycan, motif, alignment = alignment)) {
     return(FALSE)
   }
   
   # Only check linkages and anomer if linkages are not ignored
+  # These are the most expensive checks, so do them last
   if (!ignore_linkages) {
     if (!linkage_check(r, glycan, motif, alignment = alignment)) {
       return(FALSE)
@@ -54,23 +55,30 @@ is_valid_result <- function(r, glycan, motif, alignment, ignore_linkages) {
 
 
 alignment_check <- function(r, glycan, motif, alignment) {
+  # Fast path for most common case
   if (alignment == "substructure") return(TRUE)
 
-  if (alignment == "whole") {
-    return(igraph::isomorphic(glycan, motif, method = "vf2"))
-  }
-
+  # Core alignment check (most common for N-glycan motifs)
   if (alignment == "core") {
     glycan_core <- core_node(glycan)
     motif_core <- core_node(motif)
     return(r[[motif_core]] == glycan_core)
   }
-
+  
+  # Terminal alignment check
   if (alignment == "terminal") {
     glycan_terminals <- terminal_nodes(glycan)
     motif_terminals <- terminal_nodes(motif)
     return(all(r[motif_terminals] %in% glycan_terminals))
   }
+
+  # Whole glycan alignment check (most expensive, do last)
+  if (alignment == "whole") {
+    return(igraph::isomorphic(glycan, motif, method = "vf2"))
+  }
+  
+  # Default return for unknown alignment types
+  return(FALSE)
 }
 
 
