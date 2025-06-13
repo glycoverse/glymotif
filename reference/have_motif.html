@@ -260,14 +260,16 @@ The function returns <code>TRUE</code> if any of the matches pass all checks.</p
 <span class="r-in"><span><span class="va">glycan1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://glycoverse.github.io/glyrepr/reference/n_glycan_core.html" class="external-link">o_glycan_core_2</a></span><span class="op">(</span>mono_type <span class="op">=</span> <span class="st">"concrete"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">glycan2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://glycoverse.github.io/glyparse/reference/parse_iupac_condensed.html" class="external-link">parse_iupac_condensed</a></span><span class="op">(</span><span class="st">"Gal(b1-?)[GlcNAc(b1-6)]GalNAc"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">glycans</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">glycan1</span>, <span class="va">glycan2</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">glycans</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"core2"</span>, <span class="st">"test_glycan"</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">motifs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Gal(b1-3)GalNAc"</span>, <span class="st">"Gal(b1-4)GalNAc"</span>, <span class="st">"GlcNAc(b1-6)GalNAc"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">result</span> <span class="op">&lt;-</span> <span class="fu">have_motifs</span><span class="op">(</span><span class="va">glycans</span>, <span class="va">motifs</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">result</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             Gal(b1-3)GalNAc Gal(b1-4)GalNAc GlcNAc(b1-6)GalNAc</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> core2                  TRUE           FALSE               TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> test_glycan           FALSE           FALSE               TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                                   Gal(b1-3)GalNAc Gal(b1-4)GalNAc</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Gal(b1-3)[GlcNAc(b1-6)]GalNAc(a1-            TRUE           FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> GlcNAc(b1-6)[Gal(b1-?)]GalNAc(?1-           FALSE           FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                                   GlcNAc(b1-6)GalNAc</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Gal(b1-3)[GlcNAc(b1-6)]GalNAc(a1-               TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> GlcNAc(b1-6)[Gal(b1-?)]GalNAc(?1-               TRUE</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
