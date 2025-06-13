@@ -50,8 +50,8 @@
 #'
 #' @return 
 #' - `count_motif()`: An integer vector indicating how many times each `glycan` has the `motif`.
-#' - `count_motifs()`: A tibble where the first column 'glycan' contains glycan identifiers,
-#'   and subsequent columns contain integer values indicating how many times each glycan has each motif.
+#' - `count_motifs()`: An integer matrix where rows correspond to glycans and columns correspond to motifs.
+#'   Row names contain glycan identifiers and column names contain motif identifiers.
 #'
 #' @examples
 #' library(glyparse)

@@ -32,8 +32,8 @@ Can be a single value (applied to all motifs) or a vector of the same length as 
 \value{
 \itemize{
 \item \code{count_motif()}: An integer vector indicating how many times each \code{glycan} has the \code{motif}.
-\item \code{count_motifs()}: A tibble where the first column 'glycan' contains glycan identifiers,
-and subsequent columns contain integer values indicating how many times each glycan has each motif.
+\item \code{count_motifs()}: An integer matrix where rows correspond to glycans and columns correspond to motifs.
+Row names contain glycan identifiers and column names contain motif identifiers.
 }
 }
 \description{

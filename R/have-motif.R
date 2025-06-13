@@ -103,8 +103,8 @@
 #'
 #' @return 
 #' - `have_motif()`: A logical vector indicating if each `glycan` has the `motif`.
-#' - `have_motifs()`: A tibble where the first column 'glycan' contains glycan identifiers,
-#'   and subsequent columns contain logical values indicating whether each glycan has each motif.
+#' - `have_motifs()`: A logical matrix where rows correspond to glycans and columns correspond to motifs.
+#'   Row names contain glycan identifiers and column names contain motif identifiers.
 #'
 #' @seealso [count_motif()], [count_motifs()]
 #'
@@ -176,9 +176,6 @@
 #' motifs <- c("Gal(b1-3)GalNAc", "Gal(b1-4)GalNAc", "GlcNAc(b1-6)GalNAc")
 #' result <- have_motifs(glycans, motifs)
 #' print(result)
-#'
-#' # Filter to see only positive matches
-#' result |> dplyr::filter(if_any(-glycan, ~ .x))
 #'
 #' @export
 have_motif <- function(glycans, motif, alignment = NULL, ignore_linkages = FALSE) {

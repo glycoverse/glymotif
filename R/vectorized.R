@@ -43,7 +43,11 @@ apply_motifs_to_glycans <- function(glycans, motifs, alignments, ignore_linkages
   # Set names for the results
   names(motif_results_list) <- motif_names
   
-  # Combine results into tibble
-  result_tibble <- c(list(glycan = glycan_names), motif_results_list)
-  tibble::as_tibble(result_tibble)
+  # Convert results to matrix format
+  # Each element in motif_results_list should be a vector of results for all glycans
+  result_matrix <- do.call(cbind, motif_results_list)
+  rownames(result_matrix) <- glycan_names
+  colnames(result_matrix) <- motif_names
+  
+  return(result_matrix)
 }

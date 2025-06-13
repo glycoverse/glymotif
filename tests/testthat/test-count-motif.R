@@ -37,17 +37,17 @@ test_that("count_motifs works with multiple motifs", {
   
   result <- count_motifs(glycans, motifs)
   
-  expect_s3_class(result, "tbl_df")
+  expect_true(is.matrix(result))
   expect_equal(nrow(result), 2)
-  expect_equal(ncol(result), 3)
-  expect_equal(names(result), c("glycan", "Gal(b1-3)GalNAc", "Gal(b1-"))
-  expect_equal(result$glycan, c("double_gal", "single_gal"))
+  expect_equal(ncol(result), 2)
+  expect_equal(colnames(result), c("Gal(b1-3)GalNAc", "Gal(b1-"))
+  expect_equal(rownames(result), c("double_gal", "single_gal"))
   
   # Check specific counts
-  expect_equal(unname(result[1, "Gal(b1-3)GalNAc"][[1]]), 1L)
-  expect_equal(unname(result[1, "Gal(b1-"][[1]]), 2L)
-  expect_equal(unname(result[2, "Gal(b1-3)GalNAc"][[1]]), 1L)
-  expect_equal(unname(result[2, "Gal(b1-"][[1]]), 1L)
+  expect_equal(result[1, "Gal(b1-3)GalNAc"], 1L)
+  expect_equal(result[1, "Gal(b1-"], 2L)
+  expect_equal(result[2, "Gal(b1-3)GalNAc"], 1L)
+  expect_equal(result[2, "Gal(b1-"], 1L)
 })
 
 
@@ -60,14 +60,14 @@ test_that("count_motifs works without glycan names", {
   
   result <- count_motifs(glycans, motifs)
   
-  expect_s3_class(result, "tbl_df")
+  expect_true(is.matrix(result))
   expect_equal(nrow(result), 2)
-  expect_equal(ncol(result), 3)
-  expect_equal(names(result), c("glycan", "Gal(b1-3)GalNAc", "Gal(b1-"))
+  expect_equal(ncol(result), 2)
+  expect_equal(colnames(result), c("Gal(b1-3)GalNAc", "Gal(b1-"))
   
-  # Check that glycan column contains IUPAC strings
-  expect_true(grepl("Gal\\(b1-3\\)", result$glycan[1]))
-  expect_true(grepl("Gal\\(b1-3\\)", result$glycan[2]))
+  # Check that row names contain IUPAC strings
+  expect_true(grepl("Gal\\(b1-3\\)", rownames(result)[1]))
+  expect_true(grepl("Gal\\(b1-3\\)", rownames(result)[2]))
 })
 
 
@@ -81,19 +81,19 @@ test_that("count_motifs works with complex branching motifs", {
   
   result <- count_motifs(glycans, motifs)
   
-  expect_s3_class(result, "tbl_df")
+  expect_true(is.matrix(result))
   expect_equal(nrow(result), 2)
-  expect_equal(ncol(result), 4)
+  expect_equal(ncol(result), 3)
   
   # Check complex structure counts
-  expect_equal(unname(result[1, "Man(b1-?)[Man(b1-?)]GalNAc"][[1]]), 1L)
-  expect_equal(unname(result[1, "Man(b1-"][[1]]), 2L)
-  expect_equal(unname(result[1, "Gal(b1-"][[1]]), 0L)
+  expect_equal(result[1, "Man(b1-?)[Man(b1-?)]GalNAc"], 1L)
+  expect_equal(result[1, "Man(b1-"], 2L)
+  expect_equal(result[1, "Gal(b1-"], 0L)
   
   # Check simple structure counts
-  expect_equal(unname(result[2, "Man(b1-?)[Man(b1-?)]GalNAc"][[1]]), 0L)
-  expect_equal(unname(result[2, "Man(b1-"][[1]]), 0L)
-  expect_equal(unname(result[2, "Gal(b1-"][[1]]), 1L)
+  expect_equal(result[2, "Man(b1-?)[Man(b1-?)]GalNAc"], 0L)
+  expect_equal(result[2, "Man(b1-"], 0L)
+  expect_equal(result[2, "Gal(b1-"], 1L)
 })
 
 
@@ -107,9 +107,9 @@ test_that("count_motifs works with different alignments", {
   
   result <- count_motifs(glycans, motifs, alignments = alignments)
   
-  expect_s3_class(result, "tbl_df")
+  expect_true(is.matrix(result))
   expect_equal(nrow(result), 2)
-  expect_equal(ncol(result), 3)
+  expect_equal(ncol(result), 2)
 })
 
 
@@ -122,9 +122,9 @@ test_that("count_motifs handles zero counts", {
   
   result <- count_motifs(glycans, motifs)
   
-  expect_s3_class(result, "tbl_df")
-  expect_true(all(result[["Man(b1-"]] == 0L))
-  expect_true(all(result[["Fuc(a1-"]] == 0L))
+  expect_true(is.matrix(result))
+  expect_true(all(result[, "Man(b1-"] == 0L))
+  expect_true(all(result[, "Fuc(a1-"] == 0L))
 })
 
 
@@ -166,9 +166,9 @@ test_that("count_motifs works with single alignment for all motifs", {
   
   result <- count_motifs(glycans, motifs, alignments = "substructure")
   
-  expect_s3_class(result, "tbl_df")
+  expect_true(is.matrix(result))
   expect_equal(nrow(result), 2)
-  expect_equal(ncol(result), 3)
+  expect_equal(ncol(result), 2)
 })
 
 
@@ -181,6 +181,6 @@ test_that("count_motifs works with ignore_linkages", {
   result_normal <- count_motifs(glycans, motifs, ignore_linkages = FALSE)
   result_ignore <- count_motifs(glycans, motifs, ignore_linkages = TRUE)
   
-  expect_equal(unname(result_normal[1, "Gal(b1-4)GalNAc"][[1]]), 0L)
-  expect_equal(unname(result_ignore[1, "Gal(b1-4)GalNAc"][[1]]), 1L)
+  expect_equal(result_normal[1, "Gal(b1-4)GalNAc"], 0L)
+  expect_equal(result_ignore[1, "Gal(b1-4)GalNAc"], 1L)
 })

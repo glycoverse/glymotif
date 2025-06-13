@@ -373,20 +373,20 @@ test_that("have_motifs works with multiple motifs", {
   
   result <- have_motifs(glycans, motifs)
   
-  expect_s3_class(result, "tbl_df")
+  expect_true(is.matrix(result))
   expect_equal(nrow(result), 2)
-  expect_equal(ncol(result), 4)
-  expect_equal(names(result), c("glycan", "Gal(b1-3)GalNAc", "Gal(b1-4)GalNAc", "GlcNAc(b1-6)GalNAc"))
-  expect_equal(result$glycan, c("core2", "test_glycan"))
+  expect_equal(ncol(result), 3)
+  expect_equal(colnames(result), c("Gal(b1-3)GalNAc", "Gal(b1-4)GalNAc", "GlcNAc(b1-6)GalNAc"))
+  expect_equal(rownames(result), c("core2", "test_glycan"))
   
   # Check specific results
-  expect_true(result[1, "Gal(b1-3)GalNAc"][[1]])
-  expect_false(result[1, "Gal(b1-4)GalNAc"][[1]])
-  expect_true(result[1, "GlcNAc(b1-6)GalNAc"][[1]])
+  expect_true(result[1, "Gal(b1-3)GalNAc"])
+  expect_false(result[1, "Gal(b1-4)GalNAc"])
+  expect_true(result[1, "GlcNAc(b1-6)GalNAc"])
   
-  expect_false(result[2, "Gal(b1-3)GalNAc"][[1]])
-  expect_false(result[2, "Gal(b1-4)GalNAc"][[1]])
-  expect_true(result[2, "GlcNAc(b1-6)GalNAc"][[1]])
+  expect_false(result[2, "Gal(b1-3)GalNAc"])
+  expect_false(result[2, "Gal(b1-4)GalNAc"])
+  expect_true(result[2, "GlcNAc(b1-6)GalNAc"])
 })
 
 
@@ -399,14 +399,14 @@ test_that("have_motifs works without glycan names", {
   
   result <- have_motifs(glycans, motifs)
   
-  expect_s3_class(result, "tbl_df")
+  expect_true(is.matrix(result))
   expect_equal(nrow(result), 2)
-  expect_equal(ncol(result), 3)
-  expect_equal(names(result), c("glycan", "Gal(b1-3)GalNAc", "GlcNAc(b1-6)GalNAc"))
+  expect_equal(ncol(result), 2)
+  expect_equal(colnames(result), c("Gal(b1-3)GalNAc", "GlcNAc(b1-6)GalNAc"))
   
-  # Check that glycan column contains IUPAC strings
-  expect_true(grepl("Gal\\(b1-3\\)", result$glycan[1]))
-  expect_true(grepl("Gal\\(b1-\\?\\)", result$glycan[2]))
+  # Check that row names contain IUPAC strings
+  expect_true(grepl("Gal\\(b1-3\\)", rownames(result)[1]))
+  expect_true(grepl("Gal\\(b1-\\?\\)", rownames(result)[2]))
 })
 
 
@@ -420,9 +420,9 @@ test_that("have_motifs works with different alignments", {
   
   result <- have_motifs(glycans, motifs, alignments = alignments)
   
-  expect_s3_class(result, "tbl_df")
+  expect_true(is.matrix(result))
   expect_equal(nrow(result), 2)
-  expect_equal(ncol(result), 3)
+  expect_equal(ncol(result), 2)
 })
 
 
@@ -464,9 +464,9 @@ test_that("have_motifs works with single alignment for all motifs", {
   
   result <- have_motifs(glycans, motifs, alignments = "substructure")
   
-  expect_s3_class(result, "tbl_df")
+  expect_true(is.matrix(result))
   expect_equal(nrow(result), 2)
-  expect_equal(ncol(result), 3)
+  expect_equal(ncol(result), 2)
 })
 
 
@@ -479,6 +479,6 @@ test_that("have_motifs works with ignore_linkages", {
   result_normal <- have_motifs(glycans, motifs, ignore_linkages = FALSE)
   result_ignore <- have_motifs(glycans, motifs, ignore_linkages = TRUE)
   
-  expect_false(result_normal[1, "Gal(b1-4)GalNAc"][[1]])
-  expect_true(result_ignore[1, "Gal(b1-4)GalNAc"][[1]])
+  expect_false(result_normal[1, "Gal(b1-4)GalNAc"])
+  expect_true(result_ignore[1, "Gal(b1-4)GalNAc"])
 })

@@ -32,8 +32,8 @@ Can be a single value (applied to all motifs) or a vector of the same length as 
 \value{
 \itemize{
 \item \code{have_motif()}: A logical vector indicating if each \code{glycan} has the \code{motif}.
-\item \code{have_motifs()}: A tibble where the first column 'glycan' contains glycan identifiers,
-and subsequent columns contain logical values indicating whether each glycan has each motif.
+\item \code{have_motifs()}: A logical matrix where rows correspond to glycans and columns correspond to motifs.
+Row names contain glycan identifiers and column names contain motif identifiers.
 }
 }
 \description{
@@ -198,9 +198,6 @@ names(glycans) <- c("core2", "test_glycan")
 motifs <- c("Gal(b1-3)GalNAc", "Gal(b1-4)GalNAc", "GlcNAc(b1-6)GalNAc")
 result <- have_motifs(glycans, motifs)
 print(result)
-
-# Filter to see only positive matches
-result |> dplyr::filter(if_any(-glycan, ~ .x))
 
 }
 \seealso{
