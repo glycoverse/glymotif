@@ -86,28 +86,82 @@ describe_n_glycans <- function(glycans, strict = FALSE, parallel = FALSE) {
   if (!strict) {
     glycans <- glyrepr::convert_mono_type(glycans, to = "generic")
   }
-  hf <- purrr::partial(have_n_glycan_motif, strict = strict)
-  cf <- purrr::partial(count_n_glycan_motif, strict = strict)
-
+  
+  # Separate motifs that only need presence/absence from those that need counting
+  have_motif_names <- c("core", "pauciman", "hybrid", "highman", "bisect", "ant2", "ant3", "ant4")
+  have_motifs <- purrr::map(have_motif_names, ~ get_n_glycan_motif(.x, generic = !strict))
+  names(have_motifs) <- have_motif_names
+  
+  have_alignments <- c(
+    core = "core", pauciman = "whole", hybrid = "core", highman = "core",
+    bisect = "core", ant2 = "core", ant3 = "core", ant4 = "core"
+  )
+  
+  count_motif_names <- c("core_fuc", "arm_fuc", "gal")
+  count_motifs <- purrr::map(count_motif_names, ~ get_n_glycan_motif(.x, generic = !strict))
+  names(count_motifs) <- count_motif_names
+  
+  count_alignments <- c(
+    core_fuc = "core", arm_fuc = "core", gal = "substructure"
+  )
+  
+  # Use vectorized functions
+  motif_has_matrix <- have_motifs_(glycans, have_motifs, have_alignments, ignore_linkages = !strict)
+  motif_count_matrix <- count_motifs_(glycans, count_motifs, count_alignments, ignore_linkages = !strict)
+  
+  # Add terminal galactose counts (using gal motif with terminal alignment)
+  terminal_gal_motif <- list(gal = get_n_glycan_motif("gal", generic = !strict))
+  terminal_gal_counts <- count_motifs_(glycans, terminal_gal_motif, 
+                                       c(gal = "terminal"), ignore_linkages = !strict)
+  
   # Check if the glycans are N-glycans
-  invalid_indices <- which(!glyrepr::smap_lgl(glycans, ~ .is_n_glycan(.x, hf, cf)))
+  is_n_glycan <- motif_has_matrix[, "core"]
+  invalid_indices <- which(!is_n_glycan)
   if (length(invalid_indices) > 0) {
     cli::cli_abort("Glycans at indices {.val {invalid_indices}} are not N-glycans.")
   }
 
-  # Get the properties
-  glycan_type <- glyrepr::smap_chr(glycans, ~ .n_glycan_type(.x, hf, cf))
+  # Determine glycan types based on motif presence
+  glycan_type <- purrr::pmap_chr(
+    list(
+      pauciman = motif_has_matrix[, "pauciman"],
+      hybrid = motif_has_matrix[, "hybrid"], 
+      highman = motif_has_matrix[, "highman"]
+    ),
+    function(pauciman, hybrid, highman) {
+      if (pauciman) return("paucimannose")
+      if (hybrid) return("hybrid")
+      if (highman) return("highmannose")
+      return("complex")
+    }
+  )
+  
+  # Determine number of antennae for complex glycans
+  n_antennae <- purrr::pmap_int(
+    list(
+      glycan_type = glycan_type,
+      ant4 = motif_has_matrix[, "ant4"],
+      ant3 = motif_has_matrix[, "ant3"],
+      ant2 = motif_has_matrix[, "ant2"]
+    ),
+    function(glycan_type, ant4, ant3, ant2) {
+      if (glycan_type != "complex") return(NA_integer_)
+      if (ant4) return(4L)
+      if (ant3) return(3L)
+      if (ant2) return(2L)
+      return(1L)
+    }
+  )
+
+  # Build the result tibble
   res <- tibble::tibble(
     glycan_type = glycan_type,
-    bisecting = glyrepr::smap_lgl(glycans, ~ .has_bisecting(.x, hf, cf)),
-    n_antennae = glyrepr::smap2_int(
-      glycans, glycan_type == "complex",
-      ~ .n_antennae(.x, hf, cf, is_complex = .y)
-    ),
-    n_core_fuc = glyrepr::smap_int(glycans, ~ .n_core_fuc(.x, hf, cf)),
-    n_arm_fuc = glyrepr::smap_int(glycans, ~ .n_arm_fuc(.x, hf, cf)),
-    n_gal = glyrepr::smap_int(glycans, ~ .n_gal(.x, hf, cf)),
-    n_terminal_gal = glyrepr::smap_int(glycans, ~ .n_terminal_gal(.x, hf, cf))
+    bisecting = motif_has_matrix[, "bisect"],
+    n_antennae = n_antennae,
+    n_core_fuc = motif_count_matrix[, "core_fuc"],
+    n_arm_fuc = motif_count_matrix[, "arm_fuc"],
+    n_gal = motif_count_matrix[, "gal"],
+    n_terminal_gal = as.integer(terminal_gal_counts[, "gal"])
   )
 
   # Add the glycan name column
