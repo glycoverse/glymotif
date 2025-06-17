@@ -1,0 +1,345 @@
+---
+title: "Getting Started with glymotif"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Getting Started with glymotif}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## What is a Glycan Motif? 🧬
+
+Imagine you're looking at a complex glycan structure—those intricate branched molecules that decorate your cells.
+Hidden within these molecular architectures are recurring patterns called "motifs."
+Think of them as the molecular equivalent of architectural motifs: 
+recognizable design elements that appear across different buildings (or in this case, 
+different glycans).
+
+A glycan motif is simply a substructure that appears in multiple glycans.
+(Don't confuse this with protein motifs—we're talking about carbohydrates here! 🍭)
+Some famous examples include the N-glycan core, 
+Lewis X antigen, 
+and the Tn antigen.
+
+## Why Should You Care? 🤔
+
+Here's where it gets exciting: 
+these motifs aren't just decorative—they're functional.
+They determine how cells interact, 
+how pathogens bind, 
+and how your immune system recognizes friend from foe.
+
+This package, 
+`glymotif`, 
+is your computational microscope 🔬 for advanced glycan motif analysis.
+It helps you answer two fundamental questions:
+
+- **Does this glycan contain a specific motif?**
+- **How many times does this motif appear?**
+
+The best part? ✨
+Everything works with vectors of glycans, 
+so you can analyze hundreds or thousands at once.
+
+**Important note:** This package builds on the powerful [glyrepr](https://github.com/glycoverse/glyrepr) package.
+If you haven't used it before, 
+we highly recommend checking out its [introduction](https://glycoverse.github.io/glyrepr/articles/glyrepr.html) first.
+
+```{r setup}
+library(glymotif)
+```
+
+## A Quick Challenge 🧩
+
+Let's start with a visual puzzle.
+Can you tell if the glycan on the left contains the motif on the right?
+
+![](img/intro_example.png)
+
+If you said "yes," 
+congratulations—you have a keen eye! 👀
+But what if I gave you 500 glycans and 20 motifs to check?
+That's where `glymotif` becomes indispensable.
+
+Let's see it in action using IUPAC-condensed notation 
+(the standard text format for glycans in the `glycoverse` ecosystem).
+If this notation looks unfamiliar, 
+don't worry—check out [this helpful guide](https://glycoverse.github.io/glyrepr/articles/iupac.html) first.
+
+```{r}
+glycans <- c(
+  "Neu5Ac(a2-3)Gal(b1-3)[Fuc(a1-3)]GlcNAc(b1-3)Gal(b1-3)GalNAc",
+  "Neu5Ac(a2-?)Gal(b1-3)[Fuc(a1-3)]GlcNAc",
+  "Man(b1-4)GlcNAc(b1-4)[Fuc(a1-6)]GlcNAc",
+  "Gal(b1-3)GalNAc",
+  "Neu5Ac9Ac(a2-3)Gal(b1-4)GlcNAc"
+)
+motif <- "Neu5Ac(a2-3)Gal(b1-3)[Fuc(a1-3)]GlcNAc"
+have_motif(glycans, motif)
+```
+
+Pretty neat, 
+right? 😎
+
+## Your Toolkit: Four Essential Functions 🛠️
+
+`glymotif` provides four core functions that work together like a well-designed instrument panel:
+
+- **`have_motif()`**: Returns TRUE/FALSE for each glycan—does it contain the motif?
+- **`count_motif()`**: Returns numbers—how many times does the motif appear?
+- **`have_motifs()`**: The plural version—checks multiple motifs at once, 
+returns a matrix
+- **`count_motifs()`**: Counts multiple motifs simultaneously, 
+returns a matrix
+
+### Why the Plural Functions? 🤷‍♀️
+
+You might wonder: 
+"Why not just use `have_motif()` in a loop?"
+Great question! 💭
+There are two compelling reasons:
+
+**1. Predictable output format** 📊
+Just like the `purrr` package has different `map` functions for different return types, 
+our functions guarantee consistent outputs.
+The singular functions return vectors; 
+the plural functions return matrices.
+No surprises, 
+no wrestling with data types.
+
+**2. Optimized performance** ⚡
+The plural functions are specifically optimized for multiple motifs.
+They're significantly faster than looping or using `purrr::map()` because they avoid redundant computations.
+
+### Seeing Them in Action
+
+Let's define some motifs to work with:
+
+```{r}
+motifs <- c(
+  "Neu5Ac(a2-3)Gal(b1-3)[Fuc(a1-3)]GlcNAc",
+  "Fuc(a1-",
+  "Gal(b1-3)GalNAc"
+)
+```
+
+All functions follow the same pattern:
+
+- **First argument:** your glycans (as IUPAC strings or a `glyrepr::glycan_structure()` object)
+- **Second argument:** your motif(s) (IUPAC strings, 
+a `glyrepr::glycan_structure()` object, 
+or predefined motif names)
+
+```{r}
+have_motif(glycans, motif)
+```
+
+```{r}
+unname(have_motifs(glycans, motifs))  # Removing names for cleaner display
+```
+
+**Pro tip:** 💡 You don't need to memorize complex IUPAC strings!
+Use predefined motif names instead:
+
+```{r}
+available_motifs()[1:10]
+```
+
+```{r}
+have_motif(glycans, "Type 2 LN2")
+```
+
+## The Art and Science of Motif Matching 🎨🔬
+
+Now we enter the fascinating complexity of motif recognition.
+You might think: 
+"It's just pattern matching, 
+right?"
+Well, 
+not quite. 🤨
+
+Real-world glycan data is beautifully messy:
+
+- **Missing linkage information**: Sometimes we only know "there's a link" but not its exact type
+- **Generic monosaccharides**: Mass spectrometry might only tell us "Hex" instead of "Glucose"
+- **Chemical modifications**: Sulfation, 
+acetylation, 
+and other decorations add complexity
+- **Positional constraints**: Some motifs only "count" when they appear in specific locations
+
+Consider the Tn antigen—it's just a single GalNAc residue.
+But it shouldn't match every GalNAc in a complex N-glycan, 
+should it?
+Context matters.
+
+Similarly, 
+an O-glycan core motif should only be recognized at the reducing end, 
+not buried in the middle of a structure.
+
+`glymotif` handles all these complexities through its sophisticated matching engine.
+The algorithm considers structural context, 
+chemical modifications, 
+and biological relevance to make intelligent matching decisions.
+
+For the full technical details, 
+dive into the documentation for `have_motif()`—it's quite a journey!
+
+## A Special Focus: N-Glycan Analysis 🎯
+
+If you work with N-linked glycans (N-glycans), 
+you're in for a treat! 🎉
+These are the most extensively studied and well-characterized glycans in biology, 
+and `glymotif` has specialized tools just for them.
+
+### Why N-Glycans Deserve Special Attention
+
+N-glycans are remarkable for their structural predictability.
+Unlike their wild cousins (O-glycans and others), 
+N-glycans follow strict biosynthetic rules.
+This constraint creates opportunities: 
+we can describe N-glycan architecture using a standardized vocabulary that glycobiologists have developed over decades.
+
+Think of it like describing houses in a planned community—while each house is unique, 
+they all follow the same architectural principles.
+You can meaningfully ask: 
+"How many bedrooms?" 
+"Does it have a garage?" 
+"What style is the roof?"
+
+For N-glycans, 
+the equivalent questions are:
+
+- **What type is it?** (high mannose, hybrid, complex, or paucimannose)
+- **How many antenna branches?**
+- **Does it have a bisecting GlcNAc?**
+- **How many core fucoses?**
+- **How many arm fucoses?**
+- **How many terminal galactoses?**
+
+### Your N-Glycan Analysis Toolkit
+
+`glymotif` provides a comprehensive suite of functions for N-glycan characterization:
+
+**Classification and Structure:**
+
+- `is_n_glycan()`: Confirms whether your structure is actually an N-glycan
+- `n_glycan_type()`: Classifies as high mannose, 
+hybrid, 
+complex, 
+or paucimannose
+
+**Branching Architecture:**
+
+- `n_antennae()`: Counts the number of antenna branches
+- `has_bisecting()`: Detects bisecting GlcNAc presence
+
+**Fucosylation Patterns:**
+
+- `n_core_fuc()`: Counts core fucoses (attached to the reducing-end GlcNAc)
+- `n_arm_fuc()`: Counts arm fucoses (attached to antenna GlcNAcs)
+
+**Terminal Features:**
+
+- `n_gal()`: Counts total galactose residues
+- `n_terminal_gal()`: Counts terminal galactoses (those without sialic acid caps)
+
+### The Swiss Army Knife: `describe_n_glycans()` 🔧
+
+Rather than calling each function individually, 
+you can use `describe_n_glycans()` to get a complete structural profile in one go.
+It's like having a comprehensive building inspection that checks everything at once:
+
+```{r}
+n_glycans <- c(
+  "Man(a1-3)[Man(a1-3)Man(a1-6)]Man(b1-4)GlcNAc(b1-4)GlcNAc",
+  "GlcNAc(b1-2)Man(a1-3)[Man(a1-6)]Man(b1-4)GlcNAc(b1-4)[Fuc(a1-6)]GlcNAc",
+  "Gal(b1-4)GlcNAc(b1-2)Man(a1-3)[Gal(b1-4)GlcNAc(b1-2)Man(a1-6)]Man(b1-4)GlcNAc(b1-4)GlcNAc"
+)
+describe_n_glycans(n_glycans)
+```
+
+### Embracing the Messy Reality: Working with Ambiguous Data 🌪️
+
+Here's where `glymotif` truly shines—it thrives on incomplete information! ✨
+In the real world of glycomics or glycoproteomics research, 
+you rarely get perfect structural data.
+Mass spectrometry might only tell you "there's a hexose here" without specifying 
+whether it's glucose, galactose, or mannose.
+Linkage information might be completely missing or uncertain.
+
+**The beauty of N-glycan analysis?** 💎
+The strict biosynthetic rules act as a Rosetta Stone, 
+allowing us to decode meaning from ambiguous data.
+
+Our functions are designed to work with minimal information requirements:
+
+- **Generic monosaccharides**: "Hex", "HexNAc", "dHex", instead of specific sugars
+- **Missing linkages**: Those mysterious "??" annotations won't stop the analysis
+- **Uncertain positions**: The algorithm makes intelligent assumptions based on N-glycan biology
+
+Let's see this in action with some intentionally ambiguous structures:
+
+```{r}
+# These are the same N-glycans as before, but with all specificity stripped away
+ambiguous_glycans <- c(
+  "Hex(??-?)[Hex(??-?)Hex(??-?)]Hex(??-?)HexNAc(??-?)HexNAc",
+  "HexNAc(??-?)Hex(??-?)[Hex(??-?)]Hex(??-?)HexNAc(??-?)[dHex(??-?)]HexNAc",
+  "Hex(??-?)HexNAc(??-?)Hex(??-?)[Hex(??-?)HexNAc(??-?)Hex(??-?)]Hex(??-?)HexNAc(??-?)HexNAc"
+)
+describe_n_glycans(ambiguous_glycans)
+```
+
+**Remarkable, isn't it?** 🤯
+Despite the uncertainty in the input data, 
+we get the same structural insights as before.
+
+This tolerance for ambiguity is a game-changer for high-throughput glycomics and glycoproteomics. 🚀
+Whether you're analyzing thousands of glycopeptides from a proteomics experiment or working with automated glycan assignment from mass spectra, 
+`glymotif` meets your data where it is—not where you wish it were.
+
+### Playing Well with Others: Package Integration 🤝
+
+The real power of `glymotif` shines when it works alongside other tools in the `glycoverse` ecosystem.
+If you're already using `glyread` to import your glycoproteomics results and `glyexp` to manage your experimental data, you're in luck! 
+
+There's a seamless integration waiting for you: 
+the `glyexp::add_glycan_description()` function can automatically apply all the N-glycan analysis we just discussed to your entire dataset.
+No manual loops, 
+no data wrangling headaches—just one function call to enrich your glycan annotations with comprehensive structural descriptions.
+
+Here's how it works in practice:
+
+```{r, eval=FALSE}
+library(glyread)
+library(glyexp)
+
+# Read your glycoproteomics results
+exp <- read_pglyco3_pglycoquant("results.list")
+
+# Add N-glycan structural descriptions automatically
+exp <- add_glycan_description(exp)
+
+# Now your experiment object contains rich glycan annotations!
+```
+
+**What happens behind the scenes?** 🎭
+The function identifies N-glycan structures in your data, 
+runs `describe_n_glycans()` on them, 
+and seamlessly integrates the results into your experiment's variable information table.
+It's like having a personal glycan analyst working 24/7!
+
+## Standing on the Shoulders of Giants 🏔️
+
+This work wouldn't be possible without the inspiration and groundwork laid by several excellent projects:
+
+- [glycowork](https://github.com/BojarLab/glycowork): A comprehensive Python toolkit for glycan analysis 🐍
+- [GlyCompare](https://github.com/LewisLabUCSD/GlyCompare): Advanced glycan comparison algorithms 🔬
+
+We're proud to contribute to this growing ecosystem of computational glycobiology tools! 🌱
