@@ -29,6 +29,23 @@ You can install the development version of glymotif from
 pak::pak("glycoverse/glymotif")
 ```
 
+## Documentation
+
+-   🚀 Get started:
+    [Here](https://glycoverse.github.io/glymotif/articles/motif-matching.html)
+-   🔧 Motif matching rules:
+    [Here](https://glycoverse.github.io/glymotif/articles/motif-matching.html)
+-   📚 Reference:
+    [Here](https://glycoverse.github.io/glymotif/reference/index.html)
+
+## Role in `glycoverse`
+
+`glymotif` provides possibilities for one important job in
+glyco-bioinformatics: to detect motifs in glycans. The package is
+designed to be used directly by users for structural analysis, as well
+as to provide backend support for other packages in the `glycoverse`
+ecosystem.
+
 ## Example
 
 ``` r
