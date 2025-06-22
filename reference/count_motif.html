@@ -19,7 +19,7 @@ count_motifs() counts multiple motifs in multiple glycans
 
     <a class="navbar-brand me-2" href="../index.html">glymotif</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.3</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -29,6 +29,7 @@ count_motifs() counts multiple motifs in multiple glycans
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto"><li class="nav-item"><a class="nav-link" href="../articles/glymotif.html">Get started</a></li>
 <li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
+<li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
       </ul></div>
@@ -161,6 +162,21 @@ substituents, and implementation, see <code><a href="have_motif.html">have_motif
 <span class="r-out co"><span class="r-pr">#&gt;</span>                                            Gal(b1-3)GalNAc Gal(b1- Man(b1-</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Gal(b1-3)Gal(b1-3)GalNAc(?1-                             1       2       0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Man(b1-?)[Man(b1-?)]GalNAc(b1-4)GlcNAc(?1-               0       0       2</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Monosaccharide type matching examples</span></span></span>
+<span class="r-in"><span><span class="co"># Concrete glycan vs generic motif: matches (glycan converted to generic)</span></span></span>
+<span class="r-in"><span><span class="fu">count_motif</span><span class="op">(</span><span class="st">"Man"</span>, <span class="st">"Hex"</span><span class="op">)</span>  <span class="co"># Returns 1</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 1</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Generic glycan vs concrete motif: doesn't match</span></span></span>
+<span class="r-in"><span><span class="fu">count_motif</span><span class="op">(</span><span class="st">"Hex"</span>, <span class="st">"Man"</span><span class="op">)</span>  <span class="co"># Returns 0</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Matrix example showing type matching rules</span></span></span>
+<span class="r-in"><span><span class="fu">count_motifs</span><span class="op">(</span>glycans <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Hex"</span>, <span class="st">"Man"</span><span class="op">)</span>, motifs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Hex"</span>, <span class="st">"Man"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     Hex Man</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Hex   1   0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Man   1   1</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
