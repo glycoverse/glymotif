@@ -40,14 +40,6 @@
     Output
       [1] FALSE
 
-# generic glycan and concrete motif
-
-    Code
-      have_motif(glycan, motif)
-    Condition
-      Error in `ensure_glycans_mono_type()`:
-      ! `generic` glycans cannot be compared with `concrete` motifs.
-
 # custom alignment is different from database
 
     Code

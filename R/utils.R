@@ -13,10 +13,8 @@ prepare_have_motifs_args <- function(glycans, motifs, alignments, ignore_linkage
   glycans <- ensure_glycans_are_structures(glycans)
   motifs <- ensure_motifs_are_structures(motifs, motif_type)
 
-  # Ensure that `glycan` and `motif` have the same monosaccharide type
-  # To ensure strict comparison, if the glycan type is lower than the motif type,
-  # an error will be raised by `ensure_glycans_mono_type()`.
-  glycans <- ensure_glycans_mono_type(glycans, motifs[[1]])
+  # Note: We no longer enforce global mono type consistency here.
+  # Each motif will handle its own type conversion in apply_single_motif_to_glycans.
 
   list(glycans = glycans, motifs = motifs, alignments = alignments, ignore_linkages = ignore_linkages)
 }

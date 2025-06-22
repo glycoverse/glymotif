@@ -75,6 +75,16 @@
 #' result <- count_motifs(glycans, motifs)
 #' print(result)
 #'
+#' # Monosaccharide type matching examples
+#' # Concrete glycan vs generic motif: matches (glycan converted to generic)
+#' count_motif("Man", "Hex")  # Returns 1
+#' 
+#' # Generic glycan vs concrete motif: doesn't match
+#' count_motif("Hex", "Man")  # Returns 0
+#' 
+#' # Matrix example showing type matching rules
+#' count_motifs(glycans = c("Hex", "Man"), motifs = c("Hex", "Man"))
+#'
 #' @export
 count_motif <- function(glycans, motif, alignment = NULL, ignore_linkages = FALSE) {
   params <- prepare_have_motif_args(glycans, motif, alignment, ignore_linkages)

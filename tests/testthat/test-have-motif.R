@@ -60,7 +60,7 @@ test_that("concrete glycan and generic motif", {
 test_that("generic glycan and concrete motif", {
   glycan <- glyrepr::o_glycan_core_2(mono_type = "generic")
   motif <- glyparse::parse_iupac_condensed("Gal(b1-3)GalNAc")
-  expect_snapshot(have_motif(glycan, motif), error = TRUE)
+  expect_false(have_motif(glycan, motif))
 })
 
 
@@ -480,4 +480,135 @@ test_that("have_motifs works with ignore_linkages", {
   
   expect_false(result_normal[1, "Gal(b1-4)GalNAc"])
   expect_true(result_ignore[1, "Gal(b1-4)GalNAc"])
+})
+
+
+# ========== Monosaccharide Type Matching ==========
+test_that("have_motif: concrete glycan matches generic motif", {
+  # Man (concrete) should match Hex (generic) after conversion
+  expect_true(have_motif("Man", "Hex"))
+  expect_true(have_motif("Gal", "Hex"))
+  expect_true(have_motif("Glc", "Hex"))
+})
+
+test_that("have_motif: generic glycan does not match concrete motif", {
+  # Hex (generic) should not match Man (concrete) - names don't match
+  expect_false(have_motif("Hex", "Man"))
+  expect_false(have_motif("Hex", "Gal"))
+  expect_false(have_motif("Hex", "Glc"))
+})
+
+test_that("have_motif: same type matches", {
+  # Concrete vs concrete - exact match
+  expect_true(have_motif("Man", "Man"))
+  expect_true(have_motif("Gal", "Gal"))
+  
+  # Generic vs generic - exact match
+  expect_true(have_motif("Hex", "Hex"))
+  expect_true(have_motif("HexNAc", "HexNAc"))
+})
+
+test_that("have_motif: complex structures with type conversion", {
+  # Complex structure: concrete glycan should match when motif is generic
+  concrete_glycan <- "Gal(b1-3)GalNAc"
+  generic_motif <- "Hex(b1-3)HexNAc"
+  expect_true(have_motif(concrete_glycan, generic_motif))
+  
+  # Reverse should not match
+  generic_glycan <- "Hex(b1-3)HexNAc"
+  concrete_motif <- "Gal(b1-3)GalNAc"
+  expect_false(have_motif(generic_glycan, concrete_motif))
+})
+
+test_that("have_motifs: matrix with mixed types", {
+  # Test the key example from the user's original question
+  glycans <- c("Hex", "Man")
+  motifs <- c("Hex", "Man")
+  
+  result <- have_motifs(glycans, motifs)
+  
+  # Check structure
+  expect_true(is.matrix(result))
+  expect_equal(dim(result), c(2, 2))
+  expect_equal(rownames(result), c("Hex", "Man"))
+  expect_equal(colnames(result), c("Hex", "Man"))
+  
+  # Check expected results
+  expect_true(result["Hex", "Hex"])    # generic vs generic: match
+  expect_false(result["Hex", "Man"])   # generic vs concrete: no match
+  expect_true(result["Man", "Hex"])    # concrete vs generic: match (after conversion)
+  expect_true(result["Man", "Man"])    # concrete vs concrete: match
+})
+
+test_that("have_motifs: only concrete motifs", {
+  # Test case that used to throw error
+  glycans <- c("Hex", "Man")
+  motifs <- c("Man")
+  
+  result <- have_motifs(glycans, motifs)
+  
+  expect_true(is.matrix(result))
+  expect_equal(dim(result), c(2, 1))
+  expect_equal(rownames(result), c("Hex", "Man"))
+  expect_equal(colnames(result), c("Man"))
+  
+  # Only Man glycan should match Man motif
+  expect_false(result["Hex", "Man"])   # generic glycan vs concrete motif: no match
+  expect_true(result["Man", "Man"])    # concrete glycan vs concrete motif: match
+})
+
+test_that("have_motifs: only generic motifs", {
+  glycans <- c("Hex", "Man", "Gal")
+  motifs <- c("Hex")
+  
+  result <- have_motifs(glycans, motifs)
+  
+  expect_true(is.matrix(result))
+  expect_equal(dim(result), c(3, 1))
+  expect_equal(rownames(result), c("Hex", "Man", "Gal"))
+  expect_equal(colnames(result), c("Hex"))
+  
+  # All should match the generic motif
+  expect_true(result["Hex", "Hex"])    # generic vs generic: match
+  expect_true(result["Man", "Hex"])    # concrete vs generic: match (after conversion)
+  expect_true(result["Gal", "Hex"])    # concrete vs generic: match (after conversion)
+})
+
+test_that("have_motifs: complex mixed type scenarios", {
+  # More complex test with various type combinations
+  glycans <- c("Hex", "Man", "Gal", "HexNAc", "GalNAc")
+  motifs <- c("Hex", "Man", "HexNAc", "Fuc")
+  
+  result <- have_motifs(glycans, motifs)
+  
+  expect_true(is.matrix(result))
+  expect_equal(dim(result), c(5, 4))
+  
+  # Test some key combinations
+  expect_true(result["Hex", "Hex"])      # generic vs generic
+  expect_false(result["Hex", "Man"])     # generic vs concrete
+  expect_true(result["Man", "Hex"])      # concrete vs generic (Man converts to Hex)
+  expect_true(result["Man", "Man"])      # concrete vs concrete (same)
+  expect_false(result["Man", "HexNAc"])  # concrete vs concrete (different)
+  expect_true(result["GalNAc", "HexNAc"]) # concrete vs generic (GalNAc converts to HexNAc)
+})
+
+test_that("have_motif: vectorized glycans with single motif", {
+  # Test vectorized behavior with mixed types
+  glycans <- c("Hex", "Man", "Gal")
+  motif <- "Hex"  # generic motif
+  
+  result <- have_motif(glycans, motif)
+  
+  expect_length(result, 3)
+  expect_true(all(result))  # All should match the generic motif
+  
+  # Test with concrete motif
+  motif <- "Man"  # concrete motif
+  result <- have_motif(glycans, motif)
+  
+  expect_length(result, 3)
+  expect_false(result[1])  # Hex should not match Man
+  expect_true(result[2])   # Man should match Man
+  expect_false(result[3])  # Gal should not match Man
 })

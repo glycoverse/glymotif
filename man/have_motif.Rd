@@ -47,13 +47,24 @@ Technically speaking, they perform subgraph isomorphism tests to
 determine if the \code{motif}(s) are subgraphs of the \code{glycan}s.
 Monosaccharides, linkages, and substituents are all considered.
 }
-\section{Graph mode and monosaccharide type}{
-Both \code{glycan} and \code{motif} should be 'glyrepr_structure' objects
-(see \code{\link[glyrepr:glycan_structure]{glyrepr::glycan_structure()}}).
-
-Also, they can have different monosaccharide types
+\section{Monosaccharide type}{
+They can have different monosaccharide types
 ("concrete" or "generic", see \code{\link[glyrepr:get_mono_type]{glyrepr::get_mono_type()}}).
-However, a "concrete" motif cannot be matched to a "generic" glycan.
+The matching rules are:
+\itemize{
+\item When the motif is "generic", glycans are converted to "generic" type for comparison,
+allowing both concrete and generic glycans to match generic motifs.
+\item When the motif is "concrete", glycans are used as-is, so only concrete glycans
+with matching monosaccharide names will match, while generic glycans will not match.
+}
+
+Examples:
+\itemize{
+\item \code{Man} (concrete glycan) vs \code{Hex} (generic motif) → TRUE (Man converted to Hex for comparison)
+\item \code{Hex} (generic glycan) vs \code{Man} (concrete motif) → FALSE (names don't match)
+\item \code{Man} (concrete glycan) vs \code{Man} (concrete motif) → TRUE (exact match)
+\item \code{Hex} (generic glycan) vs \code{Hex} (generic motif) → TRUE (exact match)
+}
 }
 
 \section{Linkages}{

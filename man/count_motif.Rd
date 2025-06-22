@@ -110,6 +110,16 @@ motifs <- c("Gal(b1-3)GalNAc", "Gal(b1-", "Man(b1-")
 result <- count_motifs(glycans, motifs)
 print(result)
 
+# Monosaccharide type matching examples
+# Concrete glycan vs generic motif: matches (glycan converted to generic)
+count_motif("Man", "Hex")  # Returns 1
+
+# Generic glycan vs concrete motif: doesn't match
+count_motif("Hex", "Man")  # Returns 0
+
+# Matrix example showing type matching rules
+count_motifs(glycans = c("Hex", "Man"), motifs = c("Hex", "Man"))
+
 }
 \seealso{
 \code{\link[=have_motif]{have_motif()}}, \code{\link[=have_motifs]{have_motifs()}}

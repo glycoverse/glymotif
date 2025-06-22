@@ -10,14 +10,21 @@
 #' Monosaccharides, linkages, and substituents are all considered.
 #'
 #' @details
-#' # Graph mode and monosaccharide type
-#'
-#' Both `glycan` and `motif` should be 'glyrepr_structure' objects
-#' (see [glyrepr::glycan_structure()]).
-#'
-#' Also, they can have different monosaccharide types
+#' # Monosaccharide type
+#' 
+#' They can have different monosaccharide types
 #' ("concrete" or "generic", see [glyrepr::get_mono_type()]).
-#' However, a "concrete" motif cannot be matched to a "generic" glycan.
+#' The matching rules are:
+#' - When the motif is "generic", glycans are converted to "generic" type for comparison,
+#'   allowing both concrete and generic glycans to match generic motifs.
+#' - When the motif is "concrete", glycans are used as-is, so only concrete glycans
+#'   with matching monosaccharide names will match, while generic glycans will not match.
+#'
+#' Examples:
+#' - `Man` (concrete glycan) vs `Hex` (generic motif) → TRUE (Man converted to Hex for comparison)
+#' - `Hex` (generic glycan) vs `Man` (concrete motif) → FALSE (names don't match)
+#' - `Man` (concrete glycan) vs `Man` (concrete motif) → TRUE (exact match)
+#' - `Hex` (generic glycan) vs `Hex` (generic motif) → TRUE (exact match)
 #'
 #' # Linkages
 #'
@@ -216,6 +223,18 @@ apply_single_motif_to_glycans <- function(glycans, motif, alignment, ignore_link
   # Generic function to apply a single motif to multiple glycans
   # single_glycan_func should be either .have_motif_single or .count_motif_single
   # smap_func should be either glyrepr::smap_lgl or glyrepr::smap_int
+  
+  # Handle mono type conversion based on motif type
+  motif_type <- glyrepr::get_mono_type(motif)
+  if (motif_type == "generic") {
+    # For generic motifs, convert glycans to generic to allow matching concrete glycans
+    glycans_to_use <- glyrepr::convert_mono_type(glycans, to = "generic")
+  } else {
+    # For concrete motifs, use glycans as-is 
+    # (generic glycans will naturally not match due to different mono names)
+    glycans_to_use <- glycans
+  }
+  
   motif_graph <- glyrepr::get_structure_graphs(motif)
-  smap_func(glycans, single_glycan_func, motif_graph, alignment, ignore_linkages)
+  smap_func(glycans_to_use, single_glycan_func, motif_graph, alignment, ignore_linkages)
 }
