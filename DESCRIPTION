@@ -1,6 +1,6 @@
 Package: glymotif
 Title: Extract glycan motifs from glycan structures
-Version: 0.2.0
+Version: 0.2.1
 Authors@R: 
     person("Bin", "Fu", , "23110220018@m.fudan.edu.cn", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0001-8567-2997"))
@@ -21,8 +21,8 @@ RoxygenNote: 7.3.2
 URL: https://glycoverse.github.io/glymotif/
 Imports: 
     cli,
-    glyrepr (>= 0.3.7),
-    glyparse (>= 0.1.1),
+    glyrepr (>= 0.5.0),
+    glyparse (>= 0.1.2),
     igraph,
     purrr,
     rlang,

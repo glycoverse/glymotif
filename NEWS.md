@@ -1,3 +1,12 @@
+# glymotif 0.2.1
+
+## Minor improvements
+
+* `have_motif()`, `have_motifs()`, `count_motif()`, and `count_motifs()` now
+  support multiple substituents in the motif,
+  to align with the updates in `glyrepr` v0.5.0.
+
+
 # glymotif 0.2.0
 
 ## Bug fixes
