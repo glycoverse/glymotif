@@ -90,11 +90,64 @@ substituent_check <- function(r, glycan, motif, ...) {
 
 
 match_sub <- function(glycan_sub, motif_sub) {
-  if (stringr::str_sub(motif_sub, 1, 1) == "?") {
-    stringr::str_sub(glycan_sub, 2) == stringr::str_sub(motif_sub, 2)
-  } else {
-    glycan_sub == motif_sub
+  # Handle empty substituents
+  if (motif_sub == "" && glycan_sub == "") {
+    return(TRUE)
   }
+  if (motif_sub == "" && glycan_sub != "") {
+    return(FALSE)
+  }
+  if (motif_sub != "" && glycan_sub == "") {
+    return(FALSE)
+  }
+  
+  # Split substituents by comma
+  glycan_subs <- stringr::str_split(glycan_sub, ",")[[1]]
+  motif_subs <- stringr::str_split(motif_sub, ",")[[1]]
+  
+  # Remove empty strings
+  glycan_subs <- glycan_subs[glycan_subs != ""]
+  motif_subs <- motif_subs[motif_subs != ""]
+  
+  # For strict matching: every motif substituent must match a glycan substituent
+  # and every glycan substituent must be matched by some motif substituent
+  
+  # Check if all motif substituents are matched
+  motif_matched <- purrr::map_lgl(motif_subs, function(m_sub) {
+    any(purrr::map_lgl(glycan_subs, function(g_sub) {
+      match_single_sub(g_sub, m_sub)
+    }))
+  })
+  
+  # Check if all glycan substituents are matched (unless motif has wildcards)
+  glycan_matched <- purrr::map_lgl(glycan_subs, function(g_sub) {
+    any(purrr::map_lgl(motif_subs, function(m_sub) {
+      match_single_sub(g_sub, m_sub)
+    }))
+  })
+  
+  all(motif_matched) && all(glycan_matched)
+}
+
+# Helper function to match a single substituent (handles obscure linkages)
+match_single_sub <- function(glycan_sub, motif_sub) {
+  # Extract position and substituent parts
+  # Format: "3Me", "6S", "?Me", "?S", etc.
+  
+  # Extract position (first character) and substituent (rest)
+  motif_pos <- stringr::str_sub(motif_sub, 1, 1)
+  motif_rest <- stringr::str_sub(motif_sub, 2)
+  
+  glycan_pos <- stringr::str_sub(glycan_sub, 1, 1)
+  glycan_rest <- stringr::str_sub(glycan_sub, 2)
+  
+  # Check if positions match (? in motif matches any position)
+  pos_match <- (motif_pos == "?" || motif_pos == glycan_pos)
+  
+  # Check if substituent parts match
+  sub_match <- (motif_rest == glycan_rest)
+  
+  pos_match && sub_match
 }
 
 

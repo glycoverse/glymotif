@@ -121,10 +121,24 @@ but a warning will be issued.
 
 \section{Substituents}{
 Substituents (e.g. "Ac", "SO3") are matched in strict mode.
-"Neu5Ac-9Ac" will only match "Neu5Ac-9Ac" but not "Neu5Ac",
-and "Neu5Ac" will not match "Neu5Ac-9Ac".
-Obscure linkage in the motif will match any linkage in the glycan.
-e.g. Motif "Neu5Ac-?Ac" will match "Neu5Ac-9Ac" in the glycan.
+Both single and multiple substituents are supported:
+\itemize{
+\item Single substituents: "Neu5Ac-9Ac" will only match "Neu5Ac-9Ac" but not "Neu5Ac"
+\item Multiple substituents: "Glc3Me6S" (has both 3Me and 6S) will only match motifs
+that contain both substituents, e.g., "Glc3Me6S", "Glc?Me6S", "Glc3Me?S"
+\item "Glc3Me6S" will NOT match "Glc3Me" (missing 6S) or "Glc" (missing both)
+}
+
+For multiple substituents, they are internally stored as comma-separated values
+(e.g. "3Me,6S") and matched individually. Each substituent in the motif must
+have a corresponding match in the glycan, and vice versa.
+
+Obscure linkages in motif substituents will match any linkage in glycan substituents:
+\itemize{
+\item Motif "Neu5Ac-?Ac" will match "Neu5Ac-9Ac" in the glycan
+\item Motif "Glc?Me6S" will match "Glc3Me6S" in the glycan (? matches 3)
+\item Motif "Glc3Me?S" will match "Glc3Me6S" in the glycan (? matches 6)
+}
 }
 
 \section{Implementation}{
@@ -194,6 +208,14 @@ have_motif(glycan_4, glycan_5)
 have_motif(glycan_5, glycan_4)
 have_motif(glycan_4, glycan_4)
 have_motif(glycan_5, glycan_5)
+
+# Multiple substituents
+glycan_6 <- "Glc3Me6S"  # has both 3Me and 6S substituents
+have_motif(glycan_6, "Glc3Me6S")  # TRUE: exact match
+have_motif(glycan_6, "Glc?Me6S")  # TRUE: obscure linkage ?Me matches 3Me
+have_motif(glycan_6, "Glc3Me?S")  # TRUE: obscure linkage ?S matches 6S
+have_motif(glycan_6, "Glc3Me")    # FALSE: missing 6S substituent
+have_motif(glycan_6, "Glc")       # FALSE: missing all substituents
 
 # Vectorization with single motif
 glycans <- c(glycan, glycan_2, glycan_3)

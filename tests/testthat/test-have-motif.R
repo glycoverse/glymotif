@@ -315,6 +315,28 @@ test_that("obscure substituent linkages in glycan", {
 })
 
 
+test_that("multiple substituents in motif", {
+  glycan1 <- glyparse::parse_iupac_condensed("Glc3Me6S")
+  glycan2 <- glyparse::parse_iupac_condensed("Glc?Me6S")
+  glycan3 <- glyparse::parse_iupac_condensed("Glc3Me")
+
+  motif1 <- glyparse::parse_iupac_condensed("Glc3Me6S")
+  motif2 <- glyparse::parse_iupac_condensed("Glc?Me6S")
+  motif3 <- glyparse::parse_iupac_condensed("Glc3Me?S")
+  motif4 <- glyparse::parse_iupac_condensed("Glc3Me")
+  motif5 <- glyparse::parse_iupac_condensed("Glc")
+
+  expect_true(have_motif(glycan1, motif1))
+  expect_true(have_motif(glycan1, motif2))
+  expect_true(have_motif(glycan1, motif3))
+  expect_false(have_motif(glycan1, motif4))
+  expect_false(have_motif(glycan1, motif5))
+  expect_false(have_motif(glycan2, motif1))
+  expect_true(have_motif(glycan2, motif2))
+  expect_false(have_motif(glycan3, motif1))
+})
+
+
 # ========== Anomers ==========
 test_that("anomer right for inside motif", {
   glycan <- glyparse::parse_iupac_condensed("Neu5Ac(a2-3)Gal(b1-4)GlcNAc")
