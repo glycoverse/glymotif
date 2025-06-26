@@ -21,7 +21,7 @@ Monosaccharides, linkages, and substituents are all considered."><meta property=
 
     <a class="navbar-brand me-2" href="../index.html">glymotif</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -166,11 +166,17 @@ but a warning will be issued.</p>
     <div class="section level2">
     <h2 id="substituents">Substituents<a class="anchor" aria-label="anchor" href="#substituents"></a></h2>
     <p>Substituents (e.g. "Ac", "SO3") are matched in strict mode.
-"Neu5Ac-9Ac" will only match "Neu5Ac-9Ac" but not "Neu5Ac",
-and "Neu5Ac" will not match "Neu5Ac-9Ac".
-Obscure linkage in the motif will match any linkage in the glycan.
-e.g. Motif "Neu5Ac-?Ac" will match "Neu5Ac-9Ac" in the glycan.</p>
-    </div>
+Both single and multiple substituents are supported:</p><ul><li><p>Single substituents: "Neu5Ac-9Ac" will only match "Neu5Ac-9Ac" but not "Neu5Ac"</p></li>
+<li><p>Multiple substituents: "Glc3Me6S" (has both 3Me and 6S) will only match motifs
+that contain both substituents, e.g., "Glc3Me6S", "Glc?Me6S", "Glc3Me?S"</p></li>
+<li><p>"Glc3Me6S" will NOT match "Glc3Me" (missing 6S) or "Glc" (missing both)</p></li>
+</ul><p>For multiple substituents, they are internally stored as comma-separated values
+(e.g. "3Me,6S") and matched individually. Each substituent in the motif must
+have a corresponding match in the glycan, and vice versa.</p>
+<p>Obscure linkages in motif substituents will match any linkage in glycan substituents:</p><ul><li><p>Motif "Neu5Ac-?Ac" will match "Neu5Ac-9Ac" in the glycan</p></li>
+<li><p>Motif "Glc?Me6S" will match "Glc3Me6S" in the glycan (? matches 3)</p></li>
+<li><p>Motif "Glc3Me?S" will match "Glc3Me6S" in the glycan (? matches 6)</p></li>
+</ul></div>
     <div class="section level2">
     <h2 id="implementation">Implementation<a class="anchor" aria-label="anchor" href="#implementation"></a></h2>
     <p>Under the hood, the function uses <code><a href="https://r.igraph.org/reference/subgraph_isomorphisms.html" class="external-link">igraph::graph.get.subisomorphisms.vf2()</a></code>
@@ -260,6 +266,19 @@ The function returns <code>TRUE</code> if any of the matches pass all checks.</p
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
 <span class="r-in"><span><span class="fu">have_motif</span><span class="op">(</span><span class="va">glycan_5</span>, <span class="va">glycan_5</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Multiple substituents</span></span></span>
+<span class="r-in"><span><span class="va">glycan_6</span> <span class="op">&lt;-</span> <span class="st">"Glc3Me6S"</span>  <span class="co"># has both 3Me and 6S substituents</span></span></span>
+<span class="r-in"><span><span class="fu">have_motif</span><span class="op">(</span><span class="va">glycan_6</span>, <span class="st">"Glc3Me6S"</span><span class="op">)</span>  <span class="co"># TRUE: exact match</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
+<span class="r-in"><span><span class="fu">have_motif</span><span class="op">(</span><span class="va">glycan_6</span>, <span class="st">"Glc?Me6S"</span><span class="op">)</span>  <span class="co"># TRUE: obscure linkage ?Me matches 3Me</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
+<span class="r-in"><span><span class="fu">have_motif</span><span class="op">(</span><span class="va">glycan_6</span>, <span class="st">"Glc3Me?S"</span><span class="op">)</span>  <span class="co"># TRUE: obscure linkage ?S matches 6S</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
+<span class="r-in"><span><span class="fu">have_motif</span><span class="op">(</span><span class="va">glycan_6</span>, <span class="st">"Glc3Me"</span><span class="op">)</span>    <span class="co"># FALSE: missing 6S substituent</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] FALSE</span>
+<span class="r-in"><span><span class="fu">have_motif</span><span class="op">(</span><span class="va">glycan_6</span>, <span class="st">"Glc"</span><span class="op">)</span>       <span class="co"># FALSE: missing all substituents</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] FALSE</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Vectorization with single motif</span></span></span>
 <span class="r-in"><span><span class="va">glycans</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">glycan</span>, <span class="va">glycan_2</span>, <span class="va">glycan_3</span><span class="op">)</span></span></span>
