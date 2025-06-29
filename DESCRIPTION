@@ -22,7 +22,7 @@ URL: https://glycoverse.github.io/glymotif/
 Imports: 
     cli,
     glyrepr (>= 0.5.0),
-    glyparse (>= 0.1.2),
+    glyparse (>= 0.2.0),
     igraph,
     purrr,
     rlang,
