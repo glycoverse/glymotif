@@ -2,6 +2,8 @@
 
 export(add_comp_descriptions)
 export(add_glycan_descriptions)
+export(add_motifs_bool)
+export(add_motifs_int)
 export(add_struct_descriptions)
 export(available_motifs)
 export(count_motif)
