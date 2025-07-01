@@ -162,12 +162,11 @@ linkage_check <- function(r, glycan, motif, ...) {
 get_corresponding_edges <- function(r, glycan, motif) {
   motif_edge_list <- igraph::as_edgelist(motif, names = FALSE)
 
-  glycan_edge_ids <- vector("integer", length = nrow(motif_edge_list))
-  for (i in seq_len(nrow(motif_edge_list))) {
+  glycan_edge_ids <- purrr::map_int(seq_len(nrow(motif_edge_list)), function(i) {
     motif_edge <- motif_edge_list[i, ]  # c(node_id_1, node_id_2)
     glycan_edge <- r[motif_edge]
-    glycan_edge_ids[[i]] <- igraph::get_edge_ids(glycan, glycan_edge)
-  }
+    igraph::get_edge_ids(glycan, glycan_edge)
+  })
 
   motif_edges <- igraph::E(motif)
   glycan_edges <- igraph::E(glycan)[glycan_edge_ids]
