@@ -21,8 +21,17 @@ test_that("getting motif structure works", {
 
 
 test_that("getting many motif graphs", {
-  result <- get_motif_structure(c("O-Glycan core 1", "O-Glycan core 2"))
-  expect_snapshot(result)  # A list of `glyrepr_structure`
+  # The order in the result should be the same as the order in the input.
+  # There was a bug that the order was not preserved.
+  result1 <- get_motif_structure(c("O-Glycan core 1", "O-Glycan core 2"))
+  result1 <- as.character(result1)
+  expected1 <- c("Gal(b1-3)GalNAc(a1-", "Gal(b1-3)[GlcNAc(b1-6)]GalNAc(a1-")
+  expect_identical(result1, expected1)
+
+  result2 <- get_motif_structure(c("O-Glycan core 2", "O-Glycan core 1"))
+  result2 <- as.character(result2)
+  expected2 <- c("Gal(b1-3)[GlcNAc(b1-6)]GalNAc(a1-", "Gal(b1-3)GalNAc(a1-")
+  expect_identical(result2, expected2)
 })
 
 
@@ -33,8 +42,15 @@ test_that("getting motif alignment works", {
 
 
 test_that("getting many motif alignments", {
-  result <- get_motif_alignment(c("O-Glycan core 1", "O-Glycan core 2"))
-  expect_identical(result, c("O-Glycan core 1" = "core", "O-Glycan core 2" = "core"))
+  result1 <- get_motif_alignment(c("O-Glycan core 1", "Lewis x"))
+  result1 <- as.character(result1)
+  expected1 <- c("core", "substructure")
+  expect_identical(result1, expected1)
+
+  result2 <- get_motif_alignment(c("Lewis x", "O-Glycan core 1"))
+  result2 <- as.character(result2)
+  expected2 <- c("substructure", "core")
+  expect_identical(result2, expected2)
 })
 
 
@@ -45,6 +61,13 @@ test_that("getting motif aglycon works", {
 
 
 test_that("getting many motif aglycons", {
-  result <- get_motif_aglycon(c("O-Glycan core 1", "O-Glycan core 2"))
-  expect_identical(result, c("O-Glycan core 1" = "Ser/Thr", "O-Glycan core 2" = "Ser/Thr"))
+  result1 <- get_motif_aglycon(c("O-Glycan core 1", "O-Glycan core 2"))
+  result1 <- as.character(result1)
+  expected1 <- c("Ser/Thr", "Ser/Thr")
+  expect_identical(result1, expected1)
+
+  result2 <- get_motif_aglycon(c("O-Glycan core 2", "O-Glycan core 1"))
+  result2 <- as.character(result2)
+  expected2 <- c("Ser/Thr", "Ser/Thr")
+  expect_identical(result2, expected2)
 })

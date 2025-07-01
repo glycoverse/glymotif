@@ -196,13 +196,3 @@
       [1] Man(a1-3)[Man(a1-6)]Man(b1-4)GlcNAc(b1-4)GlcNAc(?1-
       # Unique structures: 1
 
-# getting many motif graphs
-
-    Code
-      result
-    Output
-      <glycan_structure[2]>
-      [1] Gal(b1-3)GalNAc(a1-
-      [2] Gal(b1-3)[GlcNAc(b1-6)]GalNAc(a1-
-      # Unique structures: 2
-
