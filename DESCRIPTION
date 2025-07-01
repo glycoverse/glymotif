@@ -13,7 +13,8 @@ Suggests:
     testthat (>= 3.0.0),
     patrick,
     knitr,
-    rmarkdown
+    rmarkdown,
+    glyexp (>= 0.5.1)
 Config/testthat/edition: 3
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
@@ -31,10 +32,12 @@ Imports:
     dplyr,
     tibble,
     memoise,
-    vctrs
+    vctrs,
+    magrittr
 Remotes: 
     glycoverse/glyrepr,
-    glycoverse/glyparse
+    glycoverse/glyparse,
+    glycoverse/glyexp
 Depends: 
     R (>= 4.0)
 VignetteBuilder: knitr
