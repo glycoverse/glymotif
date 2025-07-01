@@ -4,7 +4,7 @@
 \alias{describe_n_glycans}
 \title{Describe N-Glycans Properties}
 \usage{
-describe_n_glycans(glycans, strict = FALSE, parallel = FALSE)
+describe_n_glycans(glycans, strict = FALSE)
 }
 \arguments{
 \item{glycans}{A \code{glyrepr_structure} object,
@@ -17,10 +17,6 @@ checking monosaacharide identities on the "generic" level (e.g. "Hex", "HexNAc")
 and ignoring linkage information.
 Default is \code{FALSE}. This is preferred because in most cases the
 structural resolution could not be high, but we known for sure the glycans are indeed N-glycans.}
-
-\item{parallel}{A logical value. If \code{TRUE}, the function will use parallel processing.
-Remember to call \code{\link[future:plan]{future::plan()}} before using this argument,
-otherwise the function will still use sequential processing.}
 }
 \value{
 A tibble with the following columns: "glycan_type", "bisecting",
@@ -54,21 +50,6 @@ In this case, we could make some assumptions about the glycan structures,
 and extract the key properties.
 For example, an \code{H-N} terminal motif is considered a terminal galactose.
 If you have high-resolution glycan structures, you can set \code{strict = TRUE}.
-}
-
-\section{Enabling parallel processing}{
-This function can spend a lot of time on large datasets (e.g. > 500 glycans).
-To speed up, you can enable parallel processing by setting \code{parallel = TRUE}.
-However, changing the argument to \code{TRUE} only set the function "ready"
-for parallel processing.
-You still need to call \code{\link[future:plan]{future::plan()}} to change the parallel backend.
-For example, to use the "multisession" backend:
-
-\if{html}{\out{<div class="sourceCode r">}}\preformatted{library(future)
-old_plan <- future::plan("multisession")  # Save the old plan
-describe_n_glycans(glycans, parallel = TRUE)
-future::plan(old_plan)  # Restore the old plan
-}\if{html}{\out{</div>}}
 }
 
 \examples{

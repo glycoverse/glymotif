@@ -27,22 +27,6 @@
 #' For example, an `H-N` terminal motif is considered a terminal galactose.
 #' If you have high-resolution glycan structures, you can set `strict = TRUE`.
 #'
-#' # Enabling parallel processing
-#'
-#' This function can spend a lot of time on large datasets (e.g. > 500 glycans).
-#' To speed up, you can enable parallel processing by setting `parallel = TRUE`.
-#' However, changing the argument to `TRUE` only set the function "ready"
-#' for parallel processing.
-#' You still need to call [future::plan()] to change the parallel backend.
-#' For example, to use the "multisession" backend:
-#'
-#' ```r
-#' library(future)
-#' old_plan <- future::plan("multisession")  # Save the old plan
-#' describe_n_glycans(glycans, parallel = TRUE)
-#' future::plan(old_plan)  # Restore the old plan
-#' ```
-#'
 #' @param glycans A `glyrepr_structure` object,
 #' or a character vector of IUPAC-condensed structure strings.
 #' @param strict A logical value. If `TRUE`, the glycan must have "concrete"
@@ -52,9 +36,6 @@
 #' and ignoring linkage information.
 #' Default is `FALSE`. This is preferred because in most cases the
 #' structural resolution could not be high, but we known for sure the glycans are indeed N-glycans.
-#' @param parallel A logical value. If `TRUE`, the function will use parallel processing.
-#' Remember to call [future::plan()] before using this argument,
-#' otherwise the function will still use sequential processing.
 #'
 #' @return A tibble with the following columns: "glycan_type", "bisecting",
 #' "antennae", "core_fuc", "arm_fuc", "terminal_gal".
@@ -71,11 +52,10 @@
 #' describe_n_glycans(glycans)
 #'
 #' @export
-describe_n_glycans <- function(glycans, strict = FALSE, parallel = FALSE) {
+describe_n_glycans <- function(glycans, strict = FALSE) {
   # Validate the input
   valid_glycans_arg(glycans)
   checkmate::assert_flag(strict)
-  checkmate::assert(checkmate::check_null(parallel), checkmate::check_flag(parallel))
 
   glycan_structures <- ensure_glycans_are_structures(glycans)
   glycan_names <- prepare_struc_names(glycans, glycan_structures)
