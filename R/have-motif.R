@@ -10,6 +10,23 @@
 #' Monosaccharides, linkages, and substituents are all considered.
 #'
 #' @details
+#'
+#' # About Names
+#' `have_motif()` and `count_motif()` return a vector with no names.
+#' It is easy to trace the names back to the original glycans.
+#'
+#' `have_motifs()` and `count_motifs()` return a matrix with both row and column names.
+#' The row names are the glycan names, and the column names are the motif names.
+#' The names are decided according to the following rules:
+#'
+#' 1. If `glycans` or `motifs` is a `glyrepr::glycan_structure()` object,
+#'    the names are the IUPAC-condensed structure strings.
+#'    (Sadly due to the constrains of the `vctrs` package `glyrepr::glycan_structure()` is built on,
+#'    a `glyrepr::glycan_structure()` vector cannot have names.)
+#' 2. If `glycans` or `motifs` is a character vector, either IUPAC-condensed structure strings or
+#'    motif names, it will use the names of the character vector if exists, 
+#'    otherwise use the character vector itself as the names.
+#'
 #' # Monosaccharide type
 #' 
 #' They can have different monosaccharide types
@@ -198,8 +215,11 @@
 #' glycans <- c(glycan1, glycan2)
 #'
 #' motifs <- c("Gal(b1-3)GalNAc", "Gal(b1-4)GalNAc", "GlcNAc(b1-6)GalNAc")
-#' result <- have_motifs(glycans, motifs)
-#' print(result)
+#' have_motifs(glycans, motifs)
+#'
+#' # You can assign each motif a name
+#' motifs <- c(motif1 = "Gal(b1-3)GalNAc", motif2 = "Gal(b1-4)GalNAc", motif3 = "GlcNAc(b1-6)GalNAc")
+#' have_motifs(glycans, motifs)
 #'
 #' @export
 have_motif <- function(glycans, motif, alignment = NULL, ignore_linkages = FALSE) {
@@ -256,3 +276,21 @@ apply_single_motif_to_glycans <- function(glycans, motif, alignment, ignore_link
   motif_graph <- glyrepr::get_structure_graphs(motif)
   smap_func(glycans_to_use, single_glycan_func, motif_graph, alignment, ignore_linkages)
 }
+
+#' @section About Names:
+#' `have_motif()` and `count_motif()` return a vector with no names.
+#' It is easy to trace the names back to the original glycans.
+#' 
+#' `have_motifs()` and `count_motifs()` return a matrix with both row and column names.
+#' The row names are the glycan names, and the column names are the motif names.
+#' The names are decided according to the following rules:
+#' 
+#' 1. If `glycans` or `motifs` is a `glyrepr::glycan_structure()` object,
+#'    the names are the IUPAC-condensed structure strings.
+#'    (Sadly due to the constrains of the `vctrs` package `glyrepr::glycan_structure()` is built on,
+#'    a `glyrepr::glycan_structure()` vector cannot have names.)
+#' 2. If `glycans` or `motifs` is a character vector, either IUPAC-condensed structure strings or
+#'    motif names, it will use the names of the character vector if exists, 
+#'    otherwise use the character vector itself as the names.
+#'
+#' @name return_value_names

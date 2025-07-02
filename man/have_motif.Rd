@@ -47,6 +47,24 @@ Technically speaking, they perform subgraph isomorphism tests to
 determine if the \code{motif}(s) are subgraphs of the \code{glycan}s.
 Monosaccharides, linkages, and substituents are all considered.
 }
+\section{About Names}{
+\code{have_motif()} and \code{count_motif()} return a vector with no names.
+It is easy to trace the names back to the original glycans.
+
+\code{have_motifs()} and \code{count_motifs()} return a matrix with both row and column names.
+The row names are the glycan names, and the column names are the motif names.
+The names are decided according to the following rules:
+\enumerate{
+\item If \code{glycans} or \code{motifs} is a \code{glyrepr::glycan_structure()} object,
+the names are the IUPAC-condensed structure strings.
+(Sadly due to the constrains of the \code{vctrs} package \code{glyrepr::glycan_structure()} is built on,
+a \code{glyrepr::glycan_structure()} vector cannot have names.)
+\item If \code{glycans} or \code{motifs} is a character vector, either IUPAC-condensed structure strings or
+motif names, it will use the names of the character vector if exists,
+otherwise use the character vector itself as the names.
+}
+}
+
 \section{Monosaccharide type}{
 They can have different monosaccharide types
 ("concrete" or "generic", see \code{\link[glyrepr:get_mono_type]{glyrepr::get_mono_type()}}).
@@ -228,8 +246,11 @@ glycan2 <- parse_iupac_condensed("Gal(b1-?)[GlcNAc(b1-6)]GalNAc")
 glycans <- c(glycan1, glycan2)
 
 motifs <- c("Gal(b1-3)GalNAc", "Gal(b1-4)GalNAc", "GlcNAc(b1-6)GalNAc")
-result <- have_motifs(glycans, motifs)
-print(result)
+have_motifs(glycans, motifs)
+
+# You can assign each motif a name
+motifs <- c(motif1 = "Gal(b1-3)GalNAc", motif2 = "Gal(b1-4)GalNAc", motif3 = "GlcNAc(b1-6)GalNAc")
+have_motifs(glycans, motifs)
 
 }
 \seealso{

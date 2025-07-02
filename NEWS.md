@@ -1,3 +1,10 @@
+# glymotif 0.3.1
+
+## Minor improvements
+
+* Update the documentation to reflect the naming rules of the return values 
+  of `have_motif()`, `have_motifs()`, `count_motif()`, and `count_motifs()`.
+
 # glymotif 0.3.0
 
 ## Major changes
@@ -8,7 +15,8 @@
 
 ## Minor improvements
 
-* Remove the `parallel` argument from `add_glycan_descriptions()`, `add_struct_descriptions()`, and `add_comp_descriptions()`. We found it not very useful on a regular basis.
+* Remove the `parallel` argument from `add_glycan_descriptions()`, `add_struct_descriptions()`, and `add_comp_descriptions()`. 
+  We found it not very useful on a regular basis.
 * Update the vignette to reflect the new functions above.
 
 ## Bug fixes

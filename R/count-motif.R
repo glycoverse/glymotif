@@ -8,6 +8,8 @@
 #'
 #' @inheritParams have_motif
 #'
+#' @inheritSection have_motif About Names
+#' 
 #' @details
 #' This function actually perform v2f algorithm to get all possible matches
 #' between `glycans` and `motif`.

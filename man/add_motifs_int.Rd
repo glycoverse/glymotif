@@ -29,6 +29,17 @@ of a \code{\link[glyexp:experiment]{glyexp::experiment()}}.
 \code{add_motifs_int()} adds integer annotations (how many motifs are present).
 \code{add_motifs_lgl()} adds boolean annotations (whether the motif is present).
 }
+\section{About Names}{
+
+
+The naming rule for the new columns is similar to that of \code{\link[=have_motifs]{have_motifs()}}.
+Briefly, you can use named character vector to name the motifs,
+and that will be used as the new column names.
+The only catchup is that you cannot pass a named \code{glyrepr::glycan_structure()} to \code{motifs}.
+This is a fundamental limitation of the \code{vctrs_rcrd} class,
+which \code{glyrepr::glycan_structure()} is built on.
+}
+
 \section{Why do we need these functions}{
 
 
