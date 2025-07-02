@@ -19,7 +19,7 @@ count_motifs() counts multiple motifs in multiple glycans
 
     <a class="navbar-brand me-2" href="../index.html">glymotif</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -132,6 +132,20 @@ This function will take care of this, and return the "unique" number of matches.
 <p>For other details about the handling of monosaccharide, linkages, alignment,
 substituents, and implementation, see <code><a href="have_motif.html">have_motif()</a></code>.</p>
     </div>
+    <div class="section level2">
+    <h2 id="about-names">About Names<a class="anchor" aria-label="anchor" href="#about-names"></a></h2>
+    <p><code><a href="have_motif.html">have_motif()</a></code> and <code>count_motif()</code> return a vector with no names.
+It is easy to trace the names back to the original glycans.</p>
+<p><code><a href="have_motif.html">have_motifs()</a></code> and <code>count_motifs()</code> return a matrix with both row and column names.
+The row names are the glycan names, and the column names are the motif names.
+The names are decided according to the following rules:</p><ol><li><p>If <code>glycans</code> or <code>motifs</code> is a <code><a href="https://glycoverse.github.io/glyrepr/reference/glycan_structure.html" class="external-link">glyrepr::glycan_structure()</a></code> object,
+the names are the IUPAC-condensed structure strings.
+(Sadly due to the constrains of the <code>vctrs</code> package <code><a href="https://glycoverse.github.io/glyrepr/reference/glycan_structure.html" class="external-link">glyrepr::glycan_structure()</a></code> is built on,
+a <code><a href="https://glycoverse.github.io/glyrepr/reference/glycan_structure.html" class="external-link">glyrepr::glycan_structure()</a></code> vector cannot have names.)</p></li>
+<li><p>If <code>glycans</code> or <code>motifs</code> is a character vector, either IUPAC-condensed structure strings or
+motif names, it will use the names of the character vector if exists,
+otherwise use the character vector itself as the names.</p></li>
+</ol></div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
     <div class="dont-index"><p><code><a href="have_motif.html">have_motif()</a></code>, <code><a href="have_motif.html">have_motifs()</a></code></p></div>

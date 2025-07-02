@@ -13,7 +13,7 @@ add_motifs_lgl() adds boolean annotations (whether the motif is present)."><meta
 
     <a class="navbar-brand me-2" href="../index.html">glymotif</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -81,6 +81,18 @@ Can be a single value (applied to all motifs) or a vector of the same length as 
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>An <code><a href="https://glycoverse.github.io/glyexp/reference/experiment.html" class="external-link">glyexp::experiment()</a></code> object with motif annotations added to the variable information.</p>
+    </div>
+    <div class="section level2">
+    <h2 id="about-names">About Names<a class="anchor" aria-label="anchor" href="#about-names"></a></h2>
+
+
+
+<p>The naming rule for the new columns is similar to that of <code><a href="have_motif.html">have_motifs()</a></code>.
+Briefly, you can use named character vector to name the motifs,
+and that will be used as the new column names.
+The only catchup is that you cannot pass a named <code><a href="https://glycoverse.github.io/glyrepr/reference/glycan_structure.html" class="external-link">glyrepr::glycan_structure()</a></code> to <code>motifs</code>.
+This is a fundamental limitation of the <code>vctrs_rcrd</code> class,
+which <code><a href="https://glycoverse.github.io/glyrepr/reference/glycan_structure.html" class="external-link">glyrepr::glycan_structure()</a></code> is built on.</p>
     </div>
     <div class="section level2">
     <h2 id="why-do-we-need-these-functions">Why do we need these functions<a class="anchor" aria-label="anchor" href="#why-do-we-need-these-functions"></a></h2>

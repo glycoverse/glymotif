@@ -21,7 +21,7 @@ Monosaccharides, linkages, and substituents are all considered."><meta property=
 
     <a class="navbar-brand me-2" href="../index.html">glymotif</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -107,6 +107,20 @@ Can be a single value (applied to all motifs) or a vector of the same length as 
 <li><p><code>have_motifs()</code>: A logical matrix where rows correspond to glycans and columns correspond to motifs.
 Row names contain glycan identifiers and column names contain motif identifiers.</p></li>
 </ul></div>
+    <div class="section level2">
+    <h2 id="about-names">About Names<a class="anchor" aria-label="anchor" href="#about-names"></a></h2>
+    <p><code>have_motif()</code> and <code><a href="count_motif.html">count_motif()</a></code> return a vector with no names.
+It is easy to trace the names back to the original glycans.</p>
+<p><code>have_motifs()</code> and <code><a href="count_motif.html">count_motifs()</a></code> return a matrix with both row and column names.
+The row names are the glycan names, and the column names are the motif names.
+The names are decided according to the following rules:</p><ol><li><p>If <code>glycans</code> or <code>motifs</code> is a <code><a href="https://glycoverse.github.io/glyrepr/reference/glycan_structure.html" class="external-link">glyrepr::glycan_structure()</a></code> object,
+the names are the IUPAC-condensed structure strings.
+(Sadly due to the constrains of the <code>vctrs</code> package <code><a href="https://glycoverse.github.io/glyrepr/reference/glycan_structure.html" class="external-link">glyrepr::glycan_structure()</a></code> is built on,
+a <code><a href="https://glycoverse.github.io/glyrepr/reference/glycan_structure.html" class="external-link">glyrepr::glycan_structure()</a></code> vector cannot have names.)</p></li>
+<li><p>If <code>glycans</code> or <code>motifs</code> is a character vector, either IUPAC-condensed structure strings or
+motif names, it will use the names of the character vector if exists,
+otherwise use the character vector itself as the names.</p></li>
+</ol></div>
     <div class="section level2">
     <h2 id="monosaccharide-type">Monosaccharide type<a class="anchor" aria-label="anchor" href="#monosaccharide-type"></a></h2>
     <p>They can have different monosaccharide types
@@ -292,14 +306,20 @@ The function returns <code>TRUE</code> if any of the matches pass all checks.</p
 <span class="r-in"><span><span class="va">glycans</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">glycan1</span>, <span class="va">glycan2</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">motifs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Gal(b1-3)GalNAc"</span>, <span class="st">"Gal(b1-4)GalNAc"</span>, <span class="st">"GlcNAc(b1-6)GalNAc"</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">result</span> <span class="op">&lt;-</span> <span class="fu">have_motifs</span><span class="op">(</span><span class="va">glycans</span>, <span class="va">motifs</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">result</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">have_motifs</span><span class="op">(</span><span class="va">glycans</span>, <span class="va">motifs</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                                   Gal(b1-3)GalNAc Gal(b1-4)GalNAc</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Gal(b1-3)[GlcNAc(b1-6)]GalNAc(a1-            TRUE           FALSE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> GlcNAc(b1-6)[Gal(b1-?)]GalNAc(?1-           FALSE           FALSE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                                   GlcNAc(b1-6)GalNAc</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Gal(b1-3)[GlcNAc(b1-6)]GalNAc(a1-               TRUE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> GlcNAc(b1-6)[Gal(b1-?)]GalNAc(?1-               TRUE</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># You can assign each motif a name</span></span></span>
+<span class="r-in"><span><span class="va">motifs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>motif1 <span class="op">=</span> <span class="st">"Gal(b1-3)GalNAc"</span>, motif2 <span class="op">=</span> <span class="st">"Gal(b1-4)GalNAc"</span>, motif3 <span class="op">=</span> <span class="st">"GlcNAc(b1-6)GalNAc"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">have_motifs</span><span class="op">(</span><span class="va">glycans</span>, <span class="va">motifs</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                                   motif1 motif2 motif3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Gal(b1-3)[GlcNAc(b1-6)]GalNAc(a1-   TRUE  FALSE   TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> GlcNAc(b1-6)[Gal(b1-?)]GalNAc(?1-  FALSE  FALSE   TRUE</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
