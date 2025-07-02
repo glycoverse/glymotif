@@ -2,12 +2,12 @@
 % Please edit documentation in R/add-motifs.R
 \name{add_motifs_int}
 \alias{add_motifs_int}
-\alias{add_motifs_bool}
+\alias{add_motifs_lgl}
 \title{Add Motif Annotations to an Experiment}
 \usage{
 add_motifs_int(exp, motifs, alignments = NULL, ignore_linkages = FALSE)
 
-add_motifs_bool(exp, motifs, alignments = NULL, ignore_linkages = FALSE)
+add_motifs_lgl(exp, motifs, alignments = NULL, ignore_linkages = FALSE)
 }
 \arguments{
 \item{exp}{An \code{\link[glyexp:experiment]{glyexp::experiment()}} object.}
@@ -27,7 +27,7 @@ An \code{\link[glyexp:experiment]{glyexp::experiment()}} object with motif annot
 This function adds motif annotations to the variable information
 of a \code{\link[glyexp:experiment]{glyexp::experiment()}}.
 \code{add_motifs_int()} adds integer annotations (how many motifs are present).
-\code{add_motifs_bool()} adds boolean annotations (whether the motif is present).
+\code{add_motifs_lgl()} adds boolean annotations (whether the motif is present).
 }
 \section{Why do we need these functions}{
 

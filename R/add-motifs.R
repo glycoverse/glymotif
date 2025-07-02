@@ -3,7 +3,7 @@
 #' This function adds motif annotations to the variable information
 #' of a [glyexp::experiment()].
 #' `add_motifs_int()` adds integer annotations (how many motifs are present).
-#' `add_motifs_bool()` adds boolean annotations (whether the motif is present).
+#' `add_motifs_lgl()` adds boolean annotations (whether the motif is present).
 #'
 #' @section Why do we need these functions:
 #'
@@ -72,7 +72,7 @@ add_motifs_int <- function(exp, motifs, alignments = NULL, ignore_linkages = FAL
 
 #' @rdname add_motifs_int
 #' @export
-add_motifs_bool <- function(exp, motifs, alignments = NULL, ignore_linkages = FALSE) {
+add_motifs_lgl <- function(exp, motifs, alignments = NULL, ignore_linkages = FALSE) {
   .add_motifs_anno(exp, have_motifs, motifs, alignments, ignore_linkages)
 }
 
