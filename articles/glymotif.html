@@ -399,14 +399,14 @@ in luck!</p>
 <span></span>
 <span><span class="va">exp</span> <span class="op">&lt;-</span> <span class="fu">read_pglyco3_pglycoquant</span><span class="op">(</span><span class="st">"results.list"</span><span class="op">)</span></span>
 <span><span class="va">exp</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://glycoverse.github.io/glyexp/reference/mutate_obs.html" class="external-link">mutate_var</a></span><span class="op">(</span>n_hex <span class="op">=</span> <span class="fu"><a href="../reference/have_motif.html">have_motif</a></span><span class="op">(</span><span class="va">glycans</span>, <span class="st">"Hex(a1-"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="https://glycoverse.github.io/glyexp/reference/mutate_obs.html" class="external-link">mutate_var</a></span><span class="op">(</span>n_hex <span class="op">=</span> <span class="fu"><a href="../reference/have_motif.html">have_motif</a></span><span class="op">(</span><span class="va">glycan_structure</span>, <span class="st">"Hex(a1-"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>Multiple motifs at once, a bit more complex:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">exp</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://glycoverse.github.io/glyexp/reference/mutate_obs.html" class="external-link">mutate_var</a></span><span class="op">(</span></span>
-<span>    n_hex <span class="op">=</span> <span class="fu"><a href="../reference/have_motif.html">have_motif</a></span><span class="op">(</span><span class="va">glycans</span>, <span class="st">"Hex(a1-"</span><span class="op">)</span>,</span>
-<span>    n_hexna <span class="op">=</span> <span class="fu"><a href="../reference/have_motif.html">have_motif</a></span><span class="op">(</span><span class="va">glycans</span>, <span class="st">"HexNAc(a1-"</span><span class="op">)</span>,</span>
-<span>    n_dhex <span class="op">=</span> <span class="fu"><a href="../reference/have_motif.html">have_motif</a></span><span class="op">(</span><span class="va">glycans</span>, <span class="st">"dHex(a1-"</span><span class="op">)</span></span>
+<span>    n_hex <span class="op">=</span> <span class="fu"><a href="../reference/have_motif.html">have_motif</a></span><span class="op">(</span><span class="va">glycan_structure</span>, <span class="st">"Hex(a1-"</span><span class="op">)</span>,</span>
+<span>    n_hexna <span class="op">=</span> <span class="fu"><a href="../reference/have_motif.html">have_motif</a></span><span class="op">(</span><span class="va">glycan_structure</span>, <span class="st">"HexNAc(a1-"</span><span class="op">)</span>,</span>
+<span>    n_dhex <span class="op">=</span> <span class="fu"><a href="../reference/have_motif.html">have_motif</a></span><span class="op">(</span><span class="va">glycan_structure</span>, <span class="st">"dHex(a1-"</span><span class="op">)</span></span>
 <span>  <span class="op">)</span></span></code></pre></div>
 <p>Well, this works, but it’s not very efficient, and needs a lot of
 typing.</p>
