@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">glymotif</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -380,37 +380,59 @@ glycopeptides from a proteomics experiment or working with automated
 glycan assignment from mass spectra, <code>glymotif</code> meets your
 data where it is—not where you wish it were.</p>
 </div>
-<div class="section level3">
-<h3 id="playing-well-with-others-package-integration">Playing Well with Others: Package Integration 🤝<a class="anchor" aria-label="anchor" href="#playing-well-with-others-package-integration"></a>
-</h3>
+</div>
+<div class="section level2">
+<h2 id="playing-well-with-others-package-integration">Playing Well with Others: Package Integration 🤝<a class="anchor" aria-label="anchor" href="#playing-well-with-others-package-integration"></a>
+</h2>
 <p>The real power of <code>glymotif</code> shines when it works
 alongside other tools in the <code>glycoverse</code> ecosystem. If
 you’re already using <code>glyread</code> to import your glycoproteomics
 results and <code>glyexp</code> to manage your experimental data, you’re
 in luck!</p>
-<p>There’s a seamless integration waiting for you: the
-<code>glyexp::add_glycan_description()</code> function can automatically
-apply all the N-glycan analysis we just discussed to your entire
-dataset. No manual loops, no data wrangling headaches—just one function
-call to enrich your glycan annotations with comprehensive structural
-descriptions.</p>
-<p>Here’s how it works in practice:</p>
+<div class="section level3">
+<h3 id="adding-motif-annotations-to-an-experiment">Adding Motif Annotations to an Experiment<a class="anchor" aria-label="anchor" href="#adding-motif-annotations-to-an-experiment"></a>
+</h3>
+<p>One motif at a time, very intuitive:</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">glyread</span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">glyexp</span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://glycoverse.github.io/glyexp/" class="external-link">glyexp</a></span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Read your glycoproteomics results</span></span>
 <span><span class="va">exp</span> <span class="op">&lt;-</span> <span class="fu">read_pglyco3_pglycoquant</span><span class="op">(</span><span class="st">"results.list"</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Add N-glycan structural descriptions automatically</span></span>
+<span><span class="va">exp</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://glycoverse.github.io/glyexp/reference/mutate_obs.html" class="external-link">mutate_var</a></span><span class="op">(</span>n_hex <span class="op">=</span> <span class="fu"><a href="../reference/have_motif.html">have_motif</a></span><span class="op">(</span><span class="va">glycans</span>, <span class="st">"Hex(a1-"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p>Multiple motifs at once, a bit more complex:</p>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">exp</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://glycoverse.github.io/glyexp/reference/mutate_obs.html" class="external-link">mutate_var</a></span><span class="op">(</span></span>
+<span>    n_hex <span class="op">=</span> <span class="fu"><a href="../reference/have_motif.html">have_motif</a></span><span class="op">(</span><span class="va">glycans</span>, <span class="st">"Hex(a1-"</span><span class="op">)</span>,</span>
+<span>    n_hexna <span class="op">=</span> <span class="fu"><a href="../reference/have_motif.html">have_motif</a></span><span class="op">(</span><span class="va">glycans</span>, <span class="st">"HexNAc(a1-"</span><span class="op">)</span>,</span>
+<span>    n_dhex <span class="op">=</span> <span class="fu"><a href="../reference/have_motif.html">have_motif</a></span><span class="op">(</span><span class="va">glycans</span>, <span class="st">"dHex(a1-"</span><span class="op">)</span></span>
+<span>  <span class="op">)</span></span></code></pre></div>
+<p>Well, this works, but it’s not very efficient, and needs a lot of
+typing.</p>
+<p>Use the <code><a href="../reference/add_motifs_int.html">add_motifs_lgl()</a></code> or
+<code><a href="../reference/add_motifs_int.html">add_motifs_int()</a></code> functions instead:</p>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">exp</span> <span class="op">|&gt;</span> <span class="fu"><a href="../reference/add_motifs_int.html">add_motifs_lgl</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Hex(a1-"</span>, <span class="st">"HexNAc(a1-"</span>, <span class="st">"dHex(a1-"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p>Now the motif annotations are added to the variable information
+tibble.</p>
+</div>
+<div class="section level3">
+<h3 id="describing-n-glycans-in-an-experiment">Describing N-Glycans in an Experiment<a class="anchor" aria-label="anchor" href="#describing-n-glycans-in-an-experiment"></a>
+</h3>
+<p>There’s a seamless integration waiting for you: the
+<code>add_glycan_description()</code> function can automatically apply
+all the N-glycan analysis we just discussed to your entire dataset. No
+manual loops, no data wrangling headaches—just one function call to
+enrich your glycan annotations with comprehensive structural
+descriptions.</p>
+<p>Here’s how it works in practice:</p>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Add N-glycan structural descriptions automatically</span></span>
 <span><span class="va">exp</span> <span class="op">&lt;-</span> <span class="fu">add_glycan_description</span><span class="op">(</span><span class="va">exp</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Now your experiment object contains rich glycan annotations!</span></span></code></pre></div>
-<p><strong>What happens behind the scenes?</strong> 🎭 The function
-identifies N-glycan structures in your data, runs
-<code><a href="../reference/describe_n_glycans.html">describe_n_glycans()</a></code> on them, and seamlessly integrates the
-results into your experiment’s variable information table. It’s like
-having a personal glycan analyst working 24/7!</p>
+<span><span class="co"># Now your experiment object contains rich glycan annotations!</span></span>
+<span><span class="fu"><a href="https://glycoverse.github.io/glyexp/reference/get_var_info.html" class="external-link">get_var_info</a></span><span class="op">(</span><span class="va">exp</span><span class="op">)</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level2">

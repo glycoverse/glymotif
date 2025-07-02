@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">glymotif</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -35,6 +35,23 @@
 
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.3.0" id="glymotif-030">glymotif 0.3.0<a class="anchor" aria-label="anchor" href="#glymotif-030"></a></h2>
+<div class="section level3">
+<h3 id="major-changes-0-3-0">Major changes<a class="anchor" aria-label="anchor" href="#major-changes-0-3-0"></a></h3>
+<ul><li>Add <code><a href="../reference/add_glycan_descriptions.html">add_glycan_descriptions()</a></code>, <code><a href="../reference/add_struct_descriptions.html">add_struct_descriptions()</a></code>, and <code><a href="../reference/add_comp_descriptions.html">add_comp_descriptions()</a></code>. These functions are moved from <code>glyexp</code> to <code>glymotif</code> for better separation of concerns.</li>
+<li>Add <code><a href="../reference/add_motifs_int.html">add_motifs_int()</a></code> and <code><a href="../reference/add_motifs_int.html">add_motifs_lgl()</a></code> for adding motif annotations to a <code><a href="https://glycoverse.github.io/glyexp/reference/experiment.html" class="external-link">glyexp::experiment()</a></code>.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="minor-improvements-0-3-0">Minor improvements<a class="anchor" aria-label="anchor" href="#minor-improvements-0-3-0"></a></h3>
+<ul><li>Remove the <code>parallel</code> argument from <code><a href="../reference/add_glycan_descriptions.html">add_glycan_descriptions()</a></code>, <code><a href="../reference/add_struct_descriptions.html">add_struct_descriptions()</a></code>, and <code><a href="../reference/add_comp_descriptions.html">add_comp_descriptions()</a></code>. We found it not very useful on a regular basis.</li>
+<li>Update the vignette to reflect the new functions above.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="bug-fixes-0-3-0">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-3-0"></a></h3>
+<ul><li>Fix a bug in <code><a href="../reference/get_motif_structure.html">get_motif_structure()</a></code>, where the order of the results was not consistent with the order of the input motifs. This caused unexpected results in a wide range of functions including <code><a href="../reference/have_motif.html">have_motifs()</a></code>, <code><a href="../reference/count_motif.html">count_motifs()</a></code>, and the new <code><a href="../reference/add_motifs_int.html">add_motifs_lgl()</a></code> and <code><a href="../reference/add_motifs_int.html">add_motifs_int()</a></code> functions, when using motif names as input. Alone with <code><a href="../reference/get_motif_structure.html">get_motif_structure()</a></code>, similar bugs in <code><a href="../reference/get_motif_structure.html">get_motif_alignment()</a></code> and <code><a href="../reference/get_motif_structure.html">get_motif_aglycon()</a></code> are also fixed.</li>
+</ul></div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.2.1" id="glymotif-021">glymotif 0.2.1<a class="anchor" aria-label="anchor" href="#glymotif-021"></a></h2>
 <div class="section level3">

@@ -23,7 +23,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">glymotif</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -63,7 +63,7 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">describe_n_glycans</span><span class="op">(</span><span class="va">glycans</span>, strict <span class="op">=</span> <span class="cn">FALSE</span>, parallel <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">describe_n_glycans</span><span class="op">(</span><span class="va">glycans</span>, strict <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -83,12 +83,6 @@ checking monosaacharide identities on the "generic" level (e.g. "Hex", "HexNAc")
 and ignoring linkage information.
 Default is <code>FALSE</code>. This is preferred because in most cases the
 structural resolution could not be high, but we known for sure the glycans are indeed N-glycans.</p></dd>
-
-
-<dt id="arg-parallel">parallel<a class="anchor" aria-label="anchor" href="#arg-parallel"></a></dt>
-<dd><p>A logical value. If <code>TRUE</code>, the function will use parallel processing.
-Remember to call <code><a href="https://future.futureverse.org/reference/plan.html" class="external-link">future::plan()</a></code> before using this argument,
-otherwise the function will still use sequential processing.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -115,19 +109,6 @@ In this case, we could make some assumptions about the glycan structures,
 and extract the key properties.
 For example, an <code>H-N</code> terminal motif is considered a terminal galactose.
 If you have high-resolution glycan structures, you can set <code>strict = TRUE</code>.</p>
-    </div>
-    <div class="section level2">
-    <h2 id="enabling-parallel-processing">Enabling parallel processing<a class="anchor" aria-label="anchor" href="#enabling-parallel-processing"></a></h2>
-    <p>This function can spend a lot of time on large datasets (e.g. &gt; 500 glycans).
-To speed up, you can enable parallel processing by setting <code>parallel = TRUE</code>.
-However, changing the argument to <code>TRUE</code> only set the function "ready"
-for parallel processing.
-You still need to call <code><a href="https://future.futureverse.org/reference/plan.html" class="external-link">future::plan()</a></code> to change the parallel backend.
-For example, to use the "multisession" backend:</p>
-<p></p><div class="sourceCode r"><pre><code><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://future.futureverse.org" class="external-link">future</a></span><span class="op">)</span></span>
-<span><span class="va">old_plan</span> <span class="op">&lt;-</span> <span class="fu">future</span><span class="fu">::</span><span class="fu"><a href="https://future.futureverse.org/reference/plan.html" class="external-link">plan</a></span><span class="op">(</span><span class="st">"multisession"</span><span class="op">)</span>  <span class="co"># Save the old plan</span></span>
-<span><span class="fu"><a href="../reference/describe_n_glycans.html">describe_n_glycans</a></span><span class="op">(</span><span class="va">glycans</span>, parallel <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="fu">future</span><span class="fu">::</span><span class="fu"><a href="https://future.futureverse.org/reference/plan.html" class="external-link">plan</a></span><span class="op">(</span><span class="va">old_plan</span><span class="op">)</span>  <span class="co"># Restore the old plan</span></span></code></pre><p></p></div>
     </div>
 
     <div class="section level2">
