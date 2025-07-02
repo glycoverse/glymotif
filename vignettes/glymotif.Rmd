@@ -319,7 +319,7 @@ library(glyexp)
 
 exp <- read_pglyco3_pglycoquant("results.list")
 exp |>
-  mutate_var(n_hex = have_motif(glycans, "Hex(a1-"))
+  mutate_var(n_hex = have_motif(glycan_structure, "Hex(a1-"))
 ```
 
 Multiple motifs at once, a bit more complex:
@@ -327,9 +327,9 @@ Multiple motifs at once, a bit more complex:
 ```{r, eval=FALSE}
 exp |>
   mutate_var(
-    n_hex = have_motif(glycans, "Hex(a1-"),
-    n_hexna = have_motif(glycans, "HexNAc(a1-"),
-    n_dhex = have_motif(glycans, "dHex(a1-")
+    n_hex = have_motif(glycan_structure, "Hex(a1-"),
+    n_hexna = have_motif(glycan_structure, "HexNAc(a1-"),
+    n_dhex = have_motif(glycan_structure, "dHex(a1-")
   )
 ```
 
