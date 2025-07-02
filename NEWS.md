@@ -1,3 +1,26 @@
+# glymotif 0.3.0
+
+## Major changes
+
+* Add `add_glycan_descriptions()`, `add_struct_descriptions()`, and `add_comp_descriptions()`.
+  These functions are moved from `glyexp` to `glymotif` for better separation of concerns.
+* Add `add_motifs_int()` and `add_motifs_lgl()` for adding motif annotations to a `glyexp::experiment()`.
+
+## Minor improvements
+
+* Remove the `parallel` argument from `add_glycan_descriptions()`, `add_struct_descriptions()`, and `add_comp_descriptions()`. We found it not very useful on a regular basis.
+* Update the vignette to reflect the new functions above.
+
+## Bug fixes
+
+* Fix a bug in `get_motif_structure()`, where the order of the results was not consistent with
+  the order of the input motifs.
+  This caused unexpected results in a wide range of functions including `have_motifs()`, `count_motifs()`,
+  and the new `add_motifs_lgl()` and `add_motifs_int()` functions,
+  when using motif names as input.
+  Alone with `get_motif_structure()`, similar bugs in `get_motif_alignment()` and `get_motif_aglycon()`
+  are also fixed.
+
 # glymotif 0.2.1
 
 ## Minor improvements
