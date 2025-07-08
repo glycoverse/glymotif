@@ -1,0 +1,196 @@
+---
+title: "Working with glyexp"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Working with glyexp}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## When Motifs Meet Experiments: A Perfect Partnership 🤝
+
+The real power of `glymotif` shines brightest when it joins forces with other tools in the `glycoverse` ecosystem.
+If you're already using `glyread` to import your glycoproteomics results
+and `glyexp` to manage your experimental data, you're in for a treat!
+`glymotif` provides some incredibly useful functions to perform `experiment` manipulation 
+about motifs—think of it as adding a new lens to your analytical microscope. 🔬
+
+**Important note:** This vignette assumes you're familiar with the `glyexp` package.
+If you haven't met it yet, we highly recommend checking out its
+[introduction](https://glycoverse.github.io/glyexp/articles/glyexp.html) first.
+Trust us—it's worth the detour! 🚀
+
+```{r setup}
+library(glymotif)
+library(glyexp)
+library(dplyr)
+```
+
+## Meet Our Star Player: Real Glycoproteomics Data 🌟
+
+Time to roll up our sleeves and dive into the good stuff! 💪
+Let's work with a real-world dataset that will showcase what `glymotif` can do when it teams up with actual experimental data.
+We'll use `glyread::read_pglyco3_pglycoquant()` to load our data into a proper `glyexp::experiment()` object — 
+think of it as our data's new home where everything is organized and ready for analysis.
+We will also use `glyclean::auto_clean()` to preprocess the data.
+
+```{r}
+library(glyread)
+library(glyclean)
+
+exp <- glyread::read_pglyco3_pglycoquant(
+  "glycopeptides.list",
+  sample_info = "sample_info.csv",
+  glycan_type = "N"
+) |> 
+  mutate_obs(sample = stringr::str_split_i(sample, "-", -1)) |>
+  auto_clean()
+exp
+```
+
+Now, let's peek under the hood and see what treasures we're working with! 👀
+
+```{r}
+get_var_info(exp)
+```
+
+```{r}
+get_sample_info(exp)
+```
+
+What we have here is a beautiful N-glycoproteomics dataset featuring 500 PSMs (Peptide Spectrum Matches) 
+across 12 samples — a perfect playground for motif analysis! 🎮
+
+**Pro tip:** 💡 In real-world data analysis, you'll definitely want to use `glyclean` to perform
+data preprocessing before diving into any analysis.
+Think of it as washing your vegetables before cooking—essential for the best results! 🥕
+
+## Adding Motif Annotations to an Experiment 🏷️
+
+Here's where things get interesting! 🤔
+We know that the variable information tibble contains all the juicy details about each glycoform - 
+the proteins, sites, and glycan structures.
+But what if we want to sprinkle some motif magic into the mix?
+What if we want to add more columns that tell us about the motifs hiding in our glycans?
+
+**The simple approach:** One motif at a time (very intuitive!) 🎯
+
+```{r}
+exp |> 
+  mutate_var(n_hex = have_motif(glycan_structure, "Hex(a1-")) |>
+  get_var_info() |>
+  select(variable, protein, glycan_structure, n_hex)
+```
+
+**The tempting approach:** Multiple motifs at once (you might be tempted to do this...) 🤷‍♀️
+
+```{r, eval=FALSE}
+# Don't do this
+exp |>
+  mutate_var(
+    n_hex = have_motif(glycan_structure, "Hex(a1-"),
+    n_hexna = have_motif(glycan_structure, "HexNAc(a1-"),
+    n_dhex = have_motif(glycan_structure, "dHex(a1-")
+  )
+```
+
+Hold on there, speed racer! 🛑
+While this approach works, it's not very efficient, and your computer won't thank you for it.
+Here's why: those three separate calls to `have_motif()` all perform time-consuming validations and conversions
+on the same set of glycan structures.
+It's like washing the same dishes three times instead of doing them all at once! 🍽️
+Plus, there's a lot of repetitive typing.
+You have to type `have_motif` and `glycan_structure` three times — talk about finger fatigue! 😴
+
+**The smart approach:** Use the `add_motifs_lgl()` or `add_motifs_int()` functions instead! ⚡
+They might look like simple syntactic sugar, 
+but they're actually optimized powerhouses designed specifically for this exact scenario:
+
+```{r}
+exp2 <- exp |> 
+  add_motifs_lgl(c(motif1 = "Hex(a1-", motif2 = "HexNAc(a1-", motif3 = "dHex(a1-"))
+```
+
+Voilà! 🎉 The motif annotations are now seamlessly integrated into your variable information tibble.
+
+```{r}
+exp2 |>
+  get_var_info() |>
+  select(variable, motif1, motif2, motif3)
+```
+
+But wait, what can you actually *do* with these shiny new columns? 🤔
+The possibilities are endless, but here's a tantalizing example to get your creative juices flowing:
+
+```{r, eval=FALSE}
+# You can perform pathway enrichment on all glycoproteins containing some motif:
+exp2 |>
+  filter_var(motif1 == TRUE) |>
+  enrich_reactome()  # from the `glystats` package
+```
+
+## The Art of Motif Quantification in Experiments 📊
+
+Now we're entering truly exciting territory! 🚀
+Meet `quantify_motifs()` — another incredibly useful tool in our arsenal.
+This function takes a `glyexp::experiment()` object and returns a brand new one with motif quantifications.
+But what does that actually *mean*? 🤷‍♂️
+
+Here's the beautiful concept: when we quantify a motif in a glycoproteomic context,
+we're measuring the abundance of motifs on each glycosite in each sample.
+This information elegantly combines two key pieces: the motif count on each site *and* the abundance of that site.
+It's like knowing not just how many sports cars are in a parking lot, but also how often each parking spot is used! 🚗
+
+```{r}
+motifs <- c(
+  "NeuAc(??-?)Hex(??-?)HexNAc(??-",
+  "Hex(??-?)HexNAc(??-",
+  "HexNAc(??-",
+  "NeuAc(??-?)Hex(??-?)[dHex(??-?)]HexNAc(??-",
+  "Hex(??-?)[dHex(??-?)]HexNAc(??-",
+  "dHex(??-?)HexNAc(??-"
+)
+motif_exp <- quantify_motifs(exp, motifs, alignments = "terminal", ignore_linkages = TRUE)
+# Pro tip: Our motifs don't have linkage information,
+# but we can still set `ignore_linkages` to TRUE manually to turbocharge the calculation! ⚡
+```
+
+Here's the beautiful part: `motif_exp` is also a `glyexp::experiment()`! 🎭
+Think of it this way： if we describe a typical glycoproteomics `experiment()` as
+"the quantities of glycans on different glycosites in different samples",
+then `motif_exp` is "the quantities of motifs on different glycosites in different samples".
+It's the same elegant structure, just viewed through a different analytical lens! 🔍
+
+Let's explore our newly minted experiment and see what treasures it holds:
+
+```{r}
+# First, let's peek at the variable information
+print(get_var_info(motif_exp), n = 12)
+```
+
+```{r}
+# And now, the expression matrix (where the magic numbers live!)
+get_expr_mat(motif_exp)[1:12, ]
+```
+
+Pretty familiar, right? 😊
+It's just like the experiment you know and love,
+except now we're quantifying motifs rather than glycans.
+
+Here's the best part: this means *all* your favorite functions in `glystats` can be used on this experiment! 🎉
+It's like having a universal remote that works with your new TV： everything just clicks! 📺
+
+```{r, eval=FALSE}
+library(glystats)
+
+gly_anova(motif_exp)
+gly_pca(motif_exp)
+# And others...
+```

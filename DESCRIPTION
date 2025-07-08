@@ -33,11 +33,15 @@ Imports:
     tibble,
     memoise,
     vctrs,
-    magrittr
-Remotes: 
+    magrittr,
+    glyclean (>= 0.6.1),
+    glyread (>= 0.3.2)
+Remotes:  
     glycoverse/glyrepr,
     glycoverse/glyparse,
-    glycoverse/glyexp
+    glycoverse/glyexp,
+    glycoverse/glyclean,
+    glycoverse/glyread
 Depends: 
     R (>= 4.0)
 VignetteBuilder: knitr
