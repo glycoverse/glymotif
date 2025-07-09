@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">glymotif</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -35,6 +35,8 @@
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
 <li><a class="dropdown-item" href="../articles/motif-matching.html">The Science Behind Motif Matching</a></li>
+    <li><a class="dropdown-item" href="../articles/n-glycans.html">N-Glycans</a></li>
+    <li><a class="dropdown-item" href="../articles/with-exp.html">Working with glyexp</a></li>
   </ul>
 </li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
@@ -224,7 +226,7 @@ only tell us “Hex” instead of “Glucose”</li>
 <strong>Chemical modifications</strong>: Sulfation, acetylation, and
 other decorations add complexity</li>
 <li>
-<strong>Positional constraints</strong>: Some motifs only “count”
+<strong>Alignment constraints</strong>: Some motifs only “count”
 when they appear in specific locations</li>
 </ul>
 <p>Consider the Tn antigen—it’s just a single GalNAc residue. But it
@@ -236,204 +238,18 @@ reducing end, not buried in the middle of a structure.</p>
 sophisticated matching engine. The algorithm considers structural
 context, chemical modifications, and biological relevance to make
 intelligent matching decisions.</p>
-<p>For the full technical details, dive into the documentation for
-<code><a href="../reference/have_motif.html">have_motif()</a></code>—it’s quite a journey!</p>
 </div>
 <div class="section level2">
-<h2 id="a-special-focus-n-glycan-analysis">A Special Focus: N-Glycan Analysis 🎯<a class="anchor" aria-label="anchor" href="#a-special-focus-n-glycan-analysis"></a>
+<h2 id="whats-next">What’s next?<a class="anchor" aria-label="anchor" href="#whats-next"></a>
 </h2>
-<p>If you work with N-linked glycans (N-glycans), you’re in for a treat!
-🎉 These are the most extensively studied and well-characterized glycans
-in biology, and <code>glymotif</code> has specialized tools just for
-them.</p>
-<div class="section level3">
-<h3 id="why-n-glycans-deserve-special-attention">Why N-Glycans Deserve Special Attention<a class="anchor" aria-label="anchor" href="#why-n-glycans-deserve-special-attention"></a>
-</h3>
-<p>N-glycans are remarkable for their structural predictability. Unlike
-their wild cousins (O-glycans and others), N-glycans follow strict
-biosynthetic rules. This constraint creates opportunities: we can
-describe N-glycan architecture using a standardized vocabulary that
-glycobiologists have developed over decades.</p>
-<p>Think of it like describing houses in a planned community—while each
-house is unique, they all follow the same architectural principles. You
-can meaningfully ask: “How many bedrooms?” “Does it have a garage?”
-“What style is the roof?”</p>
-<p>For N-glycans, the equivalent questions are:</p>
 <ul>
-<li>
-<strong>What type is it?</strong> (high mannose, hybrid, complex, or
-paucimannose)</li>
-<li><strong>How many antenna branches?</strong></li>
-<li><strong>Does it have a bisecting GlcNAc?</strong></li>
-<li><strong>How many core fucoses?</strong></li>
-<li><strong>How many arm fucoses?</strong></li>
-<li><strong>How many terminal galactoses?</strong></li>
+<li>Want to known all the details about motif matching rules? <a href="https://glycoverse.github.io/glymotif/articles/motif-matching.html">Here</a>
+</li>
+<li>Working with <code><a href="https://glycoverse.github.io/glyexp/reference/experiment.html" class="external-link">glyexp::experiment()</a></code>? <a href="https://glycoverse.github.io/glymotif/articles/with-exp.html">Here</a>
+</li>
+<li>Dealing with N-glycans? <a href="https://glycoverse.github.io/glymotif/articles/n-glycans.html">Here</a>
+</li>
 </ul>
-</div>
-<div class="section level3">
-<h3 id="your-n-glycan-analysis-toolkit">Your N-Glycan Analysis Toolkit<a class="anchor" aria-label="anchor" href="#your-n-glycan-analysis-toolkit"></a>
-</h3>
-<p><code>glymotif</code> provides a comprehensive suite of functions for
-N-glycan characterization:</p>
-<p><strong>Classification and Structure:</strong></p>
-<ul>
-<li>
-<code><a href="../reference/is_n_glycan.html">is_n_glycan()</a></code>: Confirms whether your structure is
-actually an N-glycan</li>
-<li>
-<code><a href="../reference/n_glycan_type.html">n_glycan_type()</a></code>: Classifies as high mannose, hybrid,
-complex, or paucimannose</li>
-</ul>
-<p><strong>Branching Architecture:</strong></p>
-<ul>
-<li>
-<code><a href="../reference/n_glycan_type.html">n_antennae()</a></code>: Counts the number of antenna
-branches</li>
-<li>
-<code><a href="../reference/n_glycan_type.html">has_bisecting()</a></code>: Detects bisecting GlcNAc presence</li>
-</ul>
-<p><strong>Fucosylation Patterns:</strong></p>
-<ul>
-<li>
-<code><a href="../reference/n_glycan_type.html">n_core_fuc()</a></code>: Counts core fucoses (attached to the
-reducing-end GlcNAc)</li>
-<li>
-<code><a href="../reference/n_glycan_type.html">n_arm_fuc()</a></code>: Counts arm fucoses (attached to antenna
-GlcNAcs)</li>
-</ul>
-<p><strong>Terminal Features:</strong></p>
-<ul>
-<li>
-<code><a href="../reference/n_glycan_type.html">n_gal()</a></code>: Counts total galactose residues</li>
-<li>
-<code><a href="../reference/n_glycan_type.html">n_terminal_gal()</a></code>: Counts terminal galactoses (those
-without sialic acid caps)</li>
-</ul>
-</div>
-<div class="section level3">
-<h3 id="the-swiss-army-knife-describe_n_glycans">The Swiss Army Knife: <code>describe_n_glycans()</code> 🔧<a class="anchor" aria-label="anchor" href="#the-swiss-army-knife-describe_n_glycans"></a>
-</h3>
-<p>Rather than calling each function individually, you can use
-<code><a href="../reference/describe_n_glycans.html">describe_n_glycans()</a></code> to get a complete structural profile
-in one go. It’s like having a comprehensive building inspection that
-checks everything at once:</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">n_glycans</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
-<span>  <span class="st">"Man(a1-3)[Man(a1-3)Man(a1-6)]Man(b1-4)GlcNAc(b1-4)GlcNAc"</span>,</span>
-<span>  <span class="st">"GlcNAc(b1-2)Man(a1-3)[Man(a1-6)]Man(b1-4)GlcNAc(b1-4)[Fuc(a1-6)]GlcNAc"</span>,</span>
-<span>  <span class="st">"Gal(b1-4)GlcNAc(b1-2)Man(a1-3)[Gal(b1-4)GlcNAc(b1-2)Man(a1-6)]Man(b1-4)GlcNAc(b1-4)GlcNAc"</span></span>
-<span><span class="op">)</span></span>
-<span><span class="fu"><a href="../reference/describe_n_glycans.html">describe_n_glycans</a></span><span class="op">(</span><span class="va">n_glycans</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 × 7</span></span></span>
-<span><span class="co">#&gt;   glycan_type  bisecting n_antennae n_core_fuc n_arm_fuc n_gal n_terminal_gal</span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> paucimannose FALSE             <span style="color: #BB0000;">NA</span>          0         0     0              0</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> complex      FALSE              1          1         0     0              0</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> complex      FALSE              2          0         0     2              2</span></span></code></pre></div>
-</div>
-<div class="section level3">
-<h3 id="embracing-the-messy-reality-working-with-ambiguous-data">Embracing the Messy Reality: Working with Ambiguous Data 🌪️<a class="anchor" aria-label="anchor" href="#embracing-the-messy-reality-working-with-ambiguous-data"></a>
-</h3>
-<p>Here’s where <code>glymotif</code> truly shines—it thrives on
-incomplete information! ✨ In the real world of glycomics or
-glycoproteomics research, you rarely get perfect structural data. Mass
-spectrometry might only tell you “there’s a hexose here” without
-specifying whether it’s glucose, galactose, or mannose. Linkage
-information might be completely missing or uncertain.</p>
-<p><strong>The beauty of N-glycan analysis?</strong> 💎 The strict
-biosynthetic rules act as a Rosetta Stone, allowing us to decode meaning
-from ambiguous data.</p>
-<p>Our functions are designed to work with minimal information
-requirements:</p>
-<ul>
-<li>
-<strong>Generic monosaccharides</strong>: “Hex”, “HexNAc”, “dHex”,
-instead of specific sugars</li>
-<li>
-<strong>Missing linkages</strong>: Those mysterious “??” annotations
-won’t stop the analysis</li>
-<li>
-<strong>Uncertain positions</strong>: The algorithm makes
-intelligent assumptions based on N-glycan biology</li>
-</ul>
-<p>Let’s see this in action with some intentionally ambiguous
-structures:</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># These are the same N-glycans as before, but with all specificity stripped away</span></span>
-<span><span class="va">ambiguous_glycans</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
-<span>  <span class="st">"Hex(??-?)[Hex(??-?)Hex(??-?)]Hex(??-?)HexNAc(??-?)HexNAc"</span>,</span>
-<span>  <span class="st">"HexNAc(??-?)Hex(??-?)[Hex(??-?)]Hex(??-?)HexNAc(??-?)[dHex(??-?)]HexNAc"</span>,</span>
-<span>  <span class="st">"Hex(??-?)HexNAc(??-?)Hex(??-?)[Hex(??-?)HexNAc(??-?)Hex(??-?)]Hex(??-?)HexNAc(??-?)HexNAc"</span></span>
-<span><span class="op">)</span></span>
-<span><span class="fu"><a href="../reference/describe_n_glycans.html">describe_n_glycans</a></span><span class="op">(</span><span class="va">ambiguous_glycans</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 × 7</span></span></span>
-<span><span class="co">#&gt;   glycan_type  bisecting n_antennae n_core_fuc n_arm_fuc n_gal n_terminal_gal</span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> paucimannose FALSE             <span style="color: #BB0000;">NA</span>          0         0     0              0</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> complex      FALSE              1          1         0     0              0</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> complex      FALSE              2          0         0     2              2</span></span></code></pre></div>
-<p><strong>Remarkable, isn’t it?</strong> 🤯 Despite the uncertainty in
-the input data, we get the same structural insights as before.</p>
-<p>This tolerance for ambiguity is a game-changer for high-throughput
-glycomics and glycoproteomics. 🚀 Whether you’re analyzing thousands of
-glycopeptides from a proteomics experiment or working with automated
-glycan assignment from mass spectra, <code>glymotif</code> meets your
-data where it is—not where you wish it were.</p>
-</div>
-</div>
-<div class="section level2">
-<h2 id="playing-well-with-others-package-integration">Playing Well with Others: Package Integration 🤝<a class="anchor" aria-label="anchor" href="#playing-well-with-others-package-integration"></a>
-</h2>
-<p>The real power of <code>glymotif</code> shines when it works
-alongside other tools in the <code>glycoverse</code> ecosystem. If
-you’re already using <code>glyread</code> to import your glycoproteomics
-results and <code>glyexp</code> to manage your experimental data, you’re
-in luck!</p>
-<div class="section level3">
-<h3 id="adding-motif-annotations-to-an-experiment">Adding Motif Annotations to an Experiment<a class="anchor" aria-label="anchor" href="#adding-motif-annotations-to-an-experiment"></a>
-</h3>
-<p>One motif at a time, very intuitive:</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">glyread</span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://glycoverse.github.io/glyexp/" class="external-link">glyexp</a></span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">exp</span> <span class="op">&lt;-</span> <span class="fu">read_pglyco3_pglycoquant</span><span class="op">(</span><span class="st">"results.list"</span><span class="op">)</span></span>
-<span><span class="va">exp</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://glycoverse.github.io/glyexp/reference/mutate_obs.html" class="external-link">mutate_var</a></span><span class="op">(</span>n_hex <span class="op">=</span> <span class="fu"><a href="../reference/have_motif.html">have_motif</a></span><span class="op">(</span><span class="va">glycan_structure</span>, <span class="st">"Hex(a1-"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p>Multiple motifs at once, a bit more complex:</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">exp</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://glycoverse.github.io/glyexp/reference/mutate_obs.html" class="external-link">mutate_var</a></span><span class="op">(</span></span>
-<span>    n_hex <span class="op">=</span> <span class="fu"><a href="../reference/have_motif.html">have_motif</a></span><span class="op">(</span><span class="va">glycan_structure</span>, <span class="st">"Hex(a1-"</span><span class="op">)</span>,</span>
-<span>    n_hexna <span class="op">=</span> <span class="fu"><a href="../reference/have_motif.html">have_motif</a></span><span class="op">(</span><span class="va">glycan_structure</span>, <span class="st">"HexNAc(a1-"</span><span class="op">)</span>,</span>
-<span>    n_dhex <span class="op">=</span> <span class="fu"><a href="../reference/have_motif.html">have_motif</a></span><span class="op">(</span><span class="va">glycan_structure</span>, <span class="st">"dHex(a1-"</span><span class="op">)</span></span>
-<span>  <span class="op">)</span></span></code></pre></div>
-<p>Well, this works, but it’s not very efficient, and needs a lot of
-typing.</p>
-<p>Use the <code><a href="../reference/add_motifs_int.html">add_motifs_lgl()</a></code> or
-<code><a href="../reference/add_motifs_int.html">add_motifs_int()</a></code> functions instead:</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">exp</span> <span class="op">|&gt;</span> <span class="fu"><a href="../reference/add_motifs_int.html">add_motifs_lgl</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Hex(a1-"</span>, <span class="st">"HexNAc(a1-"</span>, <span class="st">"dHex(a1-"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p>Now the motif annotations are added to the variable information
-tibble.</p>
-</div>
-<div class="section level3">
-<h3 id="describing-n-glycans-in-an-experiment">Describing N-Glycans in an Experiment<a class="anchor" aria-label="anchor" href="#describing-n-glycans-in-an-experiment"></a>
-</h3>
-<p>There’s a seamless integration waiting for you: the
-<code>add_glycan_description()</code> function can automatically apply
-all the N-glycan analysis we just discussed to your entire dataset. No
-manual loops, no data wrangling headaches—just one function call to
-enrich your glycan annotations with comprehensive structural
-descriptions.</p>
-<p>Here’s how it works in practice:</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Add N-glycan structural descriptions automatically</span></span>
-<span><span class="va">exp</span> <span class="op">&lt;-</span> <span class="fu">add_glycan_description</span><span class="op">(</span><span class="va">exp</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Now your experiment object contains rich glycan annotations!</span></span>
-<span><span class="fu"><a href="https://glycoverse.github.io/glyexp/reference/get_var_info.html" class="external-link">get_var_info</a></span><span class="op">(</span><span class="va">exp</span><span class="op">)</span></span></code></pre></div>
-</div>
 </div>
 <div class="section level2">
 <h2 id="standing-on-the-shoulders-of-giants">Standing on the Shoulders of Giants 🏔️<a class="anchor" aria-label="anchor" href="#standing-on-the-shoulders-of-giants"></a>
