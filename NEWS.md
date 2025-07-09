@@ -1,3 +1,9 @@
+# glymotif 0.4.1
+
+## Bug fixes
+
+* Fix a major bug in `quantify_motifs()`.
+
 # glymotif 0.4.0
 
 ## Major changes
