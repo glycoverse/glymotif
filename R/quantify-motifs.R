@@ -161,9 +161,16 @@ quantify_motifs <- function(exp, motifs, alignments = NULL, ignore_linkages = FA
   # Fill the new expression matrix by aggregating within each base variable group
   for (i in seq_len(n_base_vars)) {
     # Find rows that match this unique base variable combination
-    matching_rows <- which(apply(base_variables, 1, function(row) {
-      all(row == unique_base_vars[i, ])
-    }))
+    # Fixed: Use proper tibble comparison instead of apply
+    target_row <- unique_base_vars[i, ]
+    matching_conditions <- rep(TRUE, nrow(base_variables))
+
+    for (col_name in base_var_cols) {
+      matching_conditions <- matching_conditions &
+        (base_variables[[col_name]] == target_row[[col_name]])
+    }
+
+    matching_rows <- which(matching_conditions)
 
     for (j in seq_len(n_motifs)) {
       row_idx <- (i - 1) * n_motifs + j
