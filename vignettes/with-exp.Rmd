@@ -115,7 +115,7 @@ but they're actually optimized powerhouses designed specifically for this exact 
 
 ```{r}
 exp2 <- exp |> 
-  add_motifs_lgl(c(motif1 = "Hex(a1-", motif2 = "HexNAc(a1-", motif3 = "dHex(a1-"))
+  add_motifs_lgl(c(motif1 = "Hex(??-", motif2 = "HexNAc(??-", motif3 = "dHex(??-"))
 ```
 
 Voilà! 🎉 The motif annotations are now seamlessly integrated into your variable information tibble.
