@@ -1,3 +1,16 @@
+# glymotif 0.4.0
+
+## Major changes
+
+* Add `quantify_motifs()` to quantify motifs in a `glyexp::experiment()`.
+
+## Minor improvements
+
+* Split the "Get Started" vignette into three:
+  * The new "Get Started" vignette, only covering basic motif matching functions.
+  * A new "N-Glycans" vignette, covering N-glycan-specific functions.
+  * A new "Working with `glyexp::experiment()`" vignette, covering the integration with `glyexp::experiment()`.
+
 # glymotif 0.3.1
 
 ## Minor improvements
