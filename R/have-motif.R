@@ -227,6 +227,14 @@ have_motif <- function(glycans, motif, alignment = NULL, ignore_linkages = FALSE
   rlang::exec("have_motif_", !!!params)
 }
 
+#' @rdname have_motif
+#' @export
+have_motifs <- function(glycans, motifs, alignments = NULL, ignore_linkages = FALSE) {
+  params <- prepare_have_motifs_args(glycans, motifs, alignments, ignore_linkages)
+  glycan_names <- prepare_struc_names(glycans, params$glycans)
+  motif_names <- prepare_struc_names(motifs, params$motifs)
+  rlang::exec("have_motifs_", !!!params, glycan_names = glycan_names, motif_names = motif_names)
+}
 
 have_motif_ <- function(glycans, motif, alignment, ignore_linkages = FALSE) {
   # This function is a simpler version of `have_motif()`.
@@ -242,7 +250,6 @@ have_motif_ <- function(glycans, motif, alignment, ignore_linkages = FALSE) {
   )
 }
 
-
 .have_motif_single <- function(glycan_graph, motif_graph, alignment, ignore_linkages = FALSE) {
   # Optimized version with early termination
   # Check if any match is valid, returning immediately on first valid match
@@ -256,41 +263,6 @@ have_motif_ <- function(glycans, motif, alignment, ignore_linkages = FALSE) {
   )
 }
 
-# ----- Generic function for single motif mapping -----
-apply_single_motif_to_glycans <- function(glycans, motif, alignment, ignore_linkages, single_glycan_func, smap_func) {
-  # Generic function to apply a single motif to multiple glycans
-  # single_glycan_func should be either .have_motif_single or .count_motif_single
-  # smap_func should be either glyrepr::smap_lgl or glyrepr::smap_int
-  
-  # Handle mono type conversion based on motif type
-  motif_type <- glyrepr::get_mono_type(motif)
-  if (motif_type == "generic") {
-    # For generic motifs, convert glycans to generic to allow matching concrete glycans
-    glycans_to_use <- glyrepr::convert_mono_type(glycans, to = "generic")
-  } else {
-    # For concrete motifs, use glycans as-is 
-    # (generic glycans will naturally not match due to different mono names)
-    glycans_to_use <- glycans
-  }
-  
-  motif_graph <- glyrepr::get_structure_graphs(motif)
-  smap_func(glycans_to_use, single_glycan_func, motif_graph, alignment, ignore_linkages)
+have_motifs_ <- function(glycans, motifs, alignments, glycan_names, motif_names, ignore_linkages = FALSE) {
+  apply_motifs_to_glycans(glycans, motifs, alignments, ignore_linkages, have_motif_, glycan_names, motif_names)
 }
-
-#' @section About Names:
-#' `have_motif()` and `count_motif()` return a vector with no names.
-#' It is easy to trace the names back to the original glycans.
-#' 
-#' `have_motifs()` and `count_motifs()` return a matrix with both row and column names.
-#' The row names are the glycan names, and the column names are the motif names.
-#' The names are decided according to the following rules:
-#' 
-#' 1. If `glycans` or `motifs` is a `glyrepr::glycan_structure()` object,
-#'    the names are the IUPAC-condensed structure strings.
-#'    (Sadly due to the constrains of the `vctrs` package `glyrepr::glycan_structure()` is built on,
-#'    a `glyrepr::glycan_structure()` vector cannot have names.)
-#' 2. If `glycans` or `motifs` is a character vector, either IUPAC-condensed structure strings or
-#'    motif names, it will use the names of the character vector if exists, 
-#'    otherwise use the character vector itself as the names.
-#'
-#' @name return_value_names

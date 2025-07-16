@@ -202,3 +202,65 @@ same_mono_types <- function(structures) {
   mono_types <- glyrepr::get_mono_type(structures)
   dplyr::n_distinct(mono_types) <= 1
 }
+
+# ----- Generic function for single motif mapping -----
+apply_single_motif_to_glycans <- function(glycans, motif, alignment, ignore_linkages, single_glycan_func, smap_func) {
+  # Generic function to apply a single motif to multiple glycans
+  # single_glycan_func should be either .have_motif_single or .count_motif_single
+  # smap_func should be either glyrepr::smap_lgl or glyrepr::smap_int
+  
+  # Handle mono type conversion based on motif type
+  motif_type <- glyrepr::get_mono_type(motif)
+  if (motif_type == "generic") {
+    # For generic motifs, convert glycans to generic to allow matching concrete glycans
+    glycans_to_use <- glyrepr::convert_mono_type(glycans, to = "generic")
+  } else {
+    # For concrete motifs, use glycans as-is 
+    # (generic glycans will naturally not match due to different mono names)
+    glycans_to_use <- glycans
+  }
+  
+  motif_graph <- glyrepr::get_structure_graphs(motif)
+  smap_func(glycans_to_use, single_glycan_func, motif_graph, alignment, ignore_linkages)
+}
+
+# ----- Generic function for multiple motifs -----
+prepare_struc_names <- function(x, strucs) {
+  if (glyrepr::is_glycan_structure(x)) {
+    return(as.character(x))
+  } else {  # must be a character vector
+    if (is.null(names(x))) {
+      return(x)
+    } else {
+      return(names(x))
+    }
+  }
+}
+
+apply_motifs_to_glycans <- function(glycans, motifs, alignments, ignore_linkages, single_motif_func, glycan_names, motif_names) {
+  # Generic function to apply multiple motifs to multiple glycans
+  # single_motif_func should be either have_motif_ or count_motif_
+
+  # Apply each motif to all glycans using purrr
+  motif_results_list <- purrr::map2(
+    motifs,
+    alignments,
+    ~ single_motif_func(
+      glycans, 
+      .x, 
+      alignment = .y, 
+      ignore_linkages = ignore_linkages
+    )
+  )
+  
+  # Set names for the results
+  names(motif_results_list) <- motif_names
+  
+  # Convert results to matrix format
+  # Each element in motif_results_list should be a vector of results for all glycans
+  result_matrix <- do.call(cbind, motif_results_list)
+  rownames(result_matrix) <- glycan_names
+  colnames(result_matrix) <- motif_names
+  
+  return(result_matrix)
+}

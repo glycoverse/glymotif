@@ -93,6 +93,14 @@ count_motif <- function(glycans, motif, alignment = NULL, ignore_linkages = FALS
   rlang::exec("count_motif_", !!!params)
 }
 
+#' @rdname count_motif
+#' @export
+count_motifs <- function(glycans, motifs, alignments = NULL, ignore_linkages = FALSE) {
+  params <- prepare_have_motifs_args(glycans, motifs, alignments, ignore_linkages)
+  glycan_names <- prepare_struc_names(glycans, params$glycans)
+  motif_names <- prepare_struc_names(motifs, params$motifs)
+  rlang::exec("count_motifs_", !!!params, glycan_names = glycan_names, motif_names = motif_names)
+}
 
 count_motif_ <- function(glycans, motif, alignment, ignore_linkages = FALSE) {
   # This function is a simpler version of `count_motif()`.
@@ -108,7 +116,6 @@ count_motif_ <- function(glycans, motif, alignment, ignore_linkages = FALSE) {
   )
 }
 
-
 .count_motif_single <- function(glycan_graph, motif_graph, alignment, ignore_linkages = FALSE) {
   # This function is the logic part of `count_motif()`.
   c_graphs <- colorize_graphs(glycan_graph, motif_graph)
@@ -123,11 +130,14 @@ count_motif_ <- function(glycans, motif, alignment, ignore_linkages = FALSE) {
   count_set_unique(valid_res)
 }
 
-
 count_set_unique <- function(lst) {
   # Given a list of integer vectors, return the number of unique vectors.
   if (length(lst) == 0) return(0)
   sorted_lst <- purrr::map(lst, sort)
   str_vectors <- purrr::map_chr(sorted_lst, ~ paste(.x, collapse = ","))
   length(unique(str_vectors))
+}
+
+count_motifs_ <- function(glycans, motifs, alignments, glycan_names, motif_names, ignore_linkages = FALSE) {
+  apply_motifs_to_glycans(glycans, motifs, alignments, ignore_linkages, count_motif_, glycan_names, motif_names)
 }
