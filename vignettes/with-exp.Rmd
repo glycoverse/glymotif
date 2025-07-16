@@ -133,7 +133,7 @@ The possibilities are endless, but here's a tantalizing example to get your crea
 # You can perform pathway enrichment on all glycoproteins containing some motif:
 exp2 |>
   filter_var(motif1 == TRUE) |>
-  enrich_reactome()  # from the `glystats` package
+  gly_enrich_reactome()  # from the `glystats` package
 ```
 
 ## The Art of Motif Quantification in Experiments 📊
