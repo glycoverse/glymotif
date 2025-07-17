@@ -2,14 +2,14 @@
 test_that("wrong glycan types", {
   glycan <- igraph::make_empty_graph()
   motif <- glyparse::parse_iupac_condensed("Gal(b1-4)GalNAc")
-  expect_snapshot(have_motif(glycan, motif), error = TRUE)
+  expect_error(have_motif(glycan, motif), "`glycans` must be a 'glyrepr_structure' object")
 })
 
 
 test_that("wrong motif types", {
   glycan <- glyrepr::o_glycan_core_2()
   motif <- igraph::make_empty_graph()
-  expect_snapshot(have_motif(glycan, motif), error = TRUE)
+  expect_error(have_motif(glycan, motif), "The `motif` argument must be a scalar vector")
 })
 
 
@@ -30,21 +30,25 @@ test_that("motif name used as input", {
 test_that("unkown motif name used as input", {
   glycan <- glyrepr::o_glycan_core_2()
   motif <- "unknown motif name"
-  expect_snapshot(have_motif(glycan, motif), error = TRUE)
+  expect_error(have_motif(glycan, motif), "Some motifs are neither valid IUPAC-condensed structures nor known motif names")
 })
 
 
 test_that("bad glycan IUPAC", {
   glycan <- "bad IUPAC"
   motif <- glyparse::parse_iupac_condensed("Gal(b1-3)GalNAc")
-  expect_snapshot(have_motif(glycan, motif), error = TRUE)
+  expect_error(have_motif(glycan, motif), "Some glycans could not be parsed as valid IUPAC-condensed structures")
 })
 
 
 test_that("warning when user-provided alignment is different from database", {
   glycan <- glyparse::parse_iupac_condensed("GlcNAc(b1-6)Gal(b1-3)GalNAc(a1-")
   motif <- "O-Glycan core 1"
-  expect_snapshot(have_motif(glycan, motif, alignment = "terminal"))
+  expect_warning(
+    result <- have_motif(glycan, motif, alignment = "terminal"),
+    "The provided alignment type.*is different from.*the motif's alignment type"
+  )
+  expect_false(result)
 })
 
 
@@ -285,7 +289,11 @@ test_that("custom alignment is same as database", {
 
 
 test_that("custom alignment is different from database", {
-  expect_snapshot(have_motif("Gal(b1-3)GalNAc(a1-3)GlcNAc", "O-Glycan core 1", alignment = "substructure"))
+  expect_warning(
+    result <- have_motif("Gal(b1-3)GalNAc(a1-3)GlcNAc", "O-Glycan core 1", alignment = "substructure"),
+    "The provided alignment type.*is different from.*the motif's alignment type"
+  )
+  expect_true(result)
 })
 
 

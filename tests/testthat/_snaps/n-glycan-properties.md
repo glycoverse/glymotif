@@ -22,14 +22,6 @@
       2 complex     FALSE              2          0         0     1              1
       3 complex     FALSE              2          1         1     0              0
 
-# describe not N-glycans
-
-    Code
-      describe_n_glycans(glycans)
-    Condition
-      Error in `describe_n_glycans()`:
-      ! Glycans at indices 1 are not N-glycans.
-
 # describe N-glycans with no name
 
     Code

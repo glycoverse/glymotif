@@ -741,7 +741,7 @@ test_that("describe not N-glycans", {
     o_glycan_core_1("generic", linkage = FALSE),
     highmannose_H5N2("generic", linkage = FALSE)
   )
-  expect_snapshot(describe_n_glycans(glycans), error = TRUE)
+  expect_error(describe_n_glycans(glycans), "Glycans at indices .* are not N-glycans")
 })
 
 
