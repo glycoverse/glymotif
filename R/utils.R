@@ -1,15 +1,22 @@
 # ----- Prepare arguments -----
 # Unified function to prepare arguments for both single and multiple motifs
-prepare_motif_args <- function(glycans, motifs, alignments = NULL, ignore_linkages = FALSE, single_motif = FALSE) {
+prepare_motif_args <- function(
+  glycans,
+  motifs,
+  alignments = NULL,
+  ignore_linkages = FALSE,
+  single_motif = FALSE,
+  call = rlang::caller_env()
+) {
   # Unified validation logic
   valid_alignments_arg(alignments, motifs)
   valid_ignore_linkages_arg(ignore_linkages)
 
-  motif_type <- get_motif_type(motifs)
+  motif_type <- get_motif_type(motifs, call = call)
   alignments <- decide_alignments(motifs, motif_type, alignments)
 
-  glycans <- ensure_glycans_are_structures(glycans)
-  motifs <- ensure_motifs_are_structures(motifs, motif_type, require_scalar = single_motif)
+  glycans <- ensure_glycans_are_structures(glycans, call = call)
+  motifs <- ensure_motifs_are_structures(motifs, motif_type, require_scalar = single_motif, call = call)
 
   # Return appropriate format based on single_motif flag
   if (single_motif) {
@@ -73,7 +80,7 @@ motifs_type_err_msg <- paste(
 # ----- Decide motif type -----
 # Decide if the `motifs` argument is known motifs,
 # an IUPAC-condensed structure character vector, or a 'glyrepr_structure' object.
-get_motif_type <- function(motifs) {
+get_motif_type <- function(motifs, call = rlang::caller_env()) {
   # If it is neither a glycan graph or a known motif, it is assumed to
   # be an IUPAC-condensed structure string.
   # This assumption may not be correct, for it is possible that a wrong
@@ -86,7 +93,7 @@ get_motif_type <- function(motifs) {
       return("known")
     } else if (any(known_motif_idx)) {
       unknown_motifs <- motifs[!known_motif_idx]
-      cli::cli_abort("Unknown motif: {.val {unknown_motifs}}.")
+      cli::cli_abort("Unknown motif: {.val {unknown_motifs}}.", call = call)
     } else {
       return("iupac")
     }
