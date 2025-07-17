@@ -1,3 +1,9 @@
+# glymotif 0.4.2
+
+## Minor improvements
+
+* Better error messages for invalid input.
+
 # glymotif 0.4.1
 
 ## Bug fixes
