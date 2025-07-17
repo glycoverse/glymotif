@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">glymotif</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -125,35 +125,32 @@ preprocess the data.</p>
 <span>  <span class="fu"><a href="https://glycoverse.github.io/glyexp/reference/mutate_obs.html" class="external-link">mutate_obs</a></span><span class="op">(</span>sample <span class="op">=</span> <span class="fu">stringr</span><span class="fu">::</span><span class="fu"><a href="https://stringr.tidyverse.org/reference/str_split.html" class="external-link">str_split_i</a></span><span class="op">(</span><span class="va">sample</span>, <span class="st">"-"</span>, <span class="op">-</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://glycoverse.github.io/glyclean/reference/auto_clean.html" class="external-link">auto_clean</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Reading data</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Reading data <span style="color: #B2B2B2;">[437ms]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Performing protein inference</span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Performing protein inference <span style="color: #B2B2B2;">[82ms]</span></span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Parsing glycan compositions and structures</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Reading data<span style="color: #00BBBB;">ℹ</span> Parsing glycan compositions and structures</span></span>
 <span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Parsing glycan compositions and structures <span style="color: #B2B2B2;">[3.1s]</span></span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Packing experiment</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Packing experiment <span style="color: #B2B2B2;">[20ms]</span></span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Performing protein inference</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Performing protein inference <span style="color: #B2B2B2;">[337ms]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Reading data<span style="color: #00BB00;">✔</span> Reading data <span style="color: #B2B2B2;">[3.5s]</span></span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Normalizing data (Median)</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Normalizing data (Median) <span style="color: #B2B2B2;">[128ms]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Normalizing data (Median) <span style="color: #B2B2B2;">[127ms]</span></span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Removing variables with &gt;50% missing values</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Removing variables with &gt;50% missing values <span style="color: #B2B2B2;">[18ms]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Removing variables with &gt;50% missing values <span style="color: #B2B2B2;">[16ms]</span></span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Imputing missing values</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Sample size &lt;= 30, using sample minimum imputation</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Imputing missing values<span style="color: #00BB00;">✔</span> Imputing missing values <span style="color: #B2B2B2;">[24ms]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Imputing missing values<span style="color: #00BB00;">✔</span> Imputing missing values <span style="color: #B2B2B2;">[15ms]</span></span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Aggregating data</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Aggregating data <span style="color: #B2B2B2;">[145ms]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Aggregating data <span style="color: #B2B2B2;">[101ms]</span></span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Normalizing data again</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Detecting batch effects using ANOVA for 263 variables...</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Normalizing data again<span style="color: #00BB00;">✔</span> Batch effect detection completed. 1 out of 263 variables show significant batch effects (p &lt; 0.05).</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Normalizing data again<span style="color: #00BBBB;">ℹ</span> Batch effects detected in 0.4% of variables (&lt;=10%). Skipping batch correction.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Normalizing data again<span style="color: #00BB00;">✔</span> Normalizing data again <span style="color: #B2B2B2;">[683ms]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Normalizing data again<span style="color: #00BB00;">✔</span> Normalizing data again <span style="color: #B2B2B2;">[647ms]</span></span></span>
 <span><span class="va">exp</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">──</span> <span style="font-weight: bold;">Experiment</span> <span style="color: #00BBBB;">──────────────────────────────────────────────────────────────────</span></span></span>
@@ -285,7 +282,7 @@ example to get your creative juices flowing:</p>
 <code class="sourceCode R"><span><span class="co"># You can perform pathway enrichment on all glycoproteins containing some motif:</span></span>
 <span><span class="va">exp2</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://glycoverse.github.io/glyexp/reference/filter_obs.html" class="external-link">filter_var</a></span><span class="op">(</span><span class="va">motif1</span> <span class="op">==</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">enrich_reactome</span><span class="op">(</span><span class="op">)</span>  <span class="co"># from the `glystats` package</span></span></code></pre></div>
+<span>  <span class="fu">gly_enrich_reactome</span><span class="op">(</span><span class="op">)</span>  <span class="co"># from the `glystats` package</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="the-art-of-motif-quantification-in-experiments">The Art of Motif Quantification in Experiments 📊<a class="anchor" aria-label="anchor" href="#the-art-of-motif-quantification-in-experiments"></a>
@@ -345,31 +342,31 @@ holds:</p>
 <code class="sourceCode R"><span><span class="co"># And now, the expression matrix (where the magic numbers live!)</span></span>
 <span><span class="fu"><a href="https://glycoverse.github.io/glyexp/reference/get_expr_mat.html" class="external-link">get_expr_mat</a></span><span class="op">(</span><span class="va">motif_exp</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">12</span>, <span class="op">]</span></span>
 <span><span class="co">#&gt;              C_1        C_2          C_3         H_1          H_2       H_3</span></span>
-<span><span class="co">#&gt; V1      152014.3    1066076     102104.8    313757.6     48186.51   1058981</span></span>
+<span><span class="co">#&gt; V1      161544.9    1071582     102731.8    315378.1     63111.02   1064451</span></span>
 <span><span class="co">#&gt; V2           0.0          0          0.0         0.0         0.00         0</span></span>
 <span><span class="co">#&gt; V3           0.0          0          0.0         0.0         0.00         0</span></span>
 <span><span class="co">#&gt; V4           0.0          0          0.0         0.0         0.00         0</span></span>
 <span><span class="co">#&gt; V5           0.0          0          0.0         0.0         0.00         0</span></span>
 <span><span class="co">#&gt; V6           0.0          0          0.0         0.0         0.00         0</span></span>
-<span><span class="co">#&gt; V7  6345221568.8 7206105753 7191439575.7 140324912.5 533431894.56 300715555</span></span>
-<span><span class="co">#&gt; V8   610187320.7  687432028  618492715.7   1672944.5    816325.57   4082485</span></span>
-<span><span class="co">#&gt; V9   301461764.4  469696174  342199332.7  10748745.5 499654575.62 292347836</span></span>
-<span><span class="co">#&gt; V10  204401527.3  361718038  551686432.8  42321892.3  11721625.17   1939821</span></span>
+<span><span class="co">#&gt; V7  6377993452.8 7243323943 7235597457.3 140521039.4 535845718.67 302012725</span></span>
+<span><span class="co">#&gt; V8   613338824.2  690982486  622290471.1   1582467.7    755226.47   4083880</span></span>
+<span><span class="co">#&gt; V9   303018758.1  472122067  344300552.9  10771221.7 502235198.15 293857758</span></span>
+<span><span class="co">#&gt; V10  205457223.0  363586244  555073974.8  42507437.9  11757947.48   1930150</span></span>
 <span><span class="co">#&gt; V11          0.0          0          0.0         0.0         0.00         0</span></span>
-<span><span class="co">#&gt; V12  226547981.2  387992287  581512073.9  42387630.9  11785577.54   1978999</span></span>
+<span><span class="co">#&gt; V12  227718059.2  389996195  585082755.6  42573516.1  11829567.97   1969530</span></span>
 <span><span class="co">#&gt;            M_1        M_2        M_3        Y_1        Y_2          Y_3</span></span>
-<span><span class="co">#&gt; V1    14084377    8630328    7735835   16851418   11241393     739108.8</span></span>
+<span><span class="co">#&gt; V1    14157120    8247987    7680553   16938453   11299452     742926.2</span></span>
 <span><span class="co">#&gt; V2           0          0          0          0          0          0.0</span></span>
 <span><span class="co">#&gt; V3           0          0          0          0          0          0.0</span></span>
 <span><span class="co">#&gt; V4           0          0          0          0          0          0.0</span></span>
 <span><span class="co">#&gt; V5           0          0          0          0          0          0.0</span></span>
 <span><span class="co">#&gt; V6           0          0          0          0          0          0.0</span></span>
-<span><span class="co">#&gt; V7  5747809593 5202035052 3736151840 1652226063 3236759193 2298155309.7</span></span>
-<span><span class="co">#&gt; V8   951853984  668247296  733802918  233115428  301886646  314476664.4</span></span>
-<span><span class="co">#&gt; V9   309613176   97558541  215055020   75713539   84626608   48423869.5</span></span>
-<span><span class="co">#&gt; V10  291843379  161976038  257232685  148760800  139522555  149173688.3</span></span>
+<span><span class="co">#&gt; V7  5777389128 4971574084 3709001198 1660759502 3253476450 2310024852.5</span></span>
+<span><span class="co">#&gt; V8   956784247  638642551  728559015  234319425  303445834  316100877.6</span></span>
+<span><span class="co">#&gt; V9   311212270   93236495  213518193   76104585   85063689   48673969.7</span></span>
+<span><span class="co">#&gt; V10  293350695  154800162  255394449  149529122  140243163  149944142.6</span></span>
 <span><span class="co">#&gt; V11          0          0          0          0          0          0.0</span></span>
-<span><span class="co">#&gt; V12  324153530  177427606  282567373  160099412  145271893  160356962.6</span></span></code></pre></div>
+<span><span class="co">#&gt; V12  325827723  169567194  280548090  160926295  146022195  161185176.3</span></span></code></pre></div>
 <p>Pretty familiar, right? 😊 It’s just like the experiment you know and
 love, except now we’re quantifying motifs rather than glycans.</p>
 <p>Here’s the best part: this means <em>all</em> your favorite functions
