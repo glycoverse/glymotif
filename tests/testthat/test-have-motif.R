@@ -460,8 +460,8 @@ test_that("have_motifs handles invalid motifs argument", {
   glycan <- glyrepr::o_glycan_core_2()
   glycans <- c(glycan)
   motifs <- 123
-  
-  expect_error(have_motifs(glycans, motifs), "`motifs` must be either a `glyrepr_structure` object")
+
+  expect_error(have_motifs(glycans, motifs), "`motifs` must be a 'glyrepr_structure' object")
 })
 
 

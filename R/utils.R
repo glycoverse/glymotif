@@ -1,37 +1,31 @@
 # ----- Prepare arguments -----
 prepare_have_motifs_args <- function(glycans, motifs, alignments, ignore_linkages) {
   # for `have_motifs()`, `count_motifs()`
-  valid_glycans_arg(glycans)
-  valid_motifs_arg(motifs)
   valid_alignments_arg(alignments, motifs)
   valid_ignore_linkages_arg(ignore_linkages)
 
   motif_type <- get_motif_type(motifs)
   alignments <- decide_alignments(motifs, motif_type, alignments)
-  
-  # Make sure `glycan` and `motif` are structures
+
   glycans <- ensure_glycans_are_structures(glycans)
   motifs <- ensure_motifs_are_structures(motifs, motif_type)
-
-  # Note: We no longer enforce global mono type consistency here.
-  # Each motif will handle its own type conversion in apply_single_motif_to_glycans.
 
   list(glycans = glycans, motifs = motifs, alignments = alignments, ignore_linkages = ignore_linkages)
 }
 
 prepare_have_motif_args <- function(glycans, motif, alignment, ignore_linkages) {
   # for `have_motif()`, `count_motif()`
-  if (length(motif) != 1) {
-    rlang::abort("`motif` must be a single structure.")
-  }
-  params <- prepare_have_motifs_args(glycans, motif, alignment, ignore_linkages)
-  params$motif <- params$motifs
-  params$alignment <- params$alignments
-  params$motifs <- NULL
-  params$alignments <- NULL
-  params
-}
+  valid_alignments_arg(alignment, motif)
+  valid_ignore_linkages_arg(ignore_linkages)
 
+  motif_type <- get_motif_type(motif)
+  alignment <- decide_alignments(motif, motif_type, alignment)
+
+  glycans <- ensure_glycans_are_structures(glycans)
+  motif <- ensure_motif_is_structure(motif, motif_type)
+
+  list(glycans = glycans, motif = motif, alignment = alignment, ignore_linkages = ignore_linkages)
+}
 
 # ----- Argument validation -----
 valid_alignment_arg <- function(x) {
@@ -40,7 +34,6 @@ valid_alignment_arg <- function(x) {
     checkmate::test_choice(x, c("substructure", "core", "terminal", "whole"))
   )
 }
-
 
 valid_alignments_arg <- function(alignments, motifs) {
   # Validate alignments parameter without modification
@@ -53,6 +46,9 @@ valid_alignments_arg <- function(alignments, motifs) {
   }
 }
 
+valid_ignore_linkages_arg <- function(x) {
+  checkmate::assert_flag(x)
+}
 
 glycan_type_err_msg <- paste(
   "`glycans` must be a 'glyrepr_structure' object",
@@ -73,53 +69,30 @@ motifs_type_err_msg <- paste(
   "or a character vector of known motif names."
 )
 
-
-valid_glycans_arg <- function(x) {
-  # Must be a structure or a character vector
-  if (!glyrepr::is_glycan_structure(x) && !is.character(x)) {
-    rlang::abort(glycan_type_err_msg)
-  }
-}
-
-
-valid_motifs_arg <- function(x) {
-  if (length(x) == 0) {
-    rlang::abort("`motifs` cannot be empty.")
-  }
-  if ((!glyrepr::is_glycan_structure(x)) && (!is.character(x))) {
-    rlang::abort(motifs_type_err_msg)
-  }
-}
-
-
-valid_ignore_linkages_arg <- function(x) {
-  checkmate::assert_flag(x)
-}
-
-
 # ----- Decide motif type -----
-get_motif_type <- function(motif) {
-  # Decide if the `motif` argument is a known motif,
-  # an IUPAC-condensed structure string, or a 'glyrepr_structure' object.
+# Decide if the `motifs` argument is known motifs,
+# an IUPAC-condensed structure character vector, or a 'glyrepr_structure' object.
+get_motif_type <- function(motifs) {
   # If it is neither a glycan graph or a known motif, it is assumed to
   # be an IUPAC-condensed structure string.
   # This assumption may not be correct, for it is possible that a wrong
   # motif name is passed in.
-  if (glyrepr::is_glycan_structure(motif)) {
+  if (glyrepr::is_glycan_structure(motifs)) {
     return("structure")
-  } else if (is.character(motif)) {
-    if (all(is_known_motif(motif))) {
+  } else if (is.character(motifs)) {
+    known_motif_idx <- is_known_motif(motifs)
+    if (all(known_motif_idx)) {
       return("known")
-    } else if (any(is_known_motif(motif))) {
-      rlang::abort("Some motifs are known, but some are not.")
+    } else if (any(known_motif_idx)) {
+      unknown_motifs <- motifs[!known_motif_idx]
+      cli::cli_abort("Unknown motif: {.val {unknown_motifs}}.")
     } else {
       return("iupac")
     }
   } else {
-    rlang::abort(motif_type_err_msg)
+    return(NA_character_)
   }
 }
-
 
 # ----- Decide alignment type -----
 decide_alignments <- function(motifs, motif_type, alignments) {
@@ -128,7 +101,13 @@ decide_alignments <- function(motifs, motif_type, alignments) {
   # 2. If the motif is an IUPAC string or a 'glyrepr_structure' object: use "substructure" unless provided.
   # In the first case, if the user-provided alignment is different from that in the database,
   # issue a warning.
-  if (motif_type == "known") {
+
+  # Handle NA motif_type (invalid motif type)
+  if (is.na(motif_type)) {
+    if (is.null(alignments)) {
+      alignments <- "substructure"
+    }
+  } else if (motif_type == "known") {
     db_alignments <- get_motif_alignment(motifs)
     if (!is.null(alignments)) {
       inconsistent <- alignments != db_alignments
@@ -152,35 +131,93 @@ decide_alignments <- function(motifs, motif_type, alignments) {
 }
 
 # ----- Make sure glycans and motifs are structures -----
-ensure_glycans_are_structures <- function(glycans) {
-  # Make sure `glycans` is a `glyrepr_structure` object.
-  # Fixed: Check if it's character AND not already a glyrepr_structure
-  # This prevents unnecessary parsing of already-parsed structures
-  if (is.character(glycans) && !glyrepr::is_glycan_structure(glycans)) {
+# Make sure `glycans` is a `glyrepr_structure` object.
+ensure_glycans_are_structures <- function(glycans, call = rlang::caller_env()) {
+  base_err_msg <- "`glycans` must be a 'glyrepr_structure' object or an IUPAC-condensed structure character."
+
+  # Case 1: `glycans` is already a `glyrepr_structure` object
+  if (glyrepr::is_glycan_structure(glycans)) {
+    return(glycans)
+  }
+
+  # Case 2: `glycans` is a character vector
+  # We need to parse it as IUPAC-condensed structure strings.
+  if (is.character(glycans)) {
     tryCatch(
-      glycans <- glyparse::parse_iupac_condensed(glycans),
-      error = function(e) {
-        rlang::abort("`glycan` could not be parsed as a valid IUPAC-condensed structure.")
+      return(glyparse::parse_iupac_condensed(glycans)),
+      error = function(cnd) {
+        cli::cli_abort(c(
+          base_err_msg,
+          "x" = "Some glycans could not be parsed as valid IUPAC-condensed structures."
+        ), call = call, parent = cnd)
       }
     )
   }
-  glycans
+
+  # Case 3: `glycans` has other types
+  cli::cli_abort(c(
+    base_err_msg,
+    "x" = "The input is of class {.cls {class(glycans)}}."
+  ), call = call)
 }
 
-ensure_motifs_are_structures <- function(motifs, motif_type) {
+# Make sure `motifs` is a `glyrepr_structure` object.
+ensure_motifs_are_structures <- function(motifs, motif_type, call = rlang::caller_env()) {
+  base_err_msg <- paste0(
+    "`motifs` must be a 'glyrepr_structure' object,",
+    "a character vector of IUPAC-condensed structure strings,",
+    "or a character vector of known motif names."
+  )
+
+  # Case 1: `motifs` is of other types
+  if (is.na(motif_type)) {
+    cli::cli_abort(c(
+      base_err_msg,
+      "x" = "The input is of class {.cls {class(motifs)}}."
+    ), call = call)
+  }
+
+  # Case 2: `motifs` is already a `glyrepr_structure` object
+  if (motif_type == "structure") {
+    return(motifs)
+  }
+
+  # Case 3: `motifs` is a vector of known motif names
   if (motif_type == "known") {
-    motifs <- get_motif_structure(motifs)
-  } else if (motif_type == "iupac") {
     tryCatch(
-      motifs <- glyparse::parse_iupac_condensed(motifs),
-      error = function(e) {
-        rlang::abort(motif_type_err_msg)
+      return(get_motif_structure(motifs)),
+      error = function(cnd) {
+        cli::cli_abort(c(
+          base_err_msg,
+          "i" = "Use {.fn available_motifs} to see all valid motif names."
+        ), call = call, parent = cnd)
       }
     )
-  } else {  # motif_type == "structure"
-    motifs <- motifs
   }
-  motifs
+
+  # Case 4: `motifs` is a vector of IUPAC-condensed structure strings
+  if (motif_type == "iupac") {
+    tryCatch(
+      return(glyparse::parse_iupac_condensed(motifs)),
+      error = function(cnd) {
+        cli::cli_abort(c(
+          base_err_msg,
+          "x" = "Some motifs are neither valid IUPAC-condensed structures nor known motif names.",
+          "i" = "Use {.fn available_motifs} to see all valid motif names."
+        ), call = call, parent = cnd)
+      }
+    )
+  }
+}
+
+ensure_motif_is_structure <- function(motif, motif_type, call = rlang::caller_env()) {
+  if (!length(motif) == 1) {
+    cli::cli_abort(c(
+      "The `motif` argument must be a scalar vector.",
+      "x" = "The input is of length {.val {length(motif)}}."
+    ), call = call)
+  }
+  ensure_motifs_are_structures(motif, motif_type, call)
 }
 
 # ----- Check and align mono types -----
@@ -241,26 +278,31 @@ apply_motifs_to_glycans <- function(glycans, motifs, alignments, ignore_linkages
   # Generic function to apply multiple motifs to multiple glycans
   # single_motif_func should be either have_motif_ or count_motif_
 
+  # Handle empty motifs case
+  if (length(motifs) == 0) {
+    cli::cli_abort("`motifs` cannot be empty.")
+  }
+
   # Apply each motif to all glycans using purrr
   motif_results_list <- purrr::map2(
     motifs,
     alignments,
     ~ single_motif_func(
-      glycans, 
-      .x, 
-      alignment = .y, 
+      glycans,
+      .x,
+      alignment = .y,
       ignore_linkages = ignore_linkages
     )
   )
-  
+
   # Set names for the results
   names(motif_results_list) <- motif_names
-  
+
   # Convert results to matrix format
   # Each element in motif_results_list should be a vector of results for all glycans
   result_matrix <- do.call(cbind, motif_results_list)
   rownames(result_matrix) <- glycan_names
   colnames(result_matrix) <- motif_names
-  
+
   return(result_matrix)
 }

@@ -3,8 +3,9 @@
     Code
       have_motif(glycan, motif)
     Condition
-      Error in `valid_glycans_arg()`:
+      Error in `prepare_have_motif_args()`:
       ! `glycans` must be a 'glyrepr_structure' object or an IUPAC-condensed structure character.
+      x The input is of class <igraph>.
 
 # wrong motif types
 
@@ -12,23 +13,37 @@
       have_motif(glycan, motif)
     Condition
       Error in `prepare_have_motif_args()`:
-      ! `motif` must be a single structure.
+      ! The `motif` argument must be a scalar vector.
+      x The input is of length 0.
 
 # unkown motif name used as input
 
     Code
       have_motif(glycan, motif)
     Condition
-      Error in `value[[3L]]()`:
-      ! `motif` must be either a 'glyrepr_structure' object with length 1, an IUPAC-condensed structure character scalar, or a known motif name.
+      Error in `prepare_have_motif_args()`:
+      ! `motifs` must be a 'glyrepr_structure' object,a character vector of IUPAC-condensed structure strings,or a character vector of known motif names.
+      x Some motifs are neither valid IUPAC-condensed structures nor known motif names.
+      i Use `available_motifs()` to see all valid motif names.
+      Caused by error in `purrr::map()`:
+      i In index: 1.
+      Caused by error in `value[[3L]]()`:
+      ! Could not parse IUPAC-condensed string: {.val {x}}
+      i IUPAC-condensed string cannot contain whitespace
 
 # bad glycan IUPAC
 
     Code
       have_motif(glycan, motif)
     Condition
-      Error in `value[[3L]]()`:
-      ! `glycan` could not be parsed as a valid IUPAC-condensed structure.
+      Error in `prepare_have_motif_args()`:
+      ! `glycans` must be a 'glyrepr_structure' object or an IUPAC-condensed structure character.
+      x Some glycans could not be parsed as valid IUPAC-condensed structures.
+      Caused by error in `purrr::map()`:
+      i In index: 1.
+      Caused by error in `value[[3L]]()`:
+      ! Could not parse IUPAC-condensed string: {.val {x}}
+      i IUPAC-condensed string cannot contain whitespace
 
 # warning when user-provided alignment is different from database
 

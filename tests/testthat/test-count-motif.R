@@ -130,8 +130,8 @@ test_that("count_motifs handles empty motifs", {
 test_that("count_motifs handles invalid motifs argument", {
   glycans <- "Gal(b1-3)GalNAc"
   motifs <- 123
-  
-  expect_error(count_motifs(glycans, motifs), "`motifs` must be either")
+
+  expect_error(count_motifs(glycans, motifs), "`motifs` must be a 'glyrepr_structure' object")
 })
 
 

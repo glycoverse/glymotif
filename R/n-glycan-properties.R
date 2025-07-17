@@ -53,8 +53,6 @@
 #'
 #' @export
 describe_n_glycans <- function(glycans, strict = FALSE) {
-  # Validate the input
-  valid_glycans_arg(glycans)
   checkmate::assert_flag(strict)
 
   glycan_structures <- ensure_glycans_are_structures(glycans)
@@ -422,7 +420,6 @@ n_glycan_property_wrapper <- function(glycan, strict, func, check_n_glycan = TRU
   # ```
   # This function will take care of converting the glycan to a graph and
   # checking the motif with suitable strictness.
-  valid_glycans_arg(glycan)
   checkmate::assert_flag(strict)
   glycan <- ensure_glycans_are_structures(glycan)
   if (!strict) {
