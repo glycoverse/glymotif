@@ -1,6 +1,7 @@
 # ----- Prepare arguments -----
-prepare_have_motifs_args <- function(glycans, motifs, alignments, ignore_linkages) {
-  # for `have_motifs()`, `count_motifs()`
+# Unified function to prepare arguments for both single and multiple motifs
+prepare_motif_args <- function(glycans, motifs, alignments = NULL, ignore_linkages = FALSE, single_motif = FALSE) {
+  # Unified validation logic
   valid_alignments_arg(alignments, motifs)
   valid_ignore_linkages_arg(ignore_linkages)
 
@@ -8,23 +9,33 @@ prepare_have_motifs_args <- function(glycans, motifs, alignments, ignore_linkage
   alignments <- decide_alignments(motifs, motif_type, alignments)
 
   glycans <- ensure_glycans_are_structures(glycans)
-  motifs <- ensure_motifs_are_structures(motifs, motif_type)
+  motifs <- ensure_motifs_are_structures(motifs, motif_type, require_scalar = single_motif)
 
-  list(glycans = glycans, motifs = motifs, alignments = alignments, ignore_linkages = ignore_linkages)
+  # Return appropriate format based on single_motif flag
+  if (single_motif) {
+    return(list(
+      glycans = glycans,
+      motif = motifs,
+      alignment = alignments,
+      ignore_linkages = ignore_linkages
+    ))
+  } else {
+    return(list(
+      glycans = glycans,
+      motifs = motifs,
+      alignments = alignments,
+      ignore_linkages = ignore_linkages
+    ))
+  }
 }
 
+# Legacy wrapper functions for backward compatibility
 prepare_have_motif_args <- function(glycans, motif, alignment, ignore_linkages) {
-  # for `have_motif()`, `count_motif()`
-  valid_alignments_arg(alignment, motif)
-  valid_ignore_linkages_arg(ignore_linkages)
+  prepare_motif_args(glycans, motif, alignment, ignore_linkages, single_motif = TRUE)
+}
 
-  motif_type <- get_motif_type(motif)
-  alignment <- decide_alignments(motif, motif_type, alignment)
-
-  glycans <- ensure_glycans_are_structures(glycans)
-  motif <- ensure_motif_is_structure(motif, motif_type)
-
-  list(glycans = glycans, motif = motif, alignment = alignment, ignore_linkages = ignore_linkages)
+prepare_have_motifs_args <- function(glycans, motifs, alignments, ignore_linkages) {
+  prepare_motif_args(glycans, motifs, alignments, ignore_linkages, single_motif = FALSE)
 }
 
 # ----- Argument validation -----
@@ -50,17 +61,7 @@ valid_ignore_linkages_arg <- function(x) {
   checkmate::assert_flag(x)
 }
 
-glycan_type_err_msg <- paste(
-  "`glycans` must be a 'glyrepr_structure' object",
-  "or an IUPAC-condensed structure character."
-)
-
-
-motif_type_err_msg <- paste(
-  "`motif` must be either a 'glyrepr_structure' object with length 1,",
-  "an IUPAC-condensed structure character scalar,",
-  "or a known motif name."
-)
+# Error messages are now centralized in errors.R
 
 
 motifs_type_err_msg <- paste(
@@ -133,8 +134,6 @@ decide_alignments <- function(motifs, motif_type, alignments) {
 # ----- Make sure glycans and motifs are structures -----
 # Make sure `glycans` is a `glyrepr_structure` object.
 ensure_glycans_are_structures <- function(glycans, call = rlang::caller_env()) {
-  base_err_msg <- "`glycans` must be a 'glyrepr_structure' object or an IUPAC-condensed structure character."
-
   # Case 1: `glycans` is already a `glyrepr_structure` object
   if (glyrepr::is_glycan_structure(glycans)) {
     return(glycans)
@@ -147,7 +146,7 @@ ensure_glycans_are_structures <- function(glycans, call = rlang::caller_env()) {
       return(glyparse::parse_iupac_condensed(glycans)),
       error = function(cnd) {
         cli::cli_abort(c(
-          base_err_msg,
+          "`glycans` must be a 'glyrepr_structure' object or an IUPAC-condensed structure character.",
           "x" = "Some glycans could not be parsed as valid IUPAC-condensed structures."
         ), call = call, parent = cnd)
       }
@@ -156,18 +155,36 @@ ensure_glycans_are_structures <- function(glycans, call = rlang::caller_env()) {
 
   # Case 3: `glycans` has other types
   cli::cli_abort(c(
-    base_err_msg,
+    "`glycans` must be a 'glyrepr_structure' object or an IUPAC-condensed structure character.",
     "x" = "The input is of class {.cls {class(glycans)}}."
   ), call = call)
 }
 
 # Make sure `motifs` is a `glyrepr_structure` object.
-ensure_motifs_are_structures <- function(motifs, motif_type, call = rlang::caller_env()) {
-  base_err_msg <- paste0(
-    "`motifs` must be a 'glyrepr_structure' object,",
-    "a character vector of IUPAC-condensed structure strings,",
-    "or a character vector of known motif names."
-  )
+# This function handles both single and multiple motifs
+ensure_motifs_are_structures <- function(motifs, motif_type, require_scalar = FALSE, call = rlang::caller_env()) {
+  # Check scalar requirement first if needed
+  if (require_scalar && length(motifs) != 1) {
+    cli::cli_abort(c(
+      "The `motif` argument must be a scalar vector.",
+      "x" = "The input is of length {.val {length(motifs)}}."
+    ), call = call)
+  }
+
+  # Determine which error message to use based on scalar requirement
+  base_err_msg <- if (require_scalar) {
+    paste(
+      "`motif` must be either a 'glyrepr_structure' object with length 1,",
+      "an IUPAC-condensed structure character scalar,",
+      "or a known motif name."
+    )
+  } else {
+    paste0(
+      "`motifs` must be a 'glyrepr_structure' object,",
+      "a character vector of IUPAC-condensed structure strings,",
+      "or a character vector of known motif names."
+    )
+  }
 
   # Case 1: `motifs` is of other types
   if (is.na(motif_type)) {
@@ -210,14 +227,9 @@ ensure_motifs_are_structures <- function(motifs, motif_type, call = rlang::calle
   }
 }
 
+# Simplified wrapper function for single motifs
 ensure_motif_is_structure <- function(motif, motif_type, call = rlang::caller_env()) {
-  if (!length(motif) == 1) {
-    cli::cli_abort(c(
-      "The `motif` argument must be a scalar vector.",
-      "x" = "The input is of length {.val {length(motif)}}."
-    ), call = call)
-  }
-  ensure_motifs_are_structures(motif, motif_type, call)
+  ensure_motifs_are_structures(motif, motif_type, require_scalar = TRUE, call = call)
 }
 
 # ----- Check and align mono types -----
