@@ -133,20 +133,20 @@ match_sub <- function(glycan_sub, motif_sub) {
 match_single_sub <- function(glycan_sub, motif_sub) {
   # Extract position and substituent parts
   # Format: "3Me", "6S", "?Me", "?S", etc.
-  
+
   # Extract position (first character) and substituent (rest)
   motif_pos <- stringr::str_sub(motif_sub, 1, 1)
   motif_rest <- stringr::str_sub(motif_sub, 2)
-  
+
   glycan_pos <- stringr::str_sub(glycan_sub, 1, 1)
   glycan_rest <- stringr::str_sub(glycan_sub, 2)
-  
+
   # Check if positions match (? in motif matches any position)
   pos_match <- (motif_pos == "?" || motif_pos == glycan_pos)
-  
+
   # Check if substituent parts match
   sub_match <- (motif_rest == glycan_rest)
-  
+
   pos_match && sub_match
 }
 
