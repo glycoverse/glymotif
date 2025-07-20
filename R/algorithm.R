@@ -85,22 +85,21 @@ alignment_check <- function(r, glycan, motif, alignment) {
 substituent_check <- function(r, glycan, motif, ...) {
   glycan_subs <- igraph::V(glycan)$sub[r]
   motif_subs <- igraph::V(motif)$sub
-  all(purrr::map2_lgl(glycan_subs, motif_subs, match_sub))
+  for (i in seq_along(glycan_subs)) {
+    if (!match_sub(glycan_subs[[i]], motif_subs[[i]])) {
+      return(FALSE)
+    }
+  }
+  return(TRUE)
 }
 
 
 match_sub <- function(glycan_sub, motif_sub) {
-  # Handle empty substituents
-  if (motif_sub == "" && glycan_sub == "") {
-    return(TRUE)
+  # Handle empty substituents - both must be empty to match
+  if (motif_sub == "" || glycan_sub == "") {
+    return(motif_sub == "" && glycan_sub == "")
   }
-  if (motif_sub == "" && glycan_sub != "") {
-    return(FALSE)
-  }
-  if (motif_sub != "" && glycan_sub == "") {
-    return(FALSE)
-  }
-  
+
   # Split substituents by comma
   glycan_subs <- stringr::str_split(glycan_sub, ",")[[1]]
   motif_subs <- stringr::str_split(motif_sub, ",")[[1]]
@@ -141,13 +140,14 @@ match_single_sub <- function(glycan_sub, motif_sub) {
   glycan_pos <- stringr::str_sub(glycan_sub, 1, 1)
   glycan_rest <- stringr::str_sub(glycan_sub, 2)
 
-  # Check if positions match (? in motif matches any position)
-  pos_match <- (motif_pos == "?" || motif_pos == glycan_pos)
+  pos_match <- function(motif_pos, glycan_pos) {
+    motif_pos == "?" || motif_pos == glycan_pos
+  }
+  sub_match <- function(motif_rest, glycan_rest) {
+    motif_rest == glycan_rest
+  }
 
-  # Check if substituent parts match
-  sub_match <- (motif_rest == glycan_rest)
-
-  pos_match && sub_match
+  pos_match(motif_pos, glycan_pos) && sub_match(motif_rest, glycan_rest)
 }
 
 
@@ -155,7 +155,12 @@ linkage_check <- function(r, glycan, motif, ...) {
   edges <- get_corresponding_edges(r, glycan, motif)
   glycan_linkages <- edges$glycan$linkage
   motif_linkages <- edges$motif$linkage
-  all(purrr::map2_lgl(glycan_linkages, motif_linkages, match_linkage))
+  for (i in seq_along(glycan_linkages)) {
+    if (!match_linkage(glycan_linkages[[i]], motif_linkages[[i]])) {
+      return(FALSE)
+    }
+  }
+  return(TRUE)
 }
 
 
@@ -178,11 +183,17 @@ match_linkage <- function(glycan_linkage, motif_linkage) {
   gl <- parse_linkage(glycan_linkage)
   ml <- parse_linkage(motif_linkage)
 
-  anomer_ok <- (ml[["anomer"]] == "?" || ml[["anomer"]] == gl[["anomer"]])
-  pos1_ok <- (ml[["pos1"]] == "?" || ml[["pos1"]] == gl[["pos1"]])
-  pos2_ok <- (ml[["pos2"]] == "?" || all(parse_pos2(gl[["pos2"]]) %in% parse_pos2(ml[["pos2"]])))
+  anomer_ok <- function(gl, ml) {
+    ml[["anomer"]] == "?" || ml[["anomer"]] == gl[["anomer"]]
+  }
+  pos1_ok <- function(gl, ml) {
+    ml[["pos1"]] == "?" || ml[["pos1"]] == gl[["pos1"]]
+  }
+  pos2_ok <- function(gl, ml) {
+    ml[["pos2"]] == "?" || all(parse_pos2(gl[["pos2"]]) %in% parse_pos2(ml[["pos2"]]))
+  }
 
-  anomer_ok && pos1_ok && pos2_ok
+  anomer_ok(gl, ml) && pos1_ok(gl, ml) && pos2_ok(gl, ml)
 }
 
 
@@ -230,10 +241,14 @@ match_anomer <- function(glycan_anomer, motif_anomer) {
   ga <- parse_anomer(glycan_anomer)
   ma <- parse_anomer(motif_anomer)
 
-  anomer_ok <- ma[["anomer"]] == "?" || ma[["anomer"]] == ga[["anomer"]]
-  position_ok <- ma[["pos"]] == "?" || ma[["pos"]] == ga[["pos"]]
+  anomer_ok <- function(ga, ma) {
+    ma[["anomer"]] == "?" || ma[["anomer"]] == ga[["anomer"]]
+  }
+  position_ok <- function(ga, ma) {
+    ma[["pos"]] == "?" || ma[["pos"]] == ga[["pos"]]
+  }
 
-  anomer_ok && position_ok
+  anomer_ok(ga, ma) && position_ok(ga, ma)
 }
 
 
