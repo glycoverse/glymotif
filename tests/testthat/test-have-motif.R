@@ -642,3 +642,12 @@ test_that("have_motif: vectorized glycans with single motif", {
   expect_true(result[2])   # Man should match Man
   expect_false(result[3])  # Gal should not match Man
 })
+
+test_that("have_motif works for repeated glycans", {
+  # This is to test the internal `fast_convert_mono_type` function.
+  glycans <- c("Man(??-", "Man(??-", "Gal(??-", "Gal(??-", "GlcNAc(??-")
+  motif <- "Hex(??-"
+
+  result <- have_motif(glycans, motif)
+  expect_equal(result, c(TRUE, TRUE, TRUE, TRUE, FALSE))
+})
