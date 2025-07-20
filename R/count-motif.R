@@ -127,14 +127,15 @@ count_motif_ <- function(glycans, motif, alignment, ignore_linkages = FALSE) {
     alignment = alignment, ignore_linkages = ignore_linkages
   )
   valid_res <- res[valid_mask]
-  count_set_unique(valid_res)
+  .count_set_unique(valid_res)
 }
 
-count_set_unique <- function(lst) {
+.count_set_unique <- function(lst) {
   # Given a list of integer vectors, return the number of unique vectors.
+  # Optimized version using lapply + vapply for better performance
   if (length(lst) == 0) return(0)
-  sorted_lst <- purrr::map(lst, sort)
-  str_vectors <- purrr::map_chr(sorted_lst, ~ paste(.x, collapse = ","))
+  sorted_lst <- lapply(lst, sort)
+  str_vectors <- vapply(sorted_lst, function(x) paste(x, collapse = ","), character(1))
   length(unique(str_vectors))
 }
 
