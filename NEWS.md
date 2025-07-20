@@ -1,3 +1,10 @@
+# glymotif 0.4.3
+
+## Minor improvements and bug fixes
+
+* Huge (really huge) performance optimization: all motif matching functions in this package now speed up 1000x,
+  thanks to the fix of a performance bug about monosaccharide type conversion.
+
 # glymotif 0.4.2
 
 ## Minor improvements
