@@ -19,7 +19,7 @@ count_motifs() counts multiple motifs in multiple glycans
 
     <a class="navbar-brand me-2" href="../index.html">glymotif</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.3</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -29,12 +29,6 @@ count_motifs() counts multiple motifs in multiple glycans
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto"><li class="nav-item"><a class="nav-link" href="../articles/glymotif.html">Get started</a></li>
 <li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
-<li class="nav-item dropdown">
-  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/motif-matching.html">The Science Behind Motif Matching</a></li>
-    <li><a class="dropdown-item" href="../articles/n-glycans.html">N-Glycans</a></li>
-    <li><a class="dropdown-item" href="../articles/with-exp.html">Working with glyexp</a></li>
-  </ul></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
@@ -134,20 +128,6 @@ This function will take care of this, and return the "unique" number of matches.
 <p>For other details about the handling of monosaccharide, linkages, alignment,
 substituents, and implementation, see <code><a href="have_motif.html">have_motif()</a></code>.</p>
     </div>
-    <div class="section level2">
-    <h2 id="about-names">About Names<a class="anchor" aria-label="anchor" href="#about-names"></a></h2>
-    <p><code><a href="have_motif.html">have_motif()</a></code> and <code>count_motif()</code> return a vector with no names.
-It is easy to trace the names back to the original glycans.</p>
-<p><code><a href="have_motif.html">have_motifs()</a></code> and <code>count_motifs()</code> return a matrix with both row and column names.
-The row names are the glycan names, and the column names are the motif names.
-The names are decided according to the following rules:</p><ol><li><p>If <code>glycans</code> or <code>motifs</code> is a <code><a href="https://glycoverse.github.io/glyrepr/reference/glycan_structure.html" class="external-link">glyrepr::glycan_structure()</a></code> object,
-the names are the IUPAC-condensed structure strings.
-(Sadly due to the constrains of the <code>vctrs</code> package <code><a href="https://glycoverse.github.io/glyrepr/reference/glycan_structure.html" class="external-link">glyrepr::glycan_structure()</a></code> is built on,
-a <code><a href="https://glycoverse.github.io/glyrepr/reference/glycan_structure.html" class="external-link">glyrepr::glycan_structure()</a></code> vector cannot have names.)</p></li>
-<li><p>If <code>glycans</code> or <code>motifs</code> is a character vector, either IUPAC-condensed structure strings or
-motif names, it will use the names of the character vector if exists,
-otherwise use the character vector itself as the names.</p></li>
-</ol></div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
     <div class="dont-index"><p><code><a href="have_motif.html">have_motif()</a></code>, <code><a href="have_motif.html">have_motifs()</a></code></p></div>

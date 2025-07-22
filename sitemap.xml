@@ -7,16 +7,9 @@
 <url><loc>https://glycoverse.github.io/glymotif/SUPPORT.html</loc></url>
 <url><loc>https://glycoverse.github.io/glymotif/articles/glymotif.html</loc></url>
 <url><loc>https://glycoverse.github.io/glymotif/articles/index.html</loc></url>
-<url><loc>https://glycoverse.github.io/glymotif/articles/motif-matching.html</loc></url>
-<url><loc>https://glycoverse.github.io/glymotif/articles/n-glycans.html</loc></url>
-<url><loc>https://glycoverse.github.io/glymotif/articles/with-exp.html</loc></url>
 <url><loc>https://glycoverse.github.io/glymotif/authors.html</loc></url>
 <url><loc>https://glycoverse.github.io/glymotif/index.html</loc></url>
 <url><loc>https://glycoverse.github.io/glymotif/news/index.html</loc></url>
-<url><loc>https://glycoverse.github.io/glymotif/reference/add_comp_descriptions.html</loc></url>
-<url><loc>https://glycoverse.github.io/glymotif/reference/add_glycan_descriptions.html</loc></url>
-<url><loc>https://glycoverse.github.io/glymotif/reference/add_motifs_int.html</loc></url>
-<url><loc>https://glycoverse.github.io/glymotif/reference/add_struct_descriptions.html</loc></url>
 <url><loc>https://glycoverse.github.io/glymotif/reference/available_motifs.html</loc></url>
 <url><loc>https://glycoverse.github.io/glymotif/reference/count_motif.html</loc></url>
 <url><loc>https://glycoverse.github.io/glymotif/reference/describe_n_glycans.html</loc></url>
@@ -27,6 +20,5 @@
 <url><loc>https://glycoverse.github.io/glymotif/reference/is_known_motif.html</loc></url>
 <url><loc>https://glycoverse.github.io/glymotif/reference/is_n_glycan.html</loc></url>
 <url><loc>https://glycoverse.github.io/glymotif/reference/n_glycan_type.html</loc></url>
-<url><loc>https://glycoverse.github.io/glymotif/reference/quantify_motifs.html</loc></url>
 </urlset>
 
