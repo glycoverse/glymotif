@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">glymotif</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.3</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -17,6 +17,12 @@
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto"><li class="nav-item"><a class="nav-link" href="../articles/glymotif.html">Get started</a></li>
 <li class="nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
+<li class="nav-item dropdown">
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/motif-matching.html">The Science Behind Motif Matching</a></li>
+    <li><a class="dropdown-item" href="../articles/n-glycans.html">N-Glycans</a></li>
+    <li><a class="dropdown-item" href="../articles/with-exp.html">Working with glyexp</a></li>
+  </ul></li>
 <li class="active nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
@@ -31,6 +37,74 @@
 
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.4.3" id="glymotif-043">glymotif 0.4.3<a class="anchor" aria-label="anchor" href="#glymotif-043"></a></h2>
+<div class="section level3">
+<h3 id="minor-improvements-and-bug-fixes-0-4-3">Minor improvements and bug fixes<a class="anchor" aria-label="anchor" href="#minor-improvements-and-bug-fixes-0-4-3"></a></h3>
+<ul><li>Huge (really huge) performance optimization: all motif matching functions in this package now speed up 1000x, thanks to the fix of a performance bug about monosaccharide type conversion.</li>
+</ul></div>
+</div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.4.2" id="glymotif-042">glymotif 0.4.2<a class="anchor" aria-label="anchor" href="#glymotif-042"></a></h2>
+<div class="section level3">
+<h3 id="minor-improvements-0-4-2">Minor improvements<a class="anchor" aria-label="anchor" href="#minor-improvements-0-4-2"></a></h3>
+<ul><li>Better error messages for invalid input.</li>
+</ul></div>
+</div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.4.1" id="glymotif-041">glymotif 0.4.1<a class="anchor" aria-label="anchor" href="#glymotif-041"></a></h2>
+<div class="section level3">
+<h3 id="bug-fixes-0-4-1">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-4-1"></a></h3>
+<ul><li>Fix a major bug in <code><a href="../reference/quantify_motifs.html">quantify_motifs()</a></code>.</li>
+</ul></div>
+</div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.4.0" id="glymotif-040">glymotif 0.4.0<a class="anchor" aria-label="anchor" href="#glymotif-040"></a></h2>
+<div class="section level3">
+<h3 id="major-changes-0-4-0">Major changes<a class="anchor" aria-label="anchor" href="#major-changes-0-4-0"></a></h3>
+<ul><li>Add <code><a href="../reference/quantify_motifs.html">quantify_motifs()</a></code> to quantify motifs in a <code><a href="https://glycoverse.github.io/glyexp/reference/experiment.html" class="external-link">glyexp::experiment()</a></code>.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="minor-improvements-0-4-0">Minor improvements<a class="anchor" aria-label="anchor" href="#minor-improvements-0-4-0"></a></h3>
+<ul><li>Split the “Get Started” vignette into three:
+<ul><li>The new “Get Started” vignette, only covering basic motif matching functions.</li>
+<li>A new “N-Glycans” vignette, covering N-glycan-specific functions.</li>
+<li>A new “Working with <code><a href="https://glycoverse.github.io/glyexp/reference/experiment.html" class="external-link">glyexp::experiment()</a></code>” vignette, covering the integration with <code><a href="https://glycoverse.github.io/glyexp/reference/experiment.html" class="external-link">glyexp::experiment()</a></code>.</li>
+</ul></li>
+</ul></div>
+</div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.3.1" id="glymotif-031">glymotif 0.3.1<a class="anchor" aria-label="anchor" href="#glymotif-031"></a></h2>
+<div class="section level3">
+<h3 id="minor-improvements-0-3-1">Minor improvements<a class="anchor" aria-label="anchor" href="#minor-improvements-0-3-1"></a></h3>
+<ul><li>Update the documentation to reflect the naming rules of the return values of <code><a href="../reference/have_motif.html">have_motif()</a></code>, <code><a href="../reference/have_motif.html">have_motifs()</a></code>, <code><a href="../reference/count_motif.html">count_motif()</a></code>, and <code><a href="../reference/count_motif.html">count_motifs()</a></code>.</li>
+</ul></div>
+</div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.3.0" id="glymotif-030">glymotif 0.3.0<a class="anchor" aria-label="anchor" href="#glymotif-030"></a></h2>
+<div class="section level3">
+<h3 id="major-changes-0-3-0">Major changes<a class="anchor" aria-label="anchor" href="#major-changes-0-3-0"></a></h3>
+<ul><li>Add <code><a href="../reference/add_glycan_descriptions.html">add_glycan_descriptions()</a></code>, <code><a href="../reference/add_struct_descriptions.html">add_struct_descriptions()</a></code>, and <code><a href="../reference/add_comp_descriptions.html">add_comp_descriptions()</a></code>. These functions are moved from <code>glyexp</code> to <code>glymotif</code> for better separation of concerns.</li>
+<li>Add <code><a href="../reference/add_motifs_int.html">add_motifs_int()</a></code> and <code><a href="../reference/add_motifs_int.html">add_motifs_lgl()</a></code> for adding motif annotations to a <code><a href="https://glycoverse.github.io/glyexp/reference/experiment.html" class="external-link">glyexp::experiment()</a></code>.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="minor-improvements-0-3-0">Minor improvements<a class="anchor" aria-label="anchor" href="#minor-improvements-0-3-0"></a></h3>
+<ul><li>Remove the <code>parallel</code> argument from <code><a href="../reference/add_glycan_descriptions.html">add_glycan_descriptions()</a></code>, <code><a href="../reference/add_struct_descriptions.html">add_struct_descriptions()</a></code>, and <code><a href="../reference/add_comp_descriptions.html">add_comp_descriptions()</a></code>. We found it not very useful on a regular basis.</li>
+<li>Update the vignette to reflect the new functions above.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="bug-fixes-0-3-0">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-3-0"></a></h3>
+<ul><li>Fix a bug in <code><a href="../reference/get_motif_structure.html">get_motif_structure()</a></code>, where the order of the results was not consistent with the order of the input motifs. This caused unexpected results in a wide range of functions including <code><a href="../reference/have_motif.html">have_motifs()</a></code>, <code><a href="../reference/count_motif.html">count_motifs()</a></code>, and the new <code><a href="../reference/add_motifs_int.html">add_motifs_lgl()</a></code> and <code><a href="../reference/add_motifs_int.html">add_motifs_int()</a></code> functions, when using motif names as input. Alone with <code><a href="../reference/get_motif_structure.html">get_motif_structure()</a></code>, similar bugs in <code><a href="../reference/get_motif_structure.html">get_motif_alignment()</a></code> and <code><a href="../reference/get_motif_structure.html">get_motif_aglycon()</a></code> are also fixed.</li>
+</ul></div>
+</div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.2.1" id="glymotif-021">glymotif 0.2.1<a class="anchor" aria-label="anchor" href="#glymotif-021"></a></h2>
+<div class="section level3">
+<h3 id="minor-improvements-0-2-1">Minor improvements<a class="anchor" aria-label="anchor" href="#minor-improvements-0-2-1"></a></h3>
+<ul><li>
+<code><a href="../reference/have_motif.html">have_motif()</a></code>, <code><a href="../reference/have_motif.html">have_motifs()</a></code>, <code><a href="../reference/count_motif.html">count_motif()</a></code>, and <code><a href="../reference/count_motif.html">count_motifs()</a></code> now support multiple substituents in the motif, to align with the updates in <code>glyrepr</code> v0.5.0.</li>
+</ul></div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.2.0" id="glymotif-020">glymotif 0.2.0<a class="anchor" aria-label="anchor" href="#glymotif-020"></a></h2>
 <div class="section level3">
