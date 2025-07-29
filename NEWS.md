@@ -1,3 +1,9 @@
+# glymotif 0.4.4
+
+## Minor improvements and bug fixes
+
+* Update vignette "Working with glyexp" to reflect the changes in `glyread` v0.5.0.
+
 # glymotif 0.4.3
 
 ## Minor improvements and bug fixes
