@@ -48,7 +48,8 @@ library(glyclean)
 exp <- glyread::read_pglyco3_pglycoquant(
   "glycopeptides.list",
   sample_info = "sample_info.csv",
-  glycan_type = "N"
+  glycan_type = "N",
+  parse_structure = TRUE
 ) |> 
   mutate_obs(sample = stringr::str_split_i(sample, "-", -1)) |>
   auto_clean()

@@ -16,7 +16,7 @@ Suggests:
     rmarkdown,
     glyexp (>= 0.6.0),
     glyclean (>= 0.6.1),
-    glyread (>= 0.3.2)
+    glyread (>= 0.5.0)
 Config/testthat/edition: 3
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
