@@ -147,14 +147,14 @@ ensure_glycans_are_structures <- function(glycans, call = rlang::caller_env()) {
   }
 
   # Case 2: `glycans` is a character vector
-  # We need to parse it as IUPAC-condensed structure strings.
+  # We need to parse it as glycan structure strings (auto-detect format).
   if (is.character(glycans)) {
     tryCatch(
-      return(glyparse::parse_iupac_condensed(glycans)),
+      return(glyparse::auto_parse(glycans)),
       error = function(cnd) {
         cli::cli_abort(c(
-          "`glycans` must be a 'glyrepr_structure' object or an IUPAC-condensed structure character.",
-          "x" = "Some glycans could not be parsed as valid IUPAC-condensed structures."
+          "`glycans` must be a 'glyrepr_structure' object or a glycan structure character vector.",
+          "x" = "Some glycans could not be parsed as valid glycan structures."
         ), call = call, parent = cnd)
       }
     )
@@ -162,7 +162,7 @@ ensure_glycans_are_structures <- function(glycans, call = rlang::caller_env()) {
 
   # Case 3: `glycans` has other types
   cli::cli_abort(c(
-    "`glycans` must be a 'glyrepr_structure' object or an IUPAC-condensed structure character.",
+    "`glycans` must be a 'glyrepr_structure' object or a glycan structure character vector.",
     "x" = "The input is of class {.cls {class(glycans)}}."
   ), call = call)
 }
@@ -182,13 +182,13 @@ ensure_motifs_are_structures <- function(motifs, motif_type, require_scalar = FA
   base_err_msg <- if (require_scalar) {
     paste(
       "`motif` must be either a 'glyrepr_structure' object with length 1,",
-      "an IUPAC-condensed structure character scalar,",
+      "a glycan structure character scalar,",
       "or a known motif name."
     )
   } else {
     paste0(
       "`motifs` must be a 'glyrepr_structure' object,",
-      "a character vector of IUPAC-condensed structure strings,",
+      "a character vector of glycan structure strings,",
       "or a character vector of known motif names."
     )
   }
@@ -219,14 +219,14 @@ ensure_motifs_are_structures <- function(motifs, motif_type, require_scalar = FA
     )
   }
 
-  # Case 4: `motifs` is a vector of IUPAC-condensed structure strings
+  # Case 4: `motifs` is a vector of glycan structure strings
   if (motif_type == "iupac") {
     tryCatch(
-      return(glyparse::parse_iupac_condensed(motifs)),
+      return(glyparse::auto_parse(motifs)),
       error = function(cnd) {
         cli::cli_abort(c(
           base_err_msg,
-          "x" = "Some motifs are neither valid IUPAC-condensed structures nor known motif names.",
+          "x" = "Some motifs are neither valid glycan structures nor known motif names.",
           "i" = "Use {.fn available_motifs} to see all valid motif names."
         ), call = call, parent = cnd)
       }

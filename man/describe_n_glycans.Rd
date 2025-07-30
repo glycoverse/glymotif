@@ -8,7 +8,7 @@ describe_n_glycans(glycans, strict = FALSE)
 }
 \arguments{
 \item{glycans}{A \code{glyrepr_structure} object,
-or a character vector of IUPAC-condensed structure strings.}
+or a character vector of glycan structure strings.}
 
 \item{strict}{A logical value. If \code{TRUE}, the glycan must have "concrete"
 monosaccharides (e.g. "GlcNAc", "Man", "Gal") and linkage information.
@@ -22,7 +22,7 @@ structural resolution could not be high, but we known for sure the glycans are i
 A tibble with the following columns: "glycan_type", "bisecting",
 "antennae", "core_fuc", "arm_fuc", "terminal_gal".
 If the input glycans have names, the tibble will have a "glycan" column.
-Otherwise, IUPAC-condensed strings will be used as the "glycan" column.
+Otherwise, glycan structure strings will be used as the "glycan" column.
 }
 \description{
 Extract key properties of N-glycans, including:

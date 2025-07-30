@@ -121,10 +121,10 @@
 #' - Anomer: using `anomer_check()`
 #' The function returns `TRUE` if any of the matches pass all checks.
 #'
-#' @param glycans A 'glyrepr_structure' object, or an IUPAC-condensed structure string vector.
-#' @param motif A 'glyrepr_structure' object, an IUPAC-condensed structure string,
+#' @param glycans A 'glyrepr_structure' object, or a glycan structure string vector.
+#' @param motif A 'glyrepr_structure' object, a glycan structure string,
 #' or a known motif name (use [available_motifs()] to see all available motifs).
-#' @param motifs A character vector of motif names, IUPAC-condensed structure strings,
+#' @param motifs A character vector of motif names, glycan structure strings,
 #' or a 'glyrepr_structure' object.
 #' @param alignment A character string.
 #' Possible values are "substructure", "core", "terminal" and "whole".

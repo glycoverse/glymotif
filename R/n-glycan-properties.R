@@ -28,7 +28,7 @@
 #' If you have high-resolution glycan structures, you can set `strict = TRUE`.
 #'
 #' @param glycans A `glyrepr_structure` object,
-#' or a character vector of IUPAC-condensed structure strings.
+#' or a character vector of glycan structure strings.
 #' @param strict A logical value. If `TRUE`, the glycan must have "concrete"
 #' monosaccharides (e.g. "GlcNAc", "Man", "Gal") and linkage information.
 #' If `FALSE`, the function is more lenient,
@@ -40,7 +40,7 @@
 #' @return A tibble with the following columns: "glycan_type", "bisecting",
 #' "antennae", "core_fuc", "arm_fuc", "terminal_gal".
 #' If the input glycans have names, the tibble will have a "glycan" column.
-#' Otherwise, IUPAC-condensed strings will be used as the "glycan" column.
+#' Otherwise, glycan structure strings will be used as the "glycan" column.
 #'
 #' @examples
 #' library(purrr)
@@ -155,7 +155,7 @@ describe_n_glycans <- function(glycans, strict = FALSE) {
 #' Man
 #' ```
 #'
-#' @param glycan A `glycan_graph` object, or a character string of IUPAC condensed format.
+#' @param glycan A `glycan_graph` object, or a character string of glycan structure format.
 #' @param strict A logical value. If `TRUE`, the glycan must have "concrete"
 #' monosaccharides (e.g. "GlcNAc", "Man", "Gal") and linkage information.
 #' If `FALSE`, the function is more lenient,
@@ -259,7 +259,7 @@ is_n_glycan <- function(glycan, strict = FALSE) {
 #'    not terminal Gal
 #' ```
 #'
-#' @param glycan A `glycan_graph` object, or a character string of IUPAC condensed format.
+#' @param glycan A `glycan_graph` object, or a character string of glycan structure format.
 #' @param strict A logical value. If `TRUE`, the glycan must have "concrete"
 #' monosaccharides (e.g. "GlcNAc", "Man", "Gal") and linkage information.
 #' If `FALSE`, the function is more lenient,

@@ -5,6 +5,19 @@ test_that("count motifs in glycan", {
 })
 
 
+test_that("count_motif supports multiple glycan structure formats", {
+  # Test IUPAC-condensed format
+  glycan_iupac <- "Gal(b1-3)Gal(b1-3)GalNAc(b1-"
+  motif_iupac <- "Gal(b1-"
+  expect_equal(count_motif(glycan_iupac, motif_iupac), 2L)
+
+  # Test IUPAC-short format
+  glycan_short <- "Galb3Galb3GalNAca-"
+  motif_short <- "Galb-"
+  expect_equal(count_motif(glycan_short, motif_short), 2L)
+})
+
+
 test_that("count motifs with branching", {
   glycan <- "Man(b1-?)[Man(b1-?)]GalNAc(b1-4)GlcNAc(b1-"
   motif <- "Man(b1-?)[Man(b1-?)]GalNAc(b1-"

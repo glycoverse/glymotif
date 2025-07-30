@@ -20,6 +20,19 @@ test_that("IUPAC-condensed used as input", {
 })
 
 
+test_that("auto_parse supports multiple glycan structure formats", {
+  # Test IUPAC-condensed format
+  glycan_iupac <- "Gal(b1-3)[GlcNAc(b1-6)]GalNAc(b1-"
+  motif_iupac <- "Gal(b1-3)GalNAc(b1-"
+  expect_true(have_motif(glycan_iupac, motif_iupac))
+
+  # Test IUPAC-short format
+  glycan_short <- "Galb3(GlcNAcb6)GalNAca-"
+  motif_short <- "Galb3GalNAca-"
+  expect_true(have_motif(glycan_short, motif_short))
+})
+
+
 test_that("motif name used as input", {
   glycan <- glyrepr::o_glycan_core_2()
   motif <- "O-Glycan core 1"
@@ -30,14 +43,14 @@ test_that("motif name used as input", {
 test_that("unkown motif name used as input", {
   glycan <- glyrepr::o_glycan_core_2()
   motif <- "unknown motif name"
-  expect_error(have_motif(glycan, motif), "Some motifs are neither valid IUPAC-condensed structures nor known motif names")
+  expect_error(have_motif(glycan, motif), "Some motifs are neither valid glycan structures nor known motif names")
 })
 
 
-test_that("bad glycan IUPAC", {
-  glycan <- "bad IUPAC"
+test_that("bad glycan structure", {
+  glycan <- "bad structure"
   motif <- glyparse::parse_iupac_condensed("Gal(b1-3)GalNAc(b1-")
-  expect_error(have_motif(glycan, motif), "Some glycans could not be parsed as valid IUPAC-condensed structures")
+  expect_error(have_motif(glycan, motif), "Some glycans could not be parsed as valid glycan structures")
 })
 
 

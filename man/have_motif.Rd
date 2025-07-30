@@ -10,9 +10,9 @@ have_motif(glycans, motif, alignment = NULL, ignore_linkages = FALSE)
 have_motifs(glycans, motifs, alignments = NULL, ignore_linkages = FALSE)
 }
 \arguments{
-\item{glycans}{A 'glyrepr_structure' object, or an IUPAC-condensed structure string vector.}
+\item{glycans}{A 'glyrepr_structure' object, or a glycan structure string vector.}
 
-\item{motif}{A 'glyrepr_structure' object, an IUPAC-condensed structure string,
+\item{motif}{A 'glyrepr_structure' object, a glycan structure string,
 or a known motif name (use \code{\link[=available_motifs]{available_motifs()}} to see all available motifs).}
 
 \item{alignment}{A character string.
@@ -23,7 +23,7 @@ Otherwise, "substructure" will be used.}
 
 \item{ignore_linkages}{A logical value. If \code{TRUE}, linkages will be ignored in the comparison.}
 
-\item{motifs}{A character vector of motif names, IUPAC-condensed structure strings,
+\item{motifs}{A character vector of motif names, glycan structure strings,
 or a 'glyrepr_structure' object.}
 
 \item{alignments}{A character vector specifying alignment types for each motif.

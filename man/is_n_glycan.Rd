@@ -7,7 +7,7 @@
 is_n_glycan(glycan, strict = FALSE)
 }
 \arguments{
-\item{glycan}{A \code{glycan_graph} object, or a character string of IUPAC condensed format.}
+\item{glycan}{A \code{glycan_graph} object, or a character string of glycan structure format.}
 
 \item{strict}{A logical value. If \code{TRUE}, the glycan must have "concrete"
 monosaccharides (e.g. "GlcNAc", "Man", "Gal") and linkage information.

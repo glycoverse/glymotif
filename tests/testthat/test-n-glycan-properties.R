@@ -754,3 +754,17 @@ test_that("describe N-glycans with no name", {
   result <- describe_n_glycans(glycans)
   expect_snapshot(result)
 })
+
+
+# ========== Multi-format Support ==========
+test_that("N-glycan functions support multiple structure formats", {
+  # Test IUPAC-condensed format
+  glycan_iupac <- "Man(a1-3)[Man(a1-6)]Man(b1-4)GlcNAc(b1-4)GlcNAc(?1-"
+  expect_true(is_n_glycan(glycan_iupac))
+  expect_equal(n_glycan_type(glycan_iupac), "paucimannose")
+
+  # Test IUPAC-short format
+  glycan_short <- "Mana3(Mana6)Manb4GlcNAcb4GlcNAcb-"
+  expect_true(is_n_glycan(glycan_short))
+  expect_equal(n_glycan_type(glycan_short), "paucimannose")
+})
