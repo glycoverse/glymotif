@@ -40,6 +40,7 @@ which(bad_iupac)
 df[bad_iupac, c("accession", "iupac")]
 
 good_df <- df
+good_df[bad_iupac, ]$iupac <- paste0(good_df[bad_iupac, ]$iupac, "(?1-")
 good_df[good_df$accession == "001024", "iupac"] <- "Man(a1-3)[Man(a1-6)]Man(b1-4)GlcNAc(b1-4)[Fuc(a1-?)]GlcNAc(?1-"
 good_df[good_df$accession == "001020", "name"] <- "O-Fucose Core 1"
 good_df[good_df$accession == "001021", "name"] <- "O-Fucose Core 2"
