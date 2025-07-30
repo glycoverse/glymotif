@@ -62,6 +62,13 @@ Filling the cells are the quantifications for motifs on different glycosites in 
 instead of quantifications of glycoforms or glycopeptides.
 Or just motif quantification in each sample, for glycomics data.
 }
+\section{Input Formats}{
+Besides \code{glyrepr::glycan_structure()}s,
+\code{glycans}, \code{motif} and \code{motifs} can be glycan structure text nomenclatures of any supported format,
+including IUPAC-condensed, IUPAC-short, IUPAC-extended, GlycoCT, WURCS, pGlyco-style, and StrucGP-style.
+Under the hood, the function uses \code{glyparse::auto_parse()} to parse the text strings.
+}
+
 \seealso{
 \code{\link[=count_motifs]{count_motifs()}}
 }

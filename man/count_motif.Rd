@@ -106,6 +106,13 @@ otherwise use the character vector itself as the names.
 }
 }
 
+\section{Input Formats}{
+Besides \code{glyrepr::glycan_structure()}s,
+\code{glycans}, \code{motif} and \code{motifs} can be glycan structure text nomenclatures of any supported format,
+including IUPAC-condensed, IUPAC-short, IUPAC-extended, GlycoCT, WURCS, pGlyco-style, and StrucGP-style.
+Under the hood, the function uses \code{glyparse::auto_parse()} to parse the text strings.
+}
+
 \examples{
 library(glyparse)
 

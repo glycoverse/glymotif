@@ -47,6 +47,13 @@ Technically speaking, they perform subgraph isomorphism tests to
 determine if the \code{motif}(s) are subgraphs of the \code{glycan}s.
 Monosaccharides, linkages, and substituents are all considered.
 }
+\section{Input Formats}{
+Besides \code{glyrepr::glycan_structure()}s,
+\code{glycans}, \code{motif} and \code{motifs} can be glycan structure text nomenclatures of any supported format,
+including IUPAC-condensed, IUPAC-short, IUPAC-extended, GlycoCT, WURCS, pGlyco-style, and StrucGP-style.
+Under the hood, the function uses \code{glyparse::auto_parse()} to parse the text strings.
+}
+
 \section{About Names}{
 \code{have_motif()} and \code{count_motif()} return a vector with no names.
 It is easy to trace the names back to the original glycans.

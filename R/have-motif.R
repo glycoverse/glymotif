@@ -11,7 +11,15 @@
 #'
 #' @details
 #'
+#' # Input Formats
+#'
+#' Besides `glyrepr::glycan_structure()`s,
+#' `glycans`, `motif` and `motifs` can be glycan structure text nomenclatures of any supported format,
+#' including IUPAC-condensed, IUPAC-short, IUPAC-extended, GlycoCT, WURCS, pGlyco-style, and StrucGP-style.
+#' Under the hood, the function uses `glyparse::auto_parse()` to parse the text strings.
+#'
 #' # About Names
+#'
 #' `have_motif()` and `count_motif()` return a vector with no names.
 #' It is easy to trace the names back to the original glycans.
 #'
