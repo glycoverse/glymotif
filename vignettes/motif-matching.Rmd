@@ -64,8 +64,8 @@ The presence part is determined by `have_motif()`,
 while the counting aspect is handled by `count_motif()`.
 
 ```{r}
-glycan <- "Neu5Ac(a2-3)Gal(b1-3)[Fuc(a1-3)]GlcNAc(b1-3)Gal(b1-3)GalNAc"
-motif <- "Neu5Ac(a2-3)Gal(b1-3)[Fuc(a1-3)]GlcNAc"
+glycan <- "Neu5Ac(a2-3)Gal(b1-3)[Fuc(a1-3)]GlcNAc(b1-3)Gal(b1-3)GalNAc(b1-"
+motif <- "Neu5Ac(a2-3)Gal(b1-3)[Fuc(a1-3)]GlcNAc(b1-"
 
 print(paste0("Does the glycan have the motif? ", have_motif(glycan, motif)))
 print(paste0("How many occurrences of the motif are there in the glycan? ", count_motif(glycan, motif)))
@@ -135,7 +135,7 @@ each representing a different level of structural complexity:
 3. The complete glycan structure itself
 
 ```{r}
-glycan <- "Neu5Ac(??-?)Gal(??-?)[Fuc(??-?)]GlcNAc(??-?)Gal(??-?)GalNAc"
+glycan <- "Neu5Ac(??-?)Gal(??-?)[Fuc(??-?)]GlcNAc(??-?)Gal(??-?)GalNAc(b1-"
 motifs <- c(
   "Gal(??-",
   "Fuc(??-?)GlcNAc(??-",
@@ -210,11 +210,11 @@ we often abbreviate linkages by omitting the anomeric carbon number.
 So "a1-6" becomes simply "a6" since the anomeric position is typically known.
 
 ```{r}
-glycan <- "Man(a1-3)[Man(a1-6)]Man(b1-4)GlcNAc(b1-4)[Fuc(a1-6)]GlcNAc"
+glycan <- "Man(a1-3)[Man(a1-6)]Man(b1-4)GlcNAc(b1-4)[Fuc(a1-6)]GlcNAc(b1-"
 motifs <- c(
-  "Fuc(a1-?)GlcNAc",  # Motif 1: anomer known, position flexible
-  "Fuc(a1-6)GlcNAc",  # Motif 2: exact linkage match
-  "Fuc(a1-3)GlcNAc"   # Motif 3: wrong position specification
+  "Fuc(a1-?)GlcNAc(b1-",  # Motif 1: anomer known, position flexible
+  "Fuc(a1-6)GlcNAc(b1-",  # Motif 2: exact linkage match
+  "Fuc(a1-3)GlcNAc(b1-"   # Motif 3: wrong position specification
 )
 have_motifs_simple(glycan, motifs)
 ```
@@ -240,7 +240,7 @@ Specifically:
 - Generic monosaccharides in glycans can only match generic motifs ✅
 
 ```{r}
-mat <- have_motifs(glycans = c("Hex", "Man"), motifs = c("Hex", "Man"))
+mat <- have_motifs(glycans = c("Hex(a1-", "Man(a1-"), motifs = c("Hex(a1-", "Man(a1-"))
 rownames(mat) <- paste0(rownames(mat), "_glycan")
 colnames(mat) <- paste0(colnames(mat), "_motif")
 mat
@@ -269,8 +269,8 @@ the motif must have the same type to match
 Let's see this in action:
 
 ```{r}
-glycans <- c("Neu5Ac9Ac", "Neu5Ac?Ac", "Neu5Ac")
-motifs <- c("Neu5Ac9Ac", "Neu5Ac?Ac", "Neu5Ac")
+glycans <- c("Neu5Ac9Ac(a2-", "Neu5Ac?Ac(a2-", "Neu5Ac(a2-")
+motifs <- c("Neu5Ac9Ac(a2-", "Neu5Ac?Ac(a2-", "Neu5Ac(a2-")
 mat <- have_motifs(glycans, motifs)
 rownames(mat) <- paste0("glycan_", 1:3)
 colnames(mat) <- paste0("motif_", 1:3)
@@ -300,12 +300,12 @@ we recognize four alignment types:
 Let's verify these behaviors computationally:
 
 ```{r}
-glycan <- "Gal(a1-3)Gal(a1-4)Gal(a1-6)Gal"
+glycan <- "Gal(a1-3)Gal(a1-4)Gal(a1-6)Gal(a1-"
 motifs <- c(
-  "Gal(a1-3)Gal(a1-4)Gal(a1-6)Gal",  # motif 1: complete structure
-  "Gal(a1-3)Gal(a1-4)Gal",           # motif 2: terminal branch
-           "Gal(a1-4)Gal(a1-6)Gal",  # motif 3: reducing-end subtree
-           "Gal(a1-4)Gal"            # motif 4: internal fragment
+  "Gal(a1-3)Gal(a1-4)Gal(a1-6)Gal(a1-",  # motif 1: complete structure
+  "Gal(a1-3)Gal(a1-4)Gal(a1-",           # motif 2: terminal branch
+           "Gal(a1-4)Gal(a1-6)Gal(a1-",  # motif 3: reducing-end subtree
+           "Gal(a1-4)Gal(a1-"            # motif 4: internal fragment
 )
 alignments <- c("substructure", "whole", "core", "terminal")
 mat <- do.call(cbind, purrr::map(alignments, ~ have_motifs_simple(glycan, motifs, alignment = .x)))
