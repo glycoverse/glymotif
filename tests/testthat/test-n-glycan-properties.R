@@ -718,11 +718,20 @@ test_that("check terminal galactose not for N-glycan", {
 # ========== Describe N-glycan ==========
 test_that("describing glycans works", {
   glycans <- c(
+    paucimannose_H3N2("generic", linkage = FALSE),
     highmannose_H5N2("generic", linkage = FALSE),
     complex_H4N4("generic", linkage = FALSE),
     complex_H3N4F2_1coreF_1armF("generic", linkage = FALSE)
   )
-  expect_snapshot(describe_n_glycans(glycans))
+  result <- describe_n_glycans(glycans)
+
+  expect_equal(result$glycan_type, c("paucimannose", "highmannose", "complex", "complex"))
+  expect_equal(result$bisecting, c(FALSE, FALSE, FALSE, FALSE))
+  expect_equal(result$n_antennae, c(NA, NA, 2L, 2L))
+  expect_equal(result$n_core_fuc, c(0L, 0L, 0L, 1L))
+  expect_equal(result$n_arm_fuc, c(0L, 0L, 0L, 1L))
+  expect_equal(result$n_gal, c(0L, 0L, 1L, 0L))
+  expect_equal(result$n_terminal_gal, c(0L, 0L, 1L, 0L))
 })
 
 

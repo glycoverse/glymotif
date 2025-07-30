@@ -63,82 +63,24 @@ describe_n_glycans <- function(glycans, strict = FALSE) {
     glycan_structures <- glyrepr::convert_mono_type(glycan_structures, to = "generic")
   }
 
-  # Separate motifs that only need presence/absence from those that need counting
-  have_motif_names <- c("core", "pauciman", "hybrid", "highman", "bisect", "ant2", "ant3", "ant4")
-  have_motifs <- purrr::map(have_motif_names, ~ get_n_glycan_motif(.x, generic = !strict))
-
-  have_alignments <- c(
-    core = "core", pauciman = "whole", hybrid = "core", highman = "core",
-    bisect = "core", ant2 = "core", ant3 = "core", ant4 = "core"
-  )
-
-  count_motif_names <- c("core_fuc", "arm_fuc", "gal", "terminal_gal")
-  count_motifs <- purrr::map(count_motif_names, ~ get_n_glycan_motif(.x, generic = !strict))
-
-  count_alignments <- c(core_fuc = "core", arm_fuc = "core", gal = "substructure", terminal_gal = "terminal")
-
-  # Use vectorized functions
-  motif_has_matrix <- have_motifs_(
-    glycans = glycan_structures, 
-    motifs = have_motifs, 
-    alignments = have_alignments, 
-    glycan_names = glycan_names, 
-    motif_names = have_motif_names, 
-    ignore_linkages = !strict
-  )
-  motif_count_matrix <- count_motifs_(
-    glycans = glycan_structures, 
-    motifs = count_motifs, 
-    alignments = count_alignments, 
-    glycan_names = glycan_names, 
-    motif_names = count_motif_names, 
-    ignore_linkages = !strict
-  )
-  rownames(motif_has_matrix) <- glycan_names
-  rownames(motif_count_matrix) <- glycan_names
-  colnames(motif_has_matrix) <- have_motif_names
-  colnames(motif_count_matrix) <- count_motif_names
-
   # Check if the glycans are N-glycans
-  is_n_glycan <- motif_has_matrix[, "core"]
-  invalid_indices <- which(!is_n_glycan)
+  invalid_indices <- which(!is_n_glycan(glycan_structures, strict = strict))
   if (length(invalid_indices) > 0) {
     cli::cli_abort("Glycans at indices {.val {invalid_indices}} are not N-glycans.")
   }
 
-  # Determine glycan types based on motif presence
-  # Extract logical vectors for each motif check
-  pauciman_results <- motif_has_matrix[, "pauciman"]
-  hybrid_results <- motif_has_matrix[, "hybrid"]
-  highman_results <- motif_has_matrix[, "highman"]
-  
-  # Use vectorized operations instead of purrr for better performance
-  glycan_type <- ifelse(pauciman_results, "paucimannose", 
-                 ifelse(hybrid_results, "hybrid",
-                 ifelse(highman_results, "highmannose", "complex")))
-  
-  # Determine number of antennae for complex glycans
-  # Extract logical vectors for antenna checks
-  ant4_results <- motif_has_matrix[, "ant4"]
-  ant3_results <- motif_has_matrix[, "ant3"]
-  ant2_results <- motif_has_matrix[, "ant2"]
-  
-  # Use vectorized operations for antenna counting
-  n_antennae <- ifelse(glycan_type != "complex", NA_integer_,
-                ifelse(ant4_results, 4L,
-                ifelse(ant3_results, 3L,
-                ifelse(ant2_results, 2L, 1L))))
-
   # Build the result tibble
   res <- tibble::tibble(
-    glycan_type = glycan_type,
-    bisecting = motif_has_matrix[, "bisect"],
-    n_antennae = n_antennae,
-    n_core_fuc = motif_count_matrix[, "core_fuc"],
-    n_arm_fuc = motif_count_matrix[, "arm_fuc"],
-    n_gal = motif_count_matrix[, "gal"],
-    n_terminal_gal = as.integer(motif_count_matrix[, "terminal_gal"])
+    glycan_type = purrr::map_chr(glycan_structures, ~ n_glycan_type(.x, strict = strict)),
+    bisecting = purrr::map_lgl(glycan_structures, ~ has_bisecting(.x, strict = strict)),
+    n_antennae = purrr::map_int(glycan_structures, ~ n_antennae(.x, strict = strict)),
+    n_core_fuc = purrr::map_int(glycan_structures, ~ n_core_fuc(.x, strict = strict)),
+    n_arm_fuc = purrr::map_int(glycan_structures, ~ n_arm_fuc(.x, strict = strict)),
+    n_gal = purrr::map_int(glycan_structures, ~ n_gal(.x, strict = strict)),
+    n_terminal_gal = purrr::map_int(glycan_structures, ~ n_terminal_gal(.x, strict = strict))
   )
+  res <- res %>%
+    dplyr::mutate(glycan = glycan_names, .before = 1)
 
   res
 }
