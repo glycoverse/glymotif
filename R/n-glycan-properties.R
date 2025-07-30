@@ -474,7 +474,7 @@ get_n_glycan_motif <- function(name, generic = FALSE) {
     motifs[["gal"]] <- glyparse::parse_pglyco_struc("(H(H(N(H))))")
     motifs[["terminal_gal"]] <- motifs[["gal"]]
   } else {
-    motifs[["gal"]] <- glyparse::parse_iupac_condensed("Gal")
+    motifs[["gal"]] <- glyparse::parse_iupac_condensed("Gal(?1-")
     motifs[["terminal_gal"]] <- motifs[["gal"]]
   }
   motif <- motifs[[name]]

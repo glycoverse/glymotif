@@ -52,7 +52,7 @@ However, the result is not necessarily the number of matches.
 
 Think about the following example:
 \itemize{
-\item glycan: \verb{Gal(b1-?)[Gal(b1-?)]GlcNAc(b1-4)GlcNAc}
+\item glycan: \verb{Gal(b1-?)[Gal(b1-?)]GlcNAc(b1-4)GlcNAc(b1-}
 \item motif: \verb{Gal(b1-?)[Gal(b1-?)]GlcNAc(b1-}
 }
 
@@ -60,7 +60,7 @@ To draw the glycan out:
 
 \if{html}{\out{<div class="sourceCode">}}\preformatted{Gal 1
    \\ b1-? b1-4
-    GlcNAc -- GlcNAc
+    GlcNAc -- GlcNAc b1-
    / b1-?
 Gal 2
 }\if{html}{\out{</div>}}
@@ -109,34 +109,34 @@ otherwise use the character vector itself as the names.
 \examples{
 library(glyparse)
 
-count_motif("Gal(b1-3)Gal(b1-3)GalNAc", "Gal(b1-")
+count_motif("Gal(b1-3)Gal(b1-3)GalNAc(b1-", "Gal(b1-")
 count_motif(
-  "Man(b1-?)[Man(b1-?)]GalNAc(b1-4)GlcNAc",
-  "Man(b1-?)[Man(b1-?)]GalNAc"
+  "Man(b1-?)[Man(b1-?)]GalNAc(b1-4)GlcNAc(b1-",
+  "Man(b1-?)[Man(b1-?)]GalNAc(b1-"
 )
-count_motif("Gal(b1-3)Gal", "Man")
+count_motif("Gal(b1-3)Gal(b1-", "Man(b1-")
 
 # Vectorized usage with single motif
-count_motif(c("Gal(b1-3)Gal(b1-3)GalNAc", "Gal(b1-3)GalNAc"), "Gal(b1-")
+count_motif(c("Gal(b1-3)Gal(b1-3)GalNAc(b1-", "Gal(b1-3)GalNAc(b1-"), "Gal(b1-")
 
 # Multiple motifs with count_motifs()
-glycan1 <- parse_iupac_condensed("Gal(b1-3)Gal(b1-3)GalNAc")
-glycan2 <- parse_iupac_condensed("Man(b1-?)[Man(b1-?)]GalNAc(b1-4)GlcNAc")
+glycan1 <- parse_iupac_condensed("Gal(b1-3)Gal(b1-3)GalNAc(b1-")
+glycan2 <- parse_iupac_condensed("Man(b1-?)[Man(b1-?)]GalNAc(b1-4)GlcNAc(b1-")
 glycans <- c(glycan1, glycan2)
 
-motifs <- c("Gal(b1-3)GalNAc", "Gal(b1-", "Man(b1-")
+motifs <- c("Gal(b1-3)GalNAc(b1-", "Gal(b1-", "Man(b1-")
 result <- count_motifs(glycans, motifs)
 print(result)
 
 # Monosaccharide type matching examples
 # Concrete glycan vs generic motif: matches (glycan converted to generic)
-count_motif("Man", "Hex")  # Returns 1
+count_motif("Man(?1-", "Hex(?1-")  # Returns 1
 
 # Generic glycan vs concrete motif: doesn't match
-count_motif("Hex", "Man")  # Returns 0
+count_motif("Hex(?1-", "Man(?1-")  # Returns 0
 
 # Matrix example showing type matching rules
-count_motifs(glycans = c("Hex", "Man"), motifs = c("Hex", "Man"))
+count_motifs(glycans = c("Hex(?1-", "Man(?1-"), motifs = c("Hex(?1-", "Man(?1-"))
 
 }
 \seealso{

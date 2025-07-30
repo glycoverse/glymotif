@@ -148,25 +148,25 @@
 #'
 #' (glycan <- o_glycan_core_2(mono_type = "concrete"))
 #'
-#' # The glycan has the motif "Gal(b1-3)GalNAc"
-#' have_motif(glycan, "Gal(b1-3)GalNAc")
+#' # The glycan has the motif "Gal(b1-3)GalNAc(b1-"
+#' have_motif(glycan, "Gal(b1-3)GalNAc(b1-")
 #'
-#' # But not "Gal(b1-4)GalNAc" (wrong linkage)
-#' have_motif(glycan, "Gal(b1-4)GalNAc")
+#' # But not "Gal(b1-4)GalNAc(b1-" (wrong linkage)
+#' have_motif(glycan, "Gal(b1-4)GalNAc(b1-")
 #'
 #' # Set `ignore_linkages` to `TRUE` to ignore linkages
-#' have_motif(glycan, "Gal(b1-4)GalNAc", ignore_linkages = TRUE)
+#' have_motif(glycan, "Gal(b1-4)GalNAc(b1-", ignore_linkages = TRUE)
 #'
 #' # Different monosaccharide types are allowed
-#' have_motif(glycan, "Hex(b1-3)HexNAc")
+#' have_motif(glycan, "Hex(b1-3)HexNAc(?1-")
 #'
 #' # Obscure linkages in the `motif` graph are allowed
-#' have_motif(glycan, "Gal(b1-?)GalNAc")
+#' have_motif(glycan, "Gal(b1-?)GalNAc(?1-")
 #'
 #' # However, obscure linkages in `glycan` will only match "?" in the `motif` graph
-#' glycan_2 <- parse_iupac_condensed("Gal(b1-?)[GlcNAc(b1-6)]GalNAc")
-#' have_motif(glycan_2, "Gal(b1-3)GalNAc")
-#' have_motif(glycan_2, "Gal(b1-?)GalNAc")
+#' glycan_2 <- parse_iupac_condensed("Gal(b1-?)[GlcNAc(b1-6)]GalNAc(?1-")
+#' have_motif(glycan_2, "Gal(b1-3)GalNAc(?1-")
+#' have_motif(glycan_2, "Gal(b1-?)GalNAc(?1-")
 #'
 #' # The anomer of the motif will be matched to linkages in the glycan
 #' have_motif(glycan_2, "GlcNAc(b1-")
@@ -174,12 +174,12 @@
 #' # Alignment types
 #' # The default type is "substructure", which means the motif can be anywhere in the glycan.
 #' # Other options include "core", "terminal" and "whole".
-#' glycan_3 <- parse_iupac_condensed("Gal(a1-3)Gal(a1-4)Gal(a1-6)Gal")
+#' glycan_3 <- parse_iupac_condensed("Gal(a1-3)Gal(a1-4)Gal(a1-6)Gal(a1-")
 #' motifs <- c(
-#'   "Gal(a1-3)Gal(a1-4)Gal(a1-6)Gal",
-#'   "Gal(a1-3)Gal(a1-4)Gal",
-#'            "Gal(a1-4)Gal(a1-6)Gal",
-#'            "Gal(a1-4)Gal"
+#'   "Gal(a1-3)Gal(a1-4)Gal(a1-6)Gal(a1-",
+#'   "Gal(a1-3)Gal(a1-4)Gal(a1-",
+#'            "Gal(a1-4)Gal(a1-6)Gal(a1-",
+#'            "Gal(a1-4)Gal(a1-"
 #' )
 #'
 #' purrr::map_lgl(motifs, ~ have_motif(glycan_3, .x, alignment = "whole"))
@@ -188,8 +188,8 @@
 #' purrr::map_lgl(motifs, ~ have_motif(glycan_3, .x, alignment = "substructure"))
 #'
 #' # Substituents
-#' glycan_4 <- "Neu5Ac9Ac(a2-3)Gal(b1-4)GlcNAc"
-#' glycan_5 <- "Neu5Ac(a2-3)Gal(b1-4)GlcNAc"
+#' glycan_4 <- "Neu5Ac9Ac(a2-3)Gal(b1-4)GlcNAc(b1-"
+#' glycan_5 <- "Neu5Ac(a2-3)Gal(b1-4)GlcNAc(b1-"
 #'
 #' have_motif(glycan_4, glycan_5)
 #' have_motif(glycan_5, glycan_4)
@@ -197,28 +197,32 @@
 #' have_motif(glycan_5, glycan_5)
 #'
 #' # Multiple substituents
-#' glycan_6 <- "Glc3Me6S"  # has both 3Me and 6S substituents
-#' have_motif(glycan_6, "Glc3Me6S")  # TRUE: exact match
-#' have_motif(glycan_6, "Glc?Me6S")  # TRUE: obscure linkage ?Me matches 3Me
-#' have_motif(glycan_6, "Glc3Me?S")  # TRUE: obscure linkage ?S matches 6S
-#' have_motif(glycan_6, "Glc3Me")    # FALSE: missing 6S substituent
-#' have_motif(glycan_6, "Glc")       # FALSE: missing all substituents
+#' glycan_6 <- "Glc3Me6S(a1-"  # has both 3Me and 6S substituents
+#' have_motif(glycan_6, "Glc3Me6S(a1-")  # TRUE: exact match
+#' have_motif(glycan_6, "Glc?Me6S(a1-")  # TRUE: obscure linkage ?Me matches 3Me
+#' have_motif(glycan_6, "Glc3Me?S(a1-")  # TRUE: obscure linkage ?S matches 6S
+#' have_motif(glycan_6, "Glc3Me(a1-")    # FALSE: missing 6S substituent
+#' have_motif(glycan_6, "Glc(a1-")       # FALSE: missing all substituents
 #'
 #' # Vectorization with single motif
 #' glycans <- c(glycan, glycan_2, glycan_3)
-#' motif <- "Gal(b1-3)GalNAc"
+#' motif <- "Gal(b1-3)GalNAc(b1-"
 #' have_motif(glycans, motif)
 #'
 #' # Multiple motifs with have_motifs()
 #' glycan1 <- o_glycan_core_2(mono_type = "concrete")
-#' glycan2 <- parse_iupac_condensed("Gal(b1-?)[GlcNAc(b1-6)]GalNAc")
+#' glycan2 <- parse_iupac_condensed("Gal(b1-?)[GlcNAc(b1-6)]GalNAc(b1-")
 #' glycans <- c(glycan1, glycan2)
 #'
-#' motifs <- c("Gal(b1-3)GalNAc", "Gal(b1-4)GalNAc", "GlcNAc(b1-6)GalNAc")
+#' motifs <- c("Gal(b1-3)GalNAc(b1-", "Gal(b1-4)GalNAc(b1-", "GlcNAc(b1-6)GalNAc(b1-")
 #' have_motifs(glycans, motifs)
 #'
 #' # You can assign each motif a name
-#' motifs <- c(motif1 = "Gal(b1-3)GalNAc", motif2 = "Gal(b1-4)GalNAc", motif3 = "GlcNAc(b1-6)GalNAc")
+#' motifs <- c(
+#'   motif1 = "Gal(b1-3)GalNAc(b1-", 
+#'   motif2 = "Gal(b1-4)GalNAc(b1-", 
+#'   motif3 = "GlcNAc(b1-6)GalNAc(b1-"
+#' )
 #' have_motifs(glycans, motifs)
 #'
 #' @export
