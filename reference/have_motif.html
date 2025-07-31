@@ -72,12 +72,16 @@ Monosaccharides, linkages, and substituents are all considered.</p>
 
 
 <dl><dt id="arg-glycans">glycans<a class="anchor" aria-label="anchor" href="#arg-glycans"></a></dt>
-<dd><p>A 'glyrepr_structure' object, or an IUPAC-condensed structure string vector.</p></dd>
+<dd><p>A 'glyrepr_structure' object, or a glycan structure string vector.
+All formats supported by <code><a href="https://glycoverse.github.io/glyparse/reference/auto_parse.html" class="external-link">glyparse::auto_parse()</a></code> are accepted,
+including IUPAC-condensed, WURCS, GlycoCT, and others.</p></dd>
 
 
 <dt id="arg-motif">motif<a class="anchor" aria-label="anchor" href="#arg-motif"></a></dt>
-<dd><p>A 'glyrepr_structure' object, an IUPAC-condensed structure string,
-or a known motif name (use <code><a href="available_motifs.html">available_motifs()</a></code> to see all available motifs).</p></dd>
+<dd><p>A 'glyrepr_structure' object, a glycan structure string,
+or a known motif name (use <code><a href="available_motifs.html">available_motifs()</a></code> to see all available motifs).
+For glycan structure strings, all formats supported by <code><a href="https://glycoverse.github.io/glyparse/reference/auto_parse.html" class="external-link">glyparse::auto_parse()</a></code> are accepted,
+including IUPAC-condensed, WURCS, GlycoCT, and others.</p></dd>
 
 
 <dt id="arg-alignment">alignment<a class="anchor" aria-label="anchor" href="#arg-alignment"></a></dt>
@@ -93,8 +97,10 @@ Otherwise, "substructure" will be used.</p></dd>
 
 
 <dt id="arg-motifs">motifs<a class="anchor" aria-label="anchor" href="#arg-motifs"></a></dt>
-<dd><p>A character vector of motif names, IUPAC-condensed structure strings,
-or a 'glyrepr_structure' object.</p></dd>
+<dd><p>A character vector of motif names, glycan structure strings,
+or a 'glyrepr_structure' object.
+For glycan structure strings, all formats supported by <code><a href="https://glycoverse.github.io/glyparse/reference/auto_parse.html" class="external-link">glyparse::auto_parse()</a></code> are accepted,
+including IUPAC-condensed, WURCS, GlycoCT, and others.</p></dd>
 
 
 <dt id="arg-alignments">alignments<a class="anchor" aria-label="anchor" href="#arg-alignments"></a></dt>
@@ -206,7 +212,7 @@ The function returns <code>TRUE</code> if any of the matches pass all checks.</p
 </ul></div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
-    <div class="dont-index"><p><code><a href="count_motif.html">count_motif()</a></code>, <code><a href="count_motif.html">count_motifs()</a></code></p></div>
+    <div class="dont-index"><p><code><a href="count_motif.html">count_motif()</a></code>, <code><a href="count_motif.html">count_motifs()</a></code>, <code><a href="https://glycoverse.github.io/glyparse/reference/auto_parse.html" class="external-link">glyparse::auto_parse()</a></code></p></div>
     </div>
 
     <div class="section level2">
@@ -219,31 +225,31 @@ The function returns <code>TRUE</code> if any of the matches pass all checks.</p
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] <span style="color: #FFD700;">Gal</span>(<span style="color: #B2B2B2;">b1-3</span>)[<span style="color: #0087D7;">GlcNAc</span>(<span style="color: #B2B2B2;">b1-6</span>)]<span style="color: #FFD700;">GalNAc</span>(<span style="color: #B2B2B2;">a1-</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> # Unique structures: 1</span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># The glycan has the motif "Gal(b1-3)GalNAc"</span></span></span>
-<span class="r-in"><span><span class="fu">have_motif</span><span class="op">(</span><span class="va">glycan</span>, <span class="st">"Gal(b1-3)GalNAc"</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
+<span class="r-in"><span><span class="co"># The glycan has the motif "Gal(b1-3)GalNAc(b1-"</span></span></span>
+<span class="r-in"><span><span class="fu">have_motif</span><span class="op">(</span><span class="va">glycan</span>, <span class="st">"Gal(b1-3)GalNAc(b1-"</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] FALSE</span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># But not "Gal(b1-4)GalNAc" (wrong linkage)</span></span></span>
-<span class="r-in"><span><span class="fu">have_motif</span><span class="op">(</span><span class="va">glycan</span>, <span class="st">"Gal(b1-4)GalNAc"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="co"># But not "Gal(b1-4)GalNAc(b1-" (wrong linkage)</span></span></span>
+<span class="r-in"><span><span class="fu">have_motif</span><span class="op">(</span><span class="va">glycan</span>, <span class="st">"Gal(b1-4)GalNAc(b1-"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] FALSE</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Set `ignore_linkages` to `TRUE` to ignore linkages</span></span></span>
-<span class="r-in"><span><span class="fu">have_motif</span><span class="op">(</span><span class="va">glycan</span>, <span class="st">"Gal(b1-4)GalNAc"</span>, ignore_linkages <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">have_motif</span><span class="op">(</span><span class="va">glycan</span>, <span class="st">"Gal(b1-4)GalNAc(b1-"</span>, ignore_linkages <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Different monosaccharide types are allowed</span></span></span>
-<span class="r-in"><span><span class="fu">have_motif</span><span class="op">(</span><span class="va">glycan</span>, <span class="st">"Hex(b1-3)HexNAc"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">have_motif</span><span class="op">(</span><span class="va">glycan</span>, <span class="st">"Hex(b1-3)HexNAc(?1-"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Obscure linkages in the `motif` graph are allowed</span></span></span>
-<span class="r-in"><span><span class="fu">have_motif</span><span class="op">(</span><span class="va">glycan</span>, <span class="st">"Gal(b1-?)GalNAc"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">have_motif</span><span class="op">(</span><span class="va">glycan</span>, <span class="st">"Gal(b1-?)GalNAc(?1-"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># However, obscure linkages in `glycan` will only match "?" in the `motif` graph</span></span></span>
-<span class="r-in"><span><span class="va">glycan_2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://glycoverse.github.io/glyparse/reference/parse_iupac_condensed.html" class="external-link">parse_iupac_condensed</a></span><span class="op">(</span><span class="st">"Gal(b1-?)[GlcNAc(b1-6)]GalNAc"</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu">have_motif</span><span class="op">(</span><span class="va">glycan_2</span>, <span class="st">"Gal(b1-3)GalNAc"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">glycan_2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://glycoverse.github.io/glyparse/reference/parse_iupac_condensed.html" class="external-link">parse_iupac_condensed</a></span><span class="op">(</span><span class="st">"Gal(b1-?)[GlcNAc(b1-6)]GalNAc(?1-"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">have_motif</span><span class="op">(</span><span class="va">glycan_2</span>, <span class="st">"Gal(b1-3)GalNAc(?1-"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] FALSE</span>
-<span class="r-in"><span><span class="fu">have_motif</span><span class="op">(</span><span class="va">glycan_2</span>, <span class="st">"Gal(b1-?)GalNAc"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">have_motif</span><span class="op">(</span><span class="va">glycan_2</span>, <span class="st">"Gal(b1-?)GalNAc(?1-"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># The anomer of the motif will be matched to linkages in the glycan</span></span></span>
@@ -253,12 +259,12 @@ The function returns <code>TRUE</code> if any of the matches pass all checks.</p
 <span class="r-in"><span><span class="co"># Alignment types</span></span></span>
 <span class="r-in"><span><span class="co"># The default type is "substructure", which means the motif can be anywhere in the glycan.</span></span></span>
 <span class="r-in"><span><span class="co"># Other options include "core", "terminal" and "whole".</span></span></span>
-<span class="r-in"><span><span class="va">glycan_3</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://glycoverse.github.io/glyparse/reference/parse_iupac_condensed.html" class="external-link">parse_iupac_condensed</a></span><span class="op">(</span><span class="st">"Gal(a1-3)Gal(a1-4)Gal(a1-6)Gal"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">glycan_3</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://glycoverse.github.io/glyparse/reference/parse_iupac_condensed.html" class="external-link">parse_iupac_condensed</a></span><span class="op">(</span><span class="st">"Gal(a1-3)Gal(a1-4)Gal(a1-6)Gal(a1-"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">motifs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span></span>
-<span class="r-in"><span>  <span class="st">"Gal(a1-3)Gal(a1-4)Gal(a1-6)Gal"</span>,</span></span>
-<span class="r-in"><span>  <span class="st">"Gal(a1-3)Gal(a1-4)Gal"</span>,</span></span>
-<span class="r-in"><span>           <span class="st">"Gal(a1-4)Gal(a1-6)Gal"</span>,</span></span>
-<span class="r-in"><span>           <span class="st">"Gal(a1-4)Gal"</span></span></span>
+<span class="r-in"><span>  <span class="st">"Gal(a1-3)Gal(a1-4)Gal(a1-6)Gal(a1-"</span>,</span></span>
+<span class="r-in"><span>  <span class="st">"Gal(a1-3)Gal(a1-4)Gal(a1-"</span>,</span></span>
+<span class="r-in"><span>           <span class="st">"Gal(a1-4)Gal(a1-6)Gal(a1-"</span>,</span></span>
+<span class="r-in"><span>           <span class="st">"Gal(a1-4)Gal(a1-"</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map_lgl</a></span><span class="op">(</span><span class="va">motifs</span>, <span class="op">~</span> <span class="fu">have_motif</span><span class="op">(</span><span class="va">glycan_3</span>, <span class="va">.x</span>, alignment <span class="op">=</span> <span class="st">"whole"</span><span class="op">)</span><span class="op">)</span></span></span>
@@ -271,8 +277,8 @@ The function returns <code>TRUE</code> if any of the matches pass all checks.</p
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE TRUE TRUE TRUE</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Substituents</span></span></span>
-<span class="r-in"><span><span class="va">glycan_4</span> <span class="op">&lt;-</span> <span class="st">"Neu5Ac9Ac(a2-3)Gal(b1-4)GlcNAc"</span></span></span>
-<span class="r-in"><span><span class="va">glycan_5</span> <span class="op">&lt;-</span> <span class="st">"Neu5Ac(a2-3)Gal(b1-4)GlcNAc"</span></span></span>
+<span class="r-in"><span><span class="va">glycan_4</span> <span class="op">&lt;-</span> <span class="st">"Neu5Ac9Ac(a2-3)Gal(b1-4)GlcNAc(b1-"</span></span></span>
+<span class="r-in"><span><span class="va">glycan_5</span> <span class="op">&lt;-</span> <span class="st">"Neu5Ac(a2-3)Gal(b1-4)GlcNAc(b1-"</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu">have_motif</span><span class="op">(</span><span class="va">glycan_4</span>, <span class="va">glycan_5</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] FALSE</span>
@@ -284,44 +290,48 @@ The function returns <code>TRUE</code> if any of the matches pass all checks.</p
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Multiple substituents</span></span></span>
-<span class="r-in"><span><span class="va">glycan_6</span> <span class="op">&lt;-</span> <span class="st">"Glc3Me6S"</span>  <span class="co"># has both 3Me and 6S substituents</span></span></span>
-<span class="r-in"><span><span class="fu">have_motif</span><span class="op">(</span><span class="va">glycan_6</span>, <span class="st">"Glc3Me6S"</span><span class="op">)</span>  <span class="co"># TRUE: exact match</span></span></span>
+<span class="r-in"><span><span class="va">glycan_6</span> <span class="op">&lt;-</span> <span class="st">"Glc3Me6S(a1-"</span>  <span class="co"># has both 3Me and 6S substituents</span></span></span>
+<span class="r-in"><span><span class="fu">have_motif</span><span class="op">(</span><span class="va">glycan_6</span>, <span class="st">"Glc3Me6S(a1-"</span><span class="op">)</span>  <span class="co"># TRUE: exact match</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
-<span class="r-in"><span><span class="fu">have_motif</span><span class="op">(</span><span class="va">glycan_6</span>, <span class="st">"Glc?Me6S"</span><span class="op">)</span>  <span class="co"># TRUE: obscure linkage ?Me matches 3Me</span></span></span>
+<span class="r-in"><span><span class="fu">have_motif</span><span class="op">(</span><span class="va">glycan_6</span>, <span class="st">"Glc?Me6S(a1-"</span><span class="op">)</span>  <span class="co"># TRUE: obscure linkage ?Me matches 3Me</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
-<span class="r-in"><span><span class="fu">have_motif</span><span class="op">(</span><span class="va">glycan_6</span>, <span class="st">"Glc3Me?S"</span><span class="op">)</span>  <span class="co"># TRUE: obscure linkage ?S matches 6S</span></span></span>
+<span class="r-in"><span><span class="fu">have_motif</span><span class="op">(</span><span class="va">glycan_6</span>, <span class="st">"Glc3Me?S(a1-"</span><span class="op">)</span>  <span class="co"># TRUE: obscure linkage ?S matches 6S</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
-<span class="r-in"><span><span class="fu">have_motif</span><span class="op">(</span><span class="va">glycan_6</span>, <span class="st">"Glc3Me"</span><span class="op">)</span>    <span class="co"># FALSE: missing 6S substituent</span></span></span>
+<span class="r-in"><span><span class="fu">have_motif</span><span class="op">(</span><span class="va">glycan_6</span>, <span class="st">"Glc3Me(a1-"</span><span class="op">)</span>    <span class="co"># FALSE: missing 6S substituent</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] FALSE</span>
-<span class="r-in"><span><span class="fu">have_motif</span><span class="op">(</span><span class="va">glycan_6</span>, <span class="st">"Glc"</span><span class="op">)</span>       <span class="co"># FALSE: missing all substituents</span></span></span>
+<span class="r-in"><span><span class="fu">have_motif</span><span class="op">(</span><span class="va">glycan_6</span>, <span class="st">"Glc(a1-"</span><span class="op">)</span>       <span class="co"># FALSE: missing all substituents</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] FALSE</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Vectorization with single motif</span></span></span>
 <span class="r-in"><span><span class="va">glycans</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">glycan</span>, <span class="va">glycan_2</span>, <span class="va">glycan_3</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">motif</span> <span class="op">&lt;-</span> <span class="st">"Gal(b1-3)GalNAc"</span></span></span>
+<span class="r-in"><span><span class="va">motif</span> <span class="op">&lt;-</span> <span class="st">"Gal(b1-3)GalNAc(b1-"</span></span></span>
 <span class="r-in"><span><span class="fu">have_motif</span><span class="op">(</span><span class="va">glycans</span>, <span class="va">motif</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1]  TRUE FALSE FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] FALSE FALSE FALSE</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Multiple motifs with have_motifs()</span></span></span>
 <span class="r-in"><span><span class="va">glycan1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://glycoverse.github.io/glyrepr/reference/n_glycan_core.html" class="external-link">o_glycan_core_2</a></span><span class="op">(</span>mono_type <span class="op">=</span> <span class="st">"concrete"</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">glycan2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://glycoverse.github.io/glyparse/reference/parse_iupac_condensed.html" class="external-link">parse_iupac_condensed</a></span><span class="op">(</span><span class="st">"Gal(b1-?)[GlcNAc(b1-6)]GalNAc"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">glycan2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://glycoverse.github.io/glyparse/reference/parse_iupac_condensed.html" class="external-link">parse_iupac_condensed</a></span><span class="op">(</span><span class="st">"Gal(b1-?)[GlcNAc(b1-6)]GalNAc(b1-"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">glycans</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">glycan1</span>, <span class="va">glycan2</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="va">motifs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Gal(b1-3)GalNAc"</span>, <span class="st">"Gal(b1-4)GalNAc"</span>, <span class="st">"GlcNAc(b1-6)GalNAc"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">motifs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Gal(b1-3)GalNAc(b1-"</span>, <span class="st">"Gal(b1-4)GalNAc(b1-"</span>, <span class="st">"GlcNAc(b1-6)GalNAc(b1-"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">have_motifs</span><span class="op">(</span><span class="va">glycans</span>, <span class="va">motifs</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                                   Gal(b1-3)GalNAc Gal(b1-4)GalNAc</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Gal(b1-3)[GlcNAc(b1-6)]GalNAc(a1-            TRUE           FALSE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> GlcNAc(b1-6)[Gal(b1-?)]GalNAc(?1-           FALSE           FALSE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                                   GlcNAc(b1-6)GalNAc</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Gal(b1-3)[GlcNAc(b1-6)]GalNAc(a1-               TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> GlcNAc(b1-6)[Gal(b1-?)]GalNAc(?1-               TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                                   Gal(b1-3)GalNAc(b1- Gal(b1-4)GalNAc(b1-</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Gal(b1-3)[GlcNAc(b1-6)]GalNAc(a1-               FALSE               FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> GlcNAc(b1-6)[Gal(b1-?)]GalNAc(b1-               FALSE               FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                                   GlcNAc(b1-6)GalNAc(b1-</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Gal(b1-3)[GlcNAc(b1-6)]GalNAc(a1-                  FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> GlcNAc(b1-6)[Gal(b1-?)]GalNAc(b1-                   TRUE</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># You can assign each motif a name</span></span></span>
-<span class="r-in"><span><span class="va">motifs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>motif1 <span class="op">=</span> <span class="st">"Gal(b1-3)GalNAc"</span>, motif2 <span class="op">=</span> <span class="st">"Gal(b1-4)GalNAc"</span>, motif3 <span class="op">=</span> <span class="st">"GlcNAc(b1-6)GalNAc"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">motifs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>  motif1 <span class="op">=</span> <span class="st">"Gal(b1-3)GalNAc(b1-"</span>, </span></span>
+<span class="r-in"><span>  motif2 <span class="op">=</span> <span class="st">"Gal(b1-4)GalNAc(b1-"</span>, </span></span>
+<span class="r-in"><span>  motif3 <span class="op">=</span> <span class="st">"GlcNAc(b1-6)GalNAc(b1-"</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">have_motifs</span><span class="op">(</span><span class="va">glycans</span>, <span class="va">motifs</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                                   motif1 motif2 motif3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Gal(b1-3)[GlcNAc(b1-6)]GalNAc(a1-   TRUE  FALSE   TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> GlcNAc(b1-6)[Gal(b1-?)]GalNAc(?1-  FALSE  FALSE   TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Gal(b1-3)[GlcNAc(b1-6)]GalNAc(a1-  FALSE  FALSE  FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> GlcNAc(b1-6)[Gal(b1-?)]GalNAc(b1-  FALSE  FALSE   TRUE</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

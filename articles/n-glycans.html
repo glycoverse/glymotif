@@ -145,17 +145,18 @@ in one go. It’s like having a comprehensive building inspection that
 checks everything at once:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">n_glycans</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
-<span>  <span class="st">"Man(a1-3)[Man(a1-3)Man(a1-6)]Man(b1-4)GlcNAc(b1-4)GlcNAc"</span>,</span>
-<span>  <span class="st">"GlcNAc(b1-2)Man(a1-3)[Man(a1-6)]Man(b1-4)GlcNAc(b1-4)[Fuc(a1-6)]GlcNAc"</span>,</span>
-<span>  <span class="st">"Gal(b1-4)GlcNAc(b1-2)Man(a1-3)[Gal(b1-4)GlcNAc(b1-2)Man(a1-6)]Man(b1-4)GlcNAc(b1-4)GlcNAc"</span></span>
+<span>  <span class="st">"Man(a1-3)[Man(a1-3)Man(a1-6)]Man(b1-4)GlcNAc(b1-4)GlcNAc(b1-"</span>,</span>
+<span>  <span class="st">"GlcNAc(b1-2)Man(a1-3)[Man(a1-6)]Man(b1-4)GlcNAc(b1-4)[Fuc(a1-6)]GlcNAc(b1-"</span>,</span>
+<span>  <span class="st">"Gal(b1-4)GlcNAc(b1-2)Man(a1-3)[Gal(b1-4)GlcNAc(b1-2)Man(a1-6)]Man(b1-4)GlcNAc(b1-4)GlcNAc(b1-"</span></span>
 <span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/describe_n_glycans.html">describe_n_glycans</a></span><span class="op">(</span><span class="va">n_glycans</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 × 7</span></span></span>
-<span><span class="co">#&gt;   glycan_type  bisecting n_antennae n_core_fuc n_arm_fuc n_gal n_terminal_gal</span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> paucimannose FALSE             <span style="color: #BB0000;">NA</span>          0         0     0              0</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> complex      FALSE              1          1         0     0              0</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> complex      FALSE              2          0         0     2              2</span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 × 8</span></span></span>
+<span><span class="co">#&gt;   glycan             glycan_type bisecting n_antennae n_core_fuc n_arm_fuc n_gal</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> Man(a1-3)[Man(a1-… paucimanno… FALSE             <span style="color: #BB0000;">NA</span>          0         0     0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> GlcNAc(b1-2)Man(a… complex     FALSE              1          1         0     0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> Gal(b1-4)GlcNAc(b… complex     FALSE              2          0         0     2</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 1 more variable: n_terminal_gal &lt;int&gt;</span></span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="embracing-the-messy-reality-working-with-ambiguous-data">Embracing the Messy Reality: Working with Ambiguous Data 🌪️<a class="anchor" aria-label="anchor" href="#embracing-the-messy-reality-working-with-ambiguous-data"></a>
@@ -187,17 +188,18 @@ structures:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># These are the same N-glycans as before, but with all specificity stripped away</span></span>
 <span><span class="va">ambiguous_glycans</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
-<span>  <span class="st">"Hex(??-?)[Hex(??-?)Hex(??-?)]Hex(??-?)HexNAc(??-?)HexNAc"</span>,</span>
-<span>  <span class="st">"HexNAc(??-?)Hex(??-?)[Hex(??-?)]Hex(??-?)HexNAc(??-?)[dHex(??-?)]HexNAc"</span>,</span>
-<span>  <span class="st">"Hex(??-?)HexNAc(??-?)Hex(??-?)[Hex(??-?)HexNAc(??-?)Hex(??-?)]Hex(??-?)HexNAc(??-?)HexNAc"</span></span>
+<span>  <span class="st">"Hex(??-?)[Hex(??-?)Hex(??-?)]Hex(??-?)HexNAc(??-?)HexNAc(??-"</span>,</span>
+<span>  <span class="st">"HexNAc(??-?)Hex(??-?)[Hex(??-?)]Hex(??-?)HexNAc(??-?)[dHex(??-?)]HexNAc(??-"</span>,</span>
+<span>  <span class="st">"Hex(??-?)HexNAc(??-?)Hex(??-?)[Hex(??-?)HexNAc(??-?)Hex(??-?)]Hex(??-?)HexNAc(??-?)HexNAc(??-"</span></span>
 <span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/describe_n_glycans.html">describe_n_glycans</a></span><span class="op">(</span><span class="va">ambiguous_glycans</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 × 7</span></span></span>
-<span><span class="co">#&gt;   glycan_type  bisecting n_antennae n_core_fuc n_arm_fuc n_gal n_terminal_gal</span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> paucimannose FALSE             <span style="color: #BB0000;">NA</span>          0         0     0              0</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> complex      FALSE              1          1         0     0              0</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> complex      FALSE              2          0         0     2              2</span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 × 8</span></span></span>
+<span><span class="co">#&gt;   glycan             glycan_type bisecting n_antennae n_core_fuc n_arm_fuc n_gal</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> Hex(??-?)[Hex(??-… paucimanno… FALSE             <span style="color: #BB0000;">NA</span>          0         0     0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> HexNAc(??-?)Hex(?… complex     FALSE              1          1         0     0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> Hex(??-?)HexNAc(?… complex     FALSE              2          0         0     2</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 1 more variable: n_terminal_gal &lt;int&gt;</span></span></span></code></pre></div>
 <p><strong>Remarkable, isn’t it?</strong> 🤯 Despite the uncertainty in
 the input data, we get the same structural insights as before.</p>
 <p>This tolerance for ambiguity is a game-changer for high-throughput

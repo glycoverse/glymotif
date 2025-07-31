@@ -69,12 +69,16 @@ the <code>glycans</code> have the <code>motif</code>(s).</p><ul><li><p><code>cou
 
 
 <dl><dt id="arg-glycans">glycans<a class="anchor" aria-label="anchor" href="#arg-glycans"></a></dt>
-<dd><p>A 'glyrepr_structure' object, or an IUPAC-condensed structure string vector.</p></dd>
+<dd><p>A 'glyrepr_structure' object, or a glycan structure string vector.
+All formats supported by <code><a href="https://glycoverse.github.io/glyparse/reference/auto_parse.html" class="external-link">glyparse::auto_parse()</a></code> are accepted,
+including IUPAC-condensed, WURCS, GlycoCT, and others.</p></dd>
 
 
 <dt id="arg-motif">motif<a class="anchor" aria-label="anchor" href="#arg-motif"></a></dt>
-<dd><p>A 'glyrepr_structure' object, an IUPAC-condensed structure string,
-or a known motif name (use <code><a href="available_motifs.html">available_motifs()</a></code> to see all available motifs).</p></dd>
+<dd><p>A 'glyrepr_structure' object, a glycan structure string,
+or a known motif name (use <code><a href="available_motifs.html">available_motifs()</a></code> to see all available motifs).
+For glycan structure strings, all formats supported by <code><a href="https://glycoverse.github.io/glyparse/reference/auto_parse.html" class="external-link">glyparse::auto_parse()</a></code> are accepted,
+including IUPAC-condensed, WURCS, GlycoCT, and others.</p></dd>
 
 
 <dt id="arg-alignment">alignment<a class="anchor" aria-label="anchor" href="#arg-alignment"></a></dt>
@@ -90,8 +94,10 @@ Otherwise, "substructure" will be used.</p></dd>
 
 
 <dt id="arg-motifs">motifs<a class="anchor" aria-label="anchor" href="#arg-motifs"></a></dt>
-<dd><p>A character vector of motif names, IUPAC-condensed structure strings,
-or a 'glyrepr_structure' object.</p></dd>
+<dd><p>A character vector of motif names, glycan structure strings,
+or a 'glyrepr_structure' object.
+For glycan structure strings, all formats supported by <code><a href="https://glycoverse.github.io/glyparse/reference/auto_parse.html" class="external-link">glyparse::auto_parse()</a></code> are accepted,
+including IUPAC-condensed, WURCS, GlycoCT, and others.</p></dd>
 
 
 <dt id="arg-alignments">alignments<a class="anchor" aria-label="anchor" href="#arg-alignments"></a></dt>
@@ -111,13 +117,13 @@ Row names contain glycan identifiers and column names contain motif identifiers.
     <p>This function actually perform v2f algorithm to get all possible matches
 between <code>glycans</code> and <code>motif</code>.
 However, the result is not necessarily the number of matches.</p>
-<p>Think about the following example:</p><ul><li><p>glycan: <code>Gal(b1-?)[Gal(b1-?)]GlcNAc(b1-4)GlcNAc</code></p></li>
+<p>Think about the following example:</p><ul><li><p>glycan: <code>Gal(b1-?)[Gal(b1-?)]GlcNAc(b1-4)GlcNAc(b1-</code></p></li>
 <li><p>motif: <code>Gal(b1-?)[Gal(b1-?)]GlcNAc(b1-</code></p></li>
 </ul><p>To draw the glycan out:</p>
 <p></p><div class="sourceCode"><pre><code><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a>Gal <span class="dv">1</span></span>
 <span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>   \ b1<span class="sc">-</span>? b1<span class="dv">-4</span></span>
-<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a>    GlcNAc <span class="sc">--</span> GlcNAc</span>
-<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a>   <span class="sc">/</span> b1<span class="sc">-</span>?</span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a>    GlcNAc <span class="sc">--</span> GlcNAc b1<span class="sc">-</span></span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a>   <span class="er">/</span> b1<span class="sc">-</span>?</span>
 <span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a>Gal <span class="dv">2</span></span></code></pre><p></p></div>
 <p>To draw the motif out:</p>
 <p></p><div class="sourceCode"><pre><code><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a>Gal <span class="dv">1</span></span>
@@ -157,46 +163,46 @@ otherwise use the character vector itself as the names.</p></li>
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://glycoverse.github.io/glyparse/" class="external-link">glyparse</a></span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="fu">count_motif</span><span class="op">(</span><span class="st">"Gal(b1-3)Gal(b1-3)GalNAc"</span>, <span class="st">"Gal(b1-"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">count_motif</span><span class="op">(</span><span class="st">"Gal(b1-3)Gal(b1-3)GalNAc(b1-"</span>, <span class="st">"Gal(b1-"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 2</span>
 <span class="r-in"><span><span class="fu">count_motif</span><span class="op">(</span></span></span>
-<span class="r-in"><span>  <span class="st">"Man(b1-?)[Man(b1-?)]GalNAc(b1-4)GlcNAc"</span>,</span></span>
-<span class="r-in"><span>  <span class="st">"Man(b1-?)[Man(b1-?)]GalNAc"</span></span></span>
+<span class="r-in"><span>  <span class="st">"Man(b1-?)[Man(b1-?)]GalNAc(b1-4)GlcNAc(b1-"</span>,</span></span>
+<span class="r-in"><span>  <span class="st">"Man(b1-?)[Man(b1-?)]GalNAc(b1-"</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 1</span>
-<span class="r-in"><span><span class="fu">count_motif</span><span class="op">(</span><span class="st">"Gal(b1-3)Gal"</span>, <span class="st">"Man"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">count_motif</span><span class="op">(</span><span class="st">"Gal(b1-3)Gal(b1-"</span>, <span class="st">"Man(b1-"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Vectorized usage with single motif</span></span></span>
-<span class="r-in"><span><span class="fu">count_motif</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Gal(b1-3)Gal(b1-3)GalNAc"</span>, <span class="st">"Gal(b1-3)GalNAc"</span><span class="op">)</span>, <span class="st">"Gal(b1-"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">count_motif</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Gal(b1-3)Gal(b1-3)GalNAc(b1-"</span>, <span class="st">"Gal(b1-3)GalNAc(b1-"</span><span class="op">)</span>, <span class="st">"Gal(b1-"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 2 1</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Multiple motifs with count_motifs()</span></span></span>
-<span class="r-in"><span><span class="va">glycan1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://glycoverse.github.io/glyparse/reference/parse_iupac_condensed.html" class="external-link">parse_iupac_condensed</a></span><span class="op">(</span><span class="st">"Gal(b1-3)Gal(b1-3)GalNAc"</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">glycan2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://glycoverse.github.io/glyparse/reference/parse_iupac_condensed.html" class="external-link">parse_iupac_condensed</a></span><span class="op">(</span><span class="st">"Man(b1-?)[Man(b1-?)]GalNAc(b1-4)GlcNAc"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">glycan1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://glycoverse.github.io/glyparse/reference/parse_iupac_condensed.html" class="external-link">parse_iupac_condensed</a></span><span class="op">(</span><span class="st">"Gal(b1-3)Gal(b1-3)GalNAc(b1-"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">glycan2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://glycoverse.github.io/glyparse/reference/parse_iupac_condensed.html" class="external-link">parse_iupac_condensed</a></span><span class="op">(</span><span class="st">"Man(b1-?)[Man(b1-?)]GalNAc(b1-4)GlcNAc(b1-"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">glycans</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">glycan1</span>, <span class="va">glycan2</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="va">motifs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Gal(b1-3)GalNAc"</span>, <span class="st">"Gal(b1-"</span>, <span class="st">"Man(b1-"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">motifs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Gal(b1-3)GalNAc(b1-"</span>, <span class="st">"Gal(b1-"</span>, <span class="st">"Man(b1-"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">result</span> <span class="op">&lt;-</span> <span class="fu">count_motifs</span><span class="op">(</span><span class="va">glycans</span>, <span class="va">motifs</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">result</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                                            Gal(b1-3)GalNAc Gal(b1- Man(b1-</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Gal(b1-3)Gal(b1-3)GalNAc(?1-                             1       2       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Man(b1-?)[Man(b1-?)]GalNAc(b1-4)GlcNAc(?1-               0       0       2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                                            Gal(b1-3)GalNAc(b1- Gal(b1- Man(b1-</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Gal(b1-3)Gal(b1-3)GalNAc(b1-                                 1       2       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Man(b1-?)[Man(b1-?)]GalNAc(b1-4)GlcNAc(b1-                   0       0       2</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Monosaccharide type matching examples</span></span></span>
 <span class="r-in"><span><span class="co"># Concrete glycan vs generic motif: matches (glycan converted to generic)</span></span></span>
-<span class="r-in"><span><span class="fu">count_motif</span><span class="op">(</span><span class="st">"Man"</span>, <span class="st">"Hex"</span><span class="op">)</span>  <span class="co"># Returns 1</span></span></span>
+<span class="r-in"><span><span class="fu">count_motif</span><span class="op">(</span><span class="st">"Man(?1-"</span>, <span class="st">"Hex(?1-"</span><span class="op">)</span>  <span class="co"># Returns 1</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 1</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Generic glycan vs concrete motif: doesn't match</span></span></span>
-<span class="r-in"><span><span class="fu">count_motif</span><span class="op">(</span><span class="st">"Hex"</span>, <span class="st">"Man"</span><span class="op">)</span>  <span class="co"># Returns 0</span></span></span>
+<span class="r-in"><span><span class="fu">count_motif</span><span class="op">(</span><span class="st">"Hex(?1-"</span>, <span class="st">"Man(?1-"</span><span class="op">)</span>  <span class="co"># Returns 0</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Matrix example showing type matching rules</span></span></span>
-<span class="r-in"><span><span class="fu">count_motifs</span><span class="op">(</span>glycans <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Hex"</span>, <span class="st">"Man"</span><span class="op">)</span>, motifs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Hex"</span>, <span class="st">"Man"</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     Hex Man</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Hex   1   0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Man   1   1</span>
+<span class="r-in"><span><span class="fu">count_motifs</span><span class="op">(</span>glycans <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Hex(?1-"</span>, <span class="st">"Man(?1-"</span><span class="op">)</span>, motifs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Hex(?1-"</span>, <span class="st">"Man(?1-"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         Hex(?1- Man(?1-</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Hex(?1-       1       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Man(?1-       1       1</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

@@ -118,13 +118,13 @@ this notation looks unfamiliar, don’t worry—check out <a href="https://glyco
 helpful guide</a> first.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">glycans</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
-<span>  <span class="st">"Neu5Ac(a2-3)Gal(b1-3)[Fuc(a1-3)]GlcNAc(b1-3)Gal(b1-3)GalNAc"</span>,</span>
-<span>  <span class="st">"Neu5Ac(a2-?)Gal(b1-3)[Fuc(a1-3)]GlcNAc"</span>,</span>
-<span>  <span class="st">"Man(b1-4)GlcNAc(b1-4)[Fuc(a1-6)]GlcNAc"</span>,</span>
-<span>  <span class="st">"Gal(b1-3)GalNAc"</span>,</span>
-<span>  <span class="st">"Neu5Ac9Ac(a2-3)Gal(b1-4)GlcNAc"</span></span>
+<span>  <span class="st">"Neu5Ac(a2-3)Gal(b1-3)[Fuc(a1-3)]GlcNAc(b1-3)Gal(b1-3)GalNAc(b1-"</span>,</span>
+<span>  <span class="st">"Neu5Ac(a2-?)Gal(b1-3)[Fuc(a1-3)]GlcNAc(b1-"</span>,</span>
+<span>  <span class="st">"Man(b1-4)GlcNAc(b1-4)[Fuc(a1-6)]GlcNAc(b1-"</span>,</span>
+<span>  <span class="st">"Gal(b1-3)GalNAc(b1-"</span>,</span>
+<span>  <span class="st">"Neu5Ac9Ac(a2-3)Gal(b1-4)GlcNAc(b1-"</span></span>
 <span><span class="op">)</span></span>
-<span><span class="va">motif</span> <span class="op">&lt;-</span> <span class="st">"Neu5Ac(a2-3)Gal(b1-3)[Fuc(a1-3)]GlcNAc"</span></span>
+<span><span class="va">motif</span> <span class="op">&lt;-</span> <span class="st">"Neu5Ac(a2-3)Gal(b1-3)[Fuc(a1-3)]GlcNAc(b1-"</span></span>
 <span><span class="fu"><a href="../reference/have_motif.html">have_motif</a></span><span class="op">(</span><span class="va">glycans</span>, <span class="va">motif</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1]  TRUE FALSE FALSE FALSE FALSE</span></span></code></pre></div>
 <p>Pretty neat, right? 😎</p>
@@ -169,9 +169,9 @@ redundant computations.</p>
 <p>Let’s define some motifs to work with:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">motifs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
-<span>  <span class="st">"Neu5Ac(a2-3)Gal(b1-3)[Fuc(a1-3)]GlcNAc"</span>,</span>
+<span>  <span class="st">"Neu5Ac(a2-3)Gal(b1-3)[Fuc(a1-3)]GlcNAc(b1-"</span>,</span>
 <span>  <span class="st">"Fuc(a1-"</span>,</span>
-<span>  <span class="st">"Gal(b1-3)GalNAc"</span></span>
+<span>  <span class="st">"Gal(b1-3)GalNAc(b1-"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p>All functions follow the same pattern:</p>
 <ul>
