@@ -10,14 +10,6 @@
 #' Monosaccharides, linkages, and substituents are all considered.
 #'
 #' @details
-#'
-#' # Input Formats
-#'
-#' Besides `glyrepr::glycan_structure()`s,
-#' `glycans`, `motif` and `motifs` can be glycan structure text nomenclatures of any supported format,
-#' including IUPAC-condensed, IUPAC-short, IUPAC-extended, GlycoCT, WURCS, pGlyco-style, and StrucGP-style.
-#' Under the hood, the function uses `glyparse::auto_parse()` to parse the text strings.
-#'
 #' # About Names
 #'
 #' `have_motif()` and `count_motif()` return a vector with no names.
@@ -130,25 +122,31 @@
 #' The function returns `TRUE` if any of the matches pass all checks.
 #'
 #' @param glycans A 'glyrepr_structure' object, or a glycan structure string vector.
+#'   All formats supported by [glyparse::auto_parse()] are accepted,
+#'   including IUPAC-condensed, WURCS, GlycoCT, and others.
 #' @param motif A 'glyrepr_structure' object, a glycan structure string,
-#' or a known motif name (use [available_motifs()] to see all available motifs).
+#'   or a known motif name (use [available_motifs()] to see all available motifs).
+#'   For glycan structure strings, all formats supported by [glyparse::auto_parse()] are accepted,
+#'   including IUPAC-condensed, WURCS, GlycoCT, and others.
 #' @param motifs A character vector of motif names, glycan structure strings,
-#' or a 'glyrepr_structure' object.
+#'   or a 'glyrepr_structure' object.
+#'   For glycan structure strings, all formats supported by [glyparse::auto_parse()] are accepted,
+#'   including IUPAC-condensed, WURCS, GlycoCT, and others.
 #' @param alignment A character string.
-#' Possible values are "substructure", "core", "terminal" and "whole".
-#' If not provided, the value will be decided based on the `motif` argument.
-#' If `motif` is a motif name, the alignment in the database will be used.
-#' Otherwise, "substructure" will be used.
+#'   Possible values are "substructure", "core", "terminal" and "whole".
+#'   If not provided, the value will be decided based on the `motif` argument.
+#'   If `motif` is a motif name, the alignment in the database will be used.
+#'   Otherwise, "substructure" will be used.
 #' @param alignments A character vector specifying alignment types for each motif.
-#' Can be a single value (applied to all motifs) or a vector of the same length as motifs.
+#'   Can be a single value (applied to all motifs) or a vector of the same length as motifs.
 #' @param ignore_linkages A logical value. If `TRUE`, linkages will be ignored in the comparison.
 #'
-#' @return 
+#' @returns
 #' - `have_motif()`: A logical vector indicating if each `glycan` has the `motif`.
 #' - `have_motifs()`: A logical matrix where rows correspond to glycans and columns correspond to motifs.
 #'   Row names contain glycan identifiers and column names contain motif identifiers.
 #'
-#' @seealso [count_motif()], [count_motifs()]
+#' @seealso [count_motif()], [count_motifs()], [glyparse::auto_parse()]
 #'
 #' @examples
 #' library(glyparse)

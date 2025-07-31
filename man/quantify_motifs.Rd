@@ -10,7 +10,9 @@ quantify_motifs(exp, motifs, alignments = NULL, ignore_linkages = FALSE)
 \item{exp}{A \code{glyexp::experiment()} object containing glycoproteomics data.}
 
 \item{motifs}{A character vector of motif names, glycan structure strings,
-or a 'glyrepr_structure' object.}
+or a 'glyrepr_structure' object.
+For glycan structure strings, all formats supported by \code{\link[glyparse:auto_parse]{glyparse::auto_parse()}} are accepted,
+including IUPAC-condensed, WURCS, GlycoCT, and others.}
 
 \item{alignments}{A character vector specifying alignment types for each motif.
 Can be a single value (applied to all motifs) or a vector of the same length as motifs.}
@@ -62,13 +64,6 @@ Filling the cells are the quantifications for motifs on different glycosites in 
 instead of quantifications of glycoforms or glycopeptides.
 Or just motif quantification in each sample, for glycomics data.
 }
-\section{Input Formats}{
-Besides \code{glyrepr::glycan_structure()}s,
-\code{glycans}, \code{motif} and \code{motifs} can be glycan structure text nomenclatures of any supported format,
-including IUPAC-condensed, IUPAC-short, IUPAC-extended, GlycoCT, WURCS, pGlyco-style, and StrucGP-style.
-Under the hood, the function uses \code{glyparse::auto_parse()} to parse the text strings.
-}
-
 \seealso{
 \code{\link[=count_motifs]{count_motifs()}}
 }

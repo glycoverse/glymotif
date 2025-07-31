@@ -10,10 +10,14 @@ count_motif(glycans, motif, alignment = NULL, ignore_linkages = FALSE)
 count_motifs(glycans, motifs, alignments = NULL, ignore_linkages = FALSE)
 }
 \arguments{
-\item{glycans}{A 'glyrepr_structure' object, or a glycan structure string vector.}
+\item{glycans}{A 'glyrepr_structure' object, or a glycan structure string vector.
+All formats supported by \code{\link[glyparse:auto_parse]{glyparse::auto_parse()}} are accepted,
+including IUPAC-condensed, WURCS, GlycoCT, and others.}
 
 \item{motif}{A 'glyrepr_structure' object, a glycan structure string,
-or a known motif name (use \code{\link[=available_motifs]{available_motifs()}} to see all available motifs).}
+or a known motif name (use \code{\link[=available_motifs]{available_motifs()}} to see all available motifs).
+For glycan structure strings, all formats supported by \code{\link[glyparse:auto_parse]{glyparse::auto_parse()}} are accepted,
+including IUPAC-condensed, WURCS, GlycoCT, and others.}
 
 \item{alignment}{A character string.
 Possible values are "substructure", "core", "terminal" and "whole".
@@ -24,7 +28,9 @@ Otherwise, "substructure" will be used.}
 \item{ignore_linkages}{A logical value. If \code{TRUE}, linkages will be ignored in the comparison.}
 
 \item{motifs}{A character vector of motif names, glycan structure strings,
-or a 'glyrepr_structure' object.}
+or a 'glyrepr_structure' object.
+For glycan structure strings, all formats supported by \code{\link[glyparse:auto_parse]{glyparse::auto_parse()}} are accepted,
+including IUPAC-condensed, WURCS, GlycoCT, and others.}
 
 \item{alignments}{A character vector specifying alignment types for each motif.
 Can be a single value (applied to all motifs) or a vector of the same length as motifs.}
@@ -104,13 +110,6 @@ a \code{glyrepr::glycan_structure()} vector cannot have names.)
 motif names, it will use the names of the character vector if exists,
 otherwise use the character vector itself as the names.
 }
-}
-
-\section{Input Formats}{
-Besides \code{glyrepr::glycan_structure()}s,
-\code{glycans}, \code{motif} and \code{motifs} can be glycan structure text nomenclatures of any supported format,
-including IUPAC-condensed, IUPAC-short, IUPAC-extended, GlycoCT, WURCS, pGlyco-style, and StrucGP-style.
-Under the hood, the function uses \code{glyparse::auto_parse()} to parse the text strings.
 }
 
 \examples{

@@ -21,7 +21,6 @@
 #' functions like `glystats::gly_ttest()` for further statistical analysis.
 #' Also, you can use `as_tibble()` to convert it to a "tidy" tibble for custom analysis.
 #' 
-#' @inheritSection have_motif Input Formats
 #' @details
 #' Here is a comprehensive comparison of the input experiment and the returned experiment:
 #'

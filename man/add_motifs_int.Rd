@@ -13,7 +13,9 @@ add_motifs_lgl(exp, motifs, alignments = NULL, ignore_linkages = FALSE)
 \item{exp}{An \code{\link[glyexp:experiment]{glyexp::experiment()}} object.}
 
 \item{motifs}{A character vector of motif names, glycan structure strings,
-or a 'glyrepr_structure' object.}
+or a 'glyrepr_structure' object.
+For glycan structure strings, all formats supported by \code{\link[glyparse:auto_parse]{glyparse::auto_parse()}} are accepted,
+including IUPAC-condensed, WURCS, GlycoCT, and others.}
 
 \item{alignments}{A character vector specifying alignment types for each motif.
 Can be a single value (applied to all motifs) or a vector of the same length as motifs.}

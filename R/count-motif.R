@@ -9,7 +9,6 @@
 #' @inheritParams have_motif
 #'
 #' @inheritSection have_motif About Names
-#' @inheritSection have_motif Input Formats
 #'
 #' @details
 #' This function actually perform v2f algorithm to get all possible matches
