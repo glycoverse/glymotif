@@ -1,3 +1,20 @@
+# glymotif 0.5.0
+
+## Breaking changes
+
+* Remove support for omitted reducing-end anomers in IUPAC-condensed strings. Strings like "Gal(b1-3)GlcNAc" are no longer valid. You must specify the anomer of the reducing-end monosaccharide, e.g. "Gal(b1-3)GlcNAc(b1-".
+* N-glycan functions now raise a warning when the input glycans are not N-glycans and return `NA` for those glycans, instead of throwing an error.
+
+## New features
+
+* Add support for multiple glycan structure string formats in all functions. This includes IUPAC-condensed, IUPAC-short, IUPAC-extended, GlycoCT, WURCS, pGlyco-style, and StrucGP-style.
+* All N-glycan functions now support vectorization, including `is_n_glycan()`, `n_glycan_type()`, `has_bisecting()`, `n_antennae()`, `n_core_fuc()`, `n_arm_fuc()`, `n_gal()`, and `n_terminal_gal()`.
+
+## Minor improvements and bug fixes
+
+* Update vignettes to explicitly include reducing-end anomers in IUPAC-condensed strings.
+* Fix a bug that pausimannose-type glycans are not correctly recognized in `describe_n_glycans()`.
+
 # glymotif 0.4.4
 
 ## Minor improvements and bug fixes
