@@ -71,13 +71,13 @@ describe_n_glycans <- function(glycans, strict = FALSE) {
 
   # Build the result tibble
   res <- tibble::tibble(
-    glycan_type = purrr::map_chr(glycan_structures, ~ n_glycan_type(.x, strict = strict)),
-    bisecting = purrr::map_lgl(glycan_structures, ~ has_bisecting(.x, strict = strict)),
-    n_antennae = purrr::map_int(glycan_structures, ~ n_antennae(.x, strict = strict)),
-    n_core_fuc = purrr::map_int(glycan_structures, ~ n_core_fuc(.x, strict = strict)),
-    n_arm_fuc = purrr::map_int(glycan_structures, ~ n_arm_fuc(.x, strict = strict)),
-    n_gal = purrr::map_int(glycan_structures, ~ n_gal(.x, strict = strict)),
-    n_terminal_gal = purrr::map_int(glycan_structures, ~ n_terminal_gal(.x, strict = strict))
+    glycan_type = n_glycan_type(glycan_structures, strict = strict),
+    bisecting = has_bisecting(glycan_structures, strict = strict),
+    n_antennae = n_antennae(glycan_structures, strict = strict),
+    n_core_fuc = n_core_fuc(glycan_structures, strict = strict),
+    n_arm_fuc = n_arm_fuc(glycan_structures, strict = strict),
+    n_gal = n_gal(glycan_structures, strict = strict),
+    n_terminal_gal = n_terminal_gal(glycan_structures, strict = strict)
   )
   res <- res %>%
     dplyr::mutate(glycan = glycan_names, .before = 1)
@@ -283,16 +283,13 @@ n_terminal_gal <- function(glycan, strict = FALSE) {
 
 
 .n_glycan_type <- function(glycan, .has_motif, .count_motif) {
-  if (.has_motif(glycan, "core", alignment = "whole") ||
-      .has_motif(glycan, "pauciman", alignment = "whole")) {
-    "paucimannose"
-  } else if (.has_motif(glycan, "hybrid", alignment = "core")) {
-    "hybrid"
-  } else if (.has_motif(glycan, "highman", alignment = "core")) {
-    "highmannose"
-  } else {
-    "complex"
-  }
+  dplyr::case_when(
+    .has_motif(glycan, "core", alignment = "whole") ~ "paucimannose",
+    .has_motif(glycan, "pauciman", alignment = "whole") ~ "paucimannose",
+    .has_motif(glycan, "hybrid", alignment = "core") ~ "hybrid",
+    .has_motif(glycan, "highman", alignment = "core") ~ "highmannose",
+    TRUE ~ "complex"
+  )
 }
 
 
@@ -305,18 +302,13 @@ n_terminal_gal <- function(glycan, strict = FALSE) {
   if (is.null(is_complex)) {
     is_complex <- .n_glycan_type(glycan, .has_motif, .count_motif) == "complex"
   }
-  if (!is_complex) {
-    return(NA_integer_)
-  }
-  if (.has_motif(glycan, "ant4", alignment = "core")) {
-    4L
-  } else if (.has_motif(glycan, "ant3", alignment = "core")) {
-    3L
-  } else if (.has_motif(glycan, "ant2", alignment = "core")) {
-    2L
-  } else {
-    1L
-  }
+  dplyr::case_when(
+    !is_complex ~ NA_integer_,
+    .has_motif(glycan, "ant4", alignment = "core") ~ 4L,
+    .has_motif(glycan, "ant3", alignment = "core") ~ 3L,
+    .has_motif(glycan, "ant2", alignment = "core") ~ 2L,
+    TRUE ~ 1L
+  )
 }
 
 
@@ -369,10 +361,19 @@ n_glycan_property_wrapper <- function(glycan, strict, func, check_n_glycan = TRU
   }
   have_motif_func <- purrr::partial(have_n_glycan_motif, strict = strict)
   count_motif_func <- purrr::partial(count_n_glycan_motif, strict = strict)
-  if (check_n_glycan && !.is_n_glycan(glycan, have_motif_func, count_motif_func)) {
-    rlang::abort("Not an N-glycan.")
+  res <- func(glycan, have_motif_func, count_motif_func)
+  if (check_n_glycan) {
+    n_glycans <- .is_n_glycan(glycan, have_motif_func, count_motif_func)
+    if (!all(n_glycans)) {
+      cli::cli_warn(c(
+        "All glycans must be N-glycans.",
+        "i" = "Glycans at indices {.val {which(!n_glycans)}} are not N-glycans.",
+        "i" = "NA will be returned for these glycans."
+      ))
+    }
+    res[!n_glycans] <- NA
   }
-  func(glycan, have_motif_func, count_motif_func)
+  res
 }
 
 

@@ -330,6 +330,15 @@ patrick::with_parameters_test_that("O-glycan core 1 is not N-glycan", {
 }, param_grid())
 
 
+test_that("is_n_glycan works vectorizedly", {
+  glycans <- c(
+    complex_H4N4("generic", linkage = FALSE),
+    o_glycan_core_1("generic", linkage = FALSE)
+  )
+  expect_equal(is_n_glycan(glycans), c(TRUE, FALSE))
+})
+
+
 # ========== N-glycan types ==========
 test_that("paucimannose H3N2", {
   glycan <- paucimannose_H3N2("generic", linkage = FALSE)
@@ -463,9 +472,12 @@ test_that("complex H4N4 strict", {
 })
 
 
-test_that("check glycan type not for N-glycan", {
-  glycan <- o_glycan_core_1("generic", linkage = FALSE)
-  expect_error(n_glycan_type(glycan), "Not an N-glycan")
+test_that("n_glycan_type works vectorizedly", {
+  glycans <- c(
+    paucimannose_H3N2("generic", linkage = FALSE),
+    complex_H4N4("generic", linkage = FALSE)
+  )
+  expect_equal(n_glycan_type(glycans), c("paucimannose", "complex"))
 })
 
 
@@ -488,9 +500,12 @@ test_that("complex H4H4 not bisect", {
 })
 
 
-test_that("check bisecting not for N-glycan", {
-  glycan <- o_glycan_core_1("generic", linkage = FALSE)
-  expect_error(has_bisecting(glycan), "Not an N-glycan")
+test_that("has_bisecting works vectorizedly", {
+  glycans <- c(
+    complex_H3N5_bisect("generic", linkage = FALSE),
+    complex_H4N4("generic", linkage = FALSE)
+  )
+  expect_equal(has_bisecting(glycans), c(TRUE, FALSE))
 })
 
 
@@ -549,9 +564,12 @@ test_that("paucimannose H3N2 has NA antennae", {
 })
 
 
-test_that("check antennae not for N-glycan", {
-  glycan <- o_glycan_core_1("generic", linkage = FALSE)
-  expect_error(n_antennae(glycan), "Not an N-glycan")
+test_that("n_antennae works vectorizedly", {
+  glycans <- c(
+    complex_H3N3("generic", linkage = FALSE),
+    complex_H4N4("generic", linkage = FALSE)
+  )
+  expect_equal(n_antennae(glycans), c(1L, 2L))
 })
 
 
@@ -592,9 +610,12 @@ test_that("no core fucose: H3N4F1", {
 })
 
 
-test_that("check core fucose not for N-glycan", {
-  glycan <- o_glycan_core_1("generic", linkage = FALSE)
-  expect_error(n_core_fuc(glycan), "Not an N-glycan")
+test_that("n_core_fuc works vectorizedly", {
+  glycans <- c(
+    complex_H3N3("generic", linkage = FALSE),
+    complex_H3N4F1_coreF("generic", linkage = FALSE)
+  )
+  expect_equal(n_core_fuc(glycans), c(0L, 1L))
 })
 
 
@@ -635,9 +656,12 @@ test_that("no arm fucose: H3N4F1", {
 })
 
 
-test_that("check arm fucose not for N-glycan", {
-  glycan <- o_glycan_core_1("generic", linkage = FALSE)
-  expect_error(n_arm_fuc(glycan), "Not an N-glycan")
+test_that("n_arm_fuc works vectorizedly", {
+  glycans <- c(
+    complex_H3N3("generic", linkage = FALSE),
+    complex_H3N4F1_armF("generic", linkage = FALSE)
+  )
+  expect_equal(n_arm_fuc(glycans), c(0L, 1L))
 })
 
 
@@ -660,9 +684,12 @@ test_that("no galactose: hybrid ", {
 })
 
 
-test_that("check gal not for N-glycan", {
-  glycan <- o_glycan_core_1("generic", linkage = FALSE)
-  expect_error(n_gal(glycan), "Not an N-glycan")
+test_that("n_gal works vectorizedly", {
+  glycans <- c(
+    complex_H4N4S1("generic", linkage = FALSE),
+    highmannose_H5N2("generic", linkage = FALSE)
+  )
+  expect_equal(n_gal(glycans), c(1L, 0L))
 })
 
 
@@ -709,9 +736,12 @@ test_that("one terminal galactose: hybrid H6N3", {
 })
 
 
-test_that("check terminal galactose not for N-glycan", {
-  glycan <- o_glycan_core_1("generic", linkage = FALSE)
-  expect_error(n_terminal_gal(glycan), "Not an N-glycan")
+test_that("n_terminal_gal works vectorizedly", {
+  glycans <- c(
+    complex_H4N4("generic", linkage = FALSE),
+    complex_H6N5S1a6("generic", linkage = FALSE)
+  )
+  expect_equal(n_terminal_gal(glycans), c(1L, 2L))
 })
 
 
@@ -776,4 +806,23 @@ test_that("N-glycan functions support multiple structure formats", {
   glycan_short <- "Mana3(Mana6)Manb4GlcNAcb4GlcNAcb-"
   expect_true(is_n_glycan(glycan_short))
   expect_equal(n_glycan_type(glycan_short), "paucimannose")
+})
+
+
+# ========== Vectorized ==========
+test_that("vectorized N-glycan properties work", {
+  glycans <- c(
+    paucimannose_H3N2("generic", linkage = FALSE),
+    highmannose_H5N2("generic", linkage = FALSE),
+    complex_H4N4("generic", linkage = FALSE)
+  )
+  expect_equal(n_glycan_type(glycans), c("paucimannose", "highmannose", "complex"))
+})
+
+test_that("O-glycans raise warnings", {
+  glycans <- c(
+    o_glycan_core_1("generic", linkage = FALSE),
+    highmannose_H5N2("generic", linkage = FALSE)
+  )
+  expect_warning(n_glycan_type(glycans), "must be N-glycans")
 })
