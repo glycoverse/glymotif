@@ -89,7 +89,16 @@ match_motifs <- function(glycans, motifs, alignments = NULL, ignore_linkages = F
   }
 }
 
-# Internal function for `match_motif()`
+#' Internal verison of `match_motif()`
+#'
+#' This function skips argument validation and conversion.
+#'
+#' @param glycans A `glyrepr_structure` object.
+#' @param motif A `glyrepr_structure` object with length 1.
+#' @param alignment A character scalar.
+#' @param ignore_linkages A logical value.
+#'
+#' @noRd
 match_motif_ <- function(glycans, motif, alignment, ignore_linkages = FALSE) {
   apply_single_motif_to_glycans(
     glycans = glycans,
@@ -101,7 +110,16 @@ match_motif_ <- function(glycans, motif, alignment, ignore_linkages = FALSE) {
   )
 }
 
-# Internal function for `match_motifs()`
+#' Internal verison of `match_motifs()`
+#'
+#' This function skips argument validation and conversion.
+#'
+#' @param glycans A `glyrepr_structure` object.
+#' @param motifs A `glyrepr_structure` object.
+#' @param alignments A character vector with the same length as `motifs`.
+#' @param ignore_linkages A logical value.
+#'
+#' @noRd
 match_motifs_ <- function(glycans, motifs, alignments, glycan_names, motif_names, ignore_linkages = FALSE) {
   purrr::map2(motifs, alignments, ~ match_motif_(glycans, .x, alignment = .y, ignore_linkages = ignore_linkages))
 }

@@ -246,6 +246,16 @@ have_motifs <- function(glycans, motifs, alignments = NULL, ignore_linkages = FA
   rlang::exec("have_motifs_", !!!params, glycan_names = glycan_names, motif_names = motif_names)
 }
 
+#' Internal verison of `have_motif()`
+#'
+#' This function skips argument validation and conversion.
+#'
+#' @param glycans A `glyrepr_structure` object.
+#' @param motif A `glyrepr_structure` object with length 1.
+#' @param alignment A character scalar.
+#' @param ignore_linkages A logical value.
+#'
+#' @noRd
 have_motif_ <- function(glycans, motif, alignment, ignore_linkages = FALSE) {
   # This function is a simpler version of `have_motif()`.
   # It performs the logic directly without argument validations and conversions.
@@ -273,6 +283,16 @@ have_motif_ <- function(glycans, motif, alignment, ignore_linkages = FALSE) {
   )
 }
 
+#' Internal verison of `have_motifs()`
+#'
+#' This function skips argument validation and conversion.
+#'
+#' @param glycans A `glyrepr_structure` object.
+#' @param motifs A `glyrepr_structure` object.
+#' @param alignments A character vector with the same length as `motifs`.
+#' @param ignore_linkages A logical value.
+#'
+#' @noRd
 have_motifs_ <- function(glycans, motifs, alignments, glycan_names, motif_names, ignore_linkages = FALSE) {
   apply_motifs_to_glycans(glycans, motifs, alignments, ignore_linkages, have_motif_, glycan_names, motif_names)
 }

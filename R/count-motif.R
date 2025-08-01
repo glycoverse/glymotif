@@ -102,6 +102,16 @@ count_motifs <- function(glycans, motifs, alignments = NULL, ignore_linkages = F
   rlang::exec("count_motifs_", !!!params, glycan_names = glycan_names, motif_names = motif_names)
 }
 
+#' Internal verison of `count_motif()`
+#'
+#' This function skips argument validation and conversion.
+#'
+#' @param glycans A `glyrepr_structure` object.
+#' @param motif A `glyrepr_structure` object with length 1.
+#' @param alignment A character scalar.
+#' @param ignore_linkages A logical value.
+#'
+#' @noRd
 count_motif_ <- function(glycans, motif, alignment, ignore_linkages = FALSE) {
   # This function is a simpler version of `count_motif()`.
   # It performs the logic directly without argument validations and conversions.
@@ -130,6 +140,16 @@ count_motif_ <- function(glycans, motif, alignment, ignore_linkages = FALSE) {
   length(unique_vf2_res(valid_res))
 }
 
+#' Internal verison of `count_motifs()`
+#'
+#' This function skips argument validation and conversion.
+#'
+#' @param glycans A `glyrepr_structure` object.
+#' @param motifs A `glyrepr_structure` object.
+#' @param alignments A character vector with the same length as `motifs`.
+#' @param ignore_linkages A logical value.
+#'
+#' @noRd
 count_motifs_ <- function(glycans, motifs, alignments, glycan_names, motif_names, ignore_linkages = FALSE) {
   apply_motifs_to_glycans(glycans, motifs, alignments, ignore_linkages, count_motif_, glycan_names, motif_names)
 }
