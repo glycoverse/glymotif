@@ -27,6 +27,16 @@ perform_vf2 <- function(glycan, motif) {
 }
 
 
+unique_vf2_res <- function(res) {
+  if (length(res) == 0) return(res)
+  sorted_lst <- purrr::map(res, sort)
+  str_vectors <- purrr::map_chr(sorted_lst, ~ paste(.x, collapse = ","))
+  df <- tibble::tibble(res = res, id = str_vectors)
+  df <- dplyr::distinct(df, .data$id, .keep_all = TRUE)
+  df$res
+}
+
+
 is_valid_result <- function(r, glycan, motif, alignment, ignore_linkages) {
   # Optimized early exit using most selective checks first
   # Alignment check is often the most selective and fastest
