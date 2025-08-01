@@ -1,5 +1,5 @@
-test_that("get available motifs", {
-  expect_snapshot(available_motifs())
+test_that("get all motifs", {
+  expect_snapshot(all_motifs())
 })
 
 

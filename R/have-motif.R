@@ -125,7 +125,7 @@
 #'   All formats supported by [glyparse::auto_parse()] are accepted,
 #'   including IUPAC-condensed, WURCS, GlycoCT, and others.
 #' @param motif A 'glyrepr_structure' object, a glycan structure string,
-#'   or a known motif name (use [available_motifs()] to see all available motifs).
+#'   or a known motif name (use [all_motifs()] to see all available motifs).
 #'   For glycan structure strings, all formats supported by [glyparse::auto_parse()] are accepted,
 #'   including IUPAC-condensed, WURCS, GlycoCT, and others.
 #' @param motifs A character vector of motif names, glycan structure strings,

@@ -15,7 +15,7 @@ All formats supported by \code{\link[glyparse:auto_parse]{glyparse::auto_parse()
 including IUPAC-condensed, WURCS, GlycoCT, and others.}
 
 \item{motif}{A 'glyrepr_structure' object, a glycan structure string,
-or a known motif name (use \code{\link[=available_motifs]{available_motifs()}} to see all available motifs).
+or a known motif name (use \code{\link[=all_motifs]{all_motifs()}} to see all available motifs).
 For glycan structure strings, all formats supported by \code{\link[glyparse:auto_parse]{glyparse::auto_parse()}} are accepted,
 including IUPAC-condensed, WURCS, GlycoCT, and others.}
 

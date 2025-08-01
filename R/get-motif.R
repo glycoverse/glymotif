@@ -12,17 +12,20 @@ rlang::on_load({
 # - `iupac`: the IUPAC condensed string of the motif
 # - `graph`: the structure graph (igraph object) of the motif
 
-#' Get Available Motifs
+#' Get All Motifs
 #'
-#' This function returns the names of the available motifs available in the package.
+#' This function returns the names of all motifs available in the package.
+#' We use GlycoMotif GlyGen Collection (https://glygen.org/glycomotif) as the source of the motifs.
+#' This function is useful to be integrated with [have_motifs()] and [count_motifs()].
+#' For example, use `have_motifs(glycans, all_motifs())` to check against all motifs.
 #'
 #' @return A character vector of motif names.
 #'
 #' @examples
-#' available_motifs()[1:5]
+#' all_motifs()[1:5]
 #'
 #' @export
-available_motifs <- function() {
+all_motifs <- function() {
   glygen_motifs$name
 }
 
@@ -62,7 +65,7 @@ is_known_motif <- function(name) {
 #' get_motif_alignment(c("O-Glycan core 1", "O-Glycan core 2"))
 #' get_motif_aglycon(c("O-Glycan core 1", "O-Glycan core 2"))
 #'
-#' @seealso [available_motifs()], [is_known_motif()]
+#' @seealso [all_motifs()], [is_known_motif()]
 #'
 #' @export
 get_motif_structure <- function(name) {

@@ -38,5 +38,5 @@ get_motif_aglycon(c("O-Glycan core 1", "O-Glycan core 2"))
 
 }
 \seealso{
-\code{\link[=available_motifs]{available_motifs()}}, \code{\link[=is_known_motif]{is_known_motif()}}
+\code{\link[=all_motifs]{all_motifs()}}, \code{\link[=is_known_motif]{is_known_motif()}}
 }
