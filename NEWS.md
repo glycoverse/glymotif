@@ -1,3 +1,14 @@
+# glymotif 0.6.0
+
+## Breaking changes
+
+* `available_motifs()` is renamed to `all_motifs()`.
+
+## New features
+
+* Add `match_motif()` and `match_motifs()` to find all occurrences of the given motif(s) in the glycans.
+  Node-to-node mapping is returned for each match.
+
 # glymotif 0.5.0
 
 ## Breaking changes
