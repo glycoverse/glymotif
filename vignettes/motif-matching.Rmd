@@ -64,8 +64,8 @@ The presence part is determined by `have_motif()`,
 while the counting aspect is handled by `count_motif()`.
 
 ```{r}
-glycan <- "Neu5Ac(a2-3)Gal(b1-3)[Fuc(a1-3)]GlcNAc(b1-3)Gal(b1-3)GalNAc(b1-"
-motif <- "Neu5Ac(a2-3)Gal(b1-3)[Fuc(a1-3)]GlcNAc(b1-"
+glycan <- "Neu5Ac(a2-3)Gal(b1-3)[Fuc(a1-6)]GlcNAc(b1-3)Gal(b1-3)GalNAc(b1-"
+motif <- "Neu5Ac(a2-3)Gal(b1-3)[Fuc(a1-6)]GlcNAc(b1-"
 
 print(paste0("Does the glycan have the motif? ", have_motif(glycan, motif)))
 print(paste0("How many occurrences of the motif are there in the glycan? ", count_motif(glycan, motif)))

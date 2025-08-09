@@ -75,13 +75,13 @@ don't worry—check out [this helpful guide](https://glycoverse.github.io/glyrep
 
 ```{r}
 glycans <- c(
-  "Neu5Ac(a2-3)Gal(b1-3)[Fuc(a1-3)]GlcNAc(b1-3)Gal(b1-3)GalNAc(b1-",
-  "Neu5Ac(a2-?)Gal(b1-3)[Fuc(a1-3)]GlcNAc(b1-",
-  "Man(b1-4)GlcNAc(b1-4)[Fuc(a1-6)]GlcNAc(b1-",
+  "Neu5Ac(a2-3)Gal(b1-3)[Fuc(a1-6)]GlcNAc(b1-3)Gal(b1-3)GalNAc(b1-",
+  "Neu5Ac(a2-?)Gal(b1-3)[Fuc(a1-6)]GlcNAc(b1-",
+  "Man(b1-4)GlcNAc(b1-4)[Fuc(a1-3)]GlcNAc(b1-",
   "Gal(b1-3)GalNAc(b1-",
   "Neu5Ac9Ac(a2-3)Gal(b1-4)GlcNAc(b1-"
 )
-motif <- "Neu5Ac(a2-3)Gal(b1-3)[Fuc(a1-3)]GlcNAc(b1-"
+motif <- "Neu5Ac(a2-3)Gal(b1-3)[Fuc(a1-6)]GlcNAc(b1-"
 have_motif(glycans, motif)
 ```
 
@@ -124,7 +124,7 @@ Let's define some motifs to work with:
 
 ```{r}
 motifs <- c(
-  "Neu5Ac(a2-3)Gal(b1-3)[Fuc(a1-3)]GlcNAc(b1-",
+  "Neu5Ac(a2-3)Gal(b1-3)[Fuc(a1-6)]GlcNAc(b1-",
   "Fuc(a1-",
   "Gal(b1-3)GalNAc(b1-"
 )
