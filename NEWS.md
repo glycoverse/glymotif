@@ -1,3 +1,9 @@
+# glymotif 0.6.1
+
+## Minor improvements and bug fixes
+
+* Fix some incorrect structure strings in tests and vignettes.
+
 # glymotif 0.6.0
 
 ## Breaking changes
