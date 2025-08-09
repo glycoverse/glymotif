@@ -25,7 +25,7 @@ test_that("quantify_motifs works in a most common glycoproteomics situation", {
     glycan_structure = glyrepr::as_glycan_structure(c(
       "GalNAc(b1-",
       "Gal(b1-3)GalNAc(b1-",
-      "Gal(b1-3)[Fuc(a1-3)]GalNAc(b1-"
+      "Gal(b1-3)[Fuc(a1-6)]GalNAc(b1-"
     ))
   )
 
@@ -39,7 +39,7 @@ test_that("quantify_motifs works in a most common glycoproteomics situation", {
   # V1     0          0
   # V2     1          0
   # V3     1          1
-  motifs <- c(motif1 = "Gal(b1-3)GalNAc(b1-", motif2 = "Fuc(a1-3)GalNAc(b1-")
+  motifs <- c(motif1 = "Gal(b1-3)GalNAc(b1-", motif2 = "Fuc(a1-6)GalNAc(b1-")
   result <- quantify_motifs(exp, motifs, alignments = "substructure")
 
   # ----- Check the results -----
@@ -97,7 +97,7 @@ test_that("quantify_motifs works in a common glycomics situation", {
     glycan_structure = glyrepr::as_glycan_structure(c(
       "GalNAc(b1-",
       "Gal(b1-3)GalNAc(b1-",
-      "Gal(b1-3)[Fuc(a1-3)]GalNAc(b1-"
+      "Gal(b1-3)[Fuc(a1-6)]GalNAc(b1-"
     ))
   )
 
@@ -111,7 +111,7 @@ test_that("quantify_motifs works in a common glycomics situation", {
   # V1     0          0
   # V2     1          0
   # V3     1          1
-  motifs <- c(motif1 = "Gal(b1-3)GalNAc(b1-", motif2 = "Fuc(a1-3)GalNAc(b1-")
+  motifs <- c(motif1 = "Gal(b1-3)GalNAc(b1-", motif2 = "Fuc(a1-6)GalNAc(b1-")
   result <- quantify_motifs(exp, motifs, alignments = "substructure")
 
   # ----- Check the results -----
