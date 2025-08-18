@@ -69,7 +69,7 @@ test_that("warning when user-provided alignment is different from database", {
 test_that("concrete glycan and generic motif", {
   glycan <- glyrepr::o_glycan_core_2()
   motif <- glyparse::parse_iupac_condensed("Gal(b1-3)GalNAc(?1-")
-  motif <- glyrepr::convert_mono_type(motif, "generic")
+  motif <- glyrepr::convert_to_generic(motif)
   expect_true(have_motif(glycan, motif))
 })
 
@@ -657,7 +657,7 @@ test_that("have_motif: vectorized glycans with single motif", {
 })
 
 test_that("have_motif works for repeated glycans", {
-  # This is to test the internal `fast_convert_mono_type` function.
+  # This is to test the internal `fast_convert_to_generic` function.
   glycans <- c("Man(??-", "Man(??-", "Gal(??-", "Gal(??-", "GlcNAc(??-")
   motif <- "Hex(??-"
 

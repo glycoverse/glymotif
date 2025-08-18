@@ -60,7 +60,7 @@ describe_n_glycans <- function(glycans, strict = FALSE) {
 
   # Deal with strictness
   if (!strict) {
-    glycan_structures <- glyrepr::convert_mono_type(glycan_structures, to = "generic")
+    glycan_structures <- glyrepr::convert_to_generic(glycan_structures)
   }
 
   # Check if the glycans are N-glycans
@@ -357,7 +357,7 @@ n_glycan_property_wrapper <- function(glycan, strict, func, check_n_glycan = TRU
   checkmate::assert_flag(strict)
   glycan <- ensure_glycans_are_structures(glycan)
   if (!strict) {
-    glycan <- glyrepr::convert_mono_type(glycan, to = "generic")
+    glycan <- glyrepr::convert_to_generic(glycan)
   }
   have_motif_func <- purrr::partial(have_n_glycan_motif, strict = strict)
   count_motif_func <- purrr::partial(count_n_glycan_motif, strict = strict)
@@ -422,7 +422,7 @@ get_n_glycan_motif <- function(name, generic = FALSE) {
   }
   motif <- motifs[[name]]
   if (generic) {
-    motif <- glyrepr::convert_mono_type(motif, to = "generic")
+    motif <- glyrepr::convert_to_generic(motif)
   }
   motif
 }
