@@ -39,7 +39,7 @@ test_that("match_motif works", {
   glycan <- glyrepr::n_glycan_core()
   motif <- parse_iupac_condensed("Man(a1-3)[Man(a1-6)]Man(b1-")
   result <- match_motif(glycan, motif)
-  expect_match_motif_equal(result, list(list(c(3, 4, 5))))
+  expect_match_motif_equal(result, list(list(c(1, 2, 3))))
 })
 
 test_that("match_motif rejects non-glyrepr_structure objects", {
@@ -70,9 +70,9 @@ test_that("match_motifs works", {
   result <- match_motifs(glycan, motifs)
   expected <- list(
     # Motif 1
-    list(list(c(3, 4, 5))),
+    list(list(c(1, 2, 3))),
     # Motif 2
-    list(list(c(1, 2, 3, 4), c(1, 2, 3, 5)))
+    list(list(c(1, 3, 4, 5), c(2, 3, 4, 5)))
   )
   expect_match_motifs_equal(result, expected)
 })
@@ -108,7 +108,7 @@ test_that("match_motif works with multiple glycans", {
   result <- match_motif(glycans, motif)
   expected <- list(
     # Glycan 1 (N-glycan core)
-    list(c(3, 4, 5)),
+    list(c(1, 2, 3)),
     # Glycan 2 (O-glycan core 2) - no match
     list()
   )
@@ -123,13 +123,13 @@ test_that("match_motifs works with multiple glycans", {
   expected <- list(
     # Motif 1
     list(
-      list(c(3, 4, 5)),  # Glycan 1 match
+      list(c(1, 2, 3)),  # Glycan 1 match
       list()             # Glycan 2 no match
     ),
     # Motif 2
     list(
       list(),            # Glycan 1 no match
-      list(c(2, 1))      # Glycan 2 match (Gal=node2, GalNAc=node1)
+      list(c(1, 3))      # Glycan 2 match (Gal=node1, GalNAc=node3)
     )
   )
   expect_match_motifs_equal(result, expected)
@@ -156,7 +156,7 @@ test_that("match_motif works with core alignment", {
   glycan <- parse_iupac_condensed("GlcNAc(b1-6)Gal(b1-6)Gal(a1-")
   motif <- parse_iupac_condensed("Gal(b1-6)Gal(a1-")
   result <- match_motif(glycan, motif, alignment = "core")
-  expected <- list(list(c(1, 2)))  # Gal=node1, Gal=node2 (core is node3)
+  expected <- list(list(c(2, 3)))  # Gal=node2, Gal=node3 (core is node1)
   expect_match_motif_equal(result, expected)
 })
 
@@ -164,7 +164,7 @@ test_that("match_motif works with terminal alignment", {
   glycan <- parse_iupac_condensed("Gal(b1-3)Gal(b1-4)GlcNAc(b1-")
   motif <- parse_iupac_condensed("Gal(b1-3)Gal(b1-")
   result <- match_motif(glycan, motif, alignment = "terminal")
-  expected <- list(list(c(2, 3)))  # Terminal Gal=node2, Gal=node3
+  expected <- list(list(c(1, 2)))  # Terminal Gal=node1, Gal=node2
   expect_match_motif_equal(result, expected)
 })
 
@@ -176,7 +176,7 @@ test_that("match_motifs works with different alignments", {
   result <- match_motifs(glycan, motifs, alignments = alignments)
   expected <- list(
     # Motif 1 with substructure alignment
-    list(list(c(2, 1))),  # Gal=node2, GalNAc=node1
+    list(list(c(1, 3))),  # Gal=node1, GalNAc=node3
     # Motif 2 with whole alignment - no match (not identical)
     list(list())
   )
@@ -194,7 +194,7 @@ test_that("match_motif works with ignore_linkages = TRUE", {
 
   # Should match with ignore_linkages = TRUE
   result_true <- match_motif(glycan, motif, ignore_linkages = TRUE)
-  expected <- list(list(c(2, 1)))  # Gal=node2, GalNAc=node1
+  expected <- list(list(c(1, 3)))  # Gal=node1, GalNAc=node3
   expect_match_motif_equal(result_true, expected)
 })
 
@@ -206,9 +206,9 @@ test_that("match_motifs works with ignore_linkages = TRUE", {
   result <- match_motifs(glycan, motifs, ignore_linkages = TRUE)
   expected <- list(
     # Motif 1
-    list(list(c(2, 1))),  # Gal=node2, GalNAc=node1
+    list(list(c(1, 3))),  # Gal=node1, GalNAc=node3
     # Motif 2
-    list(list(c(3, 1)))   # GlcNAc=node3, GalNAc=node1
+    list(list(c(2, 3)))   # GlcNAc=node2, GalNAc=node3
   )
   expect_match_motifs_equal(result, expected)
 })
@@ -218,7 +218,7 @@ test_that("match_motif finds multiple matches in same glycan", {
   glycan <- parse_iupac_condensed("Gal(b1-3)Gal(b1-3)GalNAc(a1-")
   motif <- parse_iupac_condensed("Gal(b1-3)GalNAc(a1-")
   result <- match_motif(glycan, motif)
-  expected <- list(list(c(2, 1)))  # Gal=node2, GalNAc=node1 (terminal match)
+  expected <- list(list(c(2, 3)))  # Gal=node2, GalNAc=node3 (terminal match)
   expect_match_motif_equal(result, expected)
 })
 
@@ -227,7 +227,7 @@ test_that("match_motif finds multiple instances of simple motif", {
   motif <- parse_iupac_condensed("Man(a1-")
   result <- match_motif(glycan, motif)
   # Should find Man residues at nodes 4 and 5 (terminal Man residues)
-  expected <- list(list(c(4), c(5)))  # Terminal Man nodes
+  expected <- list(list(c(1), c(2)))  # Terminal Man nodes
   expect_match_motif_equal(result, expected)
 })
 
@@ -240,7 +240,7 @@ test_that("match_motif considers substituents", {
 
   # Exact match
   result1 <- match_motif(glycan1, motif1)
-  expect_match_motif_equal(result1, list(list(c(3, 2))))  # Neu5Ac=node3, Gal=node2
+  expect_match_motif_equal(result1, list(list(c(1, 2))))  # Neu5Ac=node1, Gal=node2
 
   # Mismatch due to substituent
   result2 <- match_motif(glycan1, motif2)
@@ -248,7 +248,7 @@ test_that("match_motif considers substituents", {
 
   # Match without substituent
   result3 <- match_motif(glycan2, motif2)
-  expect_match_motif_equal(result3, list(list(c(3, 2))))  # Neu5Ac=node3, Gal=node2
+  expect_match_motif_equal(result3, list(list(c(1, 2))))  # Neu5Ac=node1, Gal=node2
 })
 
 # ========== Edge cases ==========
@@ -264,7 +264,7 @@ test_that("match_motif works with complex branched structure", {
   glycan <- glyrepr::n_glycan_core()
   motif <- parse_iupac_condensed("GlcNAc(b1-4)GlcNAc(?1-")
   result <- match_motif(glycan, motif)
-  expected <- list(list(c(1, 2)))
+  expected <- list(list(c(4, 5)))
   expect_match_motif_equal(result, expected)
 })
 
@@ -304,9 +304,9 @@ test_that("match_motifs works with single alignment for all motifs", {
   result <- match_motifs(glycan, motifs, alignments = "substructure")
   expected <- list(
     # Motif 1
-    list(list(c(2, 1))),  # Gal=node2, GalNAc=node1
+    list(list(c(1, 3))),  # Gal=node1, GalNAc=node3
     # Motif 2
-    list(list(c(3, 1)))   # GlcNAc=node3, GalNAc=node1
+    list(list(c(2, 3)))   # GlcNAc=node2, GalNAc=node3
   )
   expect_match_motifs_equal(result, expected)
 })
