@@ -1,3 +1,9 @@
+# glymotif 0.6.2
+
+## Minor improvements and bug fixes
+
+* Fix bugs introduced by the breaking changes in `glyrepr` v0.7.0.
+
 # glymotif 0.6.1
 
 ## Minor improvements and bug fixes
