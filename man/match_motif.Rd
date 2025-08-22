@@ -64,6 +64,20 @@ and the third node in the motif matches the 6th node in the glycan.
 Node indices are only meaningful for \code{\link[glyrepr:glycan_structure]{glyrepr::glycan_structure()}},
 so only \code{\link[glyrepr:glycan_structure]{glyrepr::glycan_structure()}} is supported for \code{glycans} and \code{motifs}.
 }
+\section{Vertex and Linkage Indices}{
+The indices of vertices and linkages in a glycan correspond directly to their
+order in the IUPAC-condensed string, which is printed when you print a
+\code{\link[glyrepr:glycan_structure]{glyrepr::glycan_structure()}}.
+For example, for the glycan "Man(a1-3)\link{Man(a1-6)}Man(b1-4)GlcNAc(b1-4)GlcNAc(b1-)",
+the vertices are "Man", "Man", "Man", "GlcNAc", "GlcNAc",
+and the linkages are "a1-3", "a1-6", "b1-4", "b1-4".
+
+Thus, matching the motif "Man(a1-3)Man(b1-4)" to this glycan yields \code{c(1, 3)}.
+This indicates that the first motif vertex (the a1-3 Man) corresponds to
+the first vertex in the glycan, and the second motif vertex (the b1-4 Man)
+corresponds to the third vertex in the glycan.
+}
+
 \examples{
 library(glyparse)
 library(glyrepr)
