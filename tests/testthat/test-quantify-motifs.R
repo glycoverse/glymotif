@@ -70,7 +70,7 @@ test_that("quantify_motifs works in a most common glycoproteomics situation", {
   expect_equal(result$expr_mat, expected_expr_mat)
 
   # Check experiment type
-  expect_equal(result$meta_data$exp_type, "motifomics")
+  expect_equal(result$meta_data$exp_type, "traitomics")
 })
 
 test_that("quantify_motifs works in a common glycomics situation", {
@@ -136,7 +136,7 @@ test_that("quantify_motifs works in a common glycomics situation", {
   expect_equal(result$expr_mat, expected_expr_mat)
 
   # Check experiment type
-  expect_equal(result$meta_data$exp_type, "motifomics")
+  expect_equal(result$meta_data$exp_type, "traitomics")
 })
 
 test_that("quantify_motifs correctly handles complex glycoproteomics data with tibble comparisons", {

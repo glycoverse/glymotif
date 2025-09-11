@@ -7,7 +7,7 @@
 #' The new experiment is different from a normal `glyexp::experiment()` in three ways:
 #' 1. It doesn't have a "glycan_structure" or "glycan_composition" column,
 #' but a "motif" column instead.
-#' 2. The metadata field "exp_type" is "motifomics", not "glycoproteomics" or glycomics.
+#' 2. The metadata field "exp_type" is "traitomics", not "glycoproteomics" or glycomics.
 #'
 #' You can understand a "motif experiment" in this way:
 #' For glycoproteomics data,
@@ -88,9 +88,9 @@ quantify_motifs <- function(exp, motifs, alignments = NULL, ignore_linkages = FA
 
   # Create new experiment with updated meta_data
   new_meta_data <- exp$meta_data
-  new_meta_data$exp_type <- "motifomics"
+  new_meta_data$exp_type <- "traitomics"
 
-  # Use new_experiment to bypass validation since "motifomics" is not a standard exp_type
+  # Use new_experiment to bypass validation since "traitomics" is not a standard exp_type
   result <- glyexp:::new_experiment(
     expr_mat = new_expr_mat,
     sample_info = exp$sample_info,
