@@ -13,5 +13,4 @@
   get_motif_aglycon <<- memoise::memoise(get_motif_aglycon)
   terminal_nodes <<- memoise::memoise(terminal_nodes)
   core_node <<- memoise::memoise(core_node)
-  get_n_glycan_motif <<- memoise::memoise(get_n_glycan_motif)
 }
