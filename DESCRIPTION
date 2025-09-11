@@ -34,8 +34,7 @@ Imports:
     dplyr,
     tibble,
     memoise,
-    vctrs,
-    magrittr
+    vctrs
 Remotes: 
     glycoverse/glyrepr,
     glycoverse/glyparse,
