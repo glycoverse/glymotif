@@ -34,7 +34,6 @@ Monosaccharides, linkages, and substituents are all considered."><meta property=
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/motif-matching.html">The Science Behind Motif Matching</a></li>
-    <li><a class="dropdown-item" href="../articles/n-glycans.html">N-Glycans</a></li>
     <li><a class="dropdown-item" href="../articles/with-exp.html">Working with glyexp</a></li>
   </ul></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
@@ -317,10 +316,10 @@ The function returns <code>TRUE</code> if any of the matches pass all checks.</p
 <span class="r-in"><span><span class="fu">have_motifs</span><span class="op">(</span><span class="va">glycans</span>, <span class="va">motifs</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                                   Gal(b1-3)GalNAc(b1- Gal(b1-4)GalNAc(b1-</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Gal(b1-3)[GlcNAc(b1-6)]GalNAc(a1-               FALSE               FALSE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> GlcNAc(b1-6)[Gal(b1-?)]GalNAc(b1-               FALSE               FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Gal(b1-?)[GlcNAc(b1-6)]GalNAc(b1-               FALSE               FALSE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                                   GlcNAc(b1-6)GalNAc(b1-</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Gal(b1-3)[GlcNAc(b1-6)]GalNAc(a1-                  FALSE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> GlcNAc(b1-6)[Gal(b1-?)]GalNAc(b1-                   TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Gal(b1-?)[GlcNAc(b1-6)]GalNAc(b1-                   TRUE</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># You can assign each motif a name</span></span></span>
 <span class="r-in"><span><span class="va">motifs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span></span>
@@ -331,7 +330,7 @@ The function returns <code>TRUE</code> if any of the matches pass all checks.</p
 <span class="r-in"><span><span class="fu">have_motifs</span><span class="op">(</span><span class="va">glycans</span>, <span class="va">motifs</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                                   motif1 motif2 motif3</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Gal(b1-3)[GlcNAc(b1-6)]GalNAc(a1-  FALSE  FALSE  FALSE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> GlcNAc(b1-6)[Gal(b1-?)]GalNAc(b1-  FALSE  FALSE   TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Gal(b1-?)[GlcNAc(b1-6)]GalNAc(b1-  FALSE  FALSE   TRUE</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

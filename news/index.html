@@ -20,7 +20,6 @@
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/motif-matching.html">The Science Behind Motif Matching</a></li>
-    <li><a class="dropdown-item" href="../articles/n-glycans.html">N-Glycans</a></li>
     <li><a class="dropdown-item" href="../articles/with-exp.html">Working with glyexp</a></li>
   </ul></li>
 <li class="active nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
@@ -73,12 +72,12 @@
 <div class="section level3">
 <h3 id="new-features-0-5-0">New features<a class="anchor" aria-label="anchor" href="#new-features-0-5-0"></a></h3>
 <ul><li>Add support for multiple glycan structure string formats in all functions. This includes IUPAC-condensed, IUPAC-short, IUPAC-extended, GlycoCT, WURCS, pGlyco-style, and StrucGP-style.</li>
-<li>All N-glycan functions now support vectorization, including <code><a href="../reference/is_n_glycan.html">is_n_glycan()</a></code>, <code><a href="../reference/n_glycan_type.html">n_glycan_type()</a></code>, <code><a href="../reference/n_glycan_type.html">has_bisecting()</a></code>, <code><a href="../reference/n_glycan_type.html">n_antennae()</a></code>, <code><a href="../reference/n_glycan_type.html">n_core_fuc()</a></code>, <code><a href="../reference/n_glycan_type.html">n_arm_fuc()</a></code>, <code><a href="../reference/n_glycan_type.html">n_gal()</a></code>, and <code><a href="../reference/n_glycan_type.html">n_terminal_gal()</a></code>.</li>
+<li>All N-glycan functions now support vectorization, including <code>is_n_glycan()</code>, <code>n_glycan_type()</code>, <code>has_bisecting()</code>, <code>n_antennae()</code>, <code>n_core_fuc()</code>, <code>n_arm_fuc()</code>, <code>n_gal()</code>, and <code>n_terminal_gal()</code>.</li>
 </ul></div>
 <div class="section level3">
 <h3 id="minor-improvements-and-bug-fixes-0-5-0">Minor improvements and bug fixes<a class="anchor" aria-label="anchor" href="#minor-improvements-and-bug-fixes-0-5-0"></a></h3>
 <ul><li>Update vignettes to explicitly include reducing-end anomers in IUPAC-condensed strings.</li>
-<li>Fix a bug that pausimannose-type glycans are not correctly recognized in <code><a href="../reference/describe_n_glycans.html">describe_n_glycans()</a></code>.</li>
+<li>Fix a bug that pausimannose-type glycans are not correctly recognized in <code>describe_n_glycans()</code>.</li>
 </ul></div>
 </div>
     <div class="section level2">
@@ -135,12 +134,12 @@
 <h2 class="pkg-version" data-toc-text="0.3.0" id="glymotif-030">glymotif 0.3.0<a class="anchor" aria-label="anchor" href="#glymotif-030"></a></h2>
 <div class="section level3">
 <h3 id="major-changes-0-3-0">Major changes<a class="anchor" aria-label="anchor" href="#major-changes-0-3-0"></a></h3>
-<ul><li>Add <code><a href="../reference/add_glycan_descriptions.html">add_glycan_descriptions()</a></code>, <code><a href="../reference/add_struct_descriptions.html">add_struct_descriptions()</a></code>, and <code><a href="../reference/add_comp_descriptions.html">add_comp_descriptions()</a></code>. These functions are moved from <code>glyexp</code> to <code>glymotif</code> for better separation of concerns.</li>
+<ul><li>Add <code>add_glycan_descriptions()</code>, <code>add_struct_descriptions()</code>, and <code>add_comp_descriptions()</code>. These functions are moved from <code>glyexp</code> to <code>glymotif</code> for better separation of concerns.</li>
 <li>Add <code><a href="../reference/add_motifs_int.html">add_motifs_int()</a></code> and <code><a href="../reference/add_motifs_int.html">add_motifs_lgl()</a></code> for adding motif annotations to a <code><a href="https://glycoverse.github.io/glyexp/reference/experiment.html" class="external-link">glyexp::experiment()</a></code>.</li>
 </ul></div>
 <div class="section level3">
 <h3 id="minor-improvements-0-3-0">Minor improvements<a class="anchor" aria-label="anchor" href="#minor-improvements-0-3-0"></a></h3>
-<ul><li>Remove the <code>parallel</code> argument from <code><a href="../reference/add_glycan_descriptions.html">add_glycan_descriptions()</a></code>, <code><a href="../reference/add_struct_descriptions.html">add_struct_descriptions()</a></code>, and <code><a href="../reference/add_comp_descriptions.html">add_comp_descriptions()</a></code>. We found it not very useful on a regular basis.</li>
+<ul><li>Remove the <code>parallel</code> argument from <code>add_glycan_descriptions()</code>, <code>add_struct_descriptions()</code>, and <code>add_comp_descriptions()</code>. We found it not very useful on a regular basis.</li>
 <li>Update the vignette to reflect the new functions above.</li>
 </ul></div>
 <div class="section level3">
