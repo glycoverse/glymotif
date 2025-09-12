@@ -1,3 +1,14 @@
+# glymotif 0.7.0
+
+## Breaking changes
+
+* Remove `add_comp_descriptions()`, `add_glycan_descriptions()`, `add_struct_descriptions()`, `describe_n_glycans()`, `has_bisecting()`, `is_n_glycan()`, `n_antennae()`, `n_arm_fuc()`, `n_core_fuc()`, `n_gal()`, `n_glycan_type()`, `n_terminal_gal()`. These functions are replaced by functions in the `glydet` package now.
+
+## Minor improvements and bug fixes
+
+* Update dependencies to depend on release versions of glycoverse packages.
+* `quantify_motifs()` now returns a `glyexp::experiment()` object with "traitomics" type instead of "motifomics".
+
 # glymotif 0.6.2
 
 ## Minor improvements and bug fixes
