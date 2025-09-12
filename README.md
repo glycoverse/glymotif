@@ -25,14 +25,14 @@ You can install the latest release of glymotif from
 [GitHub](https://github.com/) with:
 
 ``` r
-# install.packages("devtools")
-devtools::install_github("glycoverse/glymotif@*release")
+# install.packages("remotes")
+remotes::install_github("glycoverse/glymotif@*release")
 ```
 
 Or install the development version:
 
 ``` r
-devtools::install_github("glycoverse/glymotif")
+remotes::install_github("glycoverse/glymotif")
 ```
 
 ## Documentation
