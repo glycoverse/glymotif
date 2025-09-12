@@ -30,7 +30,7 @@ The new experiment is different from a normal \code{glyexp::experiment()} in thr
 \enumerate{
 \item It doesn't have a "glycan_structure" or "glycan_composition" column,
 but a "motif" column instead.
-\item The metadata field "exp_type" is "motifomics", not "glycoproteomics" or glycomics.
+\item The metadata field "exp_type" is "traitomics", not "glycoproteomics" or glycomics.
 }
 
 You can understand a "motif experiment" in this way:
