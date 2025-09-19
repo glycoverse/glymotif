@@ -40,7 +40,9 @@
 #' instead of quantifications of glycoforms or glycopeptides.
 #' Or just motif quantification in each sample, for glycomics data.
 #'
-#' @param exp A `glyexp::experiment()` object.
+#' @param exp A `glyexp::experiment()` object with a "glycan_structure" column in `var_info`.
+#'   The column can be a [glyrepr::glycan_structure()] vector,
+#'   or a character vector of glycan structure strings supported by [glyparse::auto_parse()].
 #' @inheritParams have_motif
 #'
 #' @returns A `glyexp::experiment()` object containing motif quantifications.
@@ -52,10 +54,9 @@ quantify_motifs <- function(exp, motifs, alignments = NULL, ignore_linkages = FA
   if (!"glycan_structure" %in% colnames(exp$var_info)) {
     cli::cli_abort("The experiment must have a {.field glycan_structure} column.")
   }
-  checkmate::assert_class(exp$var_info$glycan_structure, "glyrepr_structure")
 
   # Extract glycan structures
-  glycan_structures <- exp$var_info$glycan_structure
+  glycan_structures <- ensure_glycans_are_structures(exp$var_info$glycan_structure)
 
   # Calculate motif counts for each glycan
   motif_counts_matrix <- count_motifs(
