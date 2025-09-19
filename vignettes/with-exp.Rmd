@@ -37,22 +37,13 @@ library(dplyr)
 
 Time to roll up our sleeves and dive into the good stuff! 💪
 Let's work with a real-world dataset that will showcase what `glymotif` can do when it teams up with actual experimental data.
-We'll use `glyread::read_pglyco3_pglycoquant()` to load our data into a proper `glyexp::experiment()` object — 
-think of it as our data's new home where everything is organized and ready for analysis.
-We will also use `glyclean::auto_clean()` to preprocess the data.
+We will use `real_experiment` from the `glyexp` package, an serum N-glycoproteomics study with 12 samples.
+Firstly, let's use `glyclean::auto_clean()` to preprocess the data.
 
 ```{r}
-library(glyread)
 library(glyclean)
 
-exp <- glyread::read_pglyco3_pglycoquant(
-  "glycopeptides.list",
-  sample_info = "sample_info.csv",
-  glycan_type = "N",
-  parse_structure = TRUE
-) |> 
-  mutate_obs(sample = stringr::str_split_i(sample, "-", -1)) |>
-  auto_clean()
+exp <- auto_clean(real_experiment)
 exp
 ```
 
@@ -188,7 +179,7 @@ except now we're quantifying motifs rather than glycans.
 Here's the best part: this means *all* your favorite functions in `glystats` can be used on this experiment! 🎉
 It's like having a universal remote that works with your new TV： everything just clicks! 📺
 
-```{r, eval=FALSE}
+```R
 library(glystats)
 
 gly_anova(motif_exp)
