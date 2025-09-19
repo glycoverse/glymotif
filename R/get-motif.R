@@ -15,7 +15,7 @@ rlang::on_load({
 #' Get All Motifs
 #'
 #' This function returns the names of all motifs available in the package.
-#' We use GlycoMotif GlyGen Collection (https://glygen.org/glycomotif) as the source of the motifs.
+#' We use GlycoMotif GlyGen Collection (https://glycomotif.glyomics.org/glycomotif/GGM) as the source of the motifs.
 #' This function is useful to be integrated with [have_motifs()] and [count_motifs()].
 #' For example, use `have_motifs(glycans, all_motifs())` to check against all motifs.
 #'

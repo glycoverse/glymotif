@@ -11,7 +11,7 @@ A character vector of motif names.
 }
 \description{
 This function returns the names of all motifs available in the package.
-We use GlycoMotif GlyGen Collection (https://glygen.org/glycomotif) as the source of the motifs.
+We use GlycoMotif GlyGen Collection (https://glycomotif.glyomics.org/glycomotif/GGM) as the source of the motifs.
 This function is useful to be integrated with \code{\link[=have_motifs]{have_motifs()}} and \code{\link[=count_motifs]{count_motifs()}}.
 For example, use \code{have_motifs(glycans, all_motifs())} to check against all motifs.
 }
