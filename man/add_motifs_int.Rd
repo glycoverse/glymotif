@@ -10,7 +10,9 @@ add_motifs_int(exp, motifs, alignments = NULL, ignore_linkages = FALSE)
 add_motifs_lgl(exp, motifs, alignments = NULL, ignore_linkages = FALSE)
 }
 \arguments{
-\item{exp}{An \code{\link[glyexp:experiment]{glyexp::experiment()}} object.}
+\item{exp}{A \code{glyexp::experiment()} object with a "glycan_structure" column in \code{var_info}.
+The column can be a \code{\link[glyrepr:glycan_structure]{glyrepr::glycan_structure()}} vector,
+or a character vector of glycan structure strings supported by \code{\link[glyparse:auto_parse]{glyparse::auto_parse()}}.}
 
 \item{motifs}{A character vector of motif names, glycan structure strings,
 or a 'glyrepr_structure' object.

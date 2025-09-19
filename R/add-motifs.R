@@ -68,8 +68,7 @@
 #' 2. convert the matrix to a tibble
 #' 3. use `dplyr::bind_cols()` to add the tibble to the variable information
 #'
-#' @param exp An [glyexp::experiment()] object.
-#' @inheritParams have_motif
+#' @inheritParams quantify_motifs
 #'
 #' @return An [glyexp::experiment()] object with motif annotations added to the variable information.
 #' @seealso [glymotif::have_motifs()], [glymotif::count_motifs()], [glyexp::experiment()]
@@ -90,7 +89,6 @@ add_motifs_lgl <- function(exp, motifs, alignments = NULL, ignore_linkages = FAL
   if (!"glycan_structure" %in% colnames(exp$var_info)) {
     cli::cli_abort("The experiment must have a {.field glycan_structure} column.")
   }
-  checkmate::assert_class(exp$var_info$glycan_structure, "glyrepr_structure")
 
   motif_anno <- motif_anno_fn(exp$var_info$glycan_structure, motifs, alignments, ignore_linkages)
   names(motif_anno) <- as.character(motifs)
