@@ -102,66 +102,45 @@ first. Trust us—it’s worth the detour! 🚀</p>
 <p>Time to roll up our sleeves and dive into the good stuff! 💪 Let’s
 work with a real-world dataset that will showcase what
 <code>glymotif</code> can do when it teams up with actual experimental
-data. We’ll use <code><a href="https://glycoverse.github.io/glyread/reference/read_pglyco3_pglycoquant.html" class="external-link">glyread::read_pglyco3_pglycoquant()</a></code> to load
-our data into a proper <code><a href="https://glycoverse.github.io/glyexp/reference/experiment.html" class="external-link">glyexp::experiment()</a></code> object — think
-of it as our data’s new home where everything is organized and ready for
-analysis. We will also use <code><a href="https://glycoverse.github.io/glyclean/reference/auto_clean.html" class="external-link">glyclean::auto_clean()</a></code> to
+data. We will use <code>real_experiment</code> from the
+<code>glyexp</code> package, an serum N-glycoproteomics study with 12
+samples. Firstly, let’s use <code><a href="https://glycoverse.github.io/glyclean/reference/auto_clean.html" class="external-link">glyclean::auto_clean()</a></code> to
 preprocess the data.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://glycoverse.github.io/glyread/" class="external-link">glyread</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://glycoverse.github.io/glyclean/" class="external-link">glyclean</a></span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://glycoverse.github.io/glyclean/" class="external-link">glyclean</a></span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Attaching package: 'glyclean'</span></span>
 <span><span class="co">#&gt; The following object is masked from 'package:stats':</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;     aggregate</span></span>
 <span></span>
-<span><span class="va">exp</span> <span class="op">&lt;-</span> <span class="fu">glyread</span><span class="fu">::</span><span class="fu"><a href="https://glycoverse.github.io/glyread/reference/read_pglyco3_pglycoquant.html" class="external-link">read_pglyco3_pglycoquant</a></span><span class="op">(</span></span>
-<span>  <span class="st">"glycopeptides.list"</span>,</span>
-<span>  sample_info <span class="op">=</span> <span class="st">"sample_info.csv"</span>,</span>
-<span>  glycan_type <span class="op">=</span> <span class="st">"N"</span>,</span>
-<span>  parse_structure <span class="op">=</span> <span class="cn">TRUE</span></span>
-<span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu"><a href="https://glycoverse.github.io/glyexp/reference/mutate_obs.html" class="external-link">mutate_obs</a></span><span class="op">(</span>sample <span class="op">=</span> <span class="fu">stringr</span><span class="fu">::</span><span class="fu"><a href="https://stringr.tidyverse.org/reference/str_split.html" class="external-link">str_split_i</a></span><span class="op">(</span><span class="va">sample</span>, <span class="st">"-"</span>, <span class="op">-</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://glycoverse.github.io/glyclean/reference/auto_clean.html" class="external-link">auto_clean</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Reading data</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Finding leader proteins</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Finding leader proteins <span style="color: #B2B2B2;">[78ms]</span></span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Reading data<span style="color: #00BBBB;">ℹ</span> Parsing glycan compositions and structures</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Parsing glycan compositions and structures <span style="color: #B2B2B2;">[6.8s]</span></span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Reading data<span style="color: #00BB00;">✔</span> Reading data <span style="color: #B2B2B2;">[7.3s]</span></span></span>
-<span><span class="co">#&gt; </span></span>
+<span><span class="va">exp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://glycoverse.github.io/glyclean/reference/auto_clean.html" class="external-link">auto_clean</a></span><span class="op">(</span><span class="va">real_experiment</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Normalizing data (Median)</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Normalizing data (Median) <span style="color: #B2B2B2;">[132ms]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Normalizing data (Median) <span style="color: #B2B2B2;">[236ms]</span></span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Removing variables with &gt;50% missing values</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Removing variables with &gt;50% missing values <span style="color: #B2B2B2;">[16ms]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Removing variables with &gt;50% missing values <span style="color: #B2B2B2;">[27ms]</span></span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Imputing missing values</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Sample size &lt;= 30, using sample minimum imputation</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Imputing missing values<span style="color: #00BB00;">✔</span> Imputing missing values <span style="color: #B2B2B2;">[15ms]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Imputing missing values<span style="color: #00BB00;">✔</span> Imputing missing values <span style="color: #B2B2B2;">[30ms]</span></span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Aggregating data</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Aggregating data <span style="color: #B2B2B2;">[108ms]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Aggregating data <span style="color: #B2B2B2;">[757ms]</span></span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Normalizing data again</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Detecting batch effects using ANOVA for 263 variables...</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Normalizing data again<span style="color: #00BB00;">✔</span> Batch effect detection completed. 1 out of 263 variables show significant batch effects (p &lt; 0.05).</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Normalizing data again<span style="color: #00BBBB;">ℹ</span> Batch effects detected in 0.4% of variables (&lt;=10%). Skipping batch correction.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Normalizing data again<span style="color: #00BB00;">✔</span> Normalizing data again <span style="color: #B2B2B2;">[687ms]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Normalizing data again <span style="color: #B2B2B2;">[21ms]</span></span></span>
 <span><span class="va">exp</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">──</span> <span style="font-weight: bold;">Experiment</span> <span style="color: #00BBBB;">──────────────────────────────────────────────────────────────────</span></span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Expression matrix: <span style="color: #0000BB;">12</span> samples, <span style="color: #0000BB;">263</span> variables</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Sample information fields: <span style="color: #00BB00;">group</span> <span style="color: #0000BB;">&lt;chr&gt;</span>, <span style="color: #00BB00;">batch</span> <span style="color: #0000BB;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Expression matrix: <span style="color: #0000BB;">12</span> samples, <span style="color: #0000BB;">3880</span> variables</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Sample information fields: <span style="color: #00BB00;">group</span> <span style="color: #0000BB;">&lt;chr&gt;</span></span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Variable information fields: <span style="color: #00BB00;">protein</span> <span style="color: #0000BB;">&lt;chr&gt;</span>, <span style="color: #00BB00;">gene</span> <span style="color: #0000BB;">&lt;chr&gt;</span>, <span style="color: #00BB00;">glycan_composition</span> <span style="color: #0000BB;">&lt;comp&gt;</span>, <span style="color: #00BB00;">glycan_structure</span> <span style="color: #0000BB;">&lt;struct&gt;</span>, <span style="color: #00BB00;">protein_site</span> <span style="color: #0000BB;">&lt;int&gt;</span></span></span></code></pre></div>
 <p>Now, let’s peek under the hood and see what treasures we’re working
 with! 👀</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://glycoverse.github.io/glyexp/reference/get_var_info.html" class="external-link">get_var_info</a></span><span class="op">(</span><span class="va">exp</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 263 × 6</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 3,880 × 6</span></span></span>
 <span><span class="co">#&gt;    variable protein gene     glycan_composition     </span></span>
 <span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;comp&gt;</span>                 </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> V1       P08185  SERPINA6 Hex(5)HexNAc(4)NeuAc(2)</span></span>
@@ -174,25 +153,25 @@ with! 👀</p>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> V8       P04196  HRG      Hex(5)HexNAc(4)dHex(2) </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> V9       P04196  HRG      Hex(4)HexNAc(3)        </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> V10      P04196  HRG      Hex(4)HexNAc(4)NeuAc(1)</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 253 more rows</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 3,870 more rows</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 2 more variables: glycan_structure &lt;struct&gt;, protein_site &lt;int&gt;</span></span></span></code></pre></div>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://glycoverse.github.io/glyexp/reference/get_sample_info.html" class="external-link">get_sample_info</a></span><span class="op">(</span><span class="va">exp</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 12 × 3</span></span></span>
-<span><span class="co">#&gt;    sample group batch</span></span>
-<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> C_1    C         1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> C_2    C         2</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> C_3    C         3</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> H_1    H         1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> H_2    H         2</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> H_3    H         3</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> M_1    M         1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> M_2    M         2</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> M_3    M         3</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> Y_1    Y         1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">11</span> Y_2    Y         2</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">12</span> Y_3    Y         3</span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 12 × 2</span></span></span>
+<span><span class="co">#&gt;    sample group</span></span>
+<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> C1     C    </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> C2     C    </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> C3     C    </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> H1     H    </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> H2     H    </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> H3     H    </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> M1     M    </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> M2     M    </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> M3     M    </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> Y1     Y    </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">11</span> Y2     Y    </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">12</span> Y3     Y</span></span></code></pre></div>
 <p>What we have here is a beautiful N-glycoproteomics dataset featuring
 500 PSMs (Peptide Spectrum Matches) across 12 samples — a perfect
 playground for motif analysis! 🎮</p>
@@ -216,7 +195,7 @@ intuitive!) 🎯</p>
 <span>  <span class="fu"><a href="https://glycoverse.github.io/glyexp/reference/mutate_obs.html" class="external-link">mutate_var</a></span><span class="op">(</span>n_hex <span class="op">=</span> <span class="fu"><a href="../reference/have_motif.html">have_motif</a></span><span class="op">(</span><span class="va">glycan_structure</span>, <span class="st">"Hex(a1-"</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://glycoverse.github.io/glyexp/reference/get_var_info.html" class="external-link">get_var_info</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">variable</span>, <span class="va">protein</span>, <span class="va">glycan_structure</span>, <span class="va">n_hex</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 263 × 4</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 3,880 × 4</span></span></span>
 <span><span class="co">#&gt;    variable protein</span></span>
 <span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> V1       P08185 </span></span>
@@ -229,7 +208,7 @@ intuitive!) 🎯</p>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> V8       P04196 </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> V9       P04196 </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> V10      P04196 </span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 253 more rows</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 3,870 more rows</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 2 more variables: glycan_structure &lt;struct&gt;, n_hex &lt;lgl&gt;</span></span></span></code></pre></div>
 <p><strong>The tempting approach:</strong> Multiple motifs at once (you
 might be tempted to do this…) 🤷‍♀️</p>
@@ -263,7 +242,7 @@ your variable information tibble.</p>
 <code class="sourceCode R"><span><span class="va">exp2</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://glycoverse.github.io/glyexp/reference/get_var_info.html" class="external-link">get_var_info</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">variable</span>, <span class="va">motif1</span>, <span class="va">motif2</span>, <span class="va">motif3</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 263 × 4</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 3,880 × 4</span></span></span>
 <span><span class="co">#&gt;    variable motif1 motif2 motif3</span></span>
 <span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span> </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> V1       TRUE   TRUE   FALSE </span></span>
@@ -276,7 +255,7 @@ your variable information tibble.</p>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> V8       TRUE   TRUE   TRUE  </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> V9       TRUE   TRUE   FALSE </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> V10      TRUE   TRUE   FALSE </span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 253 more rows</span></span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 3,870 more rows</span></span></span></code></pre></div>
 <p>But wait, what can you actually <em>do</em> with these shiny new
 columns? 🤔 The possibilities are endless, but here’s a tantalizing
 example to get your creative juices flowing:</p>
@@ -324,51 +303,51 @@ holds:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># First, let's peek at the variable information</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="https://glycoverse.github.io/glyexp/reference/get_var_info.html" class="external-link">get_var_info</a></span><span class="op">(</span><span class="va">motif_exp</span><span class="op">)</span>, n <span class="op">=</span> <span class="fl">12</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 174 × 5</span></span></span>
-<span><span class="co">#&gt;    variable protein gene     protein_site motif                                 </span></span>
-<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                                 </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> V1       P08185  SERPINA6          176 NeuAc(??-?)Hex(??-?)HexNAc(??-        </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> V2       P08185  SERPINA6          176 Hex(??-?)HexNAc(??-                   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> V3       P08185  SERPINA6          176 HexNAc(??-                            </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> V4       P08185  SERPINA6          176 NeuAc(??-?)Hex(??-?)[dHex(??-?)]HexNA…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> V5       P08185  SERPINA6          176 Hex(??-?)[dHex(??-?)]HexNAc(??-       </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> V6       P08185  SERPINA6          176 dHex(??-?)HexNAc(??-                  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> V7       P04196  HRG               344 NeuAc(??-?)Hex(??-?)HexNAc(??-        </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> V8       P04196  HRG               344 Hex(??-?)HexNAc(??-                   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> V9       P04196  HRG               344 HexNAc(??-                            </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> V10      P04196  HRG               344 NeuAc(??-?)Hex(??-?)[dHex(??-?)]HexNA…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">11</span> V11      P04196  HRG               344 Hex(??-?)[dHex(??-?)]HexNAc(??-       </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">12</span> V12      P04196  HRG               344 dHex(??-?)HexNAc(??-                  </span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 162 more rows</span></span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1,644 × 5</span></span></span>
+<span><span class="co">#&gt;    variable protein protein_site motif                                     gene </span></span>
+<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                                     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> V1       A6NJW9            49 NeuAc(??-?)Hex(??-?)HexNAc(??-            CD8B2</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> V2       A6NJW9            49 Hex(??-?)HexNAc(??-                       CD8B2</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> V3       A6NJW9            49 HexNAc(??-                                CD8B2</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> V4       A6NJW9            49 NeuAc(??-?)Hex(??-?)[dHex(??-?)]HexNAc(?… CD8B2</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> V5       A6NJW9            49 Hex(??-?)[dHex(??-?)]HexNAc(??-           CD8B2</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> V6       A6NJW9            49 dHex(??-?)HexNAc(??-                      CD8B2</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> V7       O14786           150 NeuAc(??-?)Hex(??-?)HexNAc(??-            NRP1 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> V8       O14786           150 Hex(??-?)HexNAc(??-                       NRP1 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> V9       O14786           150 HexNAc(??-                                NRP1 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> V10      O14786           150 NeuAc(??-?)Hex(??-?)[dHex(??-?)]HexNAc(?… NRP1 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">11</span> V11      O14786           150 Hex(??-?)[dHex(??-?)]HexNAc(??-           NRP1 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">12</span> V12      O14786           150 dHex(??-?)HexNAc(??-                      NRP1 </span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 1,632 more rows</span></span></span></code></pre></div>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># And now, the expression matrix (where the magic numbers live!)</span></span>
 <span><span class="fu"><a href="https://glycoverse.github.io/glyexp/reference/get_expr_mat.html" class="external-link">get_expr_mat</a></span><span class="op">(</span><span class="va">motif_exp</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">12</span>, <span class="op">]</span></span>
-<span><span class="co">#&gt;              C_1        C_2          C_3         H_1          H_2       H_3</span></span>
-<span><span class="co">#&gt; V1      161544.9    1071582     102731.8    315378.1     63111.02   1064451</span></span>
-<span><span class="co">#&gt; V2           0.0          0          0.0         0.0         0.00         0</span></span>
-<span><span class="co">#&gt; V3           0.0          0          0.0         0.0         0.00         0</span></span>
-<span><span class="co">#&gt; V4           0.0          0          0.0         0.0         0.00         0</span></span>
-<span><span class="co">#&gt; V5           0.0          0          0.0         0.0         0.00         0</span></span>
-<span><span class="co">#&gt; V6           0.0          0          0.0         0.0         0.00         0</span></span>
-<span><span class="co">#&gt; V7  6377993452.8 7243323943 7235597457.3 140521039.4 535845718.67 302012725</span></span>
-<span><span class="co">#&gt; V8   613338824.2  690982486  622290471.1   1582467.7    755226.47   4083880</span></span>
-<span><span class="co">#&gt; V9   303018758.1  472122067  344300552.9  10771221.7 502235198.15 293857758</span></span>
-<span><span class="co">#&gt; V10  205457223.0  363586244  555073974.8  42507437.9  11757947.48   1930150</span></span>
-<span><span class="co">#&gt; V11          0.0          0          0.0         0.0         0.00         0</span></span>
-<span><span class="co">#&gt; V12  227718059.2  389996195  585082755.6  42573516.1  11829567.97   1969530</span></span>
-<span><span class="co">#&gt;            M_1        M_2        M_3        Y_1        Y_2          Y_3</span></span>
-<span><span class="co">#&gt; V1    14157120    8247987    7680553   16938453   11299452     742926.2</span></span>
-<span><span class="co">#&gt; V2           0          0          0          0          0          0.0</span></span>
-<span><span class="co">#&gt; V3           0          0          0          0          0          0.0</span></span>
-<span><span class="co">#&gt; V4           0          0          0          0          0          0.0</span></span>
-<span><span class="co">#&gt; V5           0          0          0          0          0          0.0</span></span>
-<span><span class="co">#&gt; V6           0          0          0          0          0          0.0</span></span>
-<span><span class="co">#&gt; V7  5777389128 4971574084 3709001198 1660759502 3253476450 2310024852.5</span></span>
-<span><span class="co">#&gt; V8   956784247  638642551  728559015  234319425  303445834  316100877.6</span></span>
-<span><span class="co">#&gt; V9   311212270   93236495  213518193   76104585   85063689   48673969.7</span></span>
-<span><span class="co">#&gt; V10  293350695  154800162  255394449  149529122  140243163  149944142.6</span></span>
-<span><span class="co">#&gt; V11          0          0          0          0          0          0.0</span></span>
-<span><span class="co">#&gt; V12  325827723  169567194  280548090  160926295  146022195  161185176.3</span></span></code></pre></div>
+<span><span class="co">#&gt;           C1       C2       C3       H1       H2       H3       M1         M2</span></span>
+<span><span class="co">#&gt; V1   4518941  3597488  9291116  1652455 17718.79 18276.18 10131349  4903136.0</span></span>
+<span><span class="co">#&gt; V2         0        0        0        0     0.00     0.00        0        0.0</span></span>
+<span><span class="co">#&gt; V3         0        0        0        0     0.00     0.00        0        0.0</span></span>
+<span><span class="co">#&gt; V4   4518941  3597488  9291116  1652455 17718.79 18276.18 10131349  4903136.0</span></span>
+<span><span class="co">#&gt; V5         0        0        0        0     0.00     0.00        0        0.0</span></span>
+<span><span class="co">#&gt; V6  13556823 10792465 27873349  4957366 53156.37 54828.54 30394046 14709407.9</span></span>
+<span><span class="co">#&gt; V7   8358832 12224955 13576169 13126524 17718.79 18276.18 16723916   904568.5</span></span>
+<span><span class="co">#&gt; V8   8358832 12224955 13576169 13126524 17718.79 18276.18 16723916   904568.5</span></span>
+<span><span class="co">#&gt; V9         0        0        0        0     0.00     0.00        0        0.0</span></span>
+<span><span class="co">#&gt; V10        0        0        0        0     0.00     0.00        0        0.0</span></span>
+<span><span class="co">#&gt; V11        0        0        0        0     0.00     0.00        0        0.0</span></span>
+<span><span class="co">#&gt; V12  8358832 12224955 13576169 13126524 17718.79 18276.18 16723916   904568.5</span></span>
+<span><span class="co">#&gt;          M3         Y1       Y2       Y3</span></span>
+<span><span class="co">#&gt; V1  2876921   697401.2  3718507  3636137</span></span>
+<span><span class="co">#&gt; V2        0        0.0        0        0</span></span>
+<span><span class="co">#&gt; V3        0        0.0        0        0</span></span>
+<span><span class="co">#&gt; V4  2876921   697401.2  3718507  3636137</span></span>
+<span><span class="co">#&gt; V5        0        0.0        0        0</span></span>
+<span><span class="co">#&gt; V6  8630764  2092203.5 11155520 10908410</span></span>
+<span><span class="co">#&gt; V7  3096274 10234681.7  9805953 12449337</span></span>
+<span><span class="co">#&gt; V8  3096274 10234681.7  9805953 12449337</span></span>
+<span><span class="co">#&gt; V9        0        0.0        0        0</span></span>
+<span><span class="co">#&gt; V10       0        0.0        0        0</span></span>
+<span><span class="co">#&gt; V11       0        0.0        0        0</span></span>
+<span><span class="co">#&gt; V12 3096274 10234681.7  9805953 12449337</span></span></code></pre></div>
 <p>Pretty familiar, right? 😊 It’s just like the experiment you know and
 love, except now we’re quantifying motifs rather than glycans.</p>
 <p>Here’s the best part: this means <em>all</em> your favorite functions

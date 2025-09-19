@@ -239,6 +239,50 @@ context, chemical modifications, and biological relevance to make
 intelligent matching decisions.</p>
 </div>
 <div class="section level2">
+<h2 id="handling-structural-ambiguity">Handling Structural Ambiguity 🤔<a class="anchor" aria-label="anchor" href="#handling-structural-ambiguity"></a>
+</h2>
+<p>Real-world glycan data often comes with structural ambiguity. Mass
+spectrometry might only tell us “HexNAc” instead of “GlcNAc”, or linkage
+analysis might yield “a1-?” instead of “a1-6”. These uncertainties are
+common in experimental glycomics and glycoproteomics.</p>
+<p><code>glymotif</code> handles these ambiguities with a fundamental
+principle: <strong>A glycan cannot be more ambiguous than the motif it’s
+being matched against.</strong></p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Ambiguous linkages won't match specific ones</span></span>
+<span><span class="fu"><a href="../reference/have_motif.html">have_motif</a></span><span class="op">(</span><span class="st">"Gal(??-?)GalNAc(??-"</span>, <span class="st">"Gal(a1-6)GalNAc(a1-"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] FALSE</span></span>
+<span></span>
+<span><span class="co"># Generic monosaccharides won't match specific ones</span></span>
+<span><span class="fu"><a href="../reference/have_motif.html">have_motif</a></span><span class="op">(</span><span class="st">"Hex(a1-6)HexNAc(a1-"</span>, <span class="st">"Gal(a1-6)GalNAc(a1-"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] FALSE</span></span></code></pre></div>
+<p>This behavior is <strong>intentional</strong>, not a bug. ✨ True
+motif identification requires confidence: structural possibilities alone
+aren’t sufficient evidence.</p>
+<div class="section level3">
+<h3 id="working-around-ambiguity">Working Around Ambiguity<a class="anchor" aria-label="anchor" href="#working-around-ambiguity"></a>
+</h3>
+<p>If you’re getting unexpected <code>FALSE</code> results with
+<code><a href="../reference/have_motif.html">have_motif()</a></code> (especially when using built-in motifs with
+ambiguous glycans), here are two strategies:</p>
+<p><strong>1. Ignore linkage information</strong> when linkages are
+unreliable:</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/have_motif.html">have_motif</a></span><span class="op">(</span><span class="st">"Gal(??-?)GalNAc(??-"</span>, <span class="st">"Gal(a1-6)GalNAc(a1-"</span>, ignore_linkages <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] TRUE</span></span></code></pre></div>
+<p><strong>2. Convert motifs to generic forms</strong> to match the
+generic monosaccharides of your data:</p>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">motif</span> <span class="op">&lt;-</span> <span class="fu">glyparse</span><span class="fu">::</span><span class="fu"><a href="https://glycoverse.github.io/glyparse/reference/auto_parse.html" class="external-link">auto_parse</a></span><span class="op">(</span><span class="st">"Gal(a1-6)GalNAc(a1-"</span><span class="op">)</span>  <span class="co"># First, create a `glycan_structure()`</span></span>
+<span><span class="va">motif</span> <span class="op">&lt;-</span> <span class="fu">glyrepr</span><span class="fu">::</span><span class="fu"><a href="https://glycoverse.github.io/glyrepr/reference/convert_to_generic.html" class="external-link">convert_to_generic</a></span><span class="op">(</span><span class="va">motif</span><span class="op">)</span>  <span class="co"># Then, convert to generic</span></span>
+<span><span class="fu"><a href="../reference/have_motif.html">have_motif</a></span><span class="op">(</span><span class="st">"Hex(a1-6)HexNAc(a1-"</span>, <span class="va">motif</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] TRUE</span></span></code></pre></div>
+<p>⚠️ <strong>Important:</strong> When using these workarounds,
+interpret your results with appropriate caution. You’re trading
+specificity for coverage.</p>
+</div>
+</div>
+<div class="section level2">
 <h2 id="whats-next">What’s next?<a class="anchor" aria-label="anchor" href="#whats-next"></a>
 </h2>
 <ul>
