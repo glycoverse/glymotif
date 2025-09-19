@@ -20,7 +20,7 @@
 #' the returned motif experiment can be passed to downstream `glycoverse`
 #' functions like `glystats::gly_ttest()` for further statistical analysis.
 #' Also, you can use `as_tibble()` to convert it to a "tidy" tibble for custom analysis.
-#' 
+#'
 #' @details
 #' Here is a comprehensive comparison of the input experiment and the returned experiment:
 #'
@@ -40,7 +40,7 @@
 #' instead of quantifications of glycoforms or glycopeptides.
 #' Or just motif quantification in each sample, for glycomics data.
 #'
-#' @param exp A `glyexp::experiment()` object containing glycoproteomics data.
+#' @param exp A `glyexp::experiment()` object.
 #' @inheritParams have_motif
 #'
 #' @returns A `glyexp::experiment()` object containing motif quantifications.

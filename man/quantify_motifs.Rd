@@ -7,7 +7,7 @@
 quantify_motifs(exp, motifs, alignments = NULL, ignore_linkages = FALSE)
 }
 \arguments{
-\item{exp}{A \code{glyexp::experiment()} object containing glycoproteomics data.}
+\item{exp}{A \code{glyexp::experiment()} object.}
 
 \item{motifs}{A character vector of motif names, glycan structure strings,
 or a 'glyrepr_structure' object.
