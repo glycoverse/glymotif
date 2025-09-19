@@ -186,6 +186,52 @@ The algorithm considers structural context,
 chemical modifications, 
 and biological relevance to make intelligent matching decisions.
 
+## Handling Structural Ambiguity 🤔
+
+Real-world glycan data often comes with structural ambiguity.
+Mass spectrometry might only tell us "HexNAc" instead of "GlcNAc",
+or linkage analysis might yield "a1-?" instead of "a1-6".
+These uncertainties are common in experimental glycomics and glycoproteomics.
+
+`glymotif` handles these ambiguities with a fundamental principle:
+**A glycan cannot be more ambiguous than the motif it's being matched against.**
+
+```{r}
+# Ambiguous linkages won't match specific ones
+have_motif("Gal(??-?)GalNAc(??-", "Gal(a1-6)GalNAc(a1-")
+
+# Generic monosaccharides won't match specific ones
+have_motif("Hex(a1-6)HexNAc(a1-", "Gal(a1-6)GalNAc(a1-")
+```
+
+This behavior is **intentional**, not a bug. ✨
+True motif identification requires confidence:
+structural possibilities alone aren't sufficient evidence.
+
+### Working Around Ambiguity
+
+If you're getting unexpected `FALSE` results with `have_motif()`
+(especially when using built-in motifs with ambiguous glycans),
+here are two strategies:
+
+**1. Ignore linkage information** when linkages are unreliable:
+
+```{r}
+have_motif("Gal(??-?)GalNAc(??-", "Gal(a1-6)GalNAc(a1-", ignore_linkages = TRUE)
+```
+
+**2. Convert motifs to generic forms** to match the generic monosaccharides of your data:
+
+```{r}
+motif <- glyparse::auto_parse("Gal(a1-6)GalNAc(a1-")  # First, create a `glycan_structure()`
+motif <- glyrepr::convert_to_generic(motif)  # Then, convert to generic
+have_motif("Hex(a1-6)HexNAc(a1-", motif)
+```
+
+⚠️ **Important:** When using these workarounds,
+interpret your results with appropriate caution.
+You're trading specificity for coverage.
+
 ## What's next?
 
 - Want to known all the details about motif matching rules? [Here](https://glycoverse.github.io/glymotif/articles/motif-matching.html)
