@@ -7,9 +7,21 @@
 quantify_motifs(exp, motifs, alignments = NULL, ignore_linkages = FALSE)
 }
 \arguments{
-\item{exp}{A \code{glyexp::experiment()} object with a "glycan_structure" column in \code{var_info}.
+\item{exp}{A \code{\link[glyexp:experiment]{glyexp::experiment()}} object. Before using this function,
+you should preprocess the data using the \code{glyclean} package.
+For glycoproteomics data, the data should be aggregated to the
+"gfs" (glycoforms with structures) level using \code{glyclean::aggregate()}.
+Also, please make sure that the \code{glycan_structure} column is present in the \code{var_info} table,
+as not all glycoproteomics identification softwares provide this information.
 The column can be a \code{\link[glyrepr:glycan_structure]{glyrepr::glycan_structure()}} vector,
-or a character vector of glycan structure strings supported by \code{\link[glyparse:auto_parse]{glyparse::auto_parse()}}.}
+or a character vector of glycan structure strings supported by \code{\link[glyparse:auto_parse]{glyparse::auto_parse()}}.
+
+For glycoproteomics data, the \code{var_info} table must contain:
+\itemize{
+\item \code{protein}: protein ID
+\item \code{protein_site}: the glycosite position on the protein
+The unique combination of \code{protein} and \code{protein_site} determines a glycosite.
+}}
 
 \item{motifs}{A character vector of motif names, glycan structure strings,
 or a 'glyrepr_structure' object.
@@ -22,49 +34,48 @@ Can be a single value (applied to all motifs) or a vector of the same length as 
 \item{ignore_linkages}{A logical value. If \code{TRUE}, linkages will be ignored in the comparison.}
 }
 \value{
-A \code{glyexp::experiment()} object containing motif quantifications.
+A new \code{\link[glyexp:experiment]{glyexp::experiment()}} object for motif quantifications with "traitomics" type.
+The new experiment contains the following columns in the \code{var_info} table:
+\itemize{
+\item \code{variable}: variable ID
+\item \code{motif}: motif name
+}
+
+For glycoproteomics data, with additional columns:
+\itemize{
+\item \code{protein}: protein ID
+\item \code{protein_site}: the glycosite position on the protein
+}
+
+Other columns in the \code{var_info} table (e.g. \code{gene}) are retained if they have "many-to-one"
+relationship with glycosites (unique combinations of \code{protein}, \code{protein_site}).
+That is, each glycosite cannot have multiple values for these columns.
+\code{gene} is a common example, as a glycosite can only be associate with one gene.
+Descriptions about glycans are not such a column, as a glycosite can have multiple glycans,
+thus having multiple descriptions.
+Columns not having this relationship with glycosites will be dropped.
+Don't worry if you cannot understand this logic,
+as long as you know that this function will try its best to preserve useful information.
+
+\code{sample_info} and \code{meta_data} are not modified,
+except that the \code{exp_type} field of \code{meta_data} is set to "traitomics".
 }
 \description{
-This function takes a \code{glyexp::experiment()},
-and returns a new \code{glyexp::experiment()} with motif quantifications.
+This function quantifies motifs from glycomic or glycoproteomic profiles.
+For glycomics data, it calculates the motif quantifications directly.
+For glycoproteomics data, each glycosite is treated as a separate glycome,
+and motif quantifications are calculated in a site-specific manner.
 
-The new experiment is different from a normal \code{glyexp::experiment()} in three ways:
-\enumerate{
-\item It doesn't have a "glycan_structure" or "glycan_composition" column,
-but a "motif" column instead.
-\item The metadata field "exp_type" is "traitomics", not "glycoproteomics" or glycomics.
-}
-
-You can understand a "motif experiment" in this way:
-For glycoproteomics data,
-instead of containing the quantification of each glycan on each glycosite,
-it now contains the quantification of each motif on each glycosite in each sample.
-For glycomics data,
-it contains the motif quantification in each sample.
+The function takes a \code{glyexp::experiment()} and returns a new \code{glyexp::experiment()}
+with motif quantifications. Instead of containing the quantification of each glycan
+on each glycosite in each sample, the new experiment contains the quantification
+of each motif on each glycosite in each sample (for glycoproteomics data) or
+the motif quantification in each sample (for glycomics data).
 
 Due to the unified data structure of \code{glyexp::experiment()},
 the returned motif experiment can be passed to downstream \code{glycoverse}
 functions like \code{glystats::gly_ttest()} for further statistical analysis.
 Also, you can use \code{as_tibble()} to convert it to a "tidy" tibble for custom analysis.
-}
-\details{
-Here is a comprehensive comparison of the input experiment and the returned experiment:
-
-\strong{Sample information:}
-Sample information doesn't change.
-
-\strong{Variable information:}
-Firstly, we define the "base variables" as the unique combination of all columns
-in the variable information tibble except for "variable", "glycan_composition", and "glycan_structure".
-The new var_info would be a Cartesian product of all "base variables" and all motifs.
-For glycomics data, no "base variable" is defined,
-so the resulted var_info only contains the "motif" column.
-
-\strong{Expression matrix:}
-Rows are variables, columns are samples, same as before.
-Filling the cells are the quantifications for motifs on different glycosites in each sample,
-instead of quantifications of glycoforms or glycopeptides.
-Or just motif quantification in each sample, for glycomics data.
 }
 \seealso{
 \code{\link[=count_motifs]{count_motifs()}}
