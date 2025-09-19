@@ -43,8 +43,6 @@ remotes::install_github("glycoverse/glymotif")
     [Here](https://glycoverse.github.io/glymotif/articles/motif-matching.html)
 -   🔬 Working with `glyexp::experiment()`:
     [Here](https://glycoverse.github.io/glymotif/articles/with-exp.html)
--   🧬 Dealing with N-glycans:
-    [Here](https://glycoverse.github.io/glymotif/articles/n-glycans.html)
 -   📚 Reference:
     [Here](https://glycoverse.github.io/glymotif/reference/index.html)
 
