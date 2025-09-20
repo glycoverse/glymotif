@@ -1,3 +1,18 @@
+# glymotif 0.8.0
+
+## New features
+
+* `quantify_motifs()` has been totally rewritten. Serious bug about column aggregation with descriptional columns about glycan structures are fixed. The function now behaves like `glydet::derive_traits()`, adding back columns in `var_info` only when they have "many-to-one" relationship with glycosites (unique combinations of `protein` and `protein_site`).
+* `quantify_motifs()`, `add_motifs_int()`, and `add_motifs_lgl()` now support a character vector ofglycan structure strings as the "glycan_structure" column in `var_info`.
+
+## Minor improvements and bug fixes
+
+* Add a section in the Get Started vignette about ambiguity handling.
+* Update the "Working with glyexp" vignette to use `glyexp::real_experiment`.
+* Update the URL of GlycoMotif in the documentation of `all_motifs()`.
+* Remove old "N-glycans" vignette from README.
+
+
 # glymotif 0.7.0
 
 ## Breaking changes
