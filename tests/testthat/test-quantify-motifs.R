@@ -70,7 +70,7 @@ test_that("quantify_motifs works in a most common glycoproteomics situation", {
   expect_equal(result$expr_mat, expected_expr_mat)
 
   # Check experiment type
-  expect_equal(result$meta_data$exp_type, "traitomics")
+  expect_equal(result$meta_data$exp_type, "traitproteomics")
 })
 
 test_that("quantify_motifs works in a common glycomics situation", {
@@ -452,7 +452,7 @@ test_that("quantify_motifs works for glycoproteomics data with glycan annotation
   expect_equal(result$expr_mat, expected_expr_mat)
 
   # Check experiment type
-  expect_equal(result$meta_data$exp_type, "traitomics")
+  expect_equal(result$meta_data$exp_type, "traitproteomics")
 })
 
 

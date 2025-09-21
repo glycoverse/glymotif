@@ -34,7 +34,7 @@ Can be a single value (applied to all motifs) or a vector of the same length as 
 \item{ignore_linkages}{A logical value. If \code{TRUE}, linkages will be ignored in the comparison.}
 }
 \value{
-A new \code{\link[glyexp:experiment]{glyexp::experiment()}} object for motif quantifications with "traitomics" type.
+A new \code{\link[glyexp:experiment]{glyexp::experiment()}} object for motif quantifications.
 The new experiment contains the following columns in the \code{var_info} table:
 \itemize{
 \item \code{variable}: variable ID
@@ -58,7 +58,8 @@ Don't worry if you cannot understand this logic,
 as long as you know that this function will try its best to preserve useful information.
 
 \code{sample_info} and \code{meta_data} are not modified,
-except that the \code{exp_type} field of \code{meta_data} is set to "traitomics".
+except that the \code{exp_type} field of \code{meta_data} is set to "traitomics" for glycomics data,
+and "traitproteomics" for glycoproteomics data.
 }
 \description{
 This function quantifies motifs from glycomic or glycoproteomic profiles.

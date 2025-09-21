@@ -32,7 +32,7 @@
 #'   The unique combination of `protein` and `protein_site` determines a glycosite.
 #' @inheritParams have_motif
 #'
-#' @returns A new [glyexp::experiment()] object for motif quantifications with "traitomics" type.
+#' @returns A new [glyexp::experiment()] object for motif quantifications.
 #'   The new experiment contains the following columns in the `var_info` table:
 #'   - `variable`: variable ID
 #'   - `motif`: motif name
@@ -52,7 +52,8 @@
 #'   as long as you know that this function will try its best to preserve useful information.
 #'
 #'   `sample_info` and `meta_data` are not modified,
-#'   except that the `exp_type` field of `meta_data` is set to "traitomics".
+#'   except that the `exp_type` field of `meta_data` is set to "traitomics" for glycomics data,
+#'   and "traitproteomics" for glycoproteomics data.
 #'
 #' @seealso [count_motifs()]
 #' @export
@@ -90,7 +91,7 @@ quantify_motifs <- function(exp, motifs, alignments = NULL, ignore_linkages = FA
 
   # Create new experiment with updated meta_data
   new_meta_data <- exp$meta_data
-  new_meta_data$exp_type <- "traitomics"
+  new_meta_data$exp_type <- if (exp$meta_data$exp_type == "glycomics") "traitomics" else "traitproteomics"
 
   # Use new_experiment to bypass validation since "traitomics" is not a standard exp_type
   result <- glyexp:::new_experiment(
