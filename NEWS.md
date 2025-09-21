@@ -1,3 +1,9 @@
+# glymotif 0.8.1
+
+## Minor improvements and bug fixes
+
+* `quantify_motifs()` now returns a `glyexp::experiment()` object with "traitomics" type for glycomics data, and "traitproteomics" type for glycoproteomics data, instead of "traitomics" for all input.
+
 # glymotif 0.8.0
 
 ## New features
