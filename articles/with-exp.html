@@ -116,20 +116,20 @@ preprocess the data.</p>
 <span></span>
 <span><span class="va">exp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://glycoverse.github.io/glyclean/reference/auto_clean.html" class="external-link">auto_clean</a></span><span class="op">(</span><span class="va">real_experiment</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Normalizing data (Median)</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Normalizing data (Median) <span style="color: #B2B2B2;">[230ms]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Normalizing data (Median) <span style="color: #B2B2B2;">[161ms]</span></span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Removing variables with &gt;50% missing values</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Removing variables with &gt;50% missing values <span style="color: #B2B2B2;">[27ms]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Removing variables with &gt;50% missing values <span style="color: #B2B2B2;">[45ms]</span></span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Imputing missing values</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Sample size &lt;= 30, using sample minimum imputation</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Imputing missing values<span style="color: #00BB00;">✔</span> Imputing missing values <span style="color: #B2B2B2;">[31ms]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Imputing missing values<span style="color: #00BB00;">✔</span> Imputing missing values <span style="color: #B2B2B2;">[25ms]</span></span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Aggregating data</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Aggregating data <span style="color: #B2B2B2;">[764ms]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Aggregating data <span style="color: #B2B2B2;">[904ms]</span></span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Normalizing data again</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Normalizing data again <span style="color: #B2B2B2;">[20ms]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Normalizing data again <span style="color: #B2B2B2;">[16ms]</span></span></span>
 <span><span class="va">exp</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">──</span> <span style="font-weight: bold;">Glycoproteomics Experiment</span> <span style="color: #00BBBB;">──────────────────────────────────────────────────</span></span></span>
@@ -268,98 +268,10 @@ example to get your creative juices flowing:</p>
 <div class="section level2">
 <h2 id="the-art-of-motif-quantification-in-experiments">The Art of Motif Quantification in Experiments 📊<a class="anchor" aria-label="anchor" href="#the-art-of-motif-quantification-in-experiments"></a>
 </h2>
-<p>Now we’re entering truly exciting territory! 🚀 Meet
-<code><a href="../reference/quantify_motifs.html">quantify_motifs()</a></code> — another incredibly useful tool in our
-arsenal. This function takes a <code><a href="https://glycoverse.github.io/glyexp/reference/experiment.html" class="external-link">glyexp::experiment()</a></code> object
-and returns a brand new one with motif quantifications. But what does
-that actually <em>mean</em>? 🤷‍♂️</p>
-<p>Here’s the beautiful concept: when we quantify a motif in a
-glycoproteomic context, we’re measuring the abundance of motifs on each
-glycosite in each sample. This information elegantly combines two key
-pieces: the motif count on each site <em>and</em> the abundance of that
-site. It’s like knowing not just how many sports cars are in a parking
-lot, but also how often each parking spot is used! 🚗</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">motifs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
-<span>  <span class="st">"NeuAc(??-?)Hex(??-?)HexNAc(??-"</span>,</span>
-<span>  <span class="st">"Hex(??-?)HexNAc(??-"</span>,</span>
-<span>  <span class="st">"HexNAc(??-"</span>,</span>
-<span>  <span class="st">"NeuAc(??-?)Hex(??-?)[dHex(??-?)]HexNAc(??-"</span>,</span>
-<span>  <span class="st">"Hex(??-?)[dHex(??-?)]HexNAc(??-"</span>,</span>
-<span>  <span class="st">"dHex(??-?)HexNAc(??-"</span></span>
-<span><span class="op">)</span></span>
-<span><span class="va">motif_exp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/quantify_motifs.html">quantify_motifs</a></span><span class="op">(</span><span class="va">exp</span>, <span class="va">motifs</span>, alignments <span class="op">=</span> <span class="st">"terminal"</span>, ignore_linkages <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="co"># Pro tip: Our motifs don't have linkage information,</span></span>
-<span><span class="co"># but we can still set `ignore_linkages` to TRUE manually to turbocharge the calculation! ⚡</span></span></code></pre></div>
-<p>Here’s the beautiful part: <code>motif_exp</code> is also a
-<code><a href="https://glycoverse.github.io/glyexp/reference/experiment.html" class="external-link">glyexp::experiment()</a></code>! 🎭 Think of it this way： if we
-describe a typical glycoproteomics <code><a href="https://glycoverse.github.io/glyexp/reference/experiment.html" class="external-link">experiment()</a></code> as “the
-quantities of glycans on different glycosites in different samples”,
-then <code>motif_exp</code> is “the quantities of motifs on different
-glycosites in different samples”. It’s the same elegant structure, just
-viewed through a different analytical lens! 🔍</p>
-<p>Let’s explore our newly minted experiment and see what treasures it
-holds:</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># First, let's peek at the variable information</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="https://glycoverse.github.io/glyexp/reference/get_var_info.html" class="external-link">get_var_info</a></span><span class="op">(</span><span class="va">motif_exp</span><span class="op">)</span>, n <span class="op">=</span> <span class="fl">12</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1,644 × 5</span></span></span>
-<span><span class="co">#&gt;    variable protein protein_site motif                                     gene </span></span>
-<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                                     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> V1       A6NJW9            49 NeuAc(??-?)Hex(??-?)HexNAc(??-            CD8B2</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> V2       A6NJW9            49 Hex(??-?)HexNAc(??-                       CD8B2</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> V3       A6NJW9            49 HexNAc(??-                                CD8B2</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> V4       A6NJW9            49 NeuAc(??-?)Hex(??-?)[dHex(??-?)]HexNAc(?… CD8B2</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> V5       A6NJW9            49 Hex(??-?)[dHex(??-?)]HexNAc(??-           CD8B2</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> V6       A6NJW9            49 dHex(??-?)HexNAc(??-                      CD8B2</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> V7       O14786           150 NeuAc(??-?)Hex(??-?)HexNAc(??-            NRP1 </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> V8       O14786           150 Hex(??-?)HexNAc(??-                       NRP1 </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> V9       O14786           150 HexNAc(??-                                NRP1 </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> V10      O14786           150 NeuAc(??-?)Hex(??-?)[dHex(??-?)]HexNAc(?… NRP1 </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">11</span> V11      O14786           150 Hex(??-?)[dHex(??-?)]HexNAc(??-           NRP1 </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">12</span> V12      O14786           150 dHex(??-?)HexNAc(??-                      NRP1 </span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 1,632 more rows</span></span></span></code></pre></div>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># And now, the expression matrix (where the magic numbers live!)</span></span>
-<span><span class="fu"><a href="https://glycoverse.github.io/glyexp/reference/get_expr_mat.html" class="external-link">get_expr_mat</a></span><span class="op">(</span><span class="va">motif_exp</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">12</span>, <span class="op">]</span></span>
-<span><span class="co">#&gt;           C1       C2       C3       H1       H2       H3       M1         M2</span></span>
-<span><span class="co">#&gt; V1   4518941  3597488  9291116  1652455 17718.79 18276.18 10131349  4903136.0</span></span>
-<span><span class="co">#&gt; V2         0        0        0        0     0.00     0.00        0        0.0</span></span>
-<span><span class="co">#&gt; V3         0        0        0        0     0.00     0.00        0        0.0</span></span>
-<span><span class="co">#&gt; V4   4518941  3597488  9291116  1652455 17718.79 18276.18 10131349  4903136.0</span></span>
-<span><span class="co">#&gt; V5         0        0        0        0     0.00     0.00        0        0.0</span></span>
-<span><span class="co">#&gt; V6  13556823 10792465 27873349  4957366 53156.37 54828.54 30394046 14709407.9</span></span>
-<span><span class="co">#&gt; V7   8358832 12224955 13576169 13126524 17718.79 18276.18 16723916   904568.5</span></span>
-<span><span class="co">#&gt; V8   8358832 12224955 13576169 13126524 17718.79 18276.18 16723916   904568.5</span></span>
-<span><span class="co">#&gt; V9         0        0        0        0     0.00     0.00        0        0.0</span></span>
-<span><span class="co">#&gt; V10        0        0        0        0     0.00     0.00        0        0.0</span></span>
-<span><span class="co">#&gt; V11        0        0        0        0     0.00     0.00        0        0.0</span></span>
-<span><span class="co">#&gt; V12  8358832 12224955 13576169 13126524 17718.79 18276.18 16723916   904568.5</span></span>
-<span><span class="co">#&gt;          M3         Y1       Y2       Y3</span></span>
-<span><span class="co">#&gt; V1  2876921   697401.2  3718507  3636137</span></span>
-<span><span class="co">#&gt; V2        0        0.0        0        0</span></span>
-<span><span class="co">#&gt; V3        0        0.0        0        0</span></span>
-<span><span class="co">#&gt; V4  2876921   697401.2  3718507  3636137</span></span>
-<span><span class="co">#&gt; V5        0        0.0        0        0</span></span>
-<span><span class="co">#&gt; V6  8630764  2092203.5 11155520 10908410</span></span>
-<span><span class="co">#&gt; V7  3096274 10234681.7  9805953 12449337</span></span>
-<span><span class="co">#&gt; V8  3096274 10234681.7  9805953 12449337</span></span>
-<span><span class="co">#&gt; V9        0        0.0        0        0</span></span>
-<span><span class="co">#&gt; V10       0        0.0        0        0</span></span>
-<span><span class="co">#&gt; V11       0        0.0        0        0</span></span>
-<span><span class="co">#&gt; V12 3096274 10234681.7  9805953 12449337</span></span></code></pre></div>
-<p>Pretty familiar, right? 😊 It’s just like the experiment you know and
-love, except now we’re quantifying motifs rather than glycans.</p>
-<p>Here’s the best part: this means <em>all</em> your favorite functions
-in <code>glystats</code> can be used on this experiment! 🎉 It’s like
-having a universal remote that works with your new TV： everything just
-clicks! 📺</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">glystats</span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu">gly_anova</span><span class="op">(</span><span class="va">motif_exp</span><span class="op">)</span></span>
-<span><span class="fu">gly_pca</span><span class="op">(</span><span class="va">motif_exp</span><span class="op">)</span></span>
-<span><span class="co"># And others...</span></span></code></pre></div>
+<p>Want to quantify the motifs in your experiment? Try the
+<code>glydet</code> package! It provides the
+<code>quantify_motifs()</code> function to perform relative and absolute
+motif quantification.</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
