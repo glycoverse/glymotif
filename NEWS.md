@@ -1,5 +1,9 @@
 # glymotif (development version)
 
+## Breaking changes
+
+* Remove `quantify_motifs()`. This function is reimplemented in the `glydet` package, with more features and better performance.
+
 # glymotif 0.8.1
 
 ## Minor improvements and bug fixes
