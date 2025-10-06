@@ -130,59 +130,6 @@ exp2 |>
 
 ## The Art of Motif Quantification in Experiments 📊
 
-Now we're entering truly exciting territory! 🚀
-Meet `quantify_motifs()` — another incredibly useful tool in our arsenal.
-This function takes a `glyexp::experiment()` object and returns a brand new one with motif quantifications.
-But what does that actually *mean*? 🤷‍♂️
-
-Here's the beautiful concept: when we quantify a motif in a glycoproteomic context,
-we're measuring the abundance of motifs on each glycosite in each sample.
-This information elegantly combines two key pieces: the motif count on each site *and* the abundance of that site.
-It's like knowing not just how many sports cars are in a parking lot, but also how often each parking spot is used! 🚗
-
-```{r}
-motifs <- c(
-  "NeuAc(??-?)Hex(??-?)HexNAc(??-",
-  "Hex(??-?)HexNAc(??-",
-  "HexNAc(??-",
-  "NeuAc(??-?)Hex(??-?)[dHex(??-?)]HexNAc(??-",
-  "Hex(??-?)[dHex(??-?)]HexNAc(??-",
-  "dHex(??-?)HexNAc(??-"
-)
-motif_exp <- quantify_motifs(exp, motifs, alignments = "terminal", ignore_linkages = TRUE)
-# Pro tip: Our motifs don't have linkage information,
-# but we can still set `ignore_linkages` to TRUE manually to turbocharge the calculation! ⚡
-```
-
-Here's the beautiful part: `motif_exp` is also a `glyexp::experiment()`! 🎭
-Think of it this way： if we describe a typical glycoproteomics `experiment()` as
-"the quantities of glycans on different glycosites in different samples",
-then `motif_exp` is "the quantities of motifs on different glycosites in different samples".
-It's the same elegant structure, just viewed through a different analytical lens! 🔍
-
-Let's explore our newly minted experiment and see what treasures it holds:
-
-```{r}
-# First, let's peek at the variable information
-print(get_var_info(motif_exp), n = 12)
-```
-
-```{r}
-# And now, the expression matrix (where the magic numbers live!)
-get_expr_mat(motif_exp)[1:12, ]
-```
-
-Pretty familiar, right? 😊
-It's just like the experiment you know and love,
-except now we're quantifying motifs rather than glycans.
-
-Here's the best part: this means *all* your favorite functions in `glystats` can be used on this experiment! 🎉
-It's like having a universal remote that works with your new TV： everything just clicks! 📺
-
-```R
-library(glystats)
-
-gly_anova(motif_exp)
-gly_pca(motif_exp)
-# And others...
-```
+Want to quantify the motifs in your experiment?
+Try the `glydet` package!
+It provides the `quantify_motifs()` function to perform relative and absolute motif quantification.

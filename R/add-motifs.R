@@ -71,7 +71,7 @@
 #' @param exp A [glyexp::experiment()] object with a "glycan_structure" column in `var_info`.
 #'   The column can be a [glyrepr::glycan_structure()] vector,
 #'   or a character vector of glycan structure strings supported by [glyparse::auto_parse()].
-#' @inheritParams quantify_motifs
+#' @inheritParams have_motifs
 #'
 #' @return An [glyexp::experiment()] object with motif annotations added to the variable information.
 #' @seealso [glymotif::have_motifs()], [glymotif::count_motifs()], [glyexp::experiment()]
