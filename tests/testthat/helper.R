@@ -21,14 +21,14 @@ create_expr_mat <- function(samples, variables) {
 create_sample_info <- function(samples) {
   tibble::tibble(
     sample = samples,
-    group = rep("A", length(samples))
+    group = factor(rep("A", length(samples)))
   )
 }
 
 create_var_info <- function(variables) {
   tibble::tibble(
     variable = variables,
-    type = rep("B", length(variables))
+    glycan_composition = rep(glyrepr::glycan_composition(c(Hex = 1)), length(variables))
   )
 }
 
