@@ -83,7 +83,6 @@ add_motifs_lgl.glyexp_experiment <- function(x, motifs, alignments = NULL, ignor
 }
 
 .add_motifs_anno_exp <- function(exp, motif_anno_fn, motifs, alignments = NULL, ignore_linkages = FALSE) {
-  checkmate::assert_class(exp, "glyexp_experiment")
   if (!"glycan_structure" %in% colnames(exp$var_info)) {
     cli::cli_abort("The experiment must have a {.field glycan_structure} column.")
   }
@@ -93,4 +92,25 @@ add_motifs_lgl.glyexp_experiment <- function(x, motifs, alignments = NULL, ignor
   motif_anno <- tibble::as_tibble(motif_anno)
   exp$var_info <- dplyr::bind_cols(exp$var_info, motif_anno)
   exp
+}
+
+#' @rdname add_motifs_int
+#' @export
+add_motifs_int.data.frame <- function(x, motifs, alignments = NULL, ignore_linkages = FALSE, ...) {
+  .add_motifs_anno_df(x, count_motifs, motifs, alignments, ignore_linkages)
+}
+
+#' @rdname add_motifs_int
+#' @export
+add_motifs_lgl.data.frame <- function(x, motifs, alignments = NULL, ignore_linkages = FALSE, ...) {
+  .add_motifs_anno_df(x, have_motifs, motifs, alignments, ignore_linkages)
+}
+
+.add_motifs_anno_df <- function(df, motif_anno_fn, motifs, alignments = NULL, ignore_linkages = FALSE) {
+  if (!"glycan_structure" %in% colnames(df)) {
+    cli::cli_abort("A {.field glycan_structure} column is required.")
+  }
+  motif_anno <- motif_anno_fn(df$glycan_structure, motifs, alignments, ignore_linkages)
+  motif_anno <- tibble::as_tibble(motif_anno)
+  dplyr::bind_cols(df, motif_anno)
 }

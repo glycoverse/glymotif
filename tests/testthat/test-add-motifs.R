@@ -57,3 +57,23 @@ test_that("add_motifs_int works with named IUPAC strings", {
   expected <- tibble::tibble(motif1 = c(1L, 0L), motif2 = c(0L, 1L))
   expect_identical(exp$var_info[, c("motif1", "motif2")], expected)
 })
+
+test_that("add_motifs_lgl works for data frames", {
+  df <- tibble::tibble(glycan_structure = c(glyrepr::o_glycan_core_1(), glyrepr::o_glycan_core_2()))
+  motifs <- c("O-Glycan core 1", "O-Glycan core 2")
+  suppressWarnings(df <- add_motifs_lgl(df, motifs, alignments = c("whole", "whole")))
+
+  # Check the results
+  expected <- tibble::tibble(`O-Glycan core 1` = c(TRUE, FALSE), `O-Glycan core 2` = c(FALSE, TRUE))
+  expect_identical(df[, c("O-Glycan core 1", "O-Glycan core 2")], expected)
+})
+
+test_that("add_motifs_int works for data frames", {
+  df <- tibble::tibble(glycan_structure = c(glyrepr::o_glycan_core_1(), glyrepr::o_glycan_core_2()))
+  motifs <- c("O-Glycan core 1", "O-Glycan core 2")
+  suppressWarnings(df <- add_motifs_int(df, motifs, alignments = c("whole", "whole")))
+
+  # Check the results
+  expected <- tibble::tibble(`O-Glycan core 1` = c(1L, 0L), `O-Glycan core 2` = c(0L, 1L))
+  expect_identical(df[, c("O-Glycan core 1", "O-Glycan core 2")], expected)
+})
