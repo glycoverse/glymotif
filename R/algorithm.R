@@ -180,7 +180,9 @@ get_corresponding_edges <- function(r, glycan, motif) {
   glycan_edge_ids <- purrr::map_int(seq_len(nrow(motif_edge_list)), function(i) {
     motif_edge <- motif_edge_list[i, ]  # c(node_id_1, node_id_2)
     glycan_edge <- r[motif_edge]
-    igraph::get_edge_ids(glycan, glycan_edge)
+    # Convert igraph.vs to vector as get_edge_ids expects a simple vector
+    # This fix a bug introduced by igraph v2.2.0
+    igraph::get_edge_ids(glycan, as.vector(glycan_edge))
   })
 
   motif_edges <- igraph::E(motif)
