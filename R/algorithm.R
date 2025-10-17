@@ -28,12 +28,14 @@ perform_vf2 <- function(glycan, motif) {
 
 
 unique_vf2_res <- function(res) {
-  if (length(res) == 0) return(res)
-  sorted_lst <- purrr::map(res, sort)
-  str_vectors <- purrr::map_chr(sorted_lst, ~ paste(.x, collapse = ","))
-  df <- tibble::tibble(res = res, id = str_vectors)
-  df <- dplyr::distinct(df, .data$id, .keep_all = TRUE)
-  df$res
+  if (length(res) <= 1) return(res)
+  keys <- vapply(
+    res,
+    function(x) paste(sort(x), collapse = ","),
+    character(1L),
+    USE.NAMES = FALSE
+  )
+  res[!duplicated(keys)]
 }
 
 
