@@ -5,6 +5,8 @@
 \alias{add_motifs_lgl}
 \alias{add_motifs_int.glyexp_experiment}
 \alias{add_motifs_lgl.glyexp_experiment}
+\alias{add_motifs_int.data.frame}
+\alias{add_motifs_lgl.data.frame}
 \title{Add Motif Annotations}
 \usage{
 add_motifs_int(x, motifs, alignments = NULL, ignore_linkages = FALSE, ...)
@@ -14,6 +16,10 @@ add_motifs_lgl(x, motifs, alignments = NULL, ignore_linkages = FALSE, ...)
 \method{add_motifs_int}{glyexp_experiment}(x, motifs, alignments = NULL, ignore_linkages = FALSE, ...)
 
 \method{add_motifs_lgl}{glyexp_experiment}(x, motifs, alignments = NULL, ignore_linkages = FALSE, ...)
+
+\method{add_motifs_int}{data.frame}(x, motifs, alignments = NULL, ignore_linkages = FALSE, ...)
+
+\method{add_motifs_lgl}{data.frame}(x, motifs, alignments = NULL, ignore_linkages = FALSE, ...)
 }
 \arguments{
 \item{x}{A \code{\link[glyexp:experiment]{glyexp::experiment()}} object, or a tibble with a structure column.}
@@ -82,7 +88,7 @@ Therefore, we think it would be better to have a function that
 adds multiple motif annotations in a single call, in a more intuitive way.
 That's why we provide these two functions.
 
-Under the hood, they use a more straightforward approach for \code{\link[=experiment]{experiment()}} objects:
+Under the hood, they use a more straightforward approach for \code{\link[glyexp:experiment]{glyexp::experiment()}} objects:
 \enumerate{
 \item get the motif annotation matrix using \code{count_motifs()} or \code{have_motifs()}
 \item convert the matrix to a tibble

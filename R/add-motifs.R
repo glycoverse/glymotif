@@ -46,7 +46,7 @@
 #' adds multiple motif annotations in a single call, in a more intuitive way.
 #' That's why we provide these two functions.
 #'
-#' Under the hood, they use a more straightforward approach for [experiment()] objects:
+#' Under the hood, they use a more straightforward approach for [glyexp::experiment()] objects:
 #'
 #' 1. get the motif annotation matrix using `count_motifs()` or `have_motifs()`
 #' 2. convert the matrix to a tibble
