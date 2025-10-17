@@ -1,4 +1,13 @@
-# glymotif (development version)
+# glymotif 0.10.0
+
+## New features
+
+* `add_motifs_int()` and `add_motifs_lgl()` now support data frames as input.
+
+## Minor improvements and bug fixes
+
+* Fix a bug introduced by igraph v2.2.0.
+* Performance optimization for the core algorithm.
 
 # glymotif 0.9.1
 
