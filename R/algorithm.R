@@ -86,9 +86,17 @@ alignment_check <- function(r, glycan, motif, alignment) {
 
   # Whole glycan alignment check (most expensive, do last)
   if (alignment == "whole") {
-    return(igraph::isomorphic(glycan, motif, method = "vf2"))
+    glycan_v <- igraph::vcount(glycan)
+    motif_v <- igraph::vcount(motif)
+    glycan_e <- igraph::ecount(glycan)
+    motif_e <- igraph::ecount(motif)
+    return(
+      motif_v == glycan_v &&
+        length(unique(r)) == glycan_v &&
+        motif_e == glycan_e
+    )
   }
-  
+
   # Default return for unknown alignment types
   return(FALSE)
 }
