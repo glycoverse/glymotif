@@ -60,6 +60,12 @@ of a <code><a href="https://glycoverse.github.io/glyexp/reference/experiment.htm
 <span><span class="fu">add_motifs_int</span><span class="op">(</span><span class="va">x</span>, <span class="va">motifs</span>, alignments <span class="op">=</span> <span class="cn">NULL</span>, ignore_linkages <span class="op">=</span> <span class="cn">FALSE</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for class 'glyexp_experiment'</span></span>
+<span><span class="fu">add_motifs_lgl</span><span class="op">(</span><span class="va">x</span>, <span class="va">motifs</span>, alignments <span class="op">=</span> <span class="cn">NULL</span>, ignore_linkages <span class="op">=</span> <span class="cn">FALSE</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for class 'data.frame'</span></span>
+<span><span class="fu">add_motifs_int</span><span class="op">(</span><span class="va">x</span>, <span class="va">motifs</span>, alignments <span class="op">=</span> <span class="cn">NULL</span>, ignore_linkages <span class="op">=</span> <span class="cn">FALSE</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for class 'data.frame'</span></span>
 <span><span class="fu">add_motifs_lgl</span><span class="op">(</span><span class="va">x</span>, <span class="va">motifs</span>, alignments <span class="op">=</span> <span class="cn">NULL</span>, ignore_linkages <span class="op">=</span> <span class="cn">FALSE</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -130,7 +136,7 @@ which is a time-consuming process.</p></li>
 </ol><p>Therefore, we think it would be better to have a function that
 adds multiple motif annotations in a single call, in a more intuitive way.
 That's why we provide these two functions.</p>
-<p>Under the hood, they use a more straightforward approach for <code>experiment()</code> objects:</p><ol><li><p>get the motif annotation matrix using <code><a href="count_motif.html">count_motifs()</a></code> or <code><a href="have_motif.html">have_motifs()</a></code></p></li>
+<p>Under the hood, they use a more straightforward approach for <code><a href="https://glycoverse.github.io/glyexp/reference/experiment.html" class="external-link">glyexp::experiment()</a></code> objects:</p><ol><li><p>get the motif annotation matrix using <code><a href="count_motif.html">count_motifs()</a></code> or <code><a href="have_motif.html">have_motifs()</a></code></p></li>
 <li><p>convert the matrix to a tibble</p></li>
 <li><p>use <code><a href="https://dplyr.tidyverse.org/reference/bind_cols.html" class="external-link">dplyr::bind_cols()</a></code> to add the tibble to the variable information</p></li>
 </ol></div>
