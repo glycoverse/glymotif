@@ -1,10 +1,10 @@
-#' Add Motif Annotations to an Experiment
+#' Add Motif Annotations
 #'
 #' This function adds motif annotations to the variable information
-#' of a [glyexp::experiment()].
+#' of a [glyexp::experiment()] or a tibble with a structure column.
 #' `add_motifs_int()` adds integer annotations (how many motifs are present).
 #' `add_motifs_lgl()` adds boolean annotations (whether the motif is present).
-#' 
+#'
 #' @section About Names:
 #'
 #' The naming rule for the new columns is similar to that of [have_motifs()].
@@ -42,52 +42,47 @@
 #'    performs validation and conversion on `glycan_structure`,
 #'    which is a time-consuming process.
 #'
-#' Advanced R users might want to use `count_motifs()`
-#' (the plural cousin of `count_motif()`) with `!!!`:
-#'
-#' ```r
-#' exp |>
-#'   mutate_var(!!!count_motifs(glycan_structure, c("Hex", "dHex", "HexNAc")))
-#' ```
-#'
-#' Sadly, this doesn't work.
-#' Firstly, `count_motifs` returns a matrix, not a list.
-#' Secondly, even if you use `as.data.frame()` to convert it to a list,
-#' `!!!` triggers early evaluation of `glycan_structure` in the calling environment,
-#' before passing it to `count_motifs()`.
-#' This will raise an "object not found" error,
-#' and there is no easy way to fix this, at least for now.
-#'
 #' Therefore, we think it would be better to have a function that
 #' adds multiple motif annotations in a single call, in a more intuitive way.
 #' That's why we provide these two functions.
 #'
-#' Under the hood, they use a more straightforward approach:
+#' Under the hood, they use a more straightforward approach for [experiment()] objects:
 #'
 #' 1. get the motif annotation matrix using `count_motifs()` or `have_motifs()`
 #' 2. convert the matrix to a tibble
 #' 3. use `dplyr::bind_cols()` to add the tibble to the variable information
 #'
-#' @param exp A [glyexp::experiment()] object with a "glycan_structure" column in `var_info`.
-#'   The column can be a [glyrepr::glycan_structure()] vector,
-#'   or a character vector of glycan structure strings supported by [glyparse::auto_parse()].
+#' @param x A [glyexp::experiment()] object, or a tibble with a structure column.
+#' @param ... Additional arguments passed to the method.
 #' @inheritParams have_motifs
 #'
 #' @return An [glyexp::experiment()] object with motif annotations added to the variable information.
 #' @seealso [glymotif::have_motifs()], [glymotif::count_motifs()], [glyexp::experiment()]
 #'
 #' @export
-add_motifs_int <- function(exp, motifs, alignments = NULL, ignore_linkages = FALSE) {
-  .add_motifs_anno(exp, count_motifs, motifs, alignments, ignore_linkages)
+add_motifs_int <- function(x, motifs, alignments = NULL, ignore_linkages = FALSE, ...) {
+  UseMethod("add_motifs_int")
 }
 
 #' @rdname add_motifs_int
 #' @export
-add_motifs_lgl <- function(exp, motifs, alignments = NULL, ignore_linkages = FALSE) {
-  .add_motifs_anno(exp, have_motifs, motifs, alignments, ignore_linkages)
+add_motifs_lgl <- function(x, motifs, alignments = NULL, ignore_linkages = FALSE, ...) {
+  UseMethod("add_motifs_lgl")
 }
 
-.add_motifs_anno <- function(exp, motif_anno_fn, motifs, alignments = NULL, ignore_linkages = FALSE) {
+#' @rdname add_motifs_int
+#' @export
+add_motifs_int.glyexp_experiment <- function(x, motifs, alignments = NULL, ignore_linkages = FALSE, ...) {
+  .add_motifs_anno_exp(x, count_motifs, motifs, alignments, ignore_linkages)
+}
+
+#' @rdname add_motifs_int
+#' @export
+add_motifs_lgl.glyexp_experiment <- function(x, motifs, alignments = NULL, ignore_linkages = FALSE, ...) {
+  .add_motifs_anno_exp(x, have_motifs, motifs, alignments, ignore_linkages)
+}
+
+.add_motifs_anno_exp <- function(exp, motif_anno_fn, motifs, alignments = NULL, ignore_linkages = FALSE) {
   checkmate::assert_class(exp, "glyexp_experiment")
   if (!"glycan_structure" %in% colnames(exp$var_info)) {
     cli::cli_abort("The experiment must have a {.field glycan_structure} column.")

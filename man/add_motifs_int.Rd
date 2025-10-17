@@ -3,16 +3,20 @@
 \name{add_motifs_int}
 \alias{add_motifs_int}
 \alias{add_motifs_lgl}
-\title{Add Motif Annotations to an Experiment}
+\alias{add_motifs_int.glyexp_experiment}
+\alias{add_motifs_lgl.glyexp_experiment}
+\title{Add Motif Annotations}
 \usage{
-add_motifs_int(exp, motifs, alignments = NULL, ignore_linkages = FALSE)
+add_motifs_int(x, motifs, alignments = NULL, ignore_linkages = FALSE, ...)
 
-add_motifs_lgl(exp, motifs, alignments = NULL, ignore_linkages = FALSE)
+add_motifs_lgl(x, motifs, alignments = NULL, ignore_linkages = FALSE, ...)
+
+\method{add_motifs_int}{glyexp_experiment}(x, motifs, alignments = NULL, ignore_linkages = FALSE, ...)
+
+\method{add_motifs_lgl}{glyexp_experiment}(x, motifs, alignments = NULL, ignore_linkages = FALSE, ...)
 }
 \arguments{
-\item{exp}{A \code{\link[glyexp:experiment]{glyexp::experiment()}} object with a "glycan_structure" column in \code{var_info}.
-The column can be a \code{\link[glyrepr:glycan_structure]{glyrepr::glycan_structure()}} vector,
-or a character vector of glycan structure strings supported by \code{\link[glyparse:auto_parse]{glyparse::auto_parse()}}.}
+\item{x}{A \code{\link[glyexp:experiment]{glyexp::experiment()}} object, or a tibble with a structure column.}
 
 \item{motifs}{A character vector of motif names, glycan structure strings,
 or a 'glyrepr_structure' object.
@@ -23,13 +27,15 @@ including IUPAC-condensed, WURCS, GlycoCT, and others.}
 Can be a single value (applied to all motifs) or a vector of the same length as motifs.}
 
 \item{ignore_linkages}{A logical value. If \code{TRUE}, linkages will be ignored in the comparison.}
+
+\item{...}{Additional arguments passed to the method.}
 }
 \value{
 An \code{\link[glyexp:experiment]{glyexp::experiment()}} object with motif annotations added to the variable information.
 }
 \description{
 This function adds motif annotations to the variable information
-of a \code{\link[glyexp:experiment]{glyexp::experiment()}}.
+of a \code{\link[glyexp:experiment]{glyexp::experiment()}} or a tibble with a structure column.
 \code{add_motifs_int()} adds integer annotations (how many motifs are present).
 \code{add_motifs_lgl()} adds boolean annotations (whether the motif is present).
 }
@@ -72,26 +78,11 @@ performs validation and conversion on \code{glycan_structure},
 which is a time-consuming process.
 }
 
-Advanced R users might want to use \code{count_motifs()}
-(the plural cousin of \code{count_motif()}) with \verb{!!!}:
-
-\if{html}{\out{<div class="sourceCode r">}}\preformatted{exp |>
-  mutate_var(!!!count_motifs(glycan_structure, c("Hex", "dHex", "HexNAc")))
-}\if{html}{\out{</div>}}
-
-Sadly, this doesn't work.
-Firstly, \code{count_motifs} returns a matrix, not a list.
-Secondly, even if you use \code{as.data.frame()} to convert it to a list,
-\verb{!!!} triggers early evaluation of \code{glycan_structure} in the calling environment,
-before passing it to \code{count_motifs()}.
-This will raise an "object not found" error,
-and there is no easy way to fix this, at least for now.
-
 Therefore, we think it would be better to have a function that
 adds multiple motif annotations in a single call, in a more intuitive way.
 That's why we provide these two functions.
 
-Under the hood, they use a more straightforward approach:
+Under the hood, they use a more straightforward approach for \code{\link[=experiment]{experiment()}} objects:
 \enumerate{
 \item get the motif annotation matrix using \code{count_motifs()} or \code{have_motifs()}
 \item convert the matrix to a tibble
