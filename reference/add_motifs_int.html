@@ -13,7 +13,7 @@ add_motifs_lgl() adds boolean annotations (whether the motif is present)."><meta
 
     <a class="navbar-brand me-2" href="../index.html">glymotif</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.10.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.10.0.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -52,21 +52,63 @@ of a <code><a href="https://glycoverse.github.io/glyexp/reference/experiment.htm
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">add_motifs_int</span><span class="op">(</span><span class="va">x</span>, <span class="va">motifs</span>, alignments <span class="op">=</span> <span class="cn">NULL</span>, ignore_linkages <span class="op">=</span> <span class="cn">FALSE</span>, <span class="va">...</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">add_motifs_int</span><span class="op">(</span></span>
+<span>  <span class="va">x</span>,</span>
+<span>  <span class="va">motifs</span>,</span>
+<span>  alignments <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  ignore_linkages <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  strict_sub <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">add_motifs_lgl</span><span class="op">(</span><span class="va">x</span>, <span class="va">motifs</span>, alignments <span class="op">=</span> <span class="cn">NULL</span>, ignore_linkages <span class="op">=</span> <span class="cn">FALSE</span>, <span class="va">...</span><span class="op">)</span></span>
+<span><span class="fu">add_motifs_lgl</span><span class="op">(</span></span>
+<span>  <span class="va">x</span>,</span>
+<span>  <span class="va">motifs</span>,</span>
+<span>  alignments <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  ignore_linkages <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  strict_sub <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for class 'glyexp_experiment'</span></span>
-<span><span class="fu">add_motifs_int</span><span class="op">(</span><span class="va">x</span>, <span class="va">motifs</span>, alignments <span class="op">=</span> <span class="cn">NULL</span>, ignore_linkages <span class="op">=</span> <span class="cn">FALSE</span>, <span class="va">...</span><span class="op">)</span></span>
+<span><span class="fu">add_motifs_int</span><span class="op">(</span></span>
+<span>  <span class="va">x</span>,</span>
+<span>  <span class="va">motifs</span>,</span>
+<span>  alignments <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  ignore_linkages <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  strict_sub <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for class 'glyexp_experiment'</span></span>
-<span><span class="fu">add_motifs_lgl</span><span class="op">(</span><span class="va">x</span>, <span class="va">motifs</span>, alignments <span class="op">=</span> <span class="cn">NULL</span>, ignore_linkages <span class="op">=</span> <span class="cn">FALSE</span>, <span class="va">...</span><span class="op">)</span></span>
+<span><span class="fu">add_motifs_lgl</span><span class="op">(</span></span>
+<span>  <span class="va">x</span>,</span>
+<span>  <span class="va">motifs</span>,</span>
+<span>  alignments <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  ignore_linkages <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  strict_sub <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for class 'data.frame'</span></span>
-<span><span class="fu">add_motifs_int</span><span class="op">(</span><span class="va">x</span>, <span class="va">motifs</span>, alignments <span class="op">=</span> <span class="cn">NULL</span>, ignore_linkages <span class="op">=</span> <span class="cn">FALSE</span>, <span class="va">...</span><span class="op">)</span></span>
+<span><span class="fu">add_motifs_int</span><span class="op">(</span></span>
+<span>  <span class="va">x</span>,</span>
+<span>  <span class="va">motifs</span>,</span>
+<span>  alignments <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  ignore_linkages <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  strict_sub <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for class 'data.frame'</span></span>
-<span><span class="fu">add_motifs_lgl</span><span class="op">(</span><span class="va">x</span>, <span class="va">motifs</span>, alignments <span class="op">=</span> <span class="cn">NULL</span>, ignore_linkages <span class="op">=</span> <span class="cn">FALSE</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">add_motifs_lgl</span><span class="op">(</span></span>
+<span>  <span class="va">x</span>,</span>
+<span>  <span class="va">motifs</span>,</span>
+<span>  alignments <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  ignore_linkages <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  strict_sub <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -91,6 +133,12 @@ Can be a single value (applied to all motifs) or a vector of the same length as 
 
 <dt id="arg-ignore-linkages">ignore_linkages<a class="anchor" aria-label="anchor" href="#arg-ignore-linkages"></a></dt>
 <dd><p>A logical value. If <code>TRUE</code>, linkages will be ignored in the comparison.</p></dd>
+
+
+<dt id="arg-strict-sub">strict_sub<a class="anchor" aria-label="anchor" href="#arg-strict-sub"></a></dt>
+<dd><p>A logical value. If <code>TRUE</code> (default), substituents will be matched in strict mode,
+which means if the glycan has a substituent in some residue,
+the motif must have the same substituent to be matched.</p></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
