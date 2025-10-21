@@ -9,17 +9,59 @@
 \alias{add_motifs_lgl.data.frame}
 \title{Add Motif Annotations}
 \usage{
-add_motifs_int(x, motifs, alignments = NULL, ignore_linkages = FALSE, ...)
+add_motifs_int(
+  x,
+  motifs,
+  alignments = NULL,
+  ignore_linkages = FALSE,
+  strict_sub = TRUE,
+  ...
+)
 
-add_motifs_lgl(x, motifs, alignments = NULL, ignore_linkages = FALSE, ...)
+add_motifs_lgl(
+  x,
+  motifs,
+  alignments = NULL,
+  ignore_linkages = FALSE,
+  strict_sub = TRUE,
+  ...
+)
 
-\method{add_motifs_int}{glyexp_experiment}(x, motifs, alignments = NULL, ignore_linkages = FALSE, ...)
+\method{add_motifs_int}{glyexp_experiment}(
+  x,
+  motifs,
+  alignments = NULL,
+  ignore_linkages = FALSE,
+  strict_sub = TRUE,
+  ...
+)
 
-\method{add_motifs_lgl}{glyexp_experiment}(x, motifs, alignments = NULL, ignore_linkages = FALSE, ...)
+\method{add_motifs_lgl}{glyexp_experiment}(
+  x,
+  motifs,
+  alignments = NULL,
+  ignore_linkages = FALSE,
+  strict_sub = TRUE,
+  ...
+)
 
-\method{add_motifs_int}{data.frame}(x, motifs, alignments = NULL, ignore_linkages = FALSE, ...)
+\method{add_motifs_int}{data.frame}(
+  x,
+  motifs,
+  alignments = NULL,
+  ignore_linkages = FALSE,
+  strict_sub = TRUE,
+  ...
+)
 
-\method{add_motifs_lgl}{data.frame}(x, motifs, alignments = NULL, ignore_linkages = FALSE, ...)
+\method{add_motifs_lgl}{data.frame}(
+  x,
+  motifs,
+  alignments = NULL,
+  ignore_linkages = FALSE,
+  strict_sub = TRUE,
+  ...
+)
 }
 \arguments{
 \item{x}{A \code{\link[glyexp:experiment]{glyexp::experiment()}} object, or a tibble with a structure column.}
@@ -33,6 +75,10 @@ including IUPAC-condensed, WURCS, GlycoCT, and others.}
 Can be a single value (applied to all motifs) or a vector of the same length as motifs.}
 
 \item{ignore_linkages}{A logical value. If \code{TRUE}, linkages will be ignored in the comparison.}
+
+\item{strict_sub}{A logical value. If \code{TRUE} (default), substituents will be matched in strict mode,
+which means if the glycan has a substituent in some residue,
+the motif must have the same substituent to be matched.}
 
 \item{...}{Additional arguments passed to the method.}
 }
