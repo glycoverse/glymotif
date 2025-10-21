@@ -88,15 +88,15 @@
 #' count_motifs(glycans = c("Hex(?1-", "Man(?1-"), motifs = c("Hex(?1-", "Man(?1-"))
 #'
 #' @export
-count_motif <- function(glycans, motif, alignment = NULL, ignore_linkages = FALSE) {
-  params <- prepare_have_motif_args(glycans, motif, alignment, ignore_linkages)
+count_motif <- function(glycans, motif, alignment = NULL, ignore_linkages = FALSE, strict_sub = TRUE) {
+  params <- prepare_have_motif_args(glycans, motif, alignment, ignore_linkages, strict_sub)
   rlang::exec("count_motif_", !!!params)
 }
 
 #' @rdname count_motif
 #' @export
-count_motifs <- function(glycans, motifs, alignments = NULL, ignore_linkages = FALSE) {
-  params <- prepare_have_motifs_args(glycans, motifs, alignments, ignore_linkages)
+count_motifs <- function(glycans, motifs, alignments = NULL, ignore_linkages = FALSE, strict_sub = TRUE) {
+  params <- prepare_have_motifs_args(glycans, motifs, alignments, ignore_linkages, strict_sub)
   glycan_names <- prepare_struc_names(glycans, params$glycans)
   motif_names <- prepare_struc_names(motifs, params$motifs)
   rlang::exec("count_motifs_", !!!params, glycan_names = glycan_names, motif_names = motif_names)
@@ -110,9 +110,10 @@ count_motifs <- function(glycans, motifs, alignments = NULL, ignore_linkages = F
 #' @param motif A `glyrepr_structure` object with length 1.
 #' @param alignment A character scalar.
 #' @param ignore_linkages A logical value.
+#' @param strict_sub A logical value.
 #'
 #' @noRd
-count_motif_ <- function(glycans, motif, alignment, ignore_linkages = FALSE) {
+count_motif_ <- function(glycans, motif, alignment, ignore_linkages = FALSE, strict_sub = TRUE) {
   # This function is a simpler version of `count_motif()`.
   # It performs the logic directly without argument validations and conversions.
   # It is a necessary abstraction for other functions.
@@ -121,12 +122,13 @@ count_motif_ <- function(glycans, motif, alignment, ignore_linkages = FALSE) {
     motif = motif,
     alignment = alignment,
     ignore_linkages = ignore_linkages,
+    strict_sub = strict_sub,
     single_glycan_func = .count_motif_single,
     smap_func = glyrepr::smap_int
   )
 }
 
-.count_motif_single <- function(glycan_graph, motif_graph, alignment, ignore_linkages = FALSE) {
+.count_motif_single <- function(glycan_graph, motif_graph, alignment, ignore_linkages = FALSE, strict_sub = TRUE) {
   # This function is the logic part of `count_motif()`.
   c_graphs <- colorize_graphs(glycan_graph, motif_graph)
   glycan_graph <- c_graphs$glycan
@@ -134,7 +136,7 @@ count_motif_ <- function(glycans, motif, alignment, ignore_linkages = FALSE) {
   res <- perform_vf2(glycan_graph, motif_graph)
   valid_mask <- purrr::map_lgl(
     res, is_valid_result, glycan = glycan_graph, motif = motif_graph,
-    alignment = alignment, ignore_linkages = ignore_linkages
+    alignment = alignment, ignore_linkages = ignore_linkages, strict_sub = strict_sub
   )
   valid_res <- res[valid_mask]
   length(unique_vf2_res(valid_res))
@@ -148,8 +150,9 @@ count_motif_ <- function(glycans, motif, alignment, ignore_linkages = FALSE) {
 #' @param motifs A `glyrepr_structure` object.
 #' @param alignments A character vector with the same length as `motifs`.
 #' @param ignore_linkages A logical value.
+#' @param strict_sub A logical value.
 #'
 #' @noRd
-count_motifs_ <- function(glycans, motifs, alignments, glycan_names, motif_names, ignore_linkages = FALSE) {
-  apply_motifs_to_glycans(glycans, motifs, alignments, ignore_linkages, count_motif_, glycan_names, motif_names)
+count_motifs_ <- function(glycans, motifs, alignments, glycan_names, motif_names, ignore_linkages = FALSE, strict_sub = TRUE) {
+  apply_motifs_to_glycans(glycans, motifs, alignments, ignore_linkages, count_motif_, glycan_names, motif_names, strict_sub)
 }
