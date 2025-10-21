@@ -1,4 +1,4 @@
-# glymotif (development version)
+# glymotif 0.11.0
 
 ## New features
 
