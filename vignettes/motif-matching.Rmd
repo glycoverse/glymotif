@@ -277,6 +277,17 @@ colnames(mat) <- paste0("motif_", 1:3)
 mat
 ```
 
+The default behavior is to match the substituent strictly.
+This is reasonable in most cases,
+because monosaccharides with different substituents should be regarded as different.
+However, you can change this behavior by setting `strict_sub = FALSE`.
+In this case, the substituent is optional in the motif,
+so the glycan "Neu5Ac9Ac" can match the motif "Neu5Ac".
+
+```{r}
+have_motif("Neu5Ac9Ac(a2-", "Neu5Ac(a2-", strict_sub = FALSE)
+```
+
 ### Rule 5: Alignment Constraints 📍
 
 Here's where biology meets computation in fascinating ways! 🎯
