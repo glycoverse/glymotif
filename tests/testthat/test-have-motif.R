@@ -358,6 +358,15 @@ test_that("multiple substituents in motif", {
 })
 
 
+test_that("substituents are not mandatory if strict_sub is FALSE", {
+  glycan <- glyparse::parse_iupac_condensed("Neu5Ac9Ac(a2-3)Gal(b1-4)GlcNAc(?1-")
+  motif <- glyparse::parse_iupac_condensed("Neu5Ac(a2-3)Gal(b1-4)GlcNAc(?1-")
+
+  expect_true(have_motif(glycan, motif, strict_sub = FALSE))
+  expect_false(have_motif(glycan, motif, strict_sub = TRUE))
+})
+
+
 # ========== Anomers ==========
 test_that("anomer right for inside motif", {
   glycan <- glyparse::parse_iupac_condensed("Neu5Ac(a2-3)Gal(b1-4)GlcNAc(?1-")

@@ -6,6 +6,7 @@ prepare_motif_args <- function(
   alignments = NULL,
   ignore_linkages = FALSE,
   single_motif = FALSE,
+  strict_sub = TRUE,
   call = rlang::caller_env()
 ) {
   # Unified validation logic
@@ -24,25 +25,27 @@ prepare_motif_args <- function(
       glycans = glycans,
       motif = motifs,
       alignment = alignments,
-      ignore_linkages = ignore_linkages
+      ignore_linkages = ignore_linkages,
+      strict_sub = strict_sub
     ))
   } else {
     return(list(
       glycans = glycans,
       motifs = motifs,
       alignments = alignments,
-      ignore_linkages = ignore_linkages
+      ignore_linkages = ignore_linkages,
+      strict_sub = strict_sub
     ))
   }
 }
 
 # Legacy wrapper functions for backward compatibility
-prepare_have_motif_args <- function(glycans, motif, alignment, ignore_linkages) {
-  prepare_motif_args(glycans, motif, alignment, ignore_linkages, single_motif = TRUE)
+prepare_have_motif_args <- function(glycans, motif, alignment, ignore_linkages, strict_sub) {
+  prepare_motif_args(glycans, motif, alignment, ignore_linkages, single_motif = TRUE, strict_sub = strict_sub)
 }
 
-prepare_have_motifs_args <- function(glycans, motifs, alignments, ignore_linkages) {
-  prepare_motif_args(glycans, motifs, alignments, ignore_linkages, single_motif = FALSE)
+prepare_have_motifs_args <- function(glycans, motifs, alignments, ignore_linkages, strict_sub) {
+  prepare_motif_args(glycans, motifs, alignments, ignore_linkages, single_motif = FALSE, strict_sub = strict_sub)
 }
 
 # ----- Argument validation -----
@@ -240,7 +243,7 @@ ensure_motif_is_structure <- function(motif, motif_type, call = rlang::caller_en
 }
 
 # ----- Generic function for single motif mapping -----
-apply_single_motif_to_glycans <- function(glycans, motif, alignment, ignore_linkages, single_glycan_func, smap_func) {
+apply_single_motif_to_glycans <- function(glycans, motif, alignment, ignore_linkages, strict_sub, single_glycan_func, smap_func) {
   # Generic function to apply a single motif to multiple glycans
   # single_glycan_func should be either .have_motif_single or .count_motif_single
   # smap_func should be either glyrepr::smap_lgl or glyrepr::smap_int
@@ -257,7 +260,7 @@ apply_single_motif_to_glycans <- function(glycans, motif, alignment, ignore_link
   }
 
   motif_graph <- glyrepr::get_structure_graphs(motif)
-  smap_func(glycans_to_use, single_glycan_func, motif_graph, alignment, ignore_linkages)
+  smap_func(glycans_to_use, single_glycan_func, motif_graph, alignment, ignore_linkages, strict_sub)
 }
 
 #' Fast Convert Mono Types
@@ -305,7 +308,7 @@ prepare_struc_names <- function(x, strucs) {
   }
 }
 
-apply_motifs_to_glycans <- function(glycans, motifs, alignments, ignore_linkages, single_motif_func, glycan_names, motif_names) {
+apply_motifs_to_glycans <- function(glycans, motifs, alignments, ignore_linkages, single_motif_func, glycan_names, motif_names, strict_sub) {
   # Generic function to apply multiple motifs to multiple glycans
   # single_motif_func should be either have_motif_ or count_motif_
 
@@ -322,7 +325,8 @@ apply_motifs_to_glycans <- function(glycans, motifs, alignments, ignore_linkages
       glycans,
       .x,
       alignment = .y,
-      ignore_linkages = ignore_linkages
+      ignore_linkages = ignore_linkages,
+      strict_sub = strict_sub
     )
   )
 

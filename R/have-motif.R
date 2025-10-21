@@ -140,6 +140,9 @@
 #' @param alignments A character vector specifying alignment types for each motif.
 #'   Can be a single value (applied to all motifs) or a vector of the same length as motifs.
 #' @param ignore_linkages A logical value. If `TRUE`, linkages will be ignored in the comparison.
+#' @param strict_sub A logical value. If `TRUE` (default), substituents will be matched in strict mode,
+#'   which means if the glycan has a substituent in some residue,
+#'   the motif must have the same substituent to be matched.
 #'
 #' @returns
 #' - `have_motif()`: A logical vector indicating if each `glycan` has the `motif`.
@@ -232,15 +235,15 @@
 #' have_motifs(glycans, motifs)
 #'
 #' @export
-have_motif <- function(glycans, motif, alignment = NULL, ignore_linkages = FALSE) {
-  params <- prepare_have_motif_args(glycans, motif, alignment, ignore_linkages)
+have_motif <- function(glycans, motif, alignment = NULL, ignore_linkages = FALSE, strict_sub = TRUE) {
+  params <- prepare_have_motif_args(glycans, motif, alignment, ignore_linkages, strict_sub)
   rlang::exec("have_motif_", !!!params)
 }
 
 #' @rdname have_motif
 #' @export
-have_motifs <- function(glycans, motifs, alignments = NULL, ignore_linkages = FALSE) {
-  params <- prepare_have_motifs_args(glycans, motifs, alignments, ignore_linkages)
+have_motifs <- function(glycans, motifs, alignments = NULL, ignore_linkages = FALSE, strict_sub = TRUE) {
+  params <- prepare_have_motifs_args(glycans, motifs, alignments, ignore_linkages, strict_sub)
   glycan_names <- prepare_struc_names(glycans, params$glycans)
   motif_names <- prepare_struc_names(motifs, params$motifs)
   rlang::exec("have_motifs_", !!!params, glycan_names = glycan_names, motif_names = motif_names)
@@ -254,9 +257,10 @@ have_motifs <- function(glycans, motifs, alignments = NULL, ignore_linkages = FA
 #' @param motif A `glyrepr_structure` object with length 1.
 #' @param alignment A character scalar.
 #' @param ignore_linkages A logical value.
+#' @param strict_sub A logical value.
 #'
 #' @noRd
-have_motif_ <- function(glycans, motif, alignment, ignore_linkages = FALSE) {
+have_motif_ <- function(glycans, motif, alignment, ignore_linkages = FALSE, strict_sub = TRUE) {
   # This function is a simpler version of `have_motif()`.
   # It performs the logic directly without argument validations and conversions.
   # It is a necessary abstraction for other functions.
@@ -265,12 +269,13 @@ have_motif_ <- function(glycans, motif, alignment, ignore_linkages = FALSE) {
     motif = motif,
     alignment = alignment,
     ignore_linkages = ignore_linkages,
+    strict_sub = strict_sub,
     single_glycan_func = .have_motif_single,
     smap_func = glyrepr::smap_lgl
   )
 }
 
-.have_motif_single <- function(glycan_graph, motif_graph, alignment, ignore_linkages = FALSE) {
+.have_motif_single <- function(glycan_graph, motif_graph, alignment, ignore_linkages = FALSE, strict_sub = TRUE) {
   # Optimized version with early termination
   # Check if any match is valid, returning immediately on first valid match
   c_graphs <- colorize_graphs(glycan_graph, motif_graph)
@@ -279,7 +284,7 @@ have_motif_ <- function(glycans, motif, alignment, ignore_linkages = FALSE) {
   res <- perform_vf2(glycan_graph, motif_graph)
   purrr::some(
     res, is_valid_result, glycan = glycan_graph, motif = motif_graph,
-    alignment = alignment, ignore_linkages = ignore_linkages
+    alignment = alignment, ignore_linkages = ignore_linkages, strict_sub = strict_sub
   )
 }
 
@@ -291,8 +296,9 @@ have_motif_ <- function(glycans, motif, alignment, ignore_linkages = FALSE) {
 #' @param motifs A `glyrepr_structure` object.
 #' @param alignments A character vector with the same length as `motifs`.
 #' @param ignore_linkages A logical value.
+#' @param strict_sub A logical value.
 #'
 #' @noRd
-have_motifs_ <- function(glycans, motifs, alignments, glycan_names, motif_names, ignore_linkages = FALSE) {
-  apply_motifs_to_glycans(glycans, motifs, alignments, ignore_linkages, have_motif_, glycan_names, motif_names)
+have_motifs_ <- function(glycans, motifs, alignments, glycan_names, motif_names, ignore_linkages = FALSE, strict_sub = TRUE) {
+  apply_motifs_to_glycans(glycans, motifs, alignments, ignore_linkages, have_motif_, glycan_names, motif_names, strict_sub)
 }
