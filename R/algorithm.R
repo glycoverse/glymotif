@@ -39,29 +39,29 @@ unique_vf2_res <- function(res) {
 }
 
 
-is_valid_result <- function(r, glycan, motif, alignment, ignore_linkages) {
+is_valid_result <- function(r, glycan, motif, alignment, ignore_linkages, strict_sub = TRUE) {
   # Optimized early exit using most selective checks first
   # Alignment check is often the most selective and fastest
   if (!alignment_check(r, glycan, motif, alignment = alignment)) {
     return(FALSE)
   }
-  
+
   # Substituent check is relatively fast and often selective
-  if (!substituent_check(r, glycan, motif, alignment = alignment)) {
+  if (!substituent_check(r, glycan, motif, strict_sub = strict_sub)) {
     return(FALSE)
   }
-  
+
   # Only check linkages and anomer if linkages are not ignored
   # These are the most expensive checks, so do them last
   if (!ignore_linkages) {
-    if (!linkage_check(r, glycan, motif, alignment = alignment)) {
+    if (!linkage_check(r, glycan, motif)) {
       return(FALSE)
     }
-    if (!anomer_check(r, glycan, motif, alignment = alignment)) {
+    if (!anomer_check(r, glycan, motif)) {
       return(FALSE)
     }
   }
-  
+
   return(TRUE)
 }
 
@@ -102,11 +102,11 @@ alignment_check <- function(r, glycan, motif, alignment) {
 }
 
 
-substituent_check <- function(r, glycan, motif, ...) {
+substituent_check <- function(r, glycan, motif, strict_sub) {
   glycan_subs <- igraph::V(glycan)$sub[r]
   motif_subs <- igraph::V(motif)$sub
   for (i in seq_along(glycan_subs)) {
-    if (!match_sub(glycan_subs[[i]], motif_subs[[i]])) {
+    if (!match_sub(glycan_subs[[i]], motif_subs[[i]], strict_sub)) {
       return(FALSE)
     }
   }
@@ -114,7 +114,12 @@ substituent_check <- function(r, glycan, motif, ...) {
 }
 
 
-match_sub <- function(glycan_sub, motif_sub) {
+match_sub <- function(glycan_sub, motif_sub, strict_sub) {
+  # Handle unstrict matching:
+  if (!strict_sub && motif_sub == "") {
+    return(TRUE)
+  }
+
   # Handle empty substituents - both must be empty to match
   if (motif_sub == "" || glycan_sub == "") {
     return(motif_sub == "" && glycan_sub == "")
@@ -171,7 +176,7 @@ match_single_sub <- function(glycan_sub, motif_sub) {
 }
 
 
-linkage_check <- function(r, glycan, motif, ...) {
+linkage_check <- function(r, glycan, motif) {
   edges <- get_corresponding_edges(r, glycan, motif)
   glycan_linkages <- edges$glycan$linkage
   motif_linkages <- edges$motif$linkage
@@ -237,7 +242,7 @@ parse_pos2 <- function(pos2) {
 }
 
 
-anomer_check <- function(r, glycan, motif, ...) {
+anomer_check <- function(r, glycan, motif) {
   glycan_core <- core_node(glycan)
   motif_core <- core_node(motif)
   matched_g_node <- r[[motif_core]]
