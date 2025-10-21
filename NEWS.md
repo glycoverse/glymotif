@@ -1,5 +1,9 @@
 # glymotif (development version)
 
+## New features
+
+* `have_motif()`, `have_motifs()`, `count_motif()`, and `count_motifs()` now support a new argument `strict_sub` to control the strictness of substituent matching.The argument defaults to `TRUE`, to be consistent with the previous behavior. When `strict_sub` is `FALSE`, the substituent is optional in the motif, so the glycan "Neu5Ac9Ac(a2-" can match the motif "Neu5Ac(a2-".
+
 # glymotif 0.10.0
 
 ## New features
