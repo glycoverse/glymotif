@@ -175,10 +175,16 @@ have a corresponding match in the glycan, and vice versa.
 
 Obscure linkages in motif substituents will match any linkage in glycan substituents:
 \itemize{
-\item Motif "Neu5Ac-?Ac" will match "Neu5Ac-9Ac" in the glycan
+\item Motif "Neu5Ac?Ac" will match "Neu5Ac9Ac" in the glycan
 \item Motif "Glc?Me6S" will match "Glc3Me6S" in the glycan (? matches 3)
 \item Motif "Glc3Me?S" will match "Glc3Me6S" in the glycan (? matches 6)
 }
+
+This default behavior is reasonable for most cases,
+because monosaccharides with different substituents should be regarded as different.
+However, you can change this behavior by setting \code{strict_sub = FALSE}.
+In this case, the substituent is optional in the motif,
+so the glycan "Neu5Ac9Ac" can match the motif "Neu5Ac".
 }
 
 \section{Implementation}{
@@ -248,6 +254,11 @@ have_motif(glycan_4, glycan_5)
 have_motif(glycan_5, glycan_4)
 have_motif(glycan_4, glycan_4)
 have_motif(glycan_5, glycan_5)
+
+have_motif(glycan_4, glycan_5, strict_sub = FALSE)
+have_motif(glycan_5, glycan_4, strict_sub = FALSE)
+have_motif(glycan_4, glycan_4, strict_sub = FALSE)
+have_motif(glycan_5, glycan_5, strict_sub = FALSE)
 
 # Multiple substituents
 glycan_6 <- "Glc3Me6S(a1-"  # has both 3Me and 6S substituents
