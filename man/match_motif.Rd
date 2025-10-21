@@ -5,9 +5,21 @@
 \alias{match_motifs}
 \title{Match Motif(s) in Glycans}
 \usage{
-match_motif(glycans, motif, alignment = NULL, ignore_linkages = FALSE)
+match_motif(
+  glycans,
+  motif,
+  alignment = NULL,
+  ignore_linkages = FALSE,
+  strict_sub = TRUE
+)
 
-match_motifs(glycans, motifs, alignments = NULL, ignore_linkages = FALSE)
+match_motifs(
+  glycans,
+  motifs,
+  alignments = NULL,
+  ignore_linkages = FALSE,
+  strict_sub = TRUE
+)
 }
 \arguments{
 \item{glycans}{A \code{glyrepr_structure} object.}
@@ -21,6 +33,10 @@ If \code{motif} is a motif name, the alignment in the database will be used.
 Otherwise, "substructure" will be used.}
 
 \item{ignore_linkages}{A logical value. If \code{TRUE}, linkages will be ignored in the comparison.}
+
+\item{strict_sub}{A logical value. If \code{TRUE} (default), substituents will be matched in strict mode,
+which means if the glycan has a substituent in some residue,
+the motif must have the same substituent to be matched.}
 
 \item{motifs}{A \code{glyrepr_structure} object.}
 
