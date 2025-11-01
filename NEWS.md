@@ -1,4 +1,8 @@
-# glymotif (development version)
+# glymotif 0.11.1
+
+## Minor improvements and fixes
+
+* glymotif now depends on the CRAN version of glyrepr.
 
 # glymotif 0.11.0
 
