@@ -8,12 +8,12 @@
 ## Citation
 
 Fu B (2025). *glymotif: Extract glycan motifs from glycan structures*. R
-package version 0.11.2.9000, <https://glycoverse.github.io/glymotif/>.
+package version 0.11.2, <https://glycoverse.github.io/glymotif/>.
 
     @Manual{,
       title = {glymotif: Extract glycan motifs from glycan structures},
       author = {Bin Fu},
       year = {2025},
-      note = {R package version 0.11.2.9000},
+      note = {R package version 0.11.2},
       url = {https://glycoverse.github.io/glymotif/},
     }

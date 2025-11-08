@@ -53,17 +53,17 @@ library(glyclean)
 
 exp <- auto_clean(real_experiment)
 #> ℹ Normalizing data (Median)
-#> ✔ Normalizing data (Median) [143ms]
+#> ✔ Normalizing data (Median) [152ms]
 #> 
 #> ℹ Removing variables with >50% missing values
-#> ✔ Removing variables with >50% missing values [46ms]
+#> ✔ Removing variables with >50% missing values [47ms]
 #> 
 #> ℹ Imputing missing values
 #> ℹ Sample size <= 30, using sample minimum imputation
-#> ℹ Imputing missing values✔ Imputing missing values [23ms]
+#> ℹ Imputing missing values✔ Imputing missing values [25ms]
 #> 
 #> ℹ Aggregating data
-#> ✔ Aggregating data [981ms]
+#> ✔ Aggregating data [1s]
 #> 
 #> ℹ Normalizing data again
 #> ✔ Normalizing data again [15ms]
