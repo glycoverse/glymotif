@@ -35,7 +35,7 @@ URL: https://glycoverse.github.io/glymotif/
 Imports: 
     cli,
     glyrepr (>= 0.7.0),
-    glyparse (>= 0.4.3),
+    glyparse (>= 0.5.3),
     igraph,
     purrr,
     rlang,
@@ -46,7 +46,6 @@ Imports:
     memoise,
     vctrs
 Remotes: 
-    glycoverse/glyparse@*release,
     glycoverse/glyexp@*release,
     glycoverse/glyclean@*release,
     glycoverse/glyread@*release
