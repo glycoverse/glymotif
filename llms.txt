@@ -1,0 +1,117 @@
+# glymotif
+
+Provides comprehensive tools for glycan motif analysis and detection in
+glycobioinformatics research. The package enables users to identify,
+count, and match glycan motifs (recurring substructures) within complex
+glycan structures using advanced subgraph isomorphism algorithms. It
+includes a curated database of known motifs from the GlycoMotif GlyGen
+Collection, supports both concrete and generic monosaccharide matching,
+and offers flexible alignment options (core, terminal, or anywhere). Key
+functionalities include motif presence detection, occurrence counting,
+detailed node-to-node mapping, and batch analysis of multiple glycans
+against multiple motifs. The package seamlessly integrates with the
+glycoverse ecosystem, particularly ‘glyrepr’ and ‘glyparse’, making it
+essential for structural glycomics analysis, biomarker discovery, and
+understanding glycan-mediated biological processes.
+
+## Installation
+
+You can install the latest release of glymotif from
+[GitHub](https://github.com/) with:
+
+``` r
+# install.packages("remotes")
+remotes::install_github("glycoverse/glymotif@*release")
+```
+
+Or install the development version:
+
+``` r
+remotes::install_github("glycoverse/glymotif")
+```
+
+## Documentation
+
+- 🚀 Get started:
+  [Here](https://glycoverse.github.io/glymotif/articles/glymotif.html)
+- 🔧 Motif matching rules:
+  [Here](https://glycoverse.github.io/glymotif/articles/motif-matching.html)
+- 🔬 Working with
+  [`glyexp::experiment()`](https://glycoverse.github.io/glyexp/reference/experiment.html):
+  [Here](https://glycoverse.github.io/glymotif/articles/with-exp.html)
+- 📚 Reference:
+  [Here](https://glycoverse.github.io/glymotif/reference/index.html)
+
+## Role in `glycoverse`
+
+`glymotif` provides possibilities for one important job in
+glyco-bioinformatics: to detect motifs in glycans. The package is
+designed to be used directly by users for structural analysis, as well
+as to provide backend support for other packages in the `glycoverse`
+ecosystem.
+
+## Example
+
+``` r
+library(glymotif)
+library(glyparse)
+```
+
+Say we have a glycan, …
+
+``` r
+(glycan <- parse_iupac_condensed("Gal(b1-3)GlcNAc(b1-3)Gal(b1-3)GalNAc(a1-"))
+#> <glycan_structure[1]>
+#> [1] Gal(b1-3)GlcNAc(b1-3)Gal(b1-3)GalNAc(a1-
+#> # Unique structures: 1
+```
+
+… and we want to check if it has the O-Glycan core 1 motif.
+
+``` r
+have_motif(glycan, "Gal(b1-3)GalNAc(a1-", alignment = "core")
+#> [1] TRUE
+```
+
+Or use the motif name directly.
+
+``` r
+have_motif(glycan, "O-Glycan core 1")
+#> [1] TRUE
+```
+
+# Package index
+
+## All functions
+
+- [`add_motifs_int()`](https://glycoverse.github.io/glymotif/reference/add_motifs_int.md)
+  [`add_motifs_lgl()`](https://glycoverse.github.io/glymotif/reference/add_motifs_int.md)
+  : Add Motif Annotations
+- [`all_motifs()`](https://glycoverse.github.io/glymotif/reference/all_motifs.md)
+  : Get All Motifs
+- [`count_motif()`](https://glycoverse.github.io/glymotif/reference/count_motif.md)
+  [`count_motifs()`](https://glycoverse.github.io/glymotif/reference/count_motif.md)
+  : Count How Many Times Glycans have the Given Motif(s)
+- [`get_motif_structure()`](https://glycoverse.github.io/glymotif/reference/get_motif_structure.md)
+  [`get_motif_alignment()`](https://glycoverse.github.io/glymotif/reference/get_motif_structure.md)
+  [`get_motif_aglycon()`](https://glycoverse.github.io/glymotif/reference/get_motif_structure.md)
+  : Get the Structures, Alignments, or Aglycons of Known Motifs
+- [`have_motif()`](https://glycoverse.github.io/glymotif/reference/have_motif.md)
+  [`have_motifs()`](https://glycoverse.github.io/glymotif/reference/have_motif.md)
+  : Check if the Glycans have the Given Motif(s)
+- [`is_known_motif()`](https://glycoverse.github.io/glymotif/reference/is_known_motif.md)
+  : Check if a Motif is Known
+- [`match_motif()`](https://glycoverse.github.io/glymotif/reference/match_motif.md)
+  [`match_motifs()`](https://glycoverse.github.io/glymotif/reference/match_motif.md)
+  : Match Motif(s) in Glycans
+
+# Articles
+
+### All vignettes
+
+- [Getting Started with
+  glymotif](https://glycoverse.github.io/glymotif/articles/glymotif.md):
+- [The Science Behind Motif
+  Matching](https://glycoverse.github.io/glymotif/articles/motif-matching.md):
+- [Working with
+  glyexp](https://glycoverse.github.io/glymotif/articles/with-exp.md):
