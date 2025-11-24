@@ -1,4 +1,4 @@
-# glymotif: Extract glycan motifs from glycan structures
+# glymotif: Extract Glycan Motifs from Glycan Structures
 
 Provides comprehensive tools for glycan motif analysis and detection in
 glycobioinformatics research. The package enables users to identify,
@@ -20,7 +20,11 @@ Useful links:
 
 - <https://glycoverse.github.io/glymotif/>
 
+- <https://github.com/glycoverse/glymotif>
+
+- Report bugs at <https://github.com/glycoverse/glymotif/issues>
+
 ## Author
 
 **Maintainer**: Bin Fu <23110220018@m.fudan.edu.cn>
-([ORCID](https://orcid.org/0000-0001-8567-2997))
+([ORCID](https://orcid.org/0000-0001-8567-2997)) \[copyright holder\]

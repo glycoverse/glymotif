@@ -33,20 +33,30 @@ count_motifs(
 
 - glycans:
 
-  A 'glyrepr_structure' object, or a glycan structure string vector. All
-  formats supported by
-  [`glyparse::auto_parse()`](https://glycoverse.github.io/glyparse/reference/auto_parse.html)
-  are accepted, including IUPAC-condensed, WURCS, GlycoCT, and others.
+  One of:
+
+  - A
+    [`glyrepr::glycan_structure()`](https://glycoverse.github.io/glyrepr/reference/glycan_structure.html)
+    vector.
+
+  - A glycan structure string vector. All formats supported by
+    [`glyparse::auto_parse()`](https://glycoverse.github.io/glyparse/reference/auto_parse.html)
+    are accepted, including IUPAC-condensed, WURCS, GlycoCT, and others.
 
 - motif:
 
-  A 'glyrepr_structure' object, a glycan structure string, or a known
-  motif name (use
-  [`all_motifs()`](https://glycoverse.github.io/glymotif/reference/all_motifs.md)
-  to see all available motifs). For glycan structure strings, all
-  formats supported by
-  [`glyparse::auto_parse()`](https://glycoverse.github.io/glyparse/reference/auto_parse.html)
-  are accepted, including IUPAC-condensed, WURCS, GlycoCT, and others.
+  One of:
+
+  - A
+    [`glyrepr::glycan_structure()`](https://glycoverse.github.io/glyrepr/reference/glycan_structure.html)
+    scalar.
+
+  - A glycan structure string, supported by
+    [`glyparse::auto_parse()`](https://glycoverse.github.io/glyparse/reference/auto_parse.html).
+
+  - A known motif name (use
+    [`all_motifs()`](https://glycoverse.github.io/glymotif/reference/all_motifs.md)
+    to see all available motifs).
 
 - alignment:
 
@@ -59,7 +69,7 @@ count_motifs(
 - ignore_linkages:
 
   A logical value. If `TRUE`, linkages will be ignored in the
-  comparison.
+  comparison. Default is `FALSE`.
 
 - strict_sub:
 
@@ -69,11 +79,18 @@ count_motifs(
 
 - motifs:
 
-  A character vector of motif names, glycan structure strings, or a
-  'glyrepr_structure' object. For glycan structure strings, all formats
-  supported by
-  [`glyparse::auto_parse()`](https://glycoverse.github.io/glyparse/reference/auto_parse.html)
-  are accepted, including IUPAC-condensed, WURCS, GlycoCT, and others.
+  One of:
+
+  - A
+    [`glyrepr::glycan_structure()`](https://glycoverse.github.io/glyrepr/reference/glycan_structure.html)
+    vector.
+
+  - A glycan structure string vector, supported by
+    [`glyparse::auto_parse()`](https://glycoverse.github.io/glyparse/reference/auto_parse.html).
+
+  - A character vector of motif names (use
+    [`all_motifs()`](https://glycoverse.github.io/glymotif/reference/all_motifs.md)
+    to see all available motifs).
 
 - alignments:
 
@@ -199,11 +216,11 @@ print(result)
 
 # Monosaccharide type matching examples
 # Concrete glycan vs generic motif: matches (glycan converted to generic)
-count_motif("Man(?1-", "Hex(?1-")  # Returns 1
+count_motif("Man(?1-", "Hex(?1-") # Returns 1
 #> [1] 1
 
 # Generic glycan vs concrete motif: doesn't match
-count_motif("Hex(?1-", "Man(?1-")  # Returns 0
+count_motif("Hex(?1-", "Man(?1-") # Returns 0
 #> [1] 0
 
 # Matrix example showing type matching rules

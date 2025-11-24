@@ -19,7 +19,7 @@ count_motifs() counts multiple motifs in multiple glycans
 
     <a class="navbar-brand me-2" href="../index.html">glymotif</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.11.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.11.2.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -37,6 +37,7 @@ count_motifs() counts multiple motifs in multiple glycans
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/glycoverse/glymotif/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
       </ul></div>
 
 
@@ -45,7 +46,7 @@ count_motifs() counts multiple motifs in multiple glycans
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Count How Many Times Glycans have the Given Motif(s)</h1>
-
+      <small class="dont-index">Source: <a href="https://github.com/glycoverse/glymotif/blob/main/R/count-motif.R" class="external-link"><code>R/count-motif.R</code></a></small>
       <div class="d-none name"><code>count_motif.Rd</code></div>
     </div>
 
@@ -80,16 +81,17 @@ the <code>glycans</code> have the <code>motif</code>(s).</p><ul><li><p><code>cou
 
 
 <dl><dt id="arg-glycans">glycans<a class="anchor" aria-label="anchor" href="#arg-glycans"></a></dt>
-<dd><p>A 'glyrepr_structure' object, or a glycan structure string vector.
-All formats supported by <code><a href="https://glycoverse.github.io/glyparse/reference/auto_parse.html" class="external-link">glyparse::auto_parse()</a></code> are accepted,
-including IUPAC-condensed, WURCS, GlycoCT, and others.</p></dd>
+<dd><p>One of:</p><ul><li><p>A <code><a href="https://glycoverse.github.io/glyrepr/reference/glycan_structure.html" class="external-link">glyrepr::glycan_structure()</a></code> vector.</p></li>
+<li><p>A glycan structure string vector. All formats supported by <code><a href="https://glycoverse.github.io/glyparse/reference/auto_parse.html" class="external-link">glyparse::auto_parse()</a></code> are accepted,
+including IUPAC-condensed, WURCS, GlycoCT, and others.</p></li>
+</ul></dd>
 
 
 <dt id="arg-motif">motif<a class="anchor" aria-label="anchor" href="#arg-motif"></a></dt>
-<dd><p>A 'glyrepr_structure' object, a glycan structure string,
-or a known motif name (use <code><a href="all_motifs.html">all_motifs()</a></code> to see all available motifs).
-For glycan structure strings, all formats supported by <code><a href="https://glycoverse.github.io/glyparse/reference/auto_parse.html" class="external-link">glyparse::auto_parse()</a></code> are accepted,
-including IUPAC-condensed, WURCS, GlycoCT, and others.</p></dd>
+<dd><p>One of:</p><ul><li><p>A <code><a href="https://glycoverse.github.io/glyrepr/reference/glycan_structure.html" class="external-link">glyrepr::glycan_structure()</a></code> scalar.</p></li>
+<li><p>A glycan structure string, supported by <code><a href="https://glycoverse.github.io/glyparse/reference/auto_parse.html" class="external-link">glyparse::auto_parse()</a></code>.</p></li>
+<li><p>A known motif name (use <code><a href="all_motifs.html">all_motifs()</a></code> to see all available motifs).</p></li>
+</ul></dd>
 
 
 <dt id="arg-alignment">alignment<a class="anchor" aria-label="anchor" href="#arg-alignment"></a></dt>
@@ -101,7 +103,8 @@ Otherwise, "substructure" will be used.</p></dd>
 
 
 <dt id="arg-ignore-linkages">ignore_linkages<a class="anchor" aria-label="anchor" href="#arg-ignore-linkages"></a></dt>
-<dd><p>A logical value. If <code>TRUE</code>, linkages will be ignored in the comparison.</p></dd>
+<dd><p>A logical value. If <code>TRUE</code>, linkages will be ignored in the comparison.
+Default is <code>FALSE</code>.</p></dd>
 
 
 <dt id="arg-strict-sub">strict_sub<a class="anchor" aria-label="anchor" href="#arg-strict-sub"></a></dt>
@@ -111,10 +114,10 @@ the motif must have the same substituent to be matched.</p></dd>
 
 
 <dt id="arg-motifs">motifs<a class="anchor" aria-label="anchor" href="#arg-motifs"></a></dt>
-<dd><p>A character vector of motif names, glycan structure strings,
-or a 'glyrepr_structure' object.
-For glycan structure strings, all formats supported by <code><a href="https://glycoverse.github.io/glyparse/reference/auto_parse.html" class="external-link">glyparse::auto_parse()</a></code> are accepted,
-including IUPAC-condensed, WURCS, GlycoCT, and others.</p></dd>
+<dd><p>One of:</p><ul><li><p>A <code><a href="https://glycoverse.github.io/glyrepr/reference/glycan_structure.html" class="external-link">glyrepr::glycan_structure()</a></code> vector.</p></li>
+<li><p>A glycan structure string vector, supported by <code><a href="https://glycoverse.github.io/glyparse/reference/auto_parse.html" class="external-link">glyparse::auto_parse()</a></code>.</p></li>
+<li><p>A character vector of motif names (use <code><a href="all_motifs.html">all_motifs()</a></code> to see all available motifs).</p></li>
+</ul></dd>
 
 
 <dt id="arg-alignments">alignments<a class="anchor" aria-label="anchor" href="#arg-alignments"></a></dt>
@@ -208,11 +211,11 @@ otherwise use the character vector itself as the names.</p></li>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Monosaccharide type matching examples</span></span></span>
 <span class="r-in"><span><span class="co"># Concrete glycan vs generic motif: matches (glycan converted to generic)</span></span></span>
-<span class="r-in"><span><span class="fu">count_motif</span><span class="op">(</span><span class="st">"Man(?1-"</span>, <span class="st">"Hex(?1-"</span><span class="op">)</span>  <span class="co"># Returns 1</span></span></span>
+<span class="r-in"><span><span class="fu">count_motif</span><span class="op">(</span><span class="st">"Man(?1-"</span>, <span class="st">"Hex(?1-"</span><span class="op">)</span> <span class="co"># Returns 1</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 1</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Generic glycan vs concrete motif: doesn't match</span></span></span>
-<span class="r-in"><span><span class="fu">count_motif</span><span class="op">(</span><span class="st">"Hex(?1-"</span>, <span class="st">"Man(?1-"</span><span class="op">)</span>  <span class="co"># Returns 0</span></span></span>
+<span class="r-in"><span><span class="fu">count_motif</span><span class="op">(</span><span class="st">"Hex(?1-"</span>, <span class="st">"Man(?1-"</span><span class="op">)</span> <span class="co"># Returns 0</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Matrix example showing type matching rules</span></span></span>

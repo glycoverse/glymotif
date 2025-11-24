@@ -34,20 +34,30 @@ have_motifs(
 
 - glycans:
 
-  A 'glyrepr_structure' object, or a glycan structure string vector. All
-  formats supported by
-  [`glyparse::auto_parse()`](https://glycoverse.github.io/glyparse/reference/auto_parse.html)
-  are accepted, including IUPAC-condensed, WURCS, GlycoCT, and others.
+  One of:
+
+  - A
+    [`glyrepr::glycan_structure()`](https://glycoverse.github.io/glyrepr/reference/glycan_structure.html)
+    vector.
+
+  - A glycan structure string vector. All formats supported by
+    [`glyparse::auto_parse()`](https://glycoverse.github.io/glyparse/reference/auto_parse.html)
+    are accepted, including IUPAC-condensed, WURCS, GlycoCT, and others.
 
 - motif:
 
-  A 'glyrepr_structure' object, a glycan structure string, or a known
-  motif name (use
-  [`all_motifs()`](https://glycoverse.github.io/glymotif/reference/all_motifs.md)
-  to see all available motifs). For glycan structure strings, all
-  formats supported by
-  [`glyparse::auto_parse()`](https://glycoverse.github.io/glyparse/reference/auto_parse.html)
-  are accepted, including IUPAC-condensed, WURCS, GlycoCT, and others.
+  One of:
+
+  - A
+    [`glyrepr::glycan_structure()`](https://glycoverse.github.io/glyrepr/reference/glycan_structure.html)
+    scalar.
+
+  - A glycan structure string, supported by
+    [`glyparse::auto_parse()`](https://glycoverse.github.io/glyparse/reference/auto_parse.html).
+
+  - A known motif name (use
+    [`all_motifs()`](https://glycoverse.github.io/glymotif/reference/all_motifs.md)
+    to see all available motifs).
 
 - alignment:
 
@@ -60,7 +70,7 @@ have_motifs(
 - ignore_linkages:
 
   A logical value. If `TRUE`, linkages will be ignored in the
-  comparison.
+  comparison. Default is `FALSE`.
 
 - strict_sub:
 
@@ -70,11 +80,18 @@ have_motifs(
 
 - motifs:
 
-  A character vector of motif names, glycan structure strings, or a
-  'glyrepr_structure' object. For glycan structure strings, all formats
-  supported by
-  [`glyparse::auto_parse()`](https://glycoverse.github.io/glyparse/reference/auto_parse.html)
-  are accepted, including IUPAC-condensed, WURCS, GlycoCT, and others.
+  One of:
+
+  - A
+    [`glyrepr::glycan_structure()`](https://glycoverse.github.io/glyrepr/reference/glycan_structure.html)
+    vector.
+
+  - A glycan structure string vector, supported by
+    [`glyparse::auto_parse()`](https://glycoverse.github.io/glyparse/reference/auto_parse.html).
+
+  - A character vector of motif names (use
+    [`all_motifs()`](https://glycoverse.github.io/glymotif/reference/all_motifs.md)
+    to see all available motifs).
 
 - alignments:
 
@@ -309,8 +326,8 @@ glycan_3 <- parse_iupac_condensed("Gal(a1-3)Gal(a1-4)Gal(a1-6)Gal(a1-")
 motifs <- c(
   "Gal(a1-3)Gal(a1-4)Gal(a1-6)Gal(a1-",
   "Gal(a1-3)Gal(a1-4)Gal(a1-",
-           "Gal(a1-4)Gal(a1-6)Gal(a1-",
-           "Gal(a1-4)Gal(a1-"
+  "Gal(a1-4)Gal(a1-6)Gal(a1-",
+  "Gal(a1-4)Gal(a1-"
 )
 
 purrr::map_lgl(motifs, ~ have_motif(glycan_3, .x, alignment = "whole"))
@@ -345,16 +362,16 @@ have_motif(glycan_5, glycan_5, strict_sub = FALSE)
 #> [1] TRUE
 
 # Multiple substituents
-glycan_6 <- "Glc3Me6S(a1-"  # has both 3Me and 6S substituents
-have_motif(glycan_6, "Glc3Me6S(a1-")  # TRUE: exact match
+glycan_6 <- "Glc3Me6S(a1-" # has both 3Me and 6S substituents
+have_motif(glycan_6, "Glc3Me6S(a1-") # TRUE: exact match
 #> [1] TRUE
-have_motif(glycan_6, "Glc?Me6S(a1-")  # TRUE: obscure linkage ?Me matches 3Me
+have_motif(glycan_6, "Glc?Me6S(a1-") # TRUE: obscure linkage ?Me matches 3Me
 #> [1] TRUE
-have_motif(glycan_6, "Glc3Me?S(a1-")  # TRUE: obscure linkage ?S matches 6S
+have_motif(glycan_6, "Glc3Me?S(a1-") # TRUE: obscure linkage ?S matches 6S
 #> [1] TRUE
-have_motif(glycan_6, "Glc3Me(a1-")    # FALSE: missing 6S substituent
+have_motif(glycan_6, "Glc3Me(a1-") # FALSE: missing 6S substituent
 #> [1] FALSE
-have_motif(glycan_6, "Glc(a1-")       # FALSE: missing all substituents
+have_motif(glycan_6, "Glc(a1-") # FALSE: missing all substituents
 #> [1] FALSE
 
 # Vectorization with single motif
@@ -379,8 +396,8 @@ have_motifs(glycans, motifs)
 
 # You can assign each motif a name
 motifs <- c(
-  motif1 = "Gal(b1-3)GalNAc(b1-", 
-  motif2 = "Gal(b1-4)GalNAc(b1-", 
+  motif1 = "Gal(b1-3)GalNAc(b1-",
+  motif2 = "Gal(b1-4)GalNAc(b1-",
   motif3 = "GlcNAc(b1-6)GalNAc(b1-"
 )
 have_motifs(glycans, motifs)

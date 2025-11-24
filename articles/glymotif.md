@@ -37,6 +37,7 @@ used it before, we highly recommend checking out its
 first.
 
 ``` r
+library(glyrepr)
 library(glymotif)
 ```
 
@@ -156,6 +157,10 @@ have_motif(glycans, "Type 2 LN2")
 #> [1] FALSE FALSE FALSE FALSE FALSE
 ```
 
+**Caution:** If you are using predefined motif names, you should be
+aware that all of the built-in motifs have “intact” structure level. See
+the “Handling Structural Ambiguity” section below for more details.
+
 ## The Art and Science of Motif Matching 🎨🔬
 
 Now we enter the fascinating complexity of motif recognition. You might
@@ -191,6 +196,8 @@ spectrometry might only tell us “HexNAc” instead of “GlcNAc”, or linkage
 analysis might yield “a1-?” instead of “a1-6”. These uncertainties are
 common in experimental glycomics and glycoproteomics.
 
+### How `glymotif` Handles Structural Ambiguity
+
 `glymotif` handles these ambiguities with a fundamental principle: **A
 glycan cannot be more ambiguous than the motif it’s being matched
 against.**
@@ -213,8 +220,19 @@ aren’t sufficient evidence.
 
 If you’re getting unexpected `FALSE` results with
 [`have_motif()`](https://glycoverse.github.io/glymotif/reference/have_motif.md)
-(especially when using built-in motifs with ambiguous glycans), here are
-two strategies:
+(especially when using built-in motifs with ambiguous glycans), the
+first thing you should do is to check the structure level of the glycan
+and the motif. You can use
+[`glyrepr::get_structure_level()`](https://glycoverse.github.io/glyrepr/reference/get_structure_level.html)
+to help you with this task.
+
+``` r
+# get_structure_level() expects a glycan structure vector
+get_structure_level(as_glycan_structure(c("Gal(??-?)GalNAc(??-", "Gal(a1-6)GalNAc(a1-")))
+#> [1] "topological" "intact"
+```
+
+here are two strategies:
 
 **1. Ignore linkage information** when linkages are unreliable:
 

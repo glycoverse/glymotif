@@ -18,3 +18,10 @@ is_known_motif(name)
 ## Value
 
 A logical vector.
+
+## Examples
+
+``` r
+is_known_motif(c("N-Glycan core basic", "O-Glycan core 1", "unknown"))
+#> [1]  TRUE  TRUE FALSE
+```

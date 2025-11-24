@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">glymotif</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.11.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.11.2.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -44,6 +44,7 @@
 <li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json">
 </form></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/glycoverse/glymotif/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
       </ul>
 </div>
 
@@ -59,7 +60,7 @@
       <img src="../logo.png" class="logo" alt=""><h1>Getting Started with glymotif</h1>
             
       
-
+      <small class="dont-index">Source: <a href="https://github.com/glycoverse/glymotif/blob/main/vignettes/glymotif.Rmd" class="external-link"><code>vignettes/glymotif.Rmd</code></a></small>
       <div class="d-none name"><code>glymotif.Rmd</code></div>
     </div>
 
@@ -100,7 +101,8 @@ can analyze hundreds or thousands at once.</p>
 you haven’t used it before, we highly recommend checking out its <a href="https://glycoverse.github.io/glyrepr/articles/glyrepr.html" class="external-link">introduction</a>
 first.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://glycoverse.github.io/glymotif/">glymotif</a></span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://glycoverse.github.io/glyrepr/" class="external-link">glyrepr</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://glycoverse.github.io/glymotif/">glymotif</a></span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="a-quick-challenge">A Quick Challenge 🧩<a class="anchor" aria-label="anchor" href="#a-quick-challenge"></a>
@@ -205,6 +207,10 @@ strings! Use predefined motif names instead:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/have_motif.html">have_motif</a></span><span class="op">(</span><span class="va">glycans</span>, <span class="st">"Type 2 LN2"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] FALSE FALSE FALSE FALSE FALSE</span></span></code></pre></div>
+<p><strong>Caution:</strong> If you are using predefined motif names,
+you should be aware that all of the built-in motifs have “intact”
+structure level. See the “Handling Structural Ambiguity” section below
+for more details.</p>
 </div>
 </div>
 <div class="section level2">
@@ -245,6 +251,9 @@ intelligent matching decisions.</p>
 spectrometry might only tell us “HexNAc” instead of “GlcNAc”, or linkage
 analysis might yield “a1-?” instead of “a1-6”. These uncertainties are
 common in experimental glycomics and glycoproteomics.</p>
+<div class="section level3">
+<h3 id="how-glymotif-handles-structural-ambiguity">How <code>glymotif</code> Handles Structural Ambiguity<a class="anchor" aria-label="anchor" href="#how-glymotif-handles-structural-ambiguity"></a>
+</h3>
 <p><code>glymotif</code> handles these ambiguities with a fundamental
 principle: <strong>A glycan cannot be more ambiguous than the motif it’s
 being matched against.</strong></p>
@@ -259,20 +268,29 @@ being matched against.</strong></p>
 <p>This behavior is <strong>intentional</strong>, not a bug. ✨ True
 motif identification requires confidence: structural possibilities alone
 aren’t sufficient evidence.</p>
+</div>
 <div class="section level3">
 <h3 id="working-around-ambiguity">Working Around Ambiguity<a class="anchor" aria-label="anchor" href="#working-around-ambiguity"></a>
 </h3>
 <p>If you’re getting unexpected <code>FALSE</code> results with
 <code><a href="../reference/have_motif.html">have_motif()</a></code> (especially when using built-in motifs with
-ambiguous glycans), here are two strategies:</p>
+ambiguous glycans), the first thing you should do is to check the
+structure level of the glycan and the motif. You can use
+<code><a href="https://glycoverse.github.io/glyrepr/reference/get_structure_level.html" class="external-link">glyrepr::get_structure_level()</a></code> to help you with this
+task.</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># get_structure_level() expects a glycan structure vector</span></span>
+<span><span class="fu"><a href="https://glycoverse.github.io/glyrepr/reference/get_structure_level.html" class="external-link">get_structure_level</a></span><span class="op">(</span><span class="fu"><a href="https://glycoverse.github.io/glyrepr/reference/as_glycan_structure.html" class="external-link">as_glycan_structure</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Gal(??-?)GalNAc(??-"</span>, <span class="st">"Gal(a1-6)GalNAc(a1-"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] "topological" "intact"</span></span></code></pre></div>
+<p>here are two strategies:</p>
 <p><strong>1. Ignore linkage information</strong> when linkages are
 unreliable:</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/have_motif.html">have_motif</a></span><span class="op">(</span><span class="st">"Gal(??-?)GalNAc(??-"</span>, <span class="st">"Gal(a1-6)GalNAc(a1-"</span>, ignore_linkages <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] TRUE</span></span></code></pre></div>
 <p><strong>2. Convert motifs to generic forms</strong> to match the
 generic monosaccharides of your data:</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">motif</span> <span class="op">&lt;-</span> <span class="fu">glyparse</span><span class="fu">::</span><span class="fu"><a href="https://glycoverse.github.io/glyparse/reference/auto_parse.html" class="external-link">auto_parse</a></span><span class="op">(</span><span class="st">"Gal(a1-6)GalNAc(a1-"</span><span class="op">)</span>  <span class="co"># First, create a `glycan_structure()`</span></span>
 <span><span class="va">motif</span> <span class="op">&lt;-</span> <span class="fu">glyrepr</span><span class="fu">::</span><span class="fu"><a href="https://glycoverse.github.io/glyrepr/reference/convert_to_generic.html" class="external-link">convert_to_generic</a></span><span class="op">(</span><span class="va">motif</span><span class="op">)</span>  <span class="co"># Then, convert to generic</span></span>
 <span><span class="fu"><a href="../reference/have_motif.html">have_motif</a></span><span class="op">(</span><span class="st">"Hex(a1-6)HexNAc(a1-"</span>, <span class="va">motif</span><span class="op">)</span></span>

@@ -21,7 +21,7 @@ Monosaccharides, linkages, and substituents are all considered."><meta property=
 
     <a class="navbar-brand me-2" href="../index.html">glymotif</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.11.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.11.2.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -39,6 +39,7 @@ Monosaccharides, linkages, and substituents are all considered."><meta property=
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/glycoverse/glymotif/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
       </ul></div>
 
 
@@ -47,7 +48,7 @@ Monosaccharides, linkages, and substituents are all considered."><meta property=
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Check if the Glycans have the Given Motif(s)</h1>
-
+      <small class="dont-index">Source: <a href="https://github.com/glycoverse/glymotif/blob/main/R/have-motif.R" class="external-link"><code>R/have-motif.R</code></a></small>
       <div class="d-none name"><code>have_motif.Rd</code></div>
     </div>
 
@@ -83,16 +84,17 @@ Monosaccharides, linkages, and substituents are all considered.</p>
 
 
 <dl><dt id="arg-glycans">glycans<a class="anchor" aria-label="anchor" href="#arg-glycans"></a></dt>
-<dd><p>A 'glyrepr_structure' object, or a glycan structure string vector.
-All formats supported by <code><a href="https://glycoverse.github.io/glyparse/reference/auto_parse.html" class="external-link">glyparse::auto_parse()</a></code> are accepted,
-including IUPAC-condensed, WURCS, GlycoCT, and others.</p></dd>
+<dd><p>One of:</p><ul><li><p>A <code><a href="https://glycoverse.github.io/glyrepr/reference/glycan_structure.html" class="external-link">glyrepr::glycan_structure()</a></code> vector.</p></li>
+<li><p>A glycan structure string vector. All formats supported by <code><a href="https://glycoverse.github.io/glyparse/reference/auto_parse.html" class="external-link">glyparse::auto_parse()</a></code> are accepted,
+including IUPAC-condensed, WURCS, GlycoCT, and others.</p></li>
+</ul></dd>
 
 
 <dt id="arg-motif">motif<a class="anchor" aria-label="anchor" href="#arg-motif"></a></dt>
-<dd><p>A 'glyrepr_structure' object, a glycan structure string,
-or a known motif name (use <code><a href="all_motifs.html">all_motifs()</a></code> to see all available motifs).
-For glycan structure strings, all formats supported by <code><a href="https://glycoverse.github.io/glyparse/reference/auto_parse.html" class="external-link">glyparse::auto_parse()</a></code> are accepted,
-including IUPAC-condensed, WURCS, GlycoCT, and others.</p></dd>
+<dd><p>One of:</p><ul><li><p>A <code><a href="https://glycoverse.github.io/glyrepr/reference/glycan_structure.html" class="external-link">glyrepr::glycan_structure()</a></code> scalar.</p></li>
+<li><p>A glycan structure string, supported by <code><a href="https://glycoverse.github.io/glyparse/reference/auto_parse.html" class="external-link">glyparse::auto_parse()</a></code>.</p></li>
+<li><p>A known motif name (use <code><a href="all_motifs.html">all_motifs()</a></code> to see all available motifs).</p></li>
+</ul></dd>
 
 
 <dt id="arg-alignment">alignment<a class="anchor" aria-label="anchor" href="#arg-alignment"></a></dt>
@@ -104,7 +106,8 @@ Otherwise, "substructure" will be used.</p></dd>
 
 
 <dt id="arg-ignore-linkages">ignore_linkages<a class="anchor" aria-label="anchor" href="#arg-ignore-linkages"></a></dt>
-<dd><p>A logical value. If <code>TRUE</code>, linkages will be ignored in the comparison.</p></dd>
+<dd><p>A logical value. If <code>TRUE</code>, linkages will be ignored in the comparison.
+Default is <code>FALSE</code>.</p></dd>
 
 
 <dt id="arg-strict-sub">strict_sub<a class="anchor" aria-label="anchor" href="#arg-strict-sub"></a></dt>
@@ -114,10 +117,10 @@ the motif must have the same substituent to be matched.</p></dd>
 
 
 <dt id="arg-motifs">motifs<a class="anchor" aria-label="anchor" href="#arg-motifs"></a></dt>
-<dd><p>A character vector of motif names, glycan structure strings,
-or a 'glyrepr_structure' object.
-For glycan structure strings, all formats supported by <code><a href="https://glycoverse.github.io/glyparse/reference/auto_parse.html" class="external-link">glyparse::auto_parse()</a></code> are accepted,
-including IUPAC-condensed, WURCS, GlycoCT, and others.</p></dd>
+<dd><p>One of:</p><ul><li><p>A <code><a href="https://glycoverse.github.io/glyrepr/reference/glycan_structure.html" class="external-link">glyrepr::glycan_structure()</a></code> vector.</p></li>
+<li><p>A glycan structure string vector, supported by <code><a href="https://glycoverse.github.io/glyparse/reference/auto_parse.html" class="external-link">glyparse::auto_parse()</a></code>.</p></li>
+<li><p>A character vector of motif names (use <code><a href="all_motifs.html">all_motifs()</a></code> to see all available motifs).</p></li>
+</ul></dd>
 
 
 <dt id="arg-alignments">alignments<a class="anchor" aria-label="anchor" href="#arg-alignments"></a></dt>
@@ -285,8 +288,8 @@ The function returns <code>TRUE</code> if any of the matches pass all checks.</p
 <span class="r-in"><span><span class="va">motifs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>  <span class="st">"Gal(a1-3)Gal(a1-4)Gal(a1-6)Gal(a1-"</span>,</span></span>
 <span class="r-in"><span>  <span class="st">"Gal(a1-3)Gal(a1-4)Gal(a1-"</span>,</span></span>
-<span class="r-in"><span>           <span class="st">"Gal(a1-4)Gal(a1-6)Gal(a1-"</span>,</span></span>
-<span class="r-in"><span>           <span class="st">"Gal(a1-4)Gal(a1-"</span></span></span>
+<span class="r-in"><span>  <span class="st">"Gal(a1-4)Gal(a1-6)Gal(a1-"</span>,</span></span>
+<span class="r-in"><span>  <span class="st">"Gal(a1-4)Gal(a1-"</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map_lgl</a></span><span class="op">(</span><span class="va">motifs</span>, <span class="op">~</span> <span class="fu">have_motif</span><span class="op">(</span><span class="va">glycan_3</span>, <span class="va">.x</span>, alignment <span class="op">=</span> <span class="st">"whole"</span><span class="op">)</span><span class="op">)</span></span></span>
@@ -321,16 +324,16 @@ The function returns <code>TRUE</code> if any of the matches pass all checks.</p
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Multiple substituents</span></span></span>
-<span class="r-in"><span><span class="va">glycan_6</span> <span class="op">&lt;-</span> <span class="st">"Glc3Me6S(a1-"</span>  <span class="co"># has both 3Me and 6S substituents</span></span></span>
-<span class="r-in"><span><span class="fu">have_motif</span><span class="op">(</span><span class="va">glycan_6</span>, <span class="st">"Glc3Me6S(a1-"</span><span class="op">)</span>  <span class="co"># TRUE: exact match</span></span></span>
+<span class="r-in"><span><span class="va">glycan_6</span> <span class="op">&lt;-</span> <span class="st">"Glc3Me6S(a1-"</span> <span class="co"># has both 3Me and 6S substituents</span></span></span>
+<span class="r-in"><span><span class="fu">have_motif</span><span class="op">(</span><span class="va">glycan_6</span>, <span class="st">"Glc3Me6S(a1-"</span><span class="op">)</span> <span class="co"># TRUE: exact match</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
-<span class="r-in"><span><span class="fu">have_motif</span><span class="op">(</span><span class="va">glycan_6</span>, <span class="st">"Glc?Me6S(a1-"</span><span class="op">)</span>  <span class="co"># TRUE: obscure linkage ?Me matches 3Me</span></span></span>
+<span class="r-in"><span><span class="fu">have_motif</span><span class="op">(</span><span class="va">glycan_6</span>, <span class="st">"Glc?Me6S(a1-"</span><span class="op">)</span> <span class="co"># TRUE: obscure linkage ?Me matches 3Me</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
-<span class="r-in"><span><span class="fu">have_motif</span><span class="op">(</span><span class="va">glycan_6</span>, <span class="st">"Glc3Me?S(a1-"</span><span class="op">)</span>  <span class="co"># TRUE: obscure linkage ?S matches 6S</span></span></span>
+<span class="r-in"><span><span class="fu">have_motif</span><span class="op">(</span><span class="va">glycan_6</span>, <span class="st">"Glc3Me?S(a1-"</span><span class="op">)</span> <span class="co"># TRUE: obscure linkage ?S matches 6S</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
-<span class="r-in"><span><span class="fu">have_motif</span><span class="op">(</span><span class="va">glycan_6</span>, <span class="st">"Glc3Me(a1-"</span><span class="op">)</span>    <span class="co"># FALSE: missing 6S substituent</span></span></span>
+<span class="r-in"><span><span class="fu">have_motif</span><span class="op">(</span><span class="va">glycan_6</span>, <span class="st">"Glc3Me(a1-"</span><span class="op">)</span> <span class="co"># FALSE: missing 6S substituent</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] FALSE</span>
-<span class="r-in"><span><span class="fu">have_motif</span><span class="op">(</span><span class="va">glycan_6</span>, <span class="st">"Glc(a1-"</span><span class="op">)</span>       <span class="co"># FALSE: missing all substituents</span></span></span>
+<span class="r-in"><span><span class="fu">have_motif</span><span class="op">(</span><span class="va">glycan_6</span>, <span class="st">"Glc(a1-"</span><span class="op">)</span> <span class="co"># FALSE: missing all substituents</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] FALSE</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Vectorization with single motif</span></span></span>
@@ -355,8 +358,8 @@ The function returns <code>TRUE</code> if any of the matches pass all checks.</p
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># You can assign each motif a name</span></span></span>
 <span class="r-in"><span><span class="va">motifs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span></span>
-<span class="r-in"><span>  motif1 <span class="op">=</span> <span class="st">"Gal(b1-3)GalNAc(b1-"</span>, </span></span>
-<span class="r-in"><span>  motif2 <span class="op">=</span> <span class="st">"Gal(b1-4)GalNAc(b1-"</span>, </span></span>
+<span class="r-in"><span>  motif1 <span class="op">=</span> <span class="st">"Gal(b1-3)GalNAc(b1-"</span>,</span></span>
+<span class="r-in"><span>  motif2 <span class="op">=</span> <span class="st">"Gal(b1-4)GalNAc(b1-"</span>,</span></span>
 <span class="r-in"><span>  motif3 <span class="op">=</span> <span class="st">"GlcNAc(b1-6)GalNAc(b1-"</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">have_motifs</span><span class="op">(</span><span class="va">glycans</span>, <span class="va">motifs</span><span class="op">)</span></span></span>

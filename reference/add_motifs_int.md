@@ -78,11 +78,18 @@ add_motifs_lgl(
 
 - motifs:
 
-  A character vector of motif names, glycan structure strings, or a
-  'glyrepr_structure' object. For glycan structure strings, all formats
-  supported by
-  [`glyparse::auto_parse()`](https://glycoverse.github.io/glyparse/reference/auto_parse.html)
-  are accepted, including IUPAC-condensed, WURCS, GlycoCT, and others.
+  One of:
+
+  - A
+    [`glyrepr::glycan_structure()`](https://glycoverse.github.io/glyrepr/reference/glycan_structure.html)
+    vector.
+
+  - A glycan structure string vector, supported by
+    [`glyparse::auto_parse()`](https://glycoverse.github.io/glyparse/reference/auto_parse.html).
+
+  - A character vector of motif names (use
+    [`all_motifs()`](https://glycoverse.github.io/glymotif/reference/all_motifs.md)
+    to see all available motifs).
 
 - alignments:
 
@@ -93,7 +100,7 @@ add_motifs_lgl(
 - ignore_linkages:
 
   A logical value. If `TRUE`, linkages will be ignored in the
-  comparison.
+  comparison. Default is `FALSE`.
 
 - strict_sub:
 
@@ -134,7 +141,9 @@ is easy:
       mutate_var(has_hex = have_motif(glycan_structure, "Hex"))
 
 However, adding multiple motifs is not as straightforward. You can still
-use `mutate_var()` to add multiple motifs like this:
+use
+[`mutate_var()`](https://glycoverse.github.io/glyexp/reference/mutate_obs.html)
+to add multiple motifs like this:
 
     exp |>
       mutate_var(
@@ -175,3 +184,53 @@ objects:
 [`have_motifs()`](https://glycoverse.github.io/glymotif/reference/have_motif.md),
 [`count_motifs()`](https://glycoverse.github.io/glymotif/reference/count_motif.md),
 [`glyexp::experiment()`](https://glycoverse.github.io/glyexp/reference/experiment.html)
+
+## Examples
+
+``` r
+library(glyexp)
+
+exp <- real_experiment2
+
+exp |>
+  add_motifs_lgl(c(
+    lacnac = "Gal(??-?)GlcNAc(??-",
+    sia_lacnac = "Neu5Ac(??-?)Gal(??-?)GlcNAc(??-"
+  )) |>
+  get_var_info()
+#> # A tibble: 67 × 5
+#>    variable glycan_composition                glycan_structure lacnac sia_lacnac
+#>    <chr>    <comp>                            <struct>         <lgl>  <lgl>     
+#>  1 V1       Man(3)GlcNAc(3)                   GlcNAc(?1-?)Man… FALSE  FALSE     
+#>  2 V2       Man(3)GlcNAc(7)                   GlcNAc(?1-?)[Gl… FALSE  FALSE     
+#>  3 V3       Man(5)GlcNAc(2)                   Man(?1-?)[Man(?… FALSE  FALSE     
+#>  4 V4       Man(4)Gal(2)GlcNAc(4)Neu5Ac(2)    Neu5Ac(?2-?)Gal… TRUE   TRUE      
+#>  5 V5       Man(3)Gal(1)GlcNAc(3)             Gal(?1-?)GlcNAc… TRUE   FALSE     
+#>  6 V6       Man(3)Gal(2)GlcNAc(4)Fuc(2)       Gal(?1-?)GlcNAc… TRUE   FALSE     
+#>  7 V7       Man(3)GlcNAc(3)Fuc(1)             GlcNAc(?1-?)Man… FALSE  FALSE     
+#>  8 V8       Man(3)GlcNAc(4)                   GlcNAc(?1-?)Man… FALSE  FALSE     
+#>  9 V9       Man(3)Gal(2)GlcNAc(5)Neu5Ac(1)    Neu5Ac(?2-?)Gal… TRUE   TRUE      
+#> 10 V10      Man(3)Gal(1)GlcNAc(5)Fuc(1)Neu5A… Neu5Ac(?2-?)Gal… TRUE   TRUE      
+#> # ℹ 57 more rows
+
+exp |>
+  add_motifs_int(c(
+    lacnac = "Gal(??-?)GlcNAc(??-",
+    sia_lacnac = "Neu5Ac(??-?)Gal(??-?)GlcNAc(??-"
+  )) |>
+  get_var_info()
+#> # A tibble: 67 × 5
+#>    variable glycan_composition                glycan_structure lacnac sia_lacnac
+#>    <chr>    <comp>                            <struct>          <int>      <int>
+#>  1 V1       Man(3)GlcNAc(3)                   GlcNAc(?1-?)Man…      0          0
+#>  2 V2       Man(3)GlcNAc(7)                   GlcNAc(?1-?)[Gl…      0          0
+#>  3 V3       Man(5)GlcNAc(2)                   Man(?1-?)[Man(?…      0          0
+#>  4 V4       Man(4)Gal(2)GlcNAc(4)Neu5Ac(2)    Neu5Ac(?2-?)Gal…      2          2
+#>  5 V5       Man(3)Gal(1)GlcNAc(3)             Gal(?1-?)GlcNAc…      1          0
+#>  6 V6       Man(3)Gal(2)GlcNAc(4)Fuc(2)       Gal(?1-?)GlcNAc…      2          0
+#>  7 V7       Man(3)GlcNAc(3)Fuc(1)             GlcNAc(?1-?)Man…      0          0
+#>  8 V8       Man(3)GlcNAc(4)                   GlcNAc(?1-?)Man…      0          0
+#>  9 V9       Man(3)Gal(2)GlcNAc(5)Neu5Ac(1)    Neu5Ac(?2-?)Gal…      2          1
+#> 10 V10      Man(3)Gal(1)GlcNAc(5)Fuc(1)Neu5A… Neu5Ac(?2-?)Gal…      1          1
+#> # ℹ 57 more rows
+```

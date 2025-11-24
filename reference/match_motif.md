@@ -55,11 +55,30 @@ match_motifs(
 
 - glycans:
 
-  A `glyrepr_structure` object.
+  One of:
+
+  - A
+    [`glyrepr::glycan_structure()`](https://glycoverse.github.io/glyrepr/reference/glycan_structure.html)
+    vector.
+
+  - A glycan structure string vector. All formats supported by
+    [`glyparse::auto_parse()`](https://glycoverse.github.io/glyparse/reference/auto_parse.html)
+    are accepted, including IUPAC-condensed, WURCS, GlycoCT, and others.
 
 - motif:
 
-  A `glyrepr_structure` object with length 1.
+  One of:
+
+  - A
+    [`glyrepr::glycan_structure()`](https://glycoverse.github.io/glyrepr/reference/glycan_structure.html)
+    scalar.
+
+  - A glycan structure string, supported by
+    [`glyparse::auto_parse()`](https://glycoverse.github.io/glyparse/reference/auto_parse.html).
+
+  - A known motif name (use
+    [`all_motifs()`](https://glycoverse.github.io/glymotif/reference/all_motifs.md)
+    to see all available motifs).
 
 - alignment:
 
@@ -72,7 +91,7 @@ match_motifs(
 - ignore_linkages:
 
   A logical value. If `TRUE`, linkages will be ignored in the
-  comparison.
+  comparison. Default is `FALSE`.
 
 - strict_sub:
 
@@ -82,7 +101,18 @@ match_motifs(
 
 - motifs:
 
-  A `glyrepr_structure` object.
+  One of:
+
+  - A
+    [`glyrepr::glycan_structure()`](https://glycoverse.github.io/glyrepr/reference/glycan_structure.html)
+    vector.
+
+  - A glycan structure string vector, supported by
+    [`glyparse::auto_parse()`](https://glycoverse.github.io/glyparse/reference/auto_parse.html).
+
+  - A character vector of motif names (use
+    [`all_motifs()`](https://glycoverse.github.io/glymotif/reference/all_motifs.md)
+    to see all available motifs).
 
 - alignments:
 
@@ -142,7 +172,7 @@ library(glyrepr)
 
 # Let's peek under the hood of the nodes in the glycan
 glycan_graph <- get_structure_graphs(glycan)
-igraph::V(glycan_graph)$mono  # 1, 2, 3, 4, 5
+igraph::V(glycan_graph)$mono # 1, 2, 3, 4, 5
 #> [1] "Man"    "Man"    "Man"    "GlcNAc" "GlcNAc"
 
 # Match a single motif against a single glycan
