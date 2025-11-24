@@ -4,7 +4,7 @@
 \name{glymotif-package}
 \alias{glymotif}
 \alias{glymotif-package}
-\title{glymotif: Extract Glycan Motifs From Glycan Structures}
+\title{glymotif: Extract Glycan Motifs from Glycan Structures}
 \description{
 \if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
 
