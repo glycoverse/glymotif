@@ -1,8 +1,8 @@
 Package: glymotif
-Title: Extract glycan motifs from glycan structures
+Title: Extract Glycan Motifs From Glycan Structures
 Version: 0.11.2.9000
 Authors@R: 
-    person("Bin", "Fu", , "23110220018@m.fudan.edu.cn", role = c("aut", "cre"),
+    person("Bin", "Fu", , "23110220018@m.fudan.edu.cn", role = c("aut", "cre", "cph"),
            comment = c(ORCID = "0000-0001-8567-2997"))
 Description: 
     Provides comprehensive tools for glycan motif analysis and detection in 
@@ -34,7 +34,7 @@ RoxygenNote: 7.3.3
 URL: https://glycoverse.github.io/glymotif/
 Imports: 
     cli,
-    glyrepr (>= 0.7.0),
+    glyrepr (>= 0.9.0),
     glyparse (>= 0.5.3),
     igraph,
     purrr,

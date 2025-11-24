@@ -4,7 +4,7 @@
 \name{glymotif-package}
 \alias{glymotif}
 \alias{glymotif-package}
-\title{glymotif: Extract glycan motifs from glycan structures}
+\title{glymotif: Extract Glycan Motifs From Glycan Structures}
 \description{
 \if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
 
@@ -18,7 +18,7 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: Bin Fu \email{23110220018@m.fudan.edu.cn} (\href{https://orcid.org/0000-0001-8567-2997}{ORCID})
+\strong{Maintainer}: Bin Fu \email{23110220018@m.fudan.edu.cn} (\href{https://orcid.org/0000-0001-8567-2997}{ORCID}) [copyright holder]
 
 }
 \keyword{internal}
