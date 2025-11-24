@@ -57,6 +57,26 @@
 #' @inheritParams have_motifs
 #'
 #' @return An [glyexp::experiment()] object with motif annotations added to the variable information.
+#'
+#' @examples
+#' library(glyexp)
+#'
+#' exp <- real_experiment2
+#'
+#' exp |>
+#'   add_motifs_lgl(c(
+#'     lacnac = "Gal(??-?)GlcNAc(??-",
+#'     sia_lacnac = "Neu5Ac(??-?)Gal(??-?)GlcNAc(??-"
+#'   )) |>
+#'   get_var_info()
+#'
+#' exp |>
+#'   add_motifs_int(c(
+#'     lacnac = "Gal(??-?)GlcNAc(??-",
+#'     sia_lacnac = "Neu5Ac(??-?)Gal(??-?)GlcNAc(??-"
+#'   )) |>
+#'   get_var_info()
+#'
 #' @seealso [glymotif::have_motifs()], [glymotif::count_motifs()], [glyexp::experiment()]
 #'
 #' @export

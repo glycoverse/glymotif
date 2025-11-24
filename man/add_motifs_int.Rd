@@ -145,6 +145,26 @@ Under the hood, they use a more straightforward approach for \code{\link[glyexp:
 }
 }
 
+\examples{
+library(glyexp)
+
+exp <- real_experiment2
+
+exp |>
+  add_motifs_lgl(c(
+    lacnac = "Gal(??-?)GlcNAc(??-",
+    sia_lacnac = "Neu5Ac(??-?)Gal(??-?)GlcNAc(??-"
+  )) |>
+  get_var_info()
+
+exp |>
+  add_motifs_int(c(
+    lacnac = "Gal(??-?)GlcNAc(??-",
+    sia_lacnac = "Neu5Ac(??-?)Gal(??-?)GlcNAc(??-"
+  )) |>
+  get_var_info()
+
+}
 \seealso{
 \code{\link[=have_motifs]{have_motifs()}}, \code{\link[=count_motifs]{count_motifs()}}, \code{\link[glyexp:experiment]{glyexp::experiment()}}
 }

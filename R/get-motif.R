@@ -36,6 +36,8 @@ all_motifs <- function() {
 #'
 #' @param name A character vector of the motif name.
 #' @return A logical vector.
+#' @examples
+#' is_known_motif(c("N-Glycan core basic", "O-Glycan core 1", "unknown"))
 #' @export
 is_known_motif <- function(name) {
   checkmate::assert_character(name)

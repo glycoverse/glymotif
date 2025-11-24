@@ -160,10 +160,10 @@ print(result)
 
 # Monosaccharide type matching examples
 # Concrete glycan vs generic motif: matches (glycan converted to generic)
-count_motif("Man(?1-", "Hex(?1-")  # Returns 1
+count_motif("Man(?1-", "Hex(?1-") # Returns 1
 
 # Generic glycan vs concrete motif: doesn't match
-count_motif("Hex(?1-", "Man(?1-")  # Returns 0
+count_motif("Hex(?1-", "Man(?1-") # Returns 0
 
 # Matrix example showing type matching rules
 count_motifs(glycans = c("Hex(?1-", "Man(?1-"), motifs = c("Hex(?1-", "Man(?1-"))

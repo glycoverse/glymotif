@@ -50,21 +50,21 @@
 #'
 #' @seealso [have_motif()], [have_motifs()]
 #'
-#' @return 
+#' @return
 #' - `count_motif()`: An integer vector indicating how many times each `glycan` has the `motif`.
 #' - `count_motifs()`: An integer matrix where rows correspond to glycans and columns correspond to motifs.
 #'   Row names contain glycan identifiers and column names contain motif identifiers.
 #'
 #' @examples
 #' library(glyparse)
-#' 
+#'
 #' count_motif("Gal(b1-3)Gal(b1-3)GalNAc(b1-", "Gal(b1-")
 #' count_motif(
 #'   "Man(b1-?)[Man(b1-?)]GalNAc(b1-4)GlcNAc(b1-",
 #'   "Man(b1-?)[Man(b1-?)]GalNAc(b1-"
 #' )
 #' count_motif("Gal(b1-3)Gal(b1-", "Man(b1-")
-#' 
+#'
 #' # Vectorized usage with single motif
 #' count_motif(c("Gal(b1-3)Gal(b1-3)GalNAc(b1-", "Gal(b1-3)GalNAc(b1-"), "Gal(b1-")
 #'
@@ -79,11 +79,11 @@
 #'
 #' # Monosaccharide type matching examples
 #' # Concrete glycan vs generic motif: matches (glycan converted to generic)
-#' count_motif("Man(?1-", "Hex(?1-")  # Returns 1
-#' 
+#' count_motif("Man(?1-", "Hex(?1-") # Returns 1
+#'
 #' # Generic glycan vs concrete motif: doesn't match
-#' count_motif("Hex(?1-", "Man(?1-")  # Returns 0
-#' 
+#' count_motif("Hex(?1-", "Man(?1-") # Returns 0
+#'
 #' # Matrix example showing type matching rules
 #' count_motifs(glycans = c("Hex(?1-", "Man(?1-"), motifs = c("Hex(?1-", "Man(?1-"))
 #'
@@ -135,7 +135,8 @@ count_motif_ <- function(glycans, motif, alignment, ignore_linkages = FALSE, str
   motif_graph <- c_graphs$motif
   res <- perform_vf2(glycan_graph, motif_graph)
   valid_mask <- purrr::map_lgl(
-    res, is_valid_result, glycan = glycan_graph, motif = motif_graph,
+    res, is_valid_result,
+    glycan = glycan_graph, motif = motif_graph,
     alignment = alignment, ignore_linkages = ignore_linkages, strict_sub = strict_sub
   )
   valid_res <- res[valid_mask]

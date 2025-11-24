@@ -15,3 +15,6 @@ A logical vector.
 \description{
 This function checks if motifs are known motifs in GlycoMotif GlyGen Collection.
 }
+\examples{
+is_known_motif(c("N-Glycan core basic", "O-Glycan core 1", "unknown"))
+}
