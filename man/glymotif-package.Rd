@@ -14,6 +14,8 @@ Provides comprehensive tools for glycan motif analysis and detection in glycobio
 Useful links:
 \itemize{
   \item \url{https://glycoverse.github.io/glymotif/}
+  \item \url{https://github.com/glycoverse/glymotif}
+  \item Report bugs at \url{https://github.com/glycoverse/glymotif/issues}
 }
 
 }
