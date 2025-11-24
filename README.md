@@ -30,13 +30,15 @@ understanding glycan-mediated biological processes.
 
 ## Installation
 
-You can install the latest release of glymotif from CRAN with:
+You can install the latest release of glymotif from
+[GitHub](https://github.com/) with:
 
 ``` r
-install.packages("glymotif")
+# install.packages("remotes")
+remotes::install_github("glycoverse/glymotif@*release")
 ```
 
-Or install the development version from GitHub:
+Or install the development version:
 
 ``` r
 remotes::install_github("glycoverse/glymotif")
