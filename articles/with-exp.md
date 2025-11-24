@@ -53,20 +53,20 @@ library(glyclean)
 
 exp <- auto_clean(real_experiment)
 #> ℹ Normalizing data (Median)
-#> ✔ Normalizing data (Median) [157ms]
+#> ✔ Normalizing data (Median) [148ms]
 #> 
 #> ℹ Removing variables with >50% missing values
-#> ✔ Removing variables with >50% missing values [27ms]
+#> ✔ Removing variables with >50% missing values [25ms]
 #> 
 #> ℹ Imputing missing values
 #> ℹ Sample size <= 30, using sample minimum imputation
-#> ℹ Imputing missing values✔ Imputing missing values [30ms]
+#> ℹ Imputing missing values✔ Imputing missing values [24ms]
 #> 
 #> ℹ Aggregating data
-#> ✔ Aggregating data [1.1s]
+#> ✔ Aggregating data [1s]
 #> 
 #> ℹ Normalizing data again
-#> ✔ Normalizing data again [16ms]
+#> ✔ Normalizing data again [15ms]
 exp
 #> 
 #> ── Glycoproteomics Experiment ──────────────────────────────────────────────────
