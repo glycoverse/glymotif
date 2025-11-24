@@ -22,14 +22,19 @@ count_motifs(
 )
 }
 \arguments{
-\item{glycans}{A 'glyrepr_structure' object, or a glycan structure string vector.
-All formats supported by \code{\link[glyparse:auto_parse]{glyparse::auto_parse()}} are accepted,
-including IUPAC-condensed, WURCS, GlycoCT, and others.}
+\item{glycans}{One of:
+\itemize{
+\item A \code{\link[glyrepr:glycan_structure]{glyrepr::glycan_structure()}} vector.
+\item A glycan structure string vector. All formats supported by \code{\link[glyparse:auto_parse]{glyparse::auto_parse()}} are accepted,
+including IUPAC-condensed, WURCS, GlycoCT, and others.
+}}
 
-\item{motif}{A 'glyrepr_structure' object, a glycan structure string,
-or a known motif name (use \code{\link[=all_motifs]{all_motifs()}} to see all available motifs).
-For glycan structure strings, all formats supported by \code{\link[glyparse:auto_parse]{glyparse::auto_parse()}} are accepted,
-including IUPAC-condensed, WURCS, GlycoCT, and others.}
+\item{motif}{One of:
+\itemize{
+\item A \code{\link[glyrepr:glycan_structure]{glyrepr::glycan_structure()}} scalar.
+\item A glycan structure string, supported by \code{\link[glyparse:auto_parse]{glyparse::auto_parse()}}.
+\item A known motif name (use \code{\link[=all_motifs]{all_motifs()}} to see all available motifs).
+}}
 
 \item{alignment}{A character string.
 Possible values are "substructure", "core", "terminal" and "whole".
@@ -37,16 +42,19 @@ If not provided, the value will be decided based on the \code{motif} argument.
 If \code{motif} is a motif name, the alignment in the database will be used.
 Otherwise, "substructure" will be used.}
 
-\item{ignore_linkages}{A logical value. If \code{TRUE}, linkages will be ignored in the comparison.}
+\item{ignore_linkages}{A logical value. If \code{TRUE}, linkages will be ignored in the comparison.
+Default is \code{FALSE}.}
 
 \item{strict_sub}{A logical value. If \code{TRUE} (default), substituents will be matched in strict mode,
 which means if the glycan has a substituent in some residue,
 the motif must have the same substituent to be matched.}
 
-\item{motifs}{A character vector of motif names, glycan structure strings,
-or a 'glyrepr_structure' object.
-For glycan structure strings, all formats supported by \code{\link[glyparse:auto_parse]{glyparse::auto_parse()}} are accepted,
-including IUPAC-condensed, WURCS, GlycoCT, and others.}
+\item{motifs}{One of:
+\itemize{
+\item A \code{\link[glyrepr:glycan_structure]{glyrepr::glycan_structure()}} vector.
+\item A glycan structure string vector, supported by \code{\link[glyparse:auto_parse]{glyparse::auto_parse()}}.
+\item A character vector of motif names (use \code{\link[=all_motifs]{all_motifs()}} to see all available motifs).
+}}
 
 \item{alignments}{A character vector specifying alignment types for each motif.
 Can be a single value (applied to all motifs) or a vector of the same length as motifs.}

@@ -66,15 +66,18 @@ add_motifs_lgl(
 \arguments{
 \item{x}{A \code{\link[glyexp:experiment]{glyexp::experiment()}} object, or a tibble with a structure column.}
 
-\item{motifs}{A character vector of motif names, glycan structure strings,
-or a 'glyrepr_structure' object.
-For glycan structure strings, all formats supported by \code{\link[glyparse:auto_parse]{glyparse::auto_parse()}} are accepted,
-including IUPAC-condensed, WURCS, GlycoCT, and others.}
+\item{motifs}{One of:
+\itemize{
+\item A \code{\link[glyrepr:glycan_structure]{glyrepr::glycan_structure()}} vector.
+\item A glycan structure string vector, supported by \code{\link[glyparse:auto_parse]{glyparse::auto_parse()}}.
+\item A character vector of motif names (use \code{\link[=all_motifs]{all_motifs()}} to see all available motifs).
+}}
 
 \item{alignments}{A character vector specifying alignment types for each motif.
 Can be a single value (applied to all motifs) or a vector of the same length as motifs.}
 
-\item{ignore_linkages}{A logical value. If \code{TRUE}, linkages will be ignored in the comparison.}
+\item{ignore_linkages}{A logical value. If \code{TRUE}, linkages will be ignored in the comparison.
+Default is \code{FALSE}.}
 
 \item{strict_sub}{A logical value. If \code{TRUE} (default), substituents will be matched in strict mode,
 which means if the glycan has a substituent in some residue,

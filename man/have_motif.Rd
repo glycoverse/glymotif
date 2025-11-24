@@ -22,14 +22,19 @@ have_motifs(
 )
 }
 \arguments{
-\item{glycans}{A 'glyrepr_structure' object, or a glycan structure string vector.
-All formats supported by \code{\link[glyparse:auto_parse]{glyparse::auto_parse()}} are accepted,
-including IUPAC-condensed, WURCS, GlycoCT, and others.}
+\item{glycans}{One of:
+\itemize{
+\item A \code{\link[glyrepr:glycan_structure]{glyrepr::glycan_structure()}} vector.
+\item A glycan structure string vector. All formats supported by \code{\link[glyparse:auto_parse]{glyparse::auto_parse()}} are accepted,
+including IUPAC-condensed, WURCS, GlycoCT, and others.
+}}
 
-\item{motif}{A 'glyrepr_structure' object, a glycan structure string,
-or a known motif name (use \code{\link[=all_motifs]{all_motifs()}} to see all available motifs).
-For glycan structure strings, all formats supported by \code{\link[glyparse:auto_parse]{glyparse::auto_parse()}} are accepted,
-including IUPAC-condensed, WURCS, GlycoCT, and others.}
+\item{motif}{One of:
+\itemize{
+\item A \code{\link[glyrepr:glycan_structure]{glyrepr::glycan_structure()}} scalar.
+\item A glycan structure string, supported by \code{\link[glyparse:auto_parse]{glyparse::auto_parse()}}.
+\item A known motif name (use \code{\link[=all_motifs]{all_motifs()}} to see all available motifs).
+}}
 
 \item{alignment}{A character string.
 Possible values are "substructure", "core", "terminal" and "whole".
@@ -37,16 +42,19 @@ If not provided, the value will be decided based on the \code{motif} argument.
 If \code{motif} is a motif name, the alignment in the database will be used.
 Otherwise, "substructure" will be used.}
 
-\item{ignore_linkages}{A logical value. If \code{TRUE}, linkages will be ignored in the comparison.}
+\item{ignore_linkages}{A logical value. If \code{TRUE}, linkages will be ignored in the comparison.
+Default is \code{FALSE}.}
 
 \item{strict_sub}{A logical value. If \code{TRUE} (default), substituents will be matched in strict mode,
 which means if the glycan has a substituent in some residue,
 the motif must have the same substituent to be matched.}
 
-\item{motifs}{A character vector of motif names, glycan structure strings,
-or a 'glyrepr_structure' object.
-For glycan structure strings, all formats supported by \code{\link[glyparse:auto_parse]{glyparse::auto_parse()}} are accepted,
-including IUPAC-condensed, WURCS, GlycoCT, and others.}
+\item{motifs}{One of:
+\itemize{
+\item A \code{\link[glyrepr:glycan_structure]{glyrepr::glycan_structure()}} vector.
+\item A glycan structure string vector, supported by \code{\link[glyparse:auto_parse]{glyparse::auto_parse()}}.
+\item A character vector of motif names (use \code{\link[=all_motifs]{all_motifs()}} to see all available motifs).
+}}
 
 \item{alignments}{A character vector specifying alignment types for each motif.
 Can be a single value (applied to all motifs) or a vector of the same length as motifs.}
@@ -237,8 +245,8 @@ glycan_3 <- parse_iupac_condensed("Gal(a1-3)Gal(a1-4)Gal(a1-6)Gal(a1-")
 motifs <- c(
   "Gal(a1-3)Gal(a1-4)Gal(a1-6)Gal(a1-",
   "Gal(a1-3)Gal(a1-4)Gal(a1-",
-           "Gal(a1-4)Gal(a1-6)Gal(a1-",
-           "Gal(a1-4)Gal(a1-"
+  "Gal(a1-4)Gal(a1-6)Gal(a1-",
+  "Gal(a1-4)Gal(a1-"
 )
 
 purrr::map_lgl(motifs, ~ have_motif(glycan_3, .x, alignment = "whole"))
@@ -261,12 +269,12 @@ have_motif(glycan_4, glycan_4, strict_sub = FALSE)
 have_motif(glycan_5, glycan_5, strict_sub = FALSE)
 
 # Multiple substituents
-glycan_6 <- "Glc3Me6S(a1-"  # has both 3Me and 6S substituents
-have_motif(glycan_6, "Glc3Me6S(a1-")  # TRUE: exact match
-have_motif(glycan_6, "Glc?Me6S(a1-")  # TRUE: obscure linkage ?Me matches 3Me
-have_motif(glycan_6, "Glc3Me?S(a1-")  # TRUE: obscure linkage ?S matches 6S
-have_motif(glycan_6, "Glc3Me(a1-")    # FALSE: missing 6S substituent
-have_motif(glycan_6, "Glc(a1-")       # FALSE: missing all substituents
+glycan_6 <- "Glc3Me6S(a1-" # has both 3Me and 6S substituents
+have_motif(glycan_6, "Glc3Me6S(a1-") # TRUE: exact match
+have_motif(glycan_6, "Glc?Me6S(a1-") # TRUE: obscure linkage ?Me matches 3Me
+have_motif(glycan_6, "Glc3Me?S(a1-") # TRUE: obscure linkage ?S matches 6S
+have_motif(glycan_6, "Glc3Me(a1-") # FALSE: missing 6S substituent
+have_motif(glycan_6, "Glc(a1-") # FALSE: missing all substituents
 
 # Vectorization with single motif
 glycans <- c(glycan, glycan_2, glycan_3)
@@ -283,8 +291,8 @@ have_motifs(glycans, motifs)
 
 # You can assign each motif a name
 motifs <- c(
-  motif1 = "Gal(b1-3)GalNAc(b1-", 
-  motif2 = "Gal(b1-4)GalNAc(b1-", 
+  motif1 = "Gal(b1-3)GalNAc(b1-",
+  motif2 = "Gal(b1-4)GalNAc(b1-",
   motif3 = "GlcNAc(b1-6)GalNAc(b1-"
 )
 have_motifs(glycans, motifs)

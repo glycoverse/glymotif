@@ -37,9 +37,6 @@
 #' the first vertex in the glycan, and the second motif vertex (the b1-4 Man)
 #' corresponds to the third vertex in the glycan.
 #'
-#' @param glycans A `glyrepr_structure` object.
-#' @param motif A `glyrepr_structure` object with length 1.
-#' @param motifs A `glyrepr_structure` object.
 #' @inheritParams have_motif
 #'
 #' @returns
@@ -64,7 +61,7 @@
 #'
 #' # Let's peek under the hood of the nodes in the glycan
 #' glycan_graph <- get_structure_graphs(glycan)
-#' igraph::V(glycan_graph)$mono  # 1, 2, 3, 4, 5
+#' igraph::V(glycan_graph)$mono # 1, 2, 3, 4, 5
 #'
 #' # Match a single motif against a single glycan
 #' motif <- parse_iupac_condensed("Man(a1-3)[Man(a1-6)]Man(b1-")
@@ -146,7 +143,8 @@ match_motifs_ <- function(glycans, motifs, alignments, glycan_names, motif_names
   motif_graph <- c_graphs$motif
   res <- perform_vf2(glycan_graph, motif_graph)
   valid_mask <- purrr::map_lgl(
-    res, is_valid_result, glycan = glycan_graph, motif = motif_graph,
+    res, is_valid_result,
+    glycan = glycan_graph, motif = motif_graph,
     alignment = alignment, ignore_linkages = ignore_linkages, strict_sub = strict_sub
   )
   valid_res <- res[valid_mask]

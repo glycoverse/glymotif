@@ -22,9 +22,19 @@ match_motifs(
 )
 }
 \arguments{
-\item{glycans}{A \code{glyrepr_structure} object.}
+\item{glycans}{One of:
+\itemize{
+\item A \code{\link[glyrepr:glycan_structure]{glyrepr::glycan_structure()}} vector.
+\item A glycan structure string vector. All formats supported by \code{\link[glyparse:auto_parse]{glyparse::auto_parse()}} are accepted,
+including IUPAC-condensed, WURCS, GlycoCT, and others.
+}}
 
-\item{motif}{A \code{glyrepr_structure} object with length 1.}
+\item{motif}{One of:
+\itemize{
+\item A \code{\link[glyrepr:glycan_structure]{glyrepr::glycan_structure()}} scalar.
+\item A glycan structure string, supported by \code{\link[glyparse:auto_parse]{glyparse::auto_parse()}}.
+\item A known motif name (use \code{\link[=all_motifs]{all_motifs()}} to see all available motifs).
+}}
 
 \item{alignment}{A character string.
 Possible values are "substructure", "core", "terminal" and "whole".
@@ -32,13 +42,19 @@ If not provided, the value will be decided based on the \code{motif} argument.
 If \code{motif} is a motif name, the alignment in the database will be used.
 Otherwise, "substructure" will be used.}
 
-\item{ignore_linkages}{A logical value. If \code{TRUE}, linkages will be ignored in the comparison.}
+\item{ignore_linkages}{A logical value. If \code{TRUE}, linkages will be ignored in the comparison.
+Default is \code{FALSE}.}
 
 \item{strict_sub}{A logical value. If \code{TRUE} (default), substituents will be matched in strict mode,
 which means if the glycan has a substituent in some residue,
 the motif must have the same substituent to be matched.}
 
-\item{motifs}{A \code{glyrepr_structure} object.}
+\item{motifs}{One of:
+\itemize{
+\item A \code{\link[glyrepr:glycan_structure]{glyrepr::glycan_structure()}} vector.
+\item A glycan structure string vector, supported by \code{\link[glyparse:auto_parse]{glyparse::auto_parse()}}.
+\item A character vector of motif names (use \code{\link[=all_motifs]{all_motifs()}} to see all available motifs).
+}}
 
 \item{alignments}{A character vector specifying alignment types for each motif.
 Can be a single value (applied to all motifs) or a vector of the same length as motifs.}
@@ -102,7 +118,7 @@ library(glyrepr)
 
 # Let's peek under the hood of the nodes in the glycan
 glycan_graph <- get_structure_graphs(glycan)
-igraph::V(glycan_graph)$mono  # 1, 2, 3, 4, 5
+igraph::V(glycan_graph)$mono # 1, 2, 3, 4, 5
 
 # Match a single motif against a single glycan
 motif <- parse_iupac_condensed("Man(a1-3)[Man(a1-6)]Man(b1-")
