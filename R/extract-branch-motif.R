@@ -42,6 +42,7 @@ extract_branch_motif <- function(glycans) {
   # 1. Handle input types and deduplicate
   glycans <- ensure_glycans_are_structures(glycans)
   glycans <- unique(glycans)
+  .assert_n_glycans(glycans)
 
   # 2. Define the motif
   # The motif represents an N-glycan branch, rooted at the GlcNAc attached to the Mannose core.
@@ -106,4 +107,15 @@ extract_branch_motif <- function(glycans) {
   # Convert extracted graphs back to glycan_structure and return unique ones
   res <- glyrepr::as_glycan_structure(extracted_subtrees)
   unique(res)
+}
+
+.assert_n_glycans <- function(glycans) {
+  n_motif <- glyrepr::as_glycan_structure("Hex(??-?)[Hex(??-?)]Hex(??-?)HexNAc(??-?)HexNAc(??-")
+  have_n_motif <- have_motif(glycans, n_motif, alignment = "core")
+  if (!all(have_n_motif)) {
+    cli::cli_abort(c(
+      "{.arg glycans} must be N-glycans.",
+      "x" = "Some of {.arg glycans} do not have the N-glycan core motif."
+    ))
+  }
 }

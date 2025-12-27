@@ -61,3 +61,8 @@ test_that("extract_branch_motif works for glycans with complex branching pattern
   expected <- glyrepr::as_glycan_structure("Neu5Ac(a2-3)[Fuc(a1-2)]Gal(b1-4)[Fuc(a1-3)]GlcNAc(b1-")
   expect_setequal(as.character(res), as.character(expected))
 })
+
+test_that("extract_branch_motif rejects glycans other than N-glycans", {
+  glycan <- "Gal(b1-3)GalNAc(a1-"
+  expect_error(extract_branch_motif(glycan), "must be N-glycans")
+})
