@@ -301,7 +301,51 @@ specificity for coverage.</p>
 </div>
 </div>
 <div class="section level2">
-<h2 id="whats-next">What’s next?<a class="anchor" aria-label="anchor" href="#whats-next"></a>
+<h2 id="dynamic-motif-detection">Dynamic Motif Detection<a class="anchor" aria-label="anchor" href="#dynamic-motif-detection"></a>
+</h2>
+<p>While matching against a database of known motifs is powerful,
+sometimes you want to discover what motifs are actually present in your
+specific dataset, even those not in the database. This is where dynamic
+motif detection comes in.</p>
+<p>Instead of asking “Is motif A here?”, we ask “What motifs are
+here?”.</p>
+<div class="section level3">
+<h3 id="extract_branch_motif">
+<code>extract_branch_motif()</code><a class="anchor" aria-label="anchor" href="#extract_branch_motif"></a>
+</h3>
+<p>As a pioneering step in dynamic motif detection,
+<code><a href="../reference/extract_branch_motif.html">extract_branch_motif()</a></code> allows you to automatically isolate
+the branches (antennae) from a set of N-glycans.</p>
+<p>An N-glycan branch motif is defined as the substructure linked to
+either the a3- or a6-core-mannose.</p>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">glycans</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
+<span>  <span class="st">"Neu5Ac(a2-3)Gal(b1-4)GlcNAc(b1-2)Man(a1-3)[Gal(b1-4)GlcNAc(b1-2)Man(a1-6)]Man(b1-4)GlcNAc(a1-4)GlcNAc(b1-"</span>,</span>
+<span>  <span class="st">"Neu5Ac(a2-3)Gal(b1-4)GlcNAc(b1-2)Man(a1-3)[Neu5Ac(a2-6)Gal(b1-4)GlcNAc(b1-2)Man(a1-6)]Man(b1-4)GlcNAc(a1-4)GlcNAc(b1-"</span>,</span>
+<span>  <span class="st">"Gal(b1-4)GlcNAc(b1-2)Man(a1-3)[GlcNAc(b1-2)Man(a1-6)]Man(b1-4)GlcNAc(a1-4)GlcNAc(b1-"</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Extract unique branching patterns</span></span>
+<span><span class="va">branches</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/extract_branch_motif.html">extract_branch_motif</a></span><span class="op">(</span><span class="va">glycans</span><span class="op">)</span></span>
+<span><span class="va">branches</span></span>
+<span><span class="co">#&gt; &lt;glycan_structure[4]&gt;</span></span>
+<span><span class="co">#&gt; [1] <span style="color: #AF5FAF;">Neu5Ac</span>(<span style="color: #B2B2B2;">a2-3</span>)<span style="color: #FFD700;">Gal</span>(<span style="color: #B2B2B2;">b1-4</span>)<span style="color: #0087D7;">GlcNAc</span>(<span style="color: #B2B2B2;">b1-</span></span></span>
+<span><span class="co">#&gt; [2] <span style="color: #FFD700;">Gal</span>(<span style="color: #B2B2B2;">b1-4</span>)<span style="color: #0087D7;">GlcNAc</span>(<span style="color: #B2B2B2;">b1-</span></span></span>
+<span><span class="co">#&gt; [3] <span style="color: #AF5FAF;">Neu5Ac</span>(<span style="color: #B2B2B2;">a2-6</span>)<span style="color: #FFD700;">Gal</span>(<span style="color: #B2B2B2;">b1-4</span>)<span style="color: #0087D7;">GlcNAc</span>(<span style="color: #B2B2B2;">b1-</span></span></span>
+<span><span class="co">#&gt; [4] <span style="color: #0087D7;">GlcNAc</span>(<span style="color: #B2B2B2;">b1-</span></span></span>
+<span><span class="co">#&gt; # Unique structures: 4</span></span></code></pre></div>
+<p>This function is particularly useful to be combined with
+<code>glydet::quantify_motifs()</code>.</p>
+</div>
+<div class="section level3">
+<h3 id="other-dynamic-motifs">Other dynamic motifs<a class="anchor" aria-label="anchor" href="#other-dynamic-motifs"></a>
+</h3>
+<p>We will add more dynamic motif extraction functions in the future.
+Remember to look back to this vignette for updates!</p>
+</div>
+</div>
+<div class="section level2">
+<h2 id="whats-next">What’s Next?<a class="anchor" aria-label="anchor" href="#whats-next"></a>
 </h2>
 <ul>
 <li>Want to known all the details about motif matching rules? <a href="https://glycoverse.github.io/glymotif/articles/motif-matching.html">Here</a>

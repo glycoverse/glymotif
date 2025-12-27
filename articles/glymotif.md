@@ -254,7 +254,52 @@ have_motif("Hex(a1-6)HexNAc(a1-", motif)
 ⚠️ **Important:** When using these workarounds, interpret your results
 with appropriate caution. You’re trading specificity for coverage.
 
-## What’s next?
+## Dynamic Motif Detection
+
+While matching against a database of known motifs is powerful, sometimes
+you want to discover what motifs are actually present in your specific
+dataset, even those not in the database. This is where dynamic motif
+detection comes in.
+
+Instead of asking “Is motif A here?”, we ask “What motifs are here?”.
+
+### `extract_branch_motif()`
+
+As a pioneering step in dynamic motif detection,
+[`extract_branch_motif()`](https://glycoverse.github.io/glymotif/reference/extract_branch_motif.md)
+allows you to automatically isolate the branches (antennae) from a set
+of N-glycans.
+
+An N-glycan branch motif is defined as the substructure linked to either
+the a3- or a6-core-mannose.
+
+``` r
+glycans <- c(
+  "Neu5Ac(a2-3)Gal(b1-4)GlcNAc(b1-2)Man(a1-3)[Gal(b1-4)GlcNAc(b1-2)Man(a1-6)]Man(b1-4)GlcNAc(a1-4)GlcNAc(b1-",
+  "Neu5Ac(a2-3)Gal(b1-4)GlcNAc(b1-2)Man(a1-3)[Neu5Ac(a2-6)Gal(b1-4)GlcNAc(b1-2)Man(a1-6)]Man(b1-4)GlcNAc(a1-4)GlcNAc(b1-",
+  "Gal(b1-4)GlcNAc(b1-2)Man(a1-3)[GlcNAc(b1-2)Man(a1-6)]Man(b1-4)GlcNAc(a1-4)GlcNAc(b1-"
+)
+
+# Extract unique branching patterns
+branches <- extract_branch_motif(glycans)
+branches
+#> <glycan_structure[4]>
+#> [1] Neu5Ac(a2-3)Gal(b1-4)GlcNAc(b1-
+#> [2] Gal(b1-4)GlcNAc(b1-
+#> [3] Neu5Ac(a2-6)Gal(b1-4)GlcNAc(b1-
+#> [4] GlcNAc(b1-
+#> # Unique structures: 4
+```
+
+This function is particularly useful to be combined with
+`glydet::quantify_motifs()`.
+
+### Other dynamic motifs
+
+We will add more dynamic motif extraction functions in the future.
+Remember to look back to this vignette for updates!
+
+## What’s Next?
 
 - Want to known all the details about motif matching rules?
   [Here](https://glycoverse.github.io/glymotif/articles/motif-matching.html)

@@ -52,25 +52,45 @@ library(glyclean)
 #>     aggregate
 
 exp <- auto_clean(real_experiment)
-#> ℹ Normalizing data (Median)
-#> ✔ Normalizing data (Median) [148ms]
 #> 
-#> ℹ Removing variables with >50% missing values
-#> ✔ Removing variables with >50% missing values [25ms]
+#> ── Normalizing data ──
 #> 
-#> ℹ Imputing missing values
-#> ℹ Sample size <= 30, using sample minimum imputation
-#> ℹ Imputing missing values✔ Imputing missing values [24ms]
+#> ℹ No QC samples found. Using default normalization method based on experiment type.
+#> ℹ Experiment type is "glycoproteomics". Using `normalize_median()`.
+#> ✔ Normalization completed.
 #> 
-#> ℹ Aggregating data
-#> ✔ Aggregating data [1s]
+#> ── Removing variables with too many missing values ──
 #> 
-#> ℹ Normalizing data again
-#> ✔ Normalizing data again [15ms]
+#> ℹ No QC samples found. Using all samples.
+#> ℹ Applying preset "discovery"...
+#> ℹ Total removed: 24 (0.56%) variables.
+#> ✔ Variable removal completed.
+#> 
+#> ── Imputing missing values ──
+#> 
+#> ℹ No QC samples found. Using default imputation method based on sample size.
+#> ℹ Sample size <= 30, using `impute_sample_min()`.
+#> ✔ Imputation completed.
+#> 
+#> ── Aggregating data ──
+#> 
+#> ℹ Aggregating to "gfs" level
+#> ✔ Aggregation completed.
+#> 
+#> ── Normalizing data again ──
+#> 
+#> ℹ No QC samples found. Using default normalization method based on experiment type.
+#> ℹ Experiment type is "glycoproteomics". Using `normalize_median()`.
+#> ✔ Normalization completed.
+#> 
+#> ── Correcting batch effects ──
+#> 
+#> ℹ Batch column  not found in sample_info. Skipping batch correction.
+#> ✔ Batch correction completed.
 exp
 #> 
 #> ── Glycoproteomics Experiment ──────────────────────────────────────────────────
-#> ℹ Expression matrix: 12 samples, 3880 variables
+#> ℹ Expression matrix: 12 samples, 3979 variables
 #> ℹ Sample information fields: group <fct>
 #> ℹ Variable information fields: protein <chr>, glycan_composition <comp>, glycan_structure <struct>, protein_site <int>, gene <chr>
 ```
@@ -80,7 +100,7 @@ with! 👀
 
 ``` r
 get_var_info(exp)
-#> # A tibble: 3,880 × 6
+#> # A tibble: 3,979 × 6
 #>    variable protein glycan_composition      glycan_structure  protein_site gene 
 #>    <chr>    <chr>   <comp>                  <struct>                 <int> <chr>
 #>  1 V1       P08185  Hex(5)HexNAc(4)NeuAc(2) NeuAc(??-?)Hex(?…          176 SERP…
@@ -93,7 +113,7 @@ get_var_info(exp)
 #>  8 V8       P04196  Hex(5)HexNAc(4)dHex(2)  dHex(??-?)Hex(??…          344 HRG  
 #>  9 V9       P04196  Hex(4)HexNAc(3)         Hex(??-?)HexNAc(…          344 HRG  
 #> 10 V10      P04196  Hex(4)HexNAc(4)NeuAc(1) NeuAc(??-?)Hex(?…          344 HRG  
-#> # ℹ 3,870 more rows
+#> # ℹ 3,969 more rows
 ```
 
 ``` r
@@ -139,7 +159,7 @@ exp |>
   mutate_var(n_hex = have_motif(glycan_structure, "Hex(a1-")) |>
   get_var_info() |>
   select(variable, protein, glycan_structure, n_hex)
-#> # A tibble: 3,880 × 4
+#> # A tibble: 3,979 × 4
 #>    variable protein glycan_structure                                       n_hex
 #>    <chr>    <chr>   <struct>                                               <lgl>
 #>  1 V1       P08185  NeuAc(??-?)Hex(??-?)HexNAc(??-?)Hex(??-?)[NeuAc(??-?)… FALSE
@@ -152,7 +172,7 @@ exp |>
 #>  8 V8       P04196  dHex(??-?)Hex(??-?)HexNAc(??-?)Hex(??-?)[dHex(??-?)He… FALSE
 #>  9 V9       P04196  Hex(??-?)HexNAc(??-?)Hex(??-?)[Hex(??-?)]Hex(??-?)Hex… FALSE
 #> 10 V10      P04196  NeuAc(??-?)Hex(??-?)HexNAc(??-?)Hex(??-?)[HexNAc(??-?… FALSE
-#> # ℹ 3,870 more rows
+#> # ℹ 3,969 more rows
 ```
 
 **The tempting approach:** Multiple motifs at once (you might be tempted
@@ -198,7 +218,7 @@ variable information tibble.
 exp2 |>
   get_var_info() |>
   select(variable, motif1, motif2, motif3)
-#> # A tibble: 3,880 × 4
+#> # A tibble: 3,979 × 4
 #>    variable motif1 motif2 motif3
 #>    <chr>    <lgl>  <lgl>  <lgl> 
 #>  1 V1       TRUE   TRUE   FALSE 
@@ -211,7 +231,7 @@ exp2 |>
 #>  8 V8       TRUE   TRUE   TRUE  
 #>  9 V9       TRUE   TRUE   FALSE 
 #> 10 V10      TRUE   TRUE   FALSE 
-#> # ℹ 3,870 more rows
+#> # ℹ 3,969 more rows
 ```
 
 But wait, what can you actually *do* with these shiny new columns? 🤔
