@@ -108,6 +108,7 @@ match_motifs <- function(glycans, motifs, alignments = NULL, ignore_linkages = F
 #' @param glycans A `glyrepr_structure` object.
 #' @param motif A `glyrepr_structure` object with length 1.
 #' @param alignment A character scalar.
+#'   Possible values are "substructure", "core", "terminal", "whole", and "exact".
 #' @param ignore_linkages A logical value.
 #'
 #' @noRd

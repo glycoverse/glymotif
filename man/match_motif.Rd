@@ -37,7 +37,7 @@ including IUPAC-condensed, WURCS, GlycoCT, and others.
 }}
 
 \item{alignment}{A character string.
-Possible values are "substructure", "core", "terminal" and "whole".
+Possible values are "substructure", "core", "terminal", "whole", and "exact".
 If not provided, the value will be decided based on the \code{motif} argument.
 If \code{motif} is a motif name, the alignment in the database will be used.
 Otherwise, "substructure" will be used.}

@@ -84,6 +84,13 @@ alignment_check <- function(r, glycan, motif, alignment) {
     return(all(r[motif_terminals] %in% glycan_terminals))
   }
 
+  # Exact substructure alignment check
+  if (alignment == "exact") {
+    glycan_degrees <- igraph::degree(glycan, mode = "out")
+    motif_degrees <- igraph::degree(motif, mode = "out")
+    return(all(glycan_degrees[r] == motif_degrees))
+  }
+
   # Whole glycan alignment check (most expensive, do last)
   if (alignment == "whole") {
     glycan_v <- igraph::vcount(glycan)

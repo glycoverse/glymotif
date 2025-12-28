@@ -50,10 +50,7 @@ prepare_have_motifs_args <- function(glycans, motifs, alignments, ignore_linkage
 
 # ----- Argument validation -----
 valid_alignment_arg <- function(x) {
-  checkmate::assert(
-    checkmate::test_null(x),
-    checkmate::test_choice(x, c("substructure", "core", "terminal", "whole"))
-  )
+  checkmate::assert_choice(x, c("substructure", "core", "terminal", "whole", "exact"), null.ok = TRUE)
 }
 
 valid_alignments_arg <- function(alignments, motifs) {
