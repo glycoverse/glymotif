@@ -1,3 +1,5 @@
+# glymotif (development version)
+
 # glymotif 0.12.0
 
 We introduce the "dynamic motif" feature in this release. Instead of specifying motifs manually or using motifs from the database, you can now extract motifs existing in your set of glycans. Two functions, `extract_motifs()` and `extract_motifs_lgl()`, are added for this purpose.
