@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">glymotif</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.11.2.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.12.0.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -39,6 +39,16 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="development version" id="glymotif-development-version">glymotif (development version)<a class="anchor" aria-label="anchor" href="#glymotif-development-version"></a></h2>
+</div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.12.0" id="glymotif-0120">glymotif 0.12.0<a class="anchor" aria-label="anchor" href="#glymotif-0120"></a></h2>
+<p>We introduce the “dynamic motif” feature in this release. Instead of specifying motifs manually or using motifs from the database, you can now extract motifs existing in your set of glycans. Two functions, <code>extract_motifs()</code> and <code>extract_motifs_lgl()</code>, are added for this purpose.</p>
+<div class="section level3">
+<h3 id="new-features-0-12-0">New features<a class="anchor" aria-label="anchor" href="#new-features-0-12-0"></a></h3>
+<ul><li>Add <code><a href="../reference/extract_motif.html">extract_motif()</a></code> to find all unique substructures (motifs) in a set of glycans. This function is suitable for motif finding in small glycans like O-GalNAc glycans.</li>
+<li>Add <code><a href="../reference/extract_branch_motif.html">extract_branch_motif()</a></code> to find all branching motifs in a set of N-glycans. This function is particular useful for N-glycan motif finding, where antennary patterns can be versatile.</li>
+<li>The <code>alignment</code> or <code>alignments</code> argument of all related functions now supports a new alignment type: “exact”. This type of alignment works the best with <code><a href="../reference/extract_branch_motif.html">extract_branch_motif()</a></code> results.</li>
+</ul></div>
 </div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.11.2" id="glymotif-0112">glymotif 0.11.2<a class="anchor" aria-label="anchor" href="#glymotif-0112"></a></h2>
