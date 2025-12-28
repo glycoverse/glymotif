@@ -67,45 +67,31 @@ is_valid_result <- function(r, glycan, motif, alignment, ignore_linkages, strict
 
 
 alignment_check <- function(r, glycan, motif, alignment) {
-  # Fast path for most common case
-  if (alignment == "substructure") return(TRUE)
-
-  # Core alignment check (most common for N-glycan motifs)
-  if (alignment == "core") {
-    glycan_core <- core_node(glycan)
-    motif_core <- core_node(motif)
-    return(r[[motif_core]] == glycan_core)
-  }
-  
-  # Terminal alignment check
-  if (alignment == "terminal") {
-    glycan_terminals <- terminal_nodes(glycan)
-    motif_terminals <- terminal_nodes(motif)
-    return(all(r[motif_terminals] %in% glycan_terminals))
-  }
-
-  # Exact substructure alignment check
-  if (alignment == "exact") {
-    glycan_degrees <- igraph::degree(glycan, mode = "out")
-    motif_degrees <- igraph::degree(motif, mode = "out")
-    return(all(glycan_degrees[r] == motif_degrees))
-  }
-
-  # Whole glycan alignment check (most expensive, do last)
-  if (alignment == "whole") {
-    glycan_v <- igraph::vcount(glycan)
-    motif_v <- igraph::vcount(motif)
-    glycan_e <- igraph::ecount(glycan)
-    motif_e <- igraph::ecount(motif)
-    return(
-      motif_v == glycan_v &&
-        length(unique(r)) == glycan_v &&
-        motif_e == glycan_e
-    )
-  }
-
-  # Default return for unknown alignment types
-  return(FALSE)
+  switch(alignment,
+    "substructure" = TRUE,
+    "core" = {
+      glycan_core <- core_node(glycan)
+      motif_core <- core_node(motif)
+      r[[motif_core]] == glycan_core
+    },
+    "terminal" = {
+      glycan_terminals <- terminal_nodes(glycan)
+      motif_terminals <- terminal_nodes(motif)
+      all(r[motif_terminals] %in% glycan_terminals)
+    },
+    "exact" = {
+      glycan_degrees <- igraph::degree(glycan, mode = "out")
+      motif_degrees <- igraph::degree(motif, mode = "out")
+      all(glycan_degrees[r] == motif_degrees)
+    },
+    "whole" = {
+      glycan_v <- igraph::vcount(glycan)
+      motif_v <- igraph::vcount(motif)
+      glycan_e <- igraph::ecount(glycan)
+      motif_e <- igraph::ecount(motif)
+      motif_v == glycan_v && length(unique(r)) == glycan_v && motif_e == glycan_e
+    }
+  )
 }
 
 
