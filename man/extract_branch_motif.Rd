@@ -30,6 +30,8 @@ For example:
 
 This function returns all the unique branching motifs found in the input glycans.
 It is very useful for analyzing N-glycan antennary patterns combined with \code{glydet::quantify_motifs()}.
+When used with \code{have_motif()} or related functions,
+we recommend setting \code{alignment} to "exact".
 }
 \details{
 The function works by:
