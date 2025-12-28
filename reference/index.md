@@ -12,6 +12,8 @@
   : Count How Many Times Glycans have the Given Motif(s)
 - [`extract_branch_motif()`](https://glycoverse.github.io/glymotif/reference/extract_branch_motif.md)
   : Extract Branch Motifs
+- [`extract_motif()`](https://glycoverse.github.io/glymotif/reference/extract_motif.md)
+  : Extract All Substructures (Motifs)
 - [`get_motif_structure()`](https://glycoverse.github.io/glymotif/reference/get_motif_structure.md)
   [`get_motif_alignment()`](https://glycoverse.github.io/glymotif/reference/get_motif_structure.md)
   [`get_motif_aglycon()`](https://glycoverse.github.io/glymotif/reference/get_motif_structure.md)

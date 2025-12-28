@@ -61,8 +61,8 @@ count_motifs(
 - alignment:
 
   A character string. Possible values are "substructure", "core",
-  "terminal" and "whole". If not provided, the value will be decided
-  based on the `motif` argument. If `motif` is a motif name, the
+  "terminal", "whole", and "exact". If not provided, the value will be
+  decided based on the `motif` argument. If `motif` is a motif name, the
   alignment in the database will be used. Otherwise, "substructure" will
   be used.
 

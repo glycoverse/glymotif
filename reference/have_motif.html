@@ -99,7 +99,7 @@ including IUPAC-condensed, WURCS, GlycoCT, and others.</p></li>
 
 <dt id="arg-alignment">alignment<a class="anchor" aria-label="anchor" href="#arg-alignment"></a></dt>
 <dd><p>A character string.
-Possible values are "substructure", "core", "terminal" and "whole".
+Possible values are "substructure", "core", "terminal", "whole", and "exact".
 If not provided, the value will be decided based on the <code>motif</code> argument.
 If <code>motif</code> is a motif name, the alignment in the database will be used.
 Otherwise, "substructure" will be used.</p></dd>
@@ -198,6 +198,10 @@ for details.</p></li>
 <li><p>"whole": The motif must align with the entire glycan.
 See <a href="https://glycomotif.glyomics.org/glycomotif/Whole-Glycan_Alignment" class="external-link">whole-glycan</a>
 for details.</p></li>
+<li><p>"exact": The motif must align with a connected substructure in the glycan,
+and the out-degrees of the matched nodes in the glycan must exactly match
+the out-degrees in the motif. This prevents the glycan from having additional
+branches (e.g. fucose) on the matched path compared to the motif.</p></li>
 </ul><p>When using known motifs in the GlycoMotif GlyGen Collection,
 the best practice is to not provide the <code>alignment</code> argument,
 and let the function decide the alignment based on the motif name.

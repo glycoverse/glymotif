@@ -263,15 +263,83 @@ detection comes in.
 
 Instead of asking “Is motif A here?”, we ask “What motifs are here?”.
 
+### `extract_motif()`
+
+[`extract_motif()`](https://glycoverse.github.io/glymotif/reference/extract_motif.md)
+allows you to detect all motifs appears in a set of glycans. Take a
+simple O-glycan for example:
+
+``` r
+extract_motif("Gal(b1-3)[GlcNAc(b1-6)]GalNAc(a1-")
+#> <glycan_structure[6]>
+#> [1] Gal(b1-
+#> [2] GlcNAc(b1-
+#> [3] GalNAc(a1-
+#> [4] Gal(b1-3)GalNAc(a1-
+#> [5] GlcNAc(b1-6)GalNAc(a1-
+#> [6] Gal(b1-3)[GlcNAc(b1-6)]GalNAc(a1-
+#> # Unique structures: 6
+```
+
+This function works vectorizedly, and only a unique set of motifs will
+be returned.
+
+``` r
+extract_motif(c(
+  "Gal(b1-3)[GlcNAc(b1-6)]GalNAc(a1-",
+  "Gal(b1-3)GalNAc(a1-"
+))
+#> <glycan_structure[6]>
+#> [1] Gal(b1-
+#> [2] GlcNAc(b1-
+#> [3] GalNAc(a1-
+#> [4] Gal(b1-3)GalNAc(a1-
+#> [5] GlcNAc(b1-6)GalNAc(a1-
+#> [6] Gal(b1-3)[GlcNAc(b1-6)]GalNAc(a1-
+#> # Unique structures: 6
+```
+
+As you can imagine, the number of possible dynamic motifs in a large
+glycan can be very large. Therefore,
+[`extract_motif()`](https://glycoverse.github.io/glymotif/reference/extract_motif.md)
+has a `max_size` parameter restricting the size of motifs to be
+extracted. By default, `max_size = 3`, this restricts the motifs to be
+extracted to those with at most 3 monosaccharides.
+
+``` r
+extract_motif("Glc(a1-2)Glc(a1-2)Glc(a1-2)Glc(a1-")
+#> <glycan_structure[3]>
+#> [1] Glc(a1-
+#> [2] Glc(a1-2)Glc(a1-
+#> [3] Glc(a1-2)Glc(a1-2)Glc(a1-
+#> # Unique structures: 3
+```
+
+You can increase the `max_size` to extract larger motifs.
+
+``` r
+extract_motif("Glc(a1-2)Glc(a1-2)Glc(a1-2)Glc(a1-", max_size = 4)
+#> <glycan_structure[4]>
+#> [1] Glc(a1-
+#> [2] Glc(a1-2)Glc(a1-
+#> [3] Glc(a1-2)Glc(a1-2)Glc(a1-
+#> [4] Glc(a1-2)Glc(a1-2)Glc(a1-2)Glc(a1-
+#> # Unique structures: 4
+```
+
+However, increase it progressively with caution, as the computation time
+can increase exponentially.
+
 ### `extract_branch_motif()`
 
-As a pioneering step in dynamic motif detection,
+[`extract_motif()`](https://glycoverse.github.io/glymotif/reference/extract_motif.md)
+works well with O-glycans, which are very versatile and not very large.
+However, using it on N-glycans might be less effective and less
+meaningful, as the core pattern of an N-glycan is very restricted by the
+biosynthesis rules. The only diversity comes from the antennae.
+Therefore, we provide
 [`extract_branch_motif()`](https://glycoverse.github.io/glymotif/reference/extract_branch_motif.md)
-allows you to automatically isolate the branches (antennae) from a set
-of N-glycans.
-
-An N-glycan branch motif is defined as the substructure linked to either
-the a3- or a6-core-mannose.
+to extract only the branching motifs.
 
 ``` r
 glycans <- c(
@@ -280,9 +348,7 @@ glycans <- c(
   "Gal(b1-4)GlcNAc(b1-2)Man(a1-3)[GlcNAc(b1-2)Man(a1-6)]Man(b1-4)GlcNAc(a1-4)GlcNAc(b1-"
 )
 
-# Extract unique branching patterns
-branches <- extract_branch_motif(glycans)
-branches
+extract_branch_motif(glycans)
 #> <glycan_structure[4]>
 #> [1] Neu5Ac(a2-3)Gal(b1-4)GlcNAc(b1-
 #> [2] Gal(b1-4)GlcNAc(b1-
@@ -290,14 +356,6 @@ branches
 #> [4] GlcNAc(b1-
 #> # Unique structures: 4
 ```
-
-This function is particularly useful to be combined with
-`glydet::quantify_motifs()`.
-
-### Other dynamic motifs
-
-We will add more dynamic motif extraction functions in the future.
-Remember to look back to this vignette for updates!
 
 ## What’s Next?
 

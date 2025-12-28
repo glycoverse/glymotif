@@ -13,7 +13,9 @@ For example:
 
 This function returns all the unique branching motifs found in the input
 glycans. It is very useful for analyzing N-glycan antennary patterns
-combined with `glydet::quantify_motifs()`.
+combined with `glydet::quantify_motifs()`. When used with
+[`have_motif()`](https://glycoverse.github.io/glymotif/reference/have_motif.md)
+or related functions, we recommend setting `alignment` to "exact".
 
 ## Usage
 

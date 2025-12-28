@@ -62,8 +62,8 @@ have_motifs(
 - alignment:
 
   A character string. Possible values are "substructure", "core",
-  "terminal" and "whole". If not provided, the value will be decided
-  based on the `motif` argument. If `motif` is a motif name, the
+  "terminal", "whole", and "exact". If not provided, the value will be
+  decided based on the `motif` argument. If `motif` is a motif name, the
   alignment in the database will be used. Otherwise, "substructure" will
   be used.
 
@@ -212,6 +212,12 @@ a motif can be classified into four alignment types:
 - "whole": The motif must align with the entire glycan. See
   [whole-glycan](https://glycomotif.glyomics.org/glycomotif/Whole-Glycan_Alignment)
   for details.
+
+- "exact": The motif must align with a connected substructure in the
+  glycan, and the out-degrees of the matched nodes in the glycan must
+  exactly match the out-degrees in the motif. This prevents the glycan
+  from having additional branches (e.g. fucose) on the matched path
+  compared to the motif.
 
 When using known motifs in the GlycoMotif GlyGen Collection, the best
 practice is to not provide the `alignment` argument, and let the
