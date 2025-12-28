@@ -1,7 +1,5 @@
 # Changelog
 
-## glymotif (development version)
-
 ## glymotif 0.12.0
 
 We introduce the “dynamic motif” feature in this release. Instead of
