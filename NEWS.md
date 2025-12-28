@@ -1,4 +1,12 @@
-# glymotif (development version)
+# glymotif 0.12.0
+
+We introduce the "dynamic motif" feature in this release. Instead of specifying motifs manually or using motifs from the database, you can now extract motifs existing in your set of glycans. Two functions, `extract_motifs()` and `extract_motifs_lgl()`, are added for this purpose.
+
+## New features
+
+* Add `extract_motif()` to find all unique substructures (motifs) in a set of glycans. This function is suitable for motif finding in small glycans like O-GalNAc glycans.
+* Add `extract_branch_motif()` to find all branching motifs in a set of N-glycans. This function is particular useful for N-glycan motif finding, where antennary patterns can be versatile.
+* The `alignment` or `alignments` argument of all related functions now supports a new alignment type: "exact". This type of alignment works the best with `extract_branch_motif()` results.
 
 # glymotif 0.11.2
 
