@@ -24,49 +24,9 @@ extract_motif <- function(glycans, max_size = 3) {
   glycans <- unique(glycans)
   structure_graphs <- glyrepr::get_structure_graphs(glycans, return_list = TRUE)
 
-  extracted_subtrees <- list()
-
-  for (g in structure_graphs) {
-    # For each node in the graph, treat it as the root of a potential motif
-    nodes <- as.numeric(igraph::V(g))
-
-    for (root_id in nodes) {
-      # Find all connected subgraphs rooted at 'root_id' with size <= max_size
-      # We only consider "out" edges (descendants) to form the subgraph because
-      # glycan structures are directed trees.
-
-      # We use a recursive function to find all valid subsets of descendants
-      subsets <- .find_connected_subsets(g, root_id, max_size)
-
-      for (subset_nodes in subsets) {
-        # Induce subgraph
-        subtree <- igraph::induced_subgraph(g, subset_nodes)
-
-        # Handle Anomer
-        # The subtree needs an 'anomer' attribute.
-        # If root_id is the root of g, use g$anomer.
-        # Otherwise, use the linkage of the incoming edge to root_id in g.
-
-        # Check if root_id is a root in g (indegree == 0)
-        # Note: In glyrepr, usually there is only one root (reducing end).
-        # But let's check properly.
-        in_edges <- igraph::incident(g, root_id, mode = "in")
-
-        if (length(in_edges) == 0) {
-          # It is the root of the original glycan
-          subtree$anomer <- g$anomer
-        } else {
-          # It is an internal node. Extract anomer from incoming linkage.
-          linkage <- igraph::edge_attr(g, "linkage", in_edges)
-          # Linkage format: "b1-4". We want "b1".
-          anomer_part <- stringr::str_split_i(linkage, "-", 1)
-          subtree$anomer <- anomer_part
-        }
-
-        extracted_subtrees[[length(extracted_subtrees) + 1]] <- subtree
-      }
-    }
-  }
+  extracted_subtrees <- unlist(purrr::map(structure_graphs, function(g) {
+    .extract_motifs_from_graph(g, max_size)
+  }), recursive = FALSE)
 
   if (length(extracted_subtrees) == 0) {
     return(glyrepr::glycan_structure())
@@ -76,68 +36,77 @@ extract_motif <- function(glycans, max_size = 3) {
   unique(res)
 }
 
+.extract_motifs_from_graph <- function(g, max_size) {
+  nodes <- as.numeric(igraph::V(g))
+  unlist(purrr::map(nodes, function(node) {
+    .extract_motifs_rooted_at(g, node, max_size)
+  }), recursive = FALSE)
+}
+
+.extract_motifs_rooted_at <- function(g, root_id, max_size) {
+  subsets <- .find_connected_subsets(g, root_id, max_size)
+  purrr::map(subsets, function(subset_nodes) {
+    subtree <- igraph::induced_subgraph(g, subset_nodes)
+    subtree$anomer <- .get_node_anomer(g, root_id)
+    subtree
+  })
+}
+
+.get_node_anomer <- function(g, node_id) {
+  in_edges <- igraph::incident(g, node_id, mode = "in")
+  if (length(in_edges) == 0) {
+    return(g$anomer)
+  }
+
+  linkage <- igraph::edge_attr(g, "linkage", in_edges)
+  # Linkage format: "b1-4". We want "b1".
+  stringr::str_split_i(linkage, "-", 1)
+}
+
 # Helper function to find connected subsets rooted at 'node'
 # Returns a list of vectors, each vector containing node IDs.
 .find_connected_subsets <- function(g, root, max_size) {
-  # Current set is just {root}
   results <- list(c(root))
 
   if (max_size <= 1) {
     return(results)
   }
 
-  # Find children of root
   children <- as.numeric(igraph::neighbors(g, root, mode = "out"))
-
   if (length(children) == 0) {
     return(results)
   }
 
-  # We need to pick subsets of children to extend the current component.
-  # This is a bit complex: we can pick child A and some of its descendants,
-  # AND child B and some of its descendants.
-  # total size <= max_size.
+  # Recursive step and combination
+  child_combinations <- .combine_child_subsets(g, children, max_size - 1)
 
-  # Recursive strategy:
-  # For each child, get all its valid connected subsets (size <= max_size - 1).
-  # Then combine these subsets such that total size <= max_size (including root).
-
-  child_subsets_list <- list()
-  for (child in children) {
-    child_subsets_list[[as.character(child)]] <- .find_connected_subsets(g, child, max_size - 1)
+  for (combo in child_combinations) {
+    results[[length(results) + 1]] <- c(root, combo)
   }
 
-  # Now we need to combine these options.
-  # Problem: "Knapsack"-like combination.
-  # We have K children. Each child i offers a set of Subsets S_i.
-  # We can choose one subset from S_i, OR choose nothing from child i.
-  # Constraint: 1 (root) + sum(|chosen_subset_i|) <= max_size.
+  results
+}
 
-  # Since max_size is small (default 3), we can brute-force combination.
+.combine_child_subsets <- function(g, children, remaining_size) {
+  child_subsets_list <- purrr::map(children, function(child) {
+    .find_connected_subsets(g, child, remaining_size)
+  })
 
-  # Simplify:
-  # Create a list of "choices" for each child.
-  # Choice 0: pick nothing (nodes = empty, size = 0).
-  # Choice 1..M: pick one of the subsets from child_subsets_list.
-
-  choices_per_child <- list()
-  for (child in children) {
-    subsets <- child_subsets_list[[as.character(child)]]
-    # Add "empty" choice
-    choices <- list(numeric(0))
-    choices <- c(choices, subsets)
-    choices_per_child[[length(choices_per_child) + 1]] <- choices
-  }
+  choices_per_child <- purrr::map(child_subsets_list, function(subsets) {
+    # Choice 0 is empty (pick nothing from this child)
+    c(list(numeric(0)), subsets)
+  })
 
   # Cartesian product of choices
+  # We use purrr::map(choices_per_child, seq_along) to get indices for expand.grid
   all_combinations <- expand.grid(purrr::map(choices_per_child, seq_along))
 
-  # Iterate all combinations
+  valid_combos <- list()
+
   for (i in seq_len(nrow(all_combinations))) {
     combination_idx <- as.numeric(all_combinations[i, ])
-
-    current_nodes <- c(root)
-    current_size <- 1
+    current_nodes <- numeric(0)
+    current_size <- 0
 
     for (j in seq_along(combination_idx)) {
       choice_idx <- combination_idx[j]
@@ -150,11 +119,11 @@ extract_motif <- function(glycans, max_size = 3) {
       }
     }
 
-    if (current_size <= max_size && current_size > 1) {
-      # Don't add size 1 again (already added initially)
-      results[[length(results) + 1]] <- current_nodes
+    # We only want combinations that add something (size > 0) and fit in remaining_size
+    if (current_size > 0 && current_size <= remaining_size) {
+      valid_combos[[length(valid_combos) + 1]] <- current_nodes
     }
   }
 
-  results
+  valid_combos
 }
