@@ -283,13 +283,13 @@ apply_single_motif_to_glycans <- function(glycans, motif, alignment, ignore_link
 #' @noRd
 fast_convert_to_generic <- function(glycans) {
   iupacs <- as.character(glycans)
-  unique_iupacs <- names(attr(glycans, "structures"))
+  unique_iupacs <- names(attr(glycans, "graphs"))
   convert_one_graph <- function(graph) {
     igraph::V(graph)$mono <- glyrepr::convert_to_generic(igraph::V(graph)$mono)
     graph
   }
-  new_graphs <- purrr::map(attr(glycans, "structures"), convert_one_graph)
-  glyrepr:::new_glycan_structure(iupacs, rep("generic", length(iupacs)), new_graphs)
+  new_graphs <- purrr::map(attr(glycans, "graphs"), convert_one_graph)
+  glyrepr:::new_glycan_structure(iupacs, new_graphs)
 }
 
 # ----- Generic function for multiple motifs -----
