@@ -96,8 +96,9 @@ otherwise use the character vector itself as the names.
 }
 
 \section{Monosaccharide type}{
-They can have different monosaccharide types
-("concrete" or "generic", see \code{\link[glyrepr:get_mono_type]{glyrepr::get_mono_type()}}).
+As of glyrepr 0.9.0.9000, all elements in a \code{glycans} or \code{motifs} vector
+must have the same monosaccharide type ("concrete" or "generic").
+This invariant is enforced when creating or combining \code{glyrepr_structure} objects.
 The matching rules are:
 \itemize{
 \item When the motif is "generic", glycans are converted to "generic" type for comparison,
