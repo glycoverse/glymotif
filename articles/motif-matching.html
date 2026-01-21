@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">glymotif</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.12.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.12.0.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -60,7 +60,7 @@
       <img src="../logo.png" class="logo" alt=""><h1>The Science Behind Motif Matching</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/glycoverse/glymotif/blob/v0.12.0/vignettes/motif-matching.Rmd" class="external-link"><code>vignettes/motif-matching.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/glycoverse/glymotif/blob/main/vignettes/motif-matching.Rmd" class="external-link"><code>vignettes/motif-matching.Rmd</code></a></small>
       <div class="d-none name"><code>motif-matching.Rmd</code></div>
     </div>
 
@@ -284,13 +284,14 @@ generic motifs ✅</li>
 ✅</li>
 </ul>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">mat</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/have_motif.html">have_motifs</a></span><span class="op">(</span>glycans <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Hex(a1-"</span>, <span class="st">"Man(a1-"</span><span class="op">)</span>, motifs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Hex(a1-"</span>, <span class="st">"Man(a1-"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">mat</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">mat</span><span class="op">)</span>, <span class="st">"_glycan"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">mat</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">mat</span><span class="op">)</span>, <span class="st">"_motif"</span><span class="op">)</span></span>
-<span><span class="va">mat</span></span>
-<span><span class="co">#&gt;                Hex(a1-_motif Man(a1-_motif</span></span>
-<span><span class="co">#&gt; Hex(a1-_glycan          TRUE         FALSE</span></span>
-<span><span class="co">#&gt; Man(a1-_glycan          TRUE          TRUE</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/have_motif.html">have_motif</a></span><span class="op">(</span><span class="st">"Gal(a1-"</span>, <span class="st">"Gal(a1-"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] TRUE</span></span>
+<span><span class="fu"><a href="../reference/have_motif.html">have_motif</a></span><span class="op">(</span><span class="st">"Gal(a1-"</span>, <span class="st">"Hex(a1-"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] TRUE</span></span>
+<span><span class="fu"><a href="../reference/have_motif.html">have_motif</a></span><span class="op">(</span><span class="st">"Hex(a1-"</span>, <span class="st">"Gal(a1-"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] FALSE</span></span>
+<span><span class="fu"><a href="../reference/have_motif.html">have_motif</a></span><span class="op">(</span><span class="st">"Hex(a1-"</span>, <span class="st">"Hex(a1-"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] TRUE</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="rule-4-chemical-modifications">Rule 4: Chemical Modifications 🧪<a class="anchor" aria-label="anchor" href="#rule-4-chemical-modifications"></a>

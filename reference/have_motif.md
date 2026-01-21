@@ -137,10 +137,10 @@ decided according to the following rules:
 
 ## Monosaccharide type
 
-They can have different monosaccharide types ("concrete" or "generic",
-see
-[`glyrepr::get_mono_type()`](https://glycoverse.github.io/glyrepr/reference/get_mono_type.html)).
-The matching rules are:
+As of glyrepr 0.9.0.9000, all elements in a `glycans` or `motifs` vector
+must have the same monosaccharide type ("concrete" or "generic"). This
+invariant is enforced when creating or combining `glyrepr_structure`
+objects. The matching rules are:
 
 - When the motif is "generic", glycans are converted to "generic" type
   for comparison, allowing both concrete and generic glycans to match

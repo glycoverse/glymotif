@@ -244,13 +244,14 @@ Specifically:
 - Generic monosaccharides in glycans can only match generic motifs ✅
 
 ``` r
-mat <- have_motifs(glycans = c("Hex(a1-", "Man(a1-"), motifs = c("Hex(a1-", "Man(a1-"))
-rownames(mat) <- paste0(rownames(mat), "_glycan")
-colnames(mat) <- paste0(colnames(mat), "_motif")
-mat
-#>                Hex(a1-_motif Man(a1-_motif
-#> Hex(a1-_glycan          TRUE         FALSE
-#> Man(a1-_glycan          TRUE          TRUE
+have_motif("Gal(a1-", "Gal(a1-")
+#> [1] TRUE
+have_motif("Gal(a1-", "Hex(a1-")
+#> [1] TRUE
+have_motif("Hex(a1-", "Gal(a1-")
+#> [1] FALSE
+have_motif("Hex(a1-", "Hex(a1-")
+#> [1] TRUE
 ```
 
 ### Rule 4: Chemical Modifications 🧪

@@ -199,18 +199,18 @@ exp |>
   )) |>
   get_var_info()
 #> # A tibble: 67 × 5
-#>    variable glycan_composition                glycan_structure lacnac sia_lacnac
-#>    <chr>    <comp>                            <struct>         <lgl>  <lgl>     
-#>  1 V1       Man(3)GlcNAc(3)                   GlcNAc(?1-?)Man… FALSE  FALSE     
-#>  2 V2       Man(3)GlcNAc(7)                   GlcNAc(?1-?)[Gl… FALSE  FALSE     
-#>  3 V3       Man(5)GlcNAc(2)                   Man(?1-?)[Man(?… FALSE  FALSE     
-#>  4 V4       Man(4)Gal(2)GlcNAc(4)Neu5Ac(2)    Neu5Ac(?2-?)Gal… TRUE   TRUE      
-#>  5 V5       Man(3)Gal(1)GlcNAc(3)             Gal(?1-?)GlcNAc… TRUE   FALSE     
-#>  6 V6       Man(3)Gal(2)GlcNAc(4)Fuc(2)       Gal(?1-?)GlcNAc… TRUE   FALSE     
-#>  7 V7       Man(3)GlcNAc(3)Fuc(1)             GlcNAc(?1-?)Man… FALSE  FALSE     
-#>  8 V8       Man(3)GlcNAc(4)                   GlcNAc(?1-?)Man… FALSE  FALSE     
-#>  9 V9       Man(3)Gal(2)GlcNAc(5)Neu5Ac(1)    Neu5Ac(?2-?)Gal… TRUE   TRUE      
-#> 10 V10      Man(3)Gal(1)GlcNAc(5)Fuc(1)Neu5A… Neu5Ac(?2-?)Gal… TRUE   TRUE      
+#>    variable                glycan_composition glycan_structure lacnac sia_lacnac
+#>    <glue>                  <comp>             <struct>         <lgl>  <lgl>     
+#>  1 Man(3)GlcNAc(3)         Man(3)GlcNAc(3)    GlcNAc(?1-?)Man… FALSE  FALSE     
+#>  2 Man(3)GlcNAc(7)         Man(3)GlcNAc(7)    GlcNAc(?1-?)[Gl… FALSE  FALSE     
+#>  3 Man(5)GlcNAc(2)         Man(5)GlcNAc(2)    Man(?1-?)[Man(?… FALSE  FALSE     
+#>  4 Man(4)Gal(2)GlcNAc(4)N… Man(4)Gal(2)GlcNA… Neu5Ac(?2-?)Gal… TRUE   TRUE      
+#>  5 Man(3)Gal(1)GlcNAc(3)   Man(3)Gal(1)GlcNA… Gal(?1-?)GlcNAc… TRUE   FALSE     
+#>  6 Man(3)Gal(2)GlcNAc(4)F… Man(3)Gal(2)GlcNA… Gal(?1-?)GlcNAc… TRUE   FALSE     
+#>  7 Man(3)GlcNAc(3)Fuc(1)   Man(3)GlcNAc(3)Fu… GlcNAc(?1-?)Man… FALSE  FALSE     
+#>  8 Man(3)GlcNAc(4)         Man(3)GlcNAc(4)    GlcNAc(?1-?)Man… FALSE  FALSE     
+#>  9 Man(3)Gal(2)GlcNAc(5)N… Man(3)Gal(2)GlcNA… Neu5Ac(?2-?)Gal… TRUE   TRUE      
+#> 10 Man(3)Gal(1)GlcNAc(5)F… Man(3)Gal(1)GlcNA… Neu5Ac(?2-?)Gal… TRUE   TRUE      
 #> # ℹ 57 more rows
 
 exp |>
@@ -220,17 +220,17 @@ exp |>
   )) |>
   get_var_info()
 #> # A tibble: 67 × 5
-#>    variable glycan_composition                glycan_structure lacnac sia_lacnac
-#>    <chr>    <comp>                            <struct>          <int>      <int>
-#>  1 V1       Man(3)GlcNAc(3)                   GlcNAc(?1-?)Man…      0          0
-#>  2 V2       Man(3)GlcNAc(7)                   GlcNAc(?1-?)[Gl…      0          0
-#>  3 V3       Man(5)GlcNAc(2)                   Man(?1-?)[Man(?…      0          0
-#>  4 V4       Man(4)Gal(2)GlcNAc(4)Neu5Ac(2)    Neu5Ac(?2-?)Gal…      2          2
-#>  5 V5       Man(3)Gal(1)GlcNAc(3)             Gal(?1-?)GlcNAc…      1          0
-#>  6 V6       Man(3)Gal(2)GlcNAc(4)Fuc(2)       Gal(?1-?)GlcNAc…      2          0
-#>  7 V7       Man(3)GlcNAc(3)Fuc(1)             GlcNAc(?1-?)Man…      0          0
-#>  8 V8       Man(3)GlcNAc(4)                   GlcNAc(?1-?)Man…      0          0
-#>  9 V9       Man(3)Gal(2)GlcNAc(5)Neu5Ac(1)    Neu5Ac(?2-?)Gal…      2          1
-#> 10 V10      Man(3)Gal(1)GlcNAc(5)Fuc(1)Neu5A… Neu5Ac(?2-?)Gal…      1          1
+#>    variable                glycan_composition glycan_structure lacnac sia_lacnac
+#>    <glue>                  <comp>             <struct>          <int>      <int>
+#>  1 Man(3)GlcNAc(3)         Man(3)GlcNAc(3)    GlcNAc(?1-?)Man…      0          0
+#>  2 Man(3)GlcNAc(7)         Man(3)GlcNAc(7)    GlcNAc(?1-?)[Gl…      0          0
+#>  3 Man(5)GlcNAc(2)         Man(5)GlcNAc(2)    Man(?1-?)[Man(?…      0          0
+#>  4 Man(4)Gal(2)GlcNAc(4)N… Man(4)Gal(2)GlcNA… Neu5Ac(?2-?)Gal…      2          2
+#>  5 Man(3)Gal(1)GlcNAc(3)   Man(3)Gal(1)GlcNA… Gal(?1-?)GlcNAc…      1          0
+#>  6 Man(3)Gal(2)GlcNAc(4)F… Man(3)Gal(2)GlcNA… Gal(?1-?)GlcNAc…      2          0
+#>  7 Man(3)GlcNAc(3)Fuc(1)   Man(3)GlcNAc(3)Fu… GlcNAc(?1-?)Man…      0          0
+#>  8 Man(3)GlcNAc(4)         Man(3)GlcNAc(4)    GlcNAc(?1-?)Man…      0          0
+#>  9 Man(3)Gal(2)GlcNAc(5)N… Man(3)Gal(2)GlcNA… Neu5Ac(?2-?)Gal…      2          1
+#> 10 Man(3)Gal(1)GlcNAc(5)F… Man(3)Gal(1)GlcNA… Neu5Ac(?2-?)Gal…      1          1
 #> # ℹ 57 more rows
 ```
