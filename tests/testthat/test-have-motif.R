@@ -615,7 +615,7 @@ test_that("have_motif: vectorized glycans with single motif", {
   result <- have_motif(glycans, motif)
 
   expect_length(result, 3)
-  expect_false(result[1])  # Hex should not match Man
+  expect_false(result[1])  # Glc should not match Man
   expect_true(result[2])   # Man should match Man
   expect_false(result[3])  # Gal should not match Man
 })
