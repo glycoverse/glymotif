@@ -165,9 +165,6 @@ count_motif("Man(?1-", "Hex(?1-") # Returns 1
 # Generic glycan vs concrete motif: doesn't match
 count_motif("Hex(?1-", "Man(?1-") # Returns 0
 
-# Matrix example showing type matching rules
-count_motifs(glycans = c("Hex(?1-", "Man(?1-"), motifs = c("Hex(?1-", "Man(?1-"))
-
 }
 \seealso{
 \code{\link[=have_motif]{have_motif()}}, \code{\link[=have_motifs]{have_motifs()}}

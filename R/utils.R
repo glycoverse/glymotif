@@ -246,6 +246,8 @@ apply_single_motif_to_glycans <- function(glycans, motif, alignment, ignore_link
   # smap_func should be either glyrepr::smap_lgl or glyrepr::smap_int
 
   # Handle mono type conversion based on motif type
+  # glyrepr 0.9.0.9000 guarantees all elements in a glyrepr_structure vector
+  # have the same mono_type, so get_mono_type() returns a scalar
   motif_type <- glyrepr::get_mono_type(motif)
   if (motif_type == "generic") {
     # For generic motifs, convert glycans to generic to allow matching concrete glycans
@@ -283,13 +285,13 @@ apply_single_motif_to_glycans <- function(glycans, motif, alignment, ignore_link
 #' @noRd
 fast_convert_to_generic <- function(glycans) {
   iupacs <- as.character(glycans)
-  unique_iupacs <- names(attr(glycans, "structures"))
+  unique_iupacs <- names(attr(glycans, "graphs"))
   convert_one_graph <- function(graph) {
     igraph::V(graph)$mono <- glyrepr::convert_to_generic(igraph::V(graph)$mono)
     graph
   }
-  new_graphs <- purrr::map(attr(glycans, "structures"), convert_one_graph)
-  glyrepr:::new_glycan_structure(iupacs, rep("generic", length(iupacs)), new_graphs)
+  new_graphs <- purrr::map(attr(glycans, "graphs"), convert_one_graph)
+  glyrepr:::new_glycan_structure(iupacs, new_graphs)
 }
 
 # ----- Generic function for multiple motifs -----

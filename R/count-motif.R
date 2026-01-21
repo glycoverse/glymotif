@@ -84,9 +84,6 @@
 #' # Generic glycan vs concrete motif: doesn't match
 #' count_motif("Hex(?1-", "Man(?1-") # Returns 0
 #'
-#' # Matrix example showing type matching rules
-#' count_motifs(glycans = c("Hex(?1-", "Man(?1-"), motifs = c("Hex(?1-", "Man(?1-"))
-#'
 #' @export
 count_motif <- function(glycans, motif, alignment = NULL, ignore_linkages = FALSE, strict_sub = TRUE) {
   params <- prepare_have_motif_args(glycans, motif, alignment, ignore_linkages, strict_sub)
