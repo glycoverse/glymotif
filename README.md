@@ -9,6 +9,8 @@
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 [![CRAN
 status](https://www.r-pkg.org/badges/version/glymotif)](https://CRAN.R-project.org/package=glymotif)
+[![R-universe
+version](https://glycoverse.r-universe.dev/glymotif/badges/version)](https://glycoverse.r-universe.dev/glymotif)
 [![R-CMD-check](https://github.com/glycoverse/glymotif/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/glycoverse/glymotif/actions/workflows/R-CMD-check.yaml)
 [![Codecov test
 coverage](https://codecov.io/gh/glycoverse/glymotif/graph/badge.svg)](https://app.codecov.io/gh/glycoverse/glymotif)
