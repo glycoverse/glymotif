@@ -1,5 +1,7 @@
 # Changelog
 
+## glymotif (development version)
+
 ## glymotif 0.12.1
 
 ### Minor improvements and fixes
