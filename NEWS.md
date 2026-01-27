@@ -1,4 +1,8 @@
-# glymotif (development version)
+# glymotif 0.12.1
+
+## Minor improvements and fixes
+
+* Adapt to glyrepr 0.10.0.
 
 # glymotif 0.12.0
 
