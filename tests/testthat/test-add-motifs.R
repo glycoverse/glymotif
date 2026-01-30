@@ -163,3 +163,45 @@ test_that("add_motifs_int uses motif names for unnamed known motif names", {
   )
   expect_identical(exp$var_info[, c("O-Glycan core 1", "O-Glycan core 2")], expected)
 })
+
+test_that("add_motifs_int uses names for named glyrepr_structure motifs", {
+  exp <- create_test_exp(c("S1", "S2"), c("V1", "V2"))
+  structures <- c(glyrepr::o_glycan_core_1(), glyrepr::o_glycan_core_2())
+  exp$var_info$glycan_structure <- structures
+
+  # Use named glyrepr_structure motifs
+  motifs <- glyparse::parse_iupac_condensed(c(
+    "Gal(b1-3)GalNAc(a1-",
+    "Gal(b1-3)[GlcNAc(b1-6)]GalNAc(a1-"
+  ))
+  names(motifs) <- c("core1_motif", "core2_motif")
+
+  suppressWarnings(exp <- add_motifs_int(exp, motifs, alignments = c("whole", "whole")))
+
+  # Check that the names are used as column names
+  expected <- tibble::tibble(
+    core1_motif = c(1L, 0L),
+    core2_motif = c(0L, 1L)
+  )
+  expect_identical(exp$var_info[, c("core1_motif", "core2_motif")], expected)
+})
+
+test_that("add_motifs_lgl for data frame uses names for named glyrepr_structure motifs", {
+  df <- tibble::tibble(glycan_structure = c(glyrepr::o_glycan_core_1(), glyrepr::o_glycan_core_2()))
+
+  # Use named glyrepr_structure motifs
+  motifs <- glyparse::parse_iupac_condensed(c(
+    "Gal(b1-3)GalNAc(a1-",
+    "Gal(b1-3)[GlcNAc(b1-6)]GalNAc(a1-"
+  ))
+  names(motifs) <- c("has_core1", "has_core2")
+
+  suppressWarnings(df <- add_motifs_lgl(df, motifs, alignments = c("whole", "whole")))
+
+  # Check that the names are used as column names
+  expected <- tibble::tibble(
+    has_core1 = c(TRUE, FALSE),
+    has_core2 = c(FALSE, TRUE)
+  )
+  expect_identical(df[, c("has_core1", "has_core2")], expected)
+})
