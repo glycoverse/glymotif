@@ -86,8 +86,18 @@
 #'
 #' @export
 count_motif <- function(glycans, motif, alignment = NULL, ignore_linkages = FALSE, strict_sub = TRUE) {
+  # Store input names before processing
+  glycan_names <- names(glycans)
+
   params <- prepare_have_motif_args(glycans, motif, alignment, ignore_linkages, strict_sub)
-  rlang::exec("count_motif_", !!!params)
+  result <- rlang::exec("count_motif_", !!!params)
+
+  # Apply names to result if input had names
+  if (!is.null(glycan_names)) {
+    names(result) <- glycan_names
+  }
+
+  result
 }
 
 #' @rdname count_motif
@@ -95,7 +105,7 @@ count_motif <- function(glycans, motif, alignment = NULL, ignore_linkages = FALS
 count_motifs <- function(glycans, motifs, alignments = NULL, ignore_linkages = FALSE, strict_sub = TRUE) {
   params <- prepare_have_motifs_args(glycans, motifs, alignments, ignore_linkages, strict_sub)
   glycan_names <- prepare_struc_names(glycans, params$glycans)
-  motif_names <- prepare_struc_names(motifs, params$motifs)
+  motif_names <- prepare_motif_names(motifs)
   rlang::exec("count_motifs_", !!!params, glycan_names = glycan_names, motif_names = motif_names)
 }
 

@@ -456,17 +456,18 @@ test_that("have_motifs works with multiple motifs", {
   expect_true(is.matrix(result))
   expect_equal(nrow(result), 2)
   expect_equal(ncol(result), 3)
-  expect_equal(colnames(result), c("Gal(b1-3)GalNAc(?1-", "Gal(b1-4)GalNAc(?1-", "GlcNAc(b1-6)GalNAc(?1-"))
+  # IUPAC strings without names should have no colnames
+  expect_null(colnames(result))
   expect_equal(rownames(result), c("core2", "test_glycan"))
   
   # Check specific results
-  expect_true(result[1, "Gal(b1-3)GalNAc(?1-"])
-  expect_false(result[1, "Gal(b1-4)GalNAc(?1-"])
-  expect_true(result[1, "GlcNAc(b1-6)GalNAc(?1-"])
+  expect_true(result[1, 1])  # Gal(b1-3)GalNAc(?1-
+  expect_false(result[1, 2]) # Gal(b1-4)GalNAc(?1-
+  expect_true(result[1, 3])  # GlcNAc(b1-6)GalNAc(?1-
   
-  expect_false(result[2, "Gal(b1-3)GalNAc(?1-"])
-  expect_false(result[2, "Gal(b1-4)GalNAc(?1-"])
-  expect_true(result[2, "GlcNAc(b1-6)GalNAc(?1-"])
+  expect_false(result[2, 1]) # Gal(b1-3)GalNAc(?1-
+  expect_false(result[2, 2]) # Gal(b1-4)GalNAc(?1-
+  expect_true(result[2, 3])  # GlcNAc(b1-6)GalNAc(?1-
 })
 
 
@@ -482,7 +483,8 @@ test_that("have_motifs works without glycan names", {
   expect_true(is.matrix(result))
   expect_equal(nrow(result), 2)
   expect_equal(ncol(result), 2)
-  expect_equal(colnames(result), c("Gal(b1-3)GalNAc(?1-", "GlcNAc(b1-6)GalNAc(?1-"))
+  # IUPAC strings without names should have no colnames
+  expect_null(colnames(result))
   
   # Check that row names contain IUPAC strings
   expect_true(grepl("Gal\\(b1-3\\)", rownames(result)[1]))
@@ -558,8 +560,9 @@ test_that("have_motifs works with ignore_linkages", {
   result_normal <- have_motifs(glycans, motifs, ignore_linkages = FALSE)
   result_ignore <- have_motifs(glycans, motifs, ignore_linkages = TRUE)
   
-  expect_false(result_normal[1, "Gal(b1-4)GalNAc(?1-"])
-  expect_true(result_ignore[1, "Gal(b1-4)GalNAc(?1-"])
+  # Use numeric indices since IUPAC strings without names have no colnames
+  expect_false(result_normal[1, 2])  # Gal(b1-4)GalNAc(?1-
+  expect_true(result_ignore[1, 2])   # Gal(b1-4)GalNAc(?1-
 })
 
 
@@ -627,4 +630,65 @@ test_that("have_motif works for repeated glycans", {
 
   result <- have_motif(glycans, motif)
   expect_equal(result, c(TRUE, TRUE, TRUE, TRUE, FALSE))
+})
+
+
+# ========== Name Preservation ==========
+test_that("have_motif preserves names from glycan_structure input", {
+  glycan1 <- glyrepr::o_glycan_core_1()
+  glycan2 <- glyrepr::o_glycan_core_2()
+  glycans <- c(glycan1, glycan2)
+  names(glycans) <- c("core1", "core2")
+
+  result <- have_motif(glycans, "Gal(b1-3)GalNAc(?1-")
+  expect_equal(names(result), c("core1", "core2"))
+})
+
+test_that("have_motif preserves names from character vector input", {
+  glycans <- c("Gal(b1-3)GalNAc(?1-", "Gal(b1-3)Gal(b1-3)GalNAc(?1-")
+  names(glycans) <- c("simple", "complex")
+
+  result <- have_motif(glycans, "Gal(b1-3)GalNAc(?1-")
+  expect_equal(names(result), c("simple", "complex"))
+})
+
+test_that("have_motif returns no names when input has no names", {
+  glycans <- c("Gal(b1-3)GalNAc(?1-", "Gal(b1-3)Gal(b1-3)GalNAc(?1-")
+
+  result <- have_motif(glycans, "Gal(b1-3)GalNAc(?1-")
+  expect_null(names(result))
+})
+
+# ========== Known Motif Names as Column Names ==========
+test_that("have_motifs uses known motif names as colnames when motifs unnamed", {
+  glycans <- c(glyrepr::o_glycan_core_1(), glyrepr::o_glycan_core_2())
+  names(glycans) <- c("core1", "core2")
+
+  # Use known motif names without explicit names
+  motifs <- c("O-Glycan core 1", "O-Glycan core 2")
+
+  result <- have_motifs(glycans, motifs)
+  expect_equal(rownames(result), c("core1", "core2"))
+  expect_equal(colnames(result), c("O-Glycan core 1", "O-Glycan core 2"))
+})
+
+test_that("have_motifs preserves explicit motif names over known names", {
+  glycans <- c(glyrepr::o_glycan_core_1(), glyrepr::o_glycan_core_2())
+  names(glycans) <- c("core1", "core2")
+
+  # Use known motif names WITH explicit names
+  motifs <- c(m1 = "O-Glycan core 1", m2 = "O-Glycan core 2")
+
+  result <- have_motifs(glycans, motifs)
+  expect_equal(colnames(result), c("m1", "m2"))
+})
+
+test_that("have_motifs has no colnames when motifs are IUPAC strings without names", {
+  glycans <- c(glyrepr::o_glycan_core_1(), glyrepr::o_glycan_core_2())
+  names(glycans) <- c("core1", "core2")
+
+  motifs <- c("Gal(b1-3)GalNAc(?1-", "Gal(b1-4)GalNAc(?1-")
+
+  result <- have_motifs(glycans, motifs)
+  expect_null(colnames(result))
 })

@@ -364,3 +364,35 @@ test_that("match_motifs handles mixed empty and non-empty results", {
   expect_length(result[[1]][[1]], 1)  # First motif has one match
   expect_length(result[[2]][[1]], 0)  # Second motif has no matches
 })
+
+# ========== Name preservation ==========
+test_that("match_motif preserves names from glycan_structure input", {
+  glycan1 <- glyrepr::o_glycan_core_1()
+  glycan2 <- glyrepr::o_glycan_core_2()
+  glycans <- c(glycan1, glycan2)
+  names(glycans) <- c("core1", "core2")
+
+  result <- match_motif(glycans, glyrepr::o_glycan_core_1())
+  expect_equal(names(result), c("core1", "core2"))
+})
+
+test_that("match_motif returns no names when input has no names", {
+  glycans <- c(glyrepr::o_glycan_core_1(), glyrepr::o_glycan_core_2())
+
+  result <- match_motif(glycans, glyrepr::o_glycan_core_1())
+  expect_null(names(result))
+})
+
+
+
+# ========== match_motifs naming ==========
+test_that("match_motifs names outer list by motifs and inner by glycans", {
+  glycans <- c(glyrepr::o_glycan_core_1(), glyrepr::o_glycan_core_2())
+  names(glycans) <- c("core1", "core2")
+
+  motifs <- c(m1 = glyrepr::o_glycan_core_1(), m2 = glyrepr::o_glycan_core_2())
+
+  result <- match_motifs(glycans, motifs)
+  expect_equal(names(result), c("m1", "m2"))
+  expect_equal(names(result[[1]]), c("core1", "core2"))
+})

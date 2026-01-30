@@ -297,7 +297,11 @@ fast_convert_to_generic <- function(glycans) {
 # ----- Generic function for multiple motifs -----
 prepare_struc_names <- function(x, strucs) {
   if (glyrepr::is_glycan_structure(x)) {
-    return(as.character(x))
+    if (is.null(names(x))) {
+      return(as.character(x))
+    } else {
+      return(names(x))
+    }
   } else {  # must be a character vector
     if (is.null(names(x))) {
       return(x)
@@ -305,6 +309,24 @@ prepare_struc_names <- function(x, strucs) {
       return(names(x))
     }
   }
+}
+
+# Helper to determine motif names for matrix columns
+# Returns: explicit names if present, known motif names if applicable,
+#          NULL otherwise (IUPAC strings or structure input without names)
+prepare_motif_names <- function(motifs_input) {
+  # If motifs_input has explicit names, use them
+  if (!is.null(names(motifs_input))) {
+    return(names(motifs_input))
+  }
+
+  # If motifs_input is a character vector of known motif names, use those
+  if (is.character(motifs_input) && all(is_known_motif(motifs_input))) {
+    return(motifs_input)
+  }
+
+  # Otherwise, no names (IUPAC strings or glyrepr_structure without names)
+  NULL
 }
 
 apply_motifs_to_glycans <- function(glycans, motifs, alignments, ignore_linkages, single_motif_func, glycan_names, motif_names, strict_sub) {
@@ -329,14 +351,24 @@ apply_motifs_to_glycans <- function(glycans, motifs, alignments, ignore_linkages
     )
   )
 
-  # Set names for the results
-  names(motif_results_list) <- motif_names
+  # Set names for the results if provided
+  if (!is.null(motif_names)) {
+    names(motif_results_list) <- motif_names
+  }
 
   # Convert results to matrix format
   # Each element in motif_results_list should be a vector of results for all glycans
   result_matrix <- do.call(cbind, motif_results_list)
-  rownames(result_matrix) <- glycan_names
-  colnames(result_matrix) <- motif_names
+  
+  # Set rownames if provided
+  if (!is.null(glycan_names)) {
+    rownames(result_matrix) <- glycan_names
+  }
+  
+  # Set colnames if provided
+  if (!is.null(motif_names)) {
+    colnames(result_matrix) <- motif_names
+  }
 
   return(result_matrix)
 }
