@@ -182,3 +182,30 @@ test_that("count_motifs works with ignore_linkages", {
   expect_equal(result_normal[1, "Gal(b1-4)GalNAc(b1-"], 0L)
   expect_equal(result_ignore[1, "Gal(b1-4)GalNAc(b1-"], 1L)
 })
+
+
+# ========== Name preservation tests ==========
+test_that("count_motif preserves names from glycan_structure input", {
+  glycan1 <- glyrepr::o_glycan_core_1()
+  glycan2 <- glyrepr::o_glycan_core_2()
+  glycans <- c(glycan1, glycan2)
+  names(glycans) <- c("core1", "core2")
+
+  result <- count_motif(glycans, "Gal(b1-")
+  expect_equal(names(result), c("core1", "core2"))
+})
+
+test_that("count_motif preserves names from character vector input", {
+  glycans <- c("Gal(b1-3)GalNAc(?1-", "Gal(b1-3)Gal(b1-3)GalNAc(?1-")
+  names(glycans) <- c("simple", "complex")
+
+  result <- count_motif(glycans, "Gal(b1-")
+  expect_equal(names(result), c("simple", "complex"))
+})
+
+test_that("count_motif returns no names when input has no names", {
+  glycans <- c("Gal(b1-3)GalNAc(?1-", "Gal(b1-3)Gal(b1-3)GalNAc(?1-")
+
+  result <- count_motif(glycans, "Gal(b1-")
+  expect_null(names(result))
+})
