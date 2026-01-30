@@ -55,14 +55,7 @@ has_duplicate_motifs <- function(motifs) {
   if (length(motifs) <= 1) {
     return(FALSE)
   }
-
-  # For glyrepr_structure, use unique() which is natively supported
-  if (glyrepr::is_glycan_structure(motifs)) {
-    length(unique(motifs)) < length(motifs)
-  } else {
-    # For character vectors, use base R unique
-    length(unique(motifs)) < length(motifs)
-  }
+  length(unique(motifs)) < length(motifs)
 }
 
 # Legacy wrapper functions for backward compatibility
