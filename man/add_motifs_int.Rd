@@ -108,7 +108,10 @@ or IUPAC-condensed structure strings, the IUPAC-condensed strings are used
 as column names.
 }
 
-This behavior is consistent with \code{\link[=have_motifs]{have_motifs()}} and \code{\link[=count_motifs]{count_motifs()}}.
+Note: This behavior differs from \code{\link[=have_motifs]{have_motifs()}} and \code{\link[=count_motifs]{count_motifs()}}, which
+return matrices with NULL column names for unnamed IUPAC string or structure
+motifs. The functions here always provide column names since they are designed
+for adding motif annotations to data frames.
 }
 
 \section{Why do we need these functions}{

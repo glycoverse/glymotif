@@ -16,7 +16,10 @@
 #'    or IUPAC-condensed structure strings, the IUPAC-condensed strings are used
 #'    as column names.
 #'
-#' This behavior is consistent with [have_motifs()] and [count_motifs()].
+#' Note: This behavior differs from [have_motifs()] and [count_motifs()], which
+#' return matrices with NULL column names for unnamed IUPAC string or structure
+#' motifs. The functions here always provide column names since they are designed
+#' for adding motif annotations to data frames.
 #'
 #' @section Why do we need these functions:
 #'
