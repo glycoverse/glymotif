@@ -210,9 +210,9 @@ glycans <- c(glycan1, glycan2)
 motifs <- c("Gal(b1-3)GalNAc(b1-", "Gal(b1-", "Man(b1-")
 result <- count_motifs(glycans, motifs)
 print(result)
-#>                                            Gal(b1-3)GalNAc(b1- Gal(b1- Man(b1-
-#> Gal(b1-3)Gal(b1-3)GalNAc(b1-                                 1       2       0
-#> Man(b1-?)[Man(b1-?)]GalNAc(b1-4)GlcNAc(b1-                   0       0       2
+#>                                            [,1] [,2] [,3]
+#> Gal(b1-3)Gal(b1-3)GalNAc(b1-                  1    2    0
+#> Man(b1-?)[Man(b1-?)]GalNAc(b1-4)GlcNAc(b1-    0    0    2
 
 # Monosaccharide type matching examples
 # Concrete glycan vs generic motif: matches (glycan converted to generic)

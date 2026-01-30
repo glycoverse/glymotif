@@ -136,7 +136,8 @@ A nested list of integer vectors.
   `purrr::pluck(result, motif_index, glycan_index, match_index)` to
   access the match information. For example,
   `purrr::pluck(result, 1, 2, 3)` means the 3rd match in the 2nd glycan
-  for the 1st motif.
+  for the 1st motif. The outermost list is named by `motifs` if they
+  have names. The middle list is named by `glycans` if they have names.
 
 ## Vertex and Linkage Indices
 

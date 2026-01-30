@@ -171,7 +171,9 @@ For example, <code>purrr::pluck(result, 1, 2)</code> means the 2nd match in the 
 The outermost list corresponds to motifs, the middle list corresponds to glycans,
 and the innermost list corresponds to matches.
 Use <code>purrr::pluck(result, motif_index, glycan_index, match_index)</code> to access the match information.
-For example, <code>purrr::pluck(result, 1, 2, 3)</code> means the 3rd match in the 2nd glycan for the 1st motif.</p></li>
+For example, <code>purrr::pluck(result, 1, 2, 3)</code> means the 3rd match in the 2nd glycan for the 1st motif.
+The outermost list is named by <code>motifs</code> if they have names.
+The middle list is named by <code>glycans</code> if they have names.</p></li>
 </ul></div>
     <div class="section level2">
     <h2 id="vertex-and-linkage-indices">Vertex and Linkage Indices<a class="anchor" aria-label="anchor" href="#vertex-and-linkage-indices"></a></h2>

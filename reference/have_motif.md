@@ -393,12 +393,9 @@ glycans <- c(glycan1, glycan2)
 
 motifs <- c("Gal(b1-3)GalNAc(b1-", "Gal(b1-4)GalNAc(b1-", "GlcNAc(b1-6)GalNAc(b1-")
 have_motifs(glycans, motifs)
-#>                                   Gal(b1-3)GalNAc(b1- Gal(b1-4)GalNAc(b1-
-#> Gal(b1-3)[GlcNAc(b1-6)]GalNAc(a1-               FALSE               FALSE
-#> Gal(b1-?)[GlcNAc(b1-6)]GalNAc(b1-               FALSE               FALSE
-#>                                   GlcNAc(b1-6)GalNAc(b1-
-#> Gal(b1-3)[GlcNAc(b1-6)]GalNAc(a1-                  FALSE
-#> Gal(b1-?)[GlcNAc(b1-6)]GalNAc(b1-                   TRUE
+#>                                    [,1]  [,2]  [,3]
+#> Gal(b1-3)[GlcNAc(b1-6)]GalNAc(a1- FALSE FALSE FALSE
+#> Gal(b1-?)[GlcNAc(b1-6)]GalNAc(b1- FALSE FALSE  TRUE
 
 # You can assign each motif a name
 motifs <- c(
