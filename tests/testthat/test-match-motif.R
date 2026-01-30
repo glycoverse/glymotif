@@ -396,3 +396,15 @@ test_that("match_motifs names outer list by motifs and inner by glycans", {
   expect_equal(names(result), c("m1", "m2"))
   expect_equal(names(result[[1]]), c("core1", "core2"))
 })
+
+# ========== Duplicate motifs ==========
+test_that("match_motifs raises error for duplicate motifs", {
+  glycan <- glyrepr::n_glycan_core()
+  glycans <- c(glycan)
+  motifs <- glyparse::parse_iupac_condensed(c("Man(b1-", "Man(b1-"))
+
+  expect_error(
+    match_motifs(glycans, motifs),
+    "cannot have duplications"
+  )
+})
