@@ -205,3 +205,28 @@ test_that("add_motifs_lgl for data frame uses names for named glyrepr_structure 
   )
   expect_identical(df[, c("has_core1", "has_core2")], expected)
 })
+test_that("add_motifs_int raises error for duplicate motifs", {
+  exp <- create_test_exp(c("S1", "S2"), c("V1", "V2"))
+  structures <- c(glyrepr::o_glycan_core_1(), glyrepr::o_glycan_core_2())
+  exp$var_info$glycan_structure <- structures
+
+  motifs <- c("O-Glycan core 1", "O-Glycan core 1")
+
+  expect_error(
+    add_motifs_int(exp, motifs),
+    "cannot have duplications"
+  )
+})
+
+test_that("add_motifs_lgl raises error for duplicate motifs", {
+  exp <- create_test_exp(c("S1", "S2"), c("V1", "V2"))
+  structures <- c(glyrepr::o_glycan_core_1(), glyrepr::o_glycan_core_2())
+  exp$var_info$glycan_structure <- structures
+
+  motifs <- c("O-Glycan core 1", "O-Glycan core 1")
+
+  expect_error(
+    add_motifs_lgl(exp, motifs),
+    "cannot have duplications"
+  )
+})
