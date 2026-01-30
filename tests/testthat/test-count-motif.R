@@ -141,6 +141,16 @@ test_that("count_motifs handles empty motifs", {
   expect_error(count_motifs(glycans, motifs), "`motifs` cannot be empty")
 })
 
+test_that("count_motifs raises error for duplicate motifs", {
+  glycans <- "Gal(b1-3)GalNAc(b1-"
+  motifs <- c("Gal(b1-", "Gal(b1-")
+
+  expect_error(
+    count_motifs(glycans, motifs),
+    "cannot have duplications"
+  )
+})
+
 
 test_that("count_motifs handles invalid motifs argument", {
   glycans <- "Gal(b1-3)GalNAc(b1-"

@@ -13,6 +13,16 @@ prepare_motif_args <- function(
   valid_alignments_arg(alignments, motifs)
   valid_ignore_linkages_arg(ignore_linkages)
 
+  # Check for duplicate motifs
+  if (has_duplicate_motifs(motifs)) {
+    dupes <- unique(motifs[duplicated(motifs)])
+    cli::cli_abort(c(
+      "`motifs` cannot have duplications.",
+      "x" = "Duplicate motifs: {.val {dupes}}.",
+      "i" = "Consider using {.fn unique}."
+    ), call = call)
+  }
+
   motif_type <- get_motif_type(motifs, call = call)
   alignments <- decide_alignments(motifs, motif_type, alignments)
 

@@ -515,6 +515,39 @@ test_that("have_motifs handles empty motifs", {
   expect_error(have_motifs(glycans, motifs), "`motifs` cannot be empty")
 })
 
+test_that("have_motifs raises error for duplicate motifs (character)", {
+  glycan <- glyrepr::o_glycan_core_2()
+  glycans <- c(glycan)
+  motifs <- c("Gal(b1-3)GalNAc(?1-", "Gal(b1-3)GalNAc(?1-")
+
+  expect_error(
+    have_motifs(glycans, motifs),
+    "cannot have duplications"
+  )
+})
+
+test_that("have_motifs raises error for duplicate motifs (known motif names)", {
+  glycan <- glyrepr::o_glycan_core_2()
+  glycans <- c(glycan)
+  motifs <- c("O-Glycan core 1", "O-Glycan core 1")
+
+  expect_error(
+    have_motifs(glycans, motifs),
+    "cannot have duplications"
+  )
+})
+
+test_that("have_motifs raises error for duplicate motifs (glyrepr_structure)", {
+  glycan <- glyrepr::o_glycan_core_2()
+  glycans <- c(glycan)
+  motifs <- glyparse::parse_iupac_condensed(c("Gal(b1-", "Gal(b1-"))
+
+  expect_error(
+    have_motifs(glycans, motifs),
+    "cannot have duplications"
+  )
+})
+
 
 test_that("have_motifs handles invalid motifs argument", {
   glycan <- glyrepr::o_glycan_core_2()
