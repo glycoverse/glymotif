@@ -156,12 +156,17 @@ the motif must have the same substituent to be matched.</p></dd>
 
 
 
-<p>The naming rule for the new columns is similar to that of <code><a href="have_motif.html">have_motifs()</a></code>.
-Briefly, you can use named character vector to name the motifs,
-and that will be used as the new column names.
-The only catchup is that you cannot pass a named <code><a href="https://glycoverse.github.io/glyrepr/reference/glycan_structure.html" class="external-link">glyrepr::glycan_structure()</a></code> to <code>motifs</code>.
-This is a fundamental limitation of the <code>vctrs_rcrd</code> class,
-which <code><a href="https://glycoverse.github.io/glyrepr/reference/glycan_structure.html" class="external-link">glyrepr::glycan_structure()</a></code> is built on.</p>
+<p>The naming rule for the new columns follows these priorities:</p><ol><li><p>If <code>motifs</code> is a named vector (character or <code><a href="https://glycoverse.github.io/glyrepr/reference/glycan_structure.html" class="external-link">glyrepr::glycan_structure()</a></code>),
+the names are used directly as column names.</p></li>
+<li><p>If <code>motifs</code> is unnamed and contains known motif names (e.g., "N-Glycan core"),
+the motif names are used as column names.</p></li>
+<li><p>If <code>motifs</code> is unnamed and contains <code><a href="https://glycoverse.github.io/glyrepr/reference/glycan_structure.html" class="external-link">glyrepr::glycan_structure()</a></code> objects
+or IUPAC-condensed structure strings, the IUPAC-condensed strings are used
+as column names.</p></li>
+</ol><p>Note: This behavior differs from <code><a href="have_motif.html">have_motifs()</a></code> and <code><a href="count_motif.html">count_motifs()</a></code>, which
+return matrices with NULL column names for unnamed IUPAC string or structure
+motifs. The functions here always provide column names since they are designed
+for adding motif annotations to data frames.</p>
     </div>
     <div class="section level2">
     <h2 id="why-do-we-need-these-functions">Why do we need these functions<a class="anchor" aria-label="anchor" href="#why-do-we-need-these-functions"></a></h2>

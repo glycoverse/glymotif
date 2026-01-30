@@ -120,16 +120,27 @@ object with motif annotations added to the variable information.
 
 ## About Names
 
-The naming rule for the new columns is similar to that of
-[`have_motifs()`](https://glycoverse.github.io/glymotif/reference/have_motif.md).
-Briefly, you can use named character vector to name the motifs, and that
-will be used as the new column names. The only catchup is that you
-cannot pass a named
-[`glyrepr::glycan_structure()`](https://glycoverse.github.io/glyrepr/reference/glycan_structure.html)
-to `motifs`. This is a fundamental limitation of the `vctrs_rcrd` class,
-which
-[`glyrepr::glycan_structure()`](https://glycoverse.github.io/glyrepr/reference/glycan_structure.html)
-is built on.
+The naming rule for the new columns follows these priorities:
+
+1.  If `motifs` is a named vector (character or
+    [`glyrepr::glycan_structure()`](https://glycoverse.github.io/glyrepr/reference/glycan_structure.html)),
+    the names are used directly as column names.
+
+2.  If `motifs` is unnamed and contains known motif names (e.g.,
+    "N-Glycan core"), the motif names are used as column names.
+
+3.  If `motifs` is unnamed and contains
+    [`glyrepr::glycan_structure()`](https://glycoverse.github.io/glyrepr/reference/glycan_structure.html)
+    objects or IUPAC-condensed structure strings, the IUPAC-condensed
+    strings are used as column names.
+
+Note: This behavior differs from
+[`have_motifs()`](https://glycoverse.github.io/glymotif/reference/have_motif.md)
+and
+[`count_motifs()`](https://glycoverse.github.io/glymotif/reference/count_motif.md),
+which return matrices with NULL column names for unnamed IUPAC string or
+structure motifs. The functions here always provide column names since
+they are designed for adding motif annotations to data frames.
 
 ## Why do we need these functions
 
