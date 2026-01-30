@@ -7,12 +7,19 @@
 #'
 #' @section About Names:
 #'
-#' The naming rule for the new columns is similar to that of [have_motifs()].
-#' Briefly, you can use named character vector to name the motifs,
-#' and that will be used as the new column names.
-#' The only catchup is that you cannot pass a named `glyrepr::glycan_structure()` to `motifs`.
-#' This is a fundamental limitation of the `vctrs_rcrd` class,
-#' which `glyrepr::glycan_structure()` is built on.
+#' The naming rule for the new columns follows these priorities:
+#' 1. If `motifs` is a named vector (character or `glyrepr::glycan_structure()`),
+#'    the names are used directly as column names.
+#' 2. If `motifs` is unnamed and contains known motif names (e.g., "N-Glycan core"),
+#'    the motif names are used as column names.
+#' 3. If `motifs` is unnamed and contains `glyrepr::glycan_structure()` objects
+#'    or IUPAC-condensed structure strings, the IUPAC-condensed strings are used
+#'    as column names.
+#'
+#' Note: This behavior differs from [have_motifs()] and [count_motifs()], which
+#' return matrices with NULL column names for unnamed IUPAC string or structure
+#' motifs. The functions here always provide column names since they are designed
+#' for adding motif annotations to data frames.
 #'
 #' @section Why do we need these functions:
 #'
@@ -108,7 +115,7 @@ add_motifs_lgl.glyexp_experiment <- function(x, motifs, alignments = NULL, ignor
   }
 
   motif_anno <- motif_anno_fn(exp$var_info$glycan_structure, motifs, alignments, ignore_linkages, strict_sub)
-  names(motif_anno) <- as.character(motifs)
+  colnames(motif_anno) <- .get_motif_colnames(motifs)
   motif_anno <- tibble::as_tibble(motif_anno)
   exp$var_info <- dplyr::bind_cols(exp$var_info, motif_anno)
   exp
@@ -126,11 +133,26 @@ add_motifs_lgl.data.frame <- function(x, motifs, alignments = NULL, ignore_linka
   .add_motifs_anno_df(x, have_motifs, motifs, alignments, ignore_linkages)
 }
 
+# Helper function to get column names for motif annotations
+# Follows the rules:
+# 1. If motifs is a named vector, use the names
+# 2. If motifs is unnamed and a vector of known motif names, use the motif names
+# 3. If motifs is unnamed and a glyrepr_structure or character vector of structure strings, use IUPAC strings
+.get_motif_colnames <- function(motifs) {
+  motif_names <- prepare_motif_names(motifs)
+  if (is.null(motif_names)) {
+    # Fallback to IUPAC strings for unnamed structures or IUPAC strings
+    motif_names <- as.character(motifs)
+  }
+  motif_names
+}
+
 .add_motifs_anno_df <- function(df, motif_anno_fn, motifs, alignments = NULL, ignore_linkages = FALSE, strict_sub = TRUE) {
   if (!"glycan_structure" %in% colnames(df)) {
     cli::cli_abort("A {.field glycan_structure} column is required.")
   }
   motif_anno <- motif_anno_fn(df$glycan_structure, motifs, alignments, ignore_linkages, strict_sub)
+  colnames(motif_anno) <- .get_motif_colnames(motifs)
   motif_anno <- tibble::as_tibble(motif_anno)
   dplyr::bind_cols(df, motif_anno)
 }

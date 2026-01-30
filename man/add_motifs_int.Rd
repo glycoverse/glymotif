@@ -97,12 +97,21 @@ of a \code{\link[glyexp:experiment]{glyexp::experiment()}} or a tibble with a st
 \section{About Names}{
 
 
-The naming rule for the new columns is similar to that of \code{\link[=have_motifs]{have_motifs()}}.
-Briefly, you can use named character vector to name the motifs,
-and that will be used as the new column names.
-The only catchup is that you cannot pass a named \code{glyrepr::glycan_structure()} to \code{motifs}.
-This is a fundamental limitation of the \code{vctrs_rcrd} class,
-which \code{glyrepr::glycan_structure()} is built on.
+The naming rule for the new columns follows these priorities:
+\enumerate{
+\item If \code{motifs} is a named vector (character or \code{glyrepr::glycan_structure()}),
+the names are used directly as column names.
+\item If \code{motifs} is unnamed and contains known motif names (e.g., "N-Glycan core"),
+the motif names are used as column names.
+\item If \code{motifs} is unnamed and contains \code{glyrepr::glycan_structure()} objects
+or IUPAC-condensed structure strings, the IUPAC-condensed strings are used
+as column names.
+}
+
+Note: This behavior differs from \code{\link[=have_motifs]{have_motifs()}} and \code{\link[=count_motifs]{count_motifs()}}, which
+return matrices with NULL column names for unnamed IUPAC string or structure
+motifs. The functions here always provide column names since they are designed
+for adding motif annotations to data frames.
 }
 
 \section{Why do we need these functions}{
