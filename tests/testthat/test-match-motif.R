@@ -382,3 +382,17 @@ test_that("match_motif returns no names when input has no names", {
   result <- match_motif(glycans, glyrepr::o_glycan_core_1())
   expect_null(names(result))
 })
+
+
+
+# ========== match_motifs naming ==========
+test_that("match_motifs names outer list by motifs and inner by glycans", {
+  glycans <- c(glyrepr::o_glycan_core_1(), glyrepr::o_glycan_core_2())
+  names(glycans) <- c("core1", "core2")
+
+  motifs <- c(m1 = glyrepr::o_glycan_core_1(), m2 = glyrepr::o_glycan_core_2())
+
+  result <- match_motifs(glycans, motifs)
+  expect_equal(names(result), c("m1", "m2"))
+  expect_equal(names(result[[1]]), c("core1", "core2"))
+})

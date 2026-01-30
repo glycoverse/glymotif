@@ -71,6 +71,8 @@ The outermost list corresponds to motifs, the middle list corresponds to glycans
 and the innermost list corresponds to matches.
 Use \code{purrr::pluck(result, motif_index, glycan_index, match_index)} to access the match information.
 For example, \code{purrr::pluck(result, 1, 2, 3)} means the 3rd match in the 2nd glycan for the 1st motif.
+The outermost list is named by \code{motifs} if they have names.
+The middle list is named by \code{glycans} if they have names.
 }
 }
 \description{
