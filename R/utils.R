@@ -297,7 +297,11 @@ fast_convert_to_generic <- function(glycans) {
 # ----- Generic function for multiple motifs -----
 prepare_struc_names <- function(x, strucs) {
   if (glyrepr::is_glycan_structure(x)) {
-    return(as.character(x))
+    if (is.null(names(x))) {
+      return(as.character(x))
+    } else {
+      return(names(x))
+    }
   } else {  # must be a character vector
     if (is.null(names(x))) {
       return(x)
