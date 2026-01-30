@@ -628,3 +628,30 @@ test_that("have_motif works for repeated glycans", {
   result <- have_motif(glycans, motif)
   expect_equal(result, c(TRUE, TRUE, TRUE, TRUE, FALSE))
 })
+
+
+# ========== Name Preservation ==========
+test_that("have_motif preserves names from glycan_structure input", {
+  glycan1 <- glyrepr::o_glycan_core_1()
+  glycan2 <- glyrepr::o_glycan_core_2()
+  glycans <- c(glycan1, glycan2)
+  names(glycans) <- c("core1", "core2")
+
+  result <- have_motif(glycans, "Gal(b1-3)GalNAc(?1-")
+  expect_equal(names(result), c("core1", "core2"))
+})
+
+test_that("have_motif preserves names from character vector input", {
+  glycans <- c("Gal(b1-3)GalNAc(?1-", "Gal(b1-3)Gal(b1-3)GalNAc(?1-")
+  names(glycans) <- c("simple", "complex")
+
+  result <- have_motif(glycans, "Gal(b1-3)GalNAc(?1-")
+  expect_equal(names(result), c("simple", "complex"))
+})
+
+test_that("have_motif returns no names when input has no names", {
+  glycans <- c("Gal(b1-3)GalNAc(?1-", "Gal(b1-3)Gal(b1-3)GalNAc(?1-")
+
+  result <- have_motif(glycans, "Gal(b1-3)GalNAc(?1-")
+  expect_null(names(result))
+})
