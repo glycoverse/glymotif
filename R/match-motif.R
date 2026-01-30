@@ -77,10 +77,20 @@
 #'
 #' @export
 match_motif <- function(glycans, motif, alignment = NULL, ignore_linkages = FALSE, strict_sub = TRUE) {
+  # Store input names before processing
+  glycan_names <- names(glycans)
+
   .assert_glycan_structure(glycans, "glycans")
   .assert_glycan_structure(motif, "motif")
   params <- prepare_have_motif_args(glycans, motif, alignment, ignore_linkages, strict_sub)
-  rlang::exec("match_motif_", !!!params)
+  result <- rlang::exec("match_motif_", !!!params)
+
+  # Apply names to result if input had names
+  if (!is.null(glycan_names)) {
+    names(result) <- glycan_names
+  }
+
+  result
 }
 
 #' @rdname match_motif
