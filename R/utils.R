@@ -39,6 +39,22 @@ prepare_motif_args <- function(
   }
 }
 
+# Helper function to check for duplicate motifs
+# Works with both character vectors and glyrepr_structure objects
+has_duplicate_motifs <- function(motifs) {
+  if (length(motifs) <= 1) {
+    return(FALSE)
+  }
+
+  # For glyrepr_structure, use unique() which is natively supported
+  if (glyrepr::is_glycan_structure(motifs)) {
+    length(unique(motifs)) < length(motifs)
+  } else {
+    # For character vectors, use base R unique
+    length(unique(motifs)) < length(motifs)
+  }
+}
+
 # Legacy wrapper functions for backward compatibility
 prepare_have_motif_args <- function(glycans, motif, alignment, ignore_linkages, strict_sub) {
   prepare_motif_args(glycans, motif, alignment, ignore_linkages, single_motif = TRUE, strict_sub = strict_sub)
