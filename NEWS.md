@@ -1,6 +1,6 @@
 # glymotif (development version)
 
-## Breaking changes
+## Minor improvements and fixes
 
 * Add validation to raise an error when `motifs` parameter contains duplicates in `have_motifs()`, `count_motifs()`, `match_motifs()`, `add_motifs_lgl()` and `add_motifs_int()`. (#8)
 * Update all motif functions to properly preserve and use names from input vectors, taking advantage of glyrepr 0.10.0's support for names on glycan structure vectors. (#5)(#6)
