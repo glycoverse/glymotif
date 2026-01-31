@@ -2,7 +2,7 @@
 
 ## glymotif (development version)
 
-### Breaking changes
+### Minor improvements and fixes
 
 - Add validation to raise an error when `motifs` parameter contains
   duplicates in
