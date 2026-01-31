@@ -2,6 +2,22 @@
 
 ## glymotif (development version)
 
+### Breaking changes
+
+- Add validation to raise an error when `motifs` parameter contains
+  duplicates in
+  [`have_motifs()`](https://glycoverse.github.io/glymotif/reference/have_motif.md),
+  [`count_motifs()`](https://glycoverse.github.io/glymotif/reference/count_motif.md),
+  [`match_motifs()`](https://glycoverse.github.io/glymotif/reference/match_motif.md),
+  [`add_motifs_lgl()`](https://glycoverse.github.io/glymotif/reference/add_motifs_int.md)
+  and
+  [`add_motifs_int()`](https://glycoverse.github.io/glymotif/reference/add_motifs_int.md).
+  ([\#8](https://github.com/glycoverse/glymotif/issues/8))
+- Update all motif functions to properly preserve and use names from
+  input vectors, taking advantage of glyrepr 0.10.0’s support for names
+  on glycan structure vectors.
+  ([\#5](https://github.com/glycoverse/glymotif/issues/5))([\#6](https://github.com/glycoverse/glymotif/issues/6))
+
 ## glymotif 0.12.1
 
 ### Minor improvements and fixes
