@@ -62,8 +62,8 @@ have_motifs(
 - alignment:
 
   A character string. Possible values are "substructure", "core",
-  "terminal", "whole", and "exact". If not provided, the value will be
-  decided based on the `motif` argument. If `motif` is a motif name, the
+  "terminal", and "whole". If not provided, the value will be decided
+  based on the `motif` argument. If `motif` is a motif name, the
   alignment in the database will be used. Otherwise, "substructure" will
   be used.
 
@@ -211,19 +211,12 @@ a motif can be classified into four alignment types:
 
 - "whole": The motif must align with the entire glycan. See
   [whole-glycan](https://glycomotif.glyomics.org/glycomotif/Whole-Glycan_Alignment)
-  for details.
-
-- "exact": The motif must align with a connected substructure in the
-  glycan, and the out-degrees of the matched nodes in the glycan must
-  exactly match the out-degrees in the motif. This prevents the glycan
-  from having additional branches (e.g. fucose) on the matched path
-  compared to the motif.
-
-When using known motifs in the GlycoMotif GlyGen Collection, the best
-practice is to not provide the `alignment` argument, and let the
-function decide the alignment based on the motif name. However, it is
-still possible to override the default alignments. In this case, the
-user-provided alignments will be used, but a warning will be issued.
+  for details. When using known motifs in the GlycoMotif GlyGen
+  Collection, the best practice is to not provide the `alignment`
+  argument, and let the function decide the alignment based on the motif
+  name. However, it is still possible to override the default
+  alignments. In this case, the user-provided alignments will be used,
+  but a warning will be issued.
 
 ## Substituents
 
@@ -369,7 +362,7 @@ have_motif(glycan_5, glycan_5, strict_sub = FALSE)
 
 # Multiple substituents
 glycan_6 <- "Glc3Me6S(a1-" # has both 3Me and 6S substituents
-have_motif(glycan_6, "Glc3Me6S(a1-") # TRUE: exact match
+have_motif(glycan_6, "Glc3Me6S(a1-") # TRUE: whole match
 #> [1] TRUE
 have_motif(glycan_6, "Glc?Me6S(a1-") # TRUE: obscure linkage ?Me matches 3Me
 #> [1] TRUE

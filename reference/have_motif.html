@@ -99,7 +99,7 @@ including IUPAC-condensed, WURCS, GlycoCT, and others.</p></li>
 
 <dt id="arg-alignment">alignment<a class="anchor" aria-label="anchor" href="#arg-alignment"></a></dt>
 <dd><p>A character string.
-Possible values are "substructure", "core", "terminal", "whole", and "exact".
+Possible values are "substructure", "core", "terminal", and "whole".
 If not provided, the value will be decided based on the <code>motif</code> argument.
 If <code>motif</code> is a motif name, the alignment in the database will be used.
 Otherwise, "substructure" will be used.</p></dd>
@@ -198,18 +198,14 @@ See <a href="https://glycomotif.glyomics.org/glycomotif/Nonreducing-End_Alignmen
 for details.</p></li>
 <li><p>"whole": The motif must align with the entire glycan.
 See <a href="https://glycomotif.glyomics.org/glycomotif/Whole-Glycan_Alignment" class="external-link">whole-glycan</a>
-for details.</p></li>
-<li><p>"exact": The motif must align with a connected substructure in the glycan,
-and the out-degrees of the matched nodes in the glycan must exactly match
-the out-degrees in the motif. This prevents the glycan from having additional
-branches (e.g. fucose) on the matched path compared to the motif.</p></li>
-</ul><p>When using known motifs in the GlycoMotif GlyGen Collection,
+for details.
+When using known motifs in the GlycoMotif GlyGen Collection,
 the best practice is to not provide the <code>alignment</code> argument,
 and let the function decide the alignment based on the motif name.
 However, it is still possible to override the default alignments.
 In this case, the user-provided alignments will be used,
-but a warning will be issued.</p>
-    </div>
+but a warning will be issued.</p></li>
+</ul></div>
     <div class="section level2">
     <h2 id="substituents">Substituents<a class="anchor" aria-label="anchor" href="#substituents"></a></h2>
     <p>Substituents (e.g. "Ac", "SO3") are matched in strict mode.
@@ -330,7 +326,7 @@ The function returns <code>TRUE</code> if any of the matches pass all checks.</p
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Multiple substituents</span></span></span>
 <span class="r-in"><span><span class="va">glycan_6</span> <span class="op">&lt;-</span> <span class="st">"Glc3Me6S(a1-"</span> <span class="co"># has both 3Me and 6S substituents</span></span></span>
-<span class="r-in"><span><span class="fu">have_motif</span><span class="op">(</span><span class="va">glycan_6</span>, <span class="st">"Glc3Me6S(a1-"</span><span class="op">)</span> <span class="co"># TRUE: exact match</span></span></span>
+<span class="r-in"><span><span class="fu">have_motif</span><span class="op">(</span><span class="va">glycan_6</span>, <span class="st">"Glc3Me6S(a1-"</span><span class="op">)</span> <span class="co"># TRUE: whole match</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
 <span class="r-in"><span><span class="fu">have_motif</span><span class="op">(</span><span class="va">glycan_6</span>, <span class="st">"Glc?Me6S(a1-"</span><span class="op">)</span> <span class="co"># TRUE: obscure linkage ?Me matches 3Me</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
