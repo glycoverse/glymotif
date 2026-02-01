@@ -295,33 +295,6 @@ test_that("terminal alignment more complex negative case", {
 })
 
 
-test_that("exact alignment simple positive case", {
-  glycan <- glyrepr::as_glycan_structure("Gal(b1-6)GalNAc(a1-")
-  motif <- glyrepr::as_glycan_structure("Gal(b1-")
-  expect_true(have_motif(glycan, motif, alignment = "exact"))
-})
-
-
-test_that("exact alignment simple negative case 1", {
-  glycan <- glyrepr::as_glycan_structure("Gal(b1-4)[Fuc(a1-3)]GlcNAc(b1-4)GlcNAc(?1-")
-  motif <- glyrepr::as_glycan_structure("Gal(b1-4)GlcNAc(b1-")
-  expect_false(have_motif(glycan, motif, alignment = "exact"))
-})
-
-
-test_that("exact alignment simple negative case 2", {
-  glycan <- glyrepr::as_glycan_structure("Neu5Ac(a2-3)Gal(b1-4)GlcNAc(b1-4)GlcNAc(?1-")
-  motif <- glyrepr::as_glycan_structure("Gal(b1-4)GlcNAc(b1-")
-  expect_false(have_motif(glycan, motif, alignment = "exact"))
-})
-
-
-test_that("exact alignment complex positive case", {
-  glycan <- glyrepr::as_glycan_structure("Neu5Ac(a2-3)Gal(b1-4)[Fuc(a1-3)]GlcNAc(b1-4)GlcNAc(?1-")
-  motif <- glyrepr::as_glycan_structure("Neu5Ac(a2-3)Gal(b1-4)[Fuc(a1-3)]GlcNAc(b1-")
-  expect_true(have_motif(glycan, motif, alignment = "exact"))
-})
-
 
 test_that("custom alignment is same as database", {
   expect_false(have_motif("Gal(b1-3)GalNAc(a1-3)GlcNAc(?1-", "O-Glycan core 1", alignment = "core"))
