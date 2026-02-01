@@ -223,6 +223,22 @@ test_that("count_motif returns no names when input has no names", {
   expect_null(names(result))
 })
 
+# ========== match_degree ==========
+test_that("count_motif respects match_degree", {
+  glycan <- glyparse::parse_iupac_condensed("Gal(b1-3)[GlcNAc(b1-6)]GalNAc(a1-")
+  motif <- glyparse::parse_iupac_condensed("Gal(b1-3)GalNAc(a1-")
+
+  expect_equal(count_motif(glycan, motif), 1L)
+  expect_equal(count_motif(glycan, motif, match_degree = c(FALSE, TRUE)), 0L)
+})
+
+test_that("count_motifs validates match_degree list", {
+  glycans <- glyrepr::o_glycan_core_2()
+  motifs <- glyparse::parse_iupac_condensed(c("Gal(b1-3)GalNAc(a1-", "Gal(b1-4)GalNAc(a1-"))
+
+  expect_error(count_motifs(glycans, motifs, match_degree = list(c(TRUE, FALSE))), "match_degree.*same length")
+})
+
 # ========== Known Motif Names as Column Names ==========
 test_that("count_motifs uses known motif names as colnames when motifs unnamed", {
   glycans <- c(glyrepr::o_glycan_core_1(), glyrepr::o_glycan_core_2())
