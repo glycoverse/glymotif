@@ -10,7 +10,8 @@ have_motif(
   motif,
   alignment = NULL,
   ignore_linkages = FALSE,
-  strict_sub = TRUE
+  strict_sub = TRUE,
+  match_degree = NULL
 )
 
 have_motifs(
@@ -18,7 +19,8 @@ have_motifs(
   motifs,
   alignments = NULL,
   ignore_linkages = FALSE,
-  strict_sub = TRUE
+  strict_sub = TRUE,
+  match_degree = NULL
 )
 }
 \arguments{
@@ -48,6 +50,14 @@ Default is \code{FALSE}.}
 \item{strict_sub}{A logical value. If \code{TRUE} (default), substituents will be matched in strict mode,
 which means if the glycan has a substituent in some residue,
 the motif must have the same substituent to be matched.}
+
+\item{match_degree}{A logical vector indicating which motif nodes must match the
+glycan's in- and out-degree exactly. For \code{have_motif()}, \code{count_motif()}, and
+\code{match_motif()}, this must be a logical vector with length 1 or the number of
+motif nodes (length 1 is recycled). For \code{have_motifs()}, \code{count_motifs()}, and
+\code{match_motifs()}, this must be a list of logical vectors with length equal to
+\code{motifs}; each element follows the same length rules. When \code{match_degree} is
+provided, \code{alignment} and \code{alignments} are silently ignored.}
 
 \item{motifs}{One of:
 \itemize{
@@ -158,13 +168,16 @@ for details.
 \item "whole": The motif must align with the entire glycan.
 See \href{https://glycomotif.glyomics.org/glycomotif/Whole-Glycan_Alignment}{whole-glycan}
 for details.
+}
+
 When using known motifs in the GlycoMotif GlyGen Collection,
 the best practice is to not provide the \code{alignment} argument,
 and let the function decide the alignment based on the motif name.
 However, it is still possible to override the default alignments.
 In this case, the user-provided alignments will be used,
 but a warning will be issued.
-}
+When \code{match_degree} is provided, \code{alignment} and \code{alignments} are ignored
+without warning.
 }
 
 \section{Substituents}{
@@ -203,6 +216,7 @@ For all possible matches, the function checks the following:
 \itemize{
 \item Alignment: using \code{alignment_check()}
 \item Substituents: using \code{substituent_check()}
+\item Degree: using \code{degree_check()} (only when \code{match_degree} is provided)
 \item Linkages: using \code{linkage_check()}
 \item Anomer: using \code{anomer_check()}
 The function returns \code{TRUE} if any of the matches pass all checks.
@@ -270,7 +284,7 @@ have_motif(glycan_5, glycan_5, strict_sub = FALSE)
 
 # Multiple substituents
 glycan_6 <- "Glc3Me6S(a1-" # has both 3Me and 6S substituents
-have_motif(glycan_6, "Glc3Me6S(a1-") # TRUE: whole match
+have_motif(glycan_6, "Glc3Me6S(a1-") # TRUE: exact match
 have_motif(glycan_6, "Glc?Me6S(a1-") # TRUE: obscure linkage ?Me matches 3Me
 have_motif(glycan_6, "Glc3Me?S(a1-") # TRUE: obscure linkage ?S matches 6S
 have_motif(glycan_6, "Glc3Me(a1-") # FALSE: missing 6S substituent

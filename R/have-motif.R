@@ -91,6 +91,8 @@
 #' However, it is still possible to override the default alignments.
 #' In this case, the user-provided alignments will be used,
 #' but a warning will be issued.
+#' When `match_degree` is provided, `alignment` and `alignments` are ignored
+#' without warning.
 #'
 #' # Substituents
 #'
@@ -124,6 +126,7 @@
 #' For all possible matches, the function checks the following:
 #' - Alignment: using `alignment_check()`
 #' - Substituents: using `substituent_check()`
+#' - Degree: using `degree_check()` (only when `match_degree` is provided)
 #' - Linkages: using `linkage_check()`
 #' - Anomer: using `anomer_check()`
 #' The function returns `TRUE` if any of the matches pass all checks.
@@ -147,6 +150,13 @@
 #'   Otherwise, "substructure" will be used.
 #' @param alignments A character vector specifying alignment types for each motif.
 #'   Can be a single value (applied to all motifs) or a vector of the same length as motifs.
+#' @param match_degree A logical vector indicating which motif nodes must match the
+#'   glycan's in- and out-degree exactly. For `have_motif()`, `count_motif()`, and
+#'   `match_motif()`, this must be a logical vector with length 1 or the number of
+#'   motif nodes (length 1 is recycled). For `have_motifs()`, `count_motifs()`, and
+#'   `match_motifs()`, this must be a list of logical vectors with length equal to
+#'   `motifs`; each element follows the same length rules. When `match_degree` is
+#'   provided, `alignment` and `alignments` are silently ignored.
 #' @param ignore_linkages A logical value. If `TRUE`, linkages will be ignored in the comparison.
 #'   Default is `FALSE`.
 #' @param strict_sub A logical value. If `TRUE` (default), substituents will be matched in strict mode,
@@ -323,6 +333,7 @@ have_motif_ <- function(glycans, motif, alignment, ignore_linkages = FALSE, stri
 #' @param alignments A character vector with the same length as `motifs`.
 #' @param ignore_linkages A logical value.
 #' @param strict_sub A logical value.
+#' @param match_degree A logical vector or list of logical vectors.
 #'
 #' @noRd
 have_motifs_ <- function(glycans, motifs, alignments, glycan_names, motif_names, ignore_linkages = FALSE, strict_sub = TRUE, match_degree = NULL) {
