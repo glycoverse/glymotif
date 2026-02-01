@@ -232,6 +232,13 @@ test_that("count_motif respects match_degree", {
   expect_equal(count_motif(glycan, motif, match_degree = c(FALSE, TRUE)), 0L)
 })
 
+test_that("count_motif differentiates branching GlcNAc and bisecting GlcNAc with match_degree", {
+  glycan <- "GlcNAc(b1-2)Man(a1-3)[GlcNAc(b1-4)][GlcNAc(b1-2)Man(a1-6)]Man(b1-4)GlcNAc(b1-4)[Fuc(a1-6)]GlcNAc(b1-"
+  motif <- "GlcNAc(b1-2)Man(a1-3/6)Man(b1-"
+
+  expect_equal(count_motif(glycan, motif, match_degree = c(TRUE, FALSE, FALSE)), 2L)
+})
+
 test_that("count_motifs validates match_degree list", {
   glycans <- glyrepr::o_glycan_core_2()
   motifs <- glyparse::parse_iupac_condensed(c("Gal(b1-3)GalNAc(a1-", "Gal(b1-4)GalNAc(a1-"))

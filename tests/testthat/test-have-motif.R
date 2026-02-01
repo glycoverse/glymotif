@@ -645,6 +645,9 @@ test_that("match_degree enforces degree constraints on selected nodes", {
 
   expect_true(have_motif(glycan, motif))
   expect_false(have_motif(glycan, motif, match_degree = c(FALSE, TRUE)))
+  expect_false(have_motif(glycan, motif, match_degree = c(TRUE, TRUE)))
+  expect_true(have_motif(glycan, motif, match_degree = c(TRUE, FALSE)))
+  expect_true(have_motif(glycan, motif, match_degree = c(FALSE, FALSE)))
 })
 
 test_that("match_degree can ignore alignment", {
@@ -660,6 +663,7 @@ test_that("match_degree controls degree in branched structures", {
 
   expect_true(have_motif(glycan, motif, match_degree = c(FALSE, FALSE, FALSE)))
   expect_false(have_motif(glycan, motif, match_degree = c(FALSE, FALSE, TRUE)))
+  expect_true(have_motif(glycan, motif, match_degree = c(TRUE, TRUE, FALSE)))
 })
 
 test_that("have_motif validates match_degree", {
