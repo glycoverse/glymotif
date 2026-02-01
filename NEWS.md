@@ -1,5 +1,9 @@
 # glymotif (development version)
 
+## Breaking changes
+
+* Remove "exact" alignment type from `alignment` and `alignments` arguments. This alignment type was introduced in v0.12.0 but is no longer needed. Users should use "substructure" alignment instead.
+
 # glymotif 0.12.2
 
 ## Minor improvements and fixes
