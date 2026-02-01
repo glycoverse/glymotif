@@ -135,6 +135,9 @@ validate_match_degree <- function(match_degree, motifs, single_motif, call = rla
   }
 
   motif_graphs <- glyrepr::get_structure_graphs(motifs)
+  if (inherits(motif_graphs, "igraph")) {
+    motif_graphs <- list(motif_graphs)
+  }
   purrr::map2(match_degree, motif_graphs, function(mask, graph) {
     if (!is.logical(mask)) {
       cli::cli_abort("Each `match_degree` element must be a logical vector.", call = call)
