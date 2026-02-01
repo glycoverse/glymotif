@@ -221,7 +221,7 @@
 #'
 #' # Multiple substituents
 #' glycan_6 <- "Glc3Me6S(a1-" # has both 3Me and 6S substituents
-#' have_motif(glycan_6, "Glc3Me6S(a1-") # TRUE: whole match
+#' have_motif(glycan_6, "Glc3Me6S(a1-") # TRUE: exact match
 #' have_motif(glycan_6, "Glc?Me6S(a1-") # TRUE: obscure linkage ?Me matches 3Me
 #' have_motif(glycan_6, "Glc3Me?S(a1-") # TRUE: obscure linkage ?S matches 6S
 #' have_motif(glycan_6, "Glc3Me(a1-") # FALSE: missing 6S substituent
