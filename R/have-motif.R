@@ -249,11 +249,11 @@
 #' have_motifs(glycans, motifs)
 #'
 #' @export
-have_motif <- function(glycans, motif, alignment = NULL, ignore_linkages = FALSE, strict_sub = TRUE) {
+have_motif <- function(glycans, motif, alignment = NULL, ignore_linkages = FALSE, strict_sub = TRUE, match_degree = NULL) {
   # Store input names before processing
   glycan_names <- names(glycans)
   
-  params <- prepare_have_motif_args(glycans, motif, alignment, ignore_linkages, strict_sub)
+  params <- prepare_have_motif_args(glycans, motif, alignment, ignore_linkages, strict_sub, match_degree)
   result <- rlang::exec("have_motif_", !!!params)
   
   # Apply names to result if input had names
@@ -266,8 +266,8 @@ have_motif <- function(glycans, motif, alignment = NULL, ignore_linkages = FALSE
 
 #' @rdname have_motif
 #' @export
-have_motifs <- function(glycans, motifs, alignments = NULL, ignore_linkages = FALSE, strict_sub = TRUE) {
-  params <- prepare_have_motifs_args(glycans, motifs, alignments, ignore_linkages, strict_sub)
+have_motifs <- function(glycans, motifs, alignments = NULL, ignore_linkages = FALSE, strict_sub = TRUE, match_degree = NULL) {
+  params <- prepare_have_motifs_args(glycans, motifs, alignments, ignore_linkages, strict_sub, match_degree)
   glycan_names <- prepare_struc_names(glycans, params$glycans)
   motif_names <- prepare_motif_names(motifs)
   rlang::exec("have_motifs_", !!!params, glycan_names = glycan_names, motif_names = motif_names)
@@ -284,7 +284,7 @@ have_motifs <- function(glycans, motifs, alignments = NULL, ignore_linkages = FA
 #' @param strict_sub A logical value.
 #'
 #' @noRd
-have_motif_ <- function(glycans, motif, alignment, ignore_linkages = FALSE, strict_sub = TRUE) {
+have_motif_ <- function(glycans, motif, alignment, ignore_linkages = FALSE, strict_sub = TRUE, match_degree = NULL) {
   # This function is a simpler version of `have_motif()`.
   # It performs the logic directly without argument validations and conversions.
   # It is a necessary abstraction for other functions.
@@ -294,12 +294,13 @@ have_motif_ <- function(glycans, motif, alignment, ignore_linkages = FALSE, stri
     alignment = alignment,
     ignore_linkages = ignore_linkages,
     strict_sub = strict_sub,
+    match_degree = match_degree,
     single_glycan_func = .have_motif_single,
     smap_func = glyrepr::smap_lgl
   )
 }
 
-.have_motif_single <- function(glycan_graph, motif_graph, alignment, ignore_linkages = FALSE, strict_sub = TRUE) {
+.have_motif_single <- function(glycan_graph, motif_graph, alignment, ignore_linkages = FALSE, strict_sub = TRUE, match_degree = NULL) {
   # Optimized version with early termination
   # Check if any match is valid, returning immediately on first valid match
   c_graphs <- colorize_graphs(glycan_graph, motif_graph)
@@ -309,7 +310,7 @@ have_motif_ <- function(glycans, motif, alignment, ignore_linkages = FALSE, stri
   purrr::some(
     res, is_valid_result,
     glycan = glycan_graph, motif = motif_graph,
-    alignment = alignment, ignore_linkages = ignore_linkages, strict_sub = strict_sub
+    alignment = alignment, ignore_linkages = ignore_linkages, strict_sub = strict_sub, match_degree = match_degree
   )
 }
 
@@ -324,6 +325,16 @@ have_motif_ <- function(glycans, motif, alignment, ignore_linkages = FALSE, stri
 #' @param strict_sub A logical value.
 #'
 #' @noRd
-have_motifs_ <- function(glycans, motifs, alignments, glycan_names, motif_names, ignore_linkages = FALSE, strict_sub = TRUE) {
-  apply_motifs_to_glycans(glycans, motifs, alignments, ignore_linkages, have_motif_, glycan_names, motif_names, strict_sub)
+have_motifs_ <- function(glycans, motifs, alignments, glycan_names, motif_names, ignore_linkages = FALSE, strict_sub = TRUE, match_degree = NULL) {
+  apply_motifs_to_glycans(
+    glycans,
+    motifs,
+    alignments,
+    ignore_linkages,
+    have_motif_,
+    glycan_names,
+    motif_names,
+    strict_sub,
+    match_degree
+  )
 }

@@ -39,15 +39,21 @@ unique_vf2_res <- function(res) {
 }
 
 
-is_valid_result <- function(r, glycan, motif, alignment, ignore_linkages, strict_sub = TRUE) {
+is_valid_result <- function(r, glycan, motif, alignment, ignore_linkages, strict_sub = TRUE, match_degree = NULL) {
   # Optimized early exit using most selective checks first
   # Alignment check is often the most selective and fastest
-  if (!alignment_check(r, glycan, motif, alignment = alignment)) {
-    return(FALSE)
+  if (is.null(match_degree)) {
+    if (!alignment_check(r, glycan, motif, alignment = alignment)) {
+      return(FALSE)
+    }
   }
 
   # Substituent check is relatively fast and often selective
   if (!substituent_check(r, glycan, motif, strict_sub = strict_sub)) {
+    return(FALSE)
+  }
+
+  if (!degree_check(r, glycan, motif, match_degree)) {
     return(FALSE)
   }
 
@@ -99,6 +105,32 @@ substituent_check <- function(r, glycan, motif, strict_sub) {
     }
   }
   return(TRUE)
+}
+
+#' Validate Degree Matching
+#'
+#' @param r A vector mapping motif vertices to glycan vertices.
+#' @param glycan A glycan graph.
+#' @param motif A motif graph.
+#' @param match_degree A logical vector indicating which motif nodes to enforce degree matching.
+#'
+#' @return `TRUE` if all selected nodes have matching in- and out-degrees.
+#' @noRd
+degree_check <- function(r, glycan, motif, match_degree) {
+  if (is.null(match_degree) || !any(match_degree)) {
+    return(TRUE)
+  }
+
+  motif_in <- igraph::degree(motif, mode = "in")
+  motif_out <- igraph::degree(motif, mode = "out")
+  glycan_in <- igraph::degree(glycan, mode = "in")
+  glycan_out <- igraph::degree(glycan, mode = "out")
+
+  motif_idx <- which(match_degree)
+  all(purrr::map_lgl(motif_idx, function(i) {
+    g_idx <- r[[i]]
+    motif_in[[i]] == glycan_in[[g_idx]] && motif_out[[i]] == glycan_out[[g_idx]]
+  }))
 }
 
 

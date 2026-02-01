@@ -5,12 +5,15 @@ prepare_motif_args <- function(
   motifs,
   alignments = NULL,
   ignore_linkages = FALSE,
+  match_degree = NULL,
   single_motif = FALSE,
   strict_sub = TRUE,
   call = rlang::caller_env()
 ) {
   # Unified validation logic
-  valid_alignments_arg(alignments, motifs)
+  if (is.null(match_degree)) {
+    valid_alignments_arg(alignments, motifs)
+  }
   valid_ignore_linkages_arg(ignore_linkages)
 
   # Check for duplicate motifs
@@ -24,10 +27,15 @@ prepare_motif_args <- function(
   }
 
   motif_type <- get_motif_type(motifs, call = call)
-  alignments <- decide_alignments(motifs, motif_type, alignments)
+  alignments <- if (is.null(match_degree)) {
+    decide_alignments(motifs, motif_type, alignments)
+  } else {
+    vctrs::vec_recycle("substructure", length(motifs))
+  }
 
   glycans <- ensure_glycans_are_structures(glycans, call = call)
   motifs <- ensure_motifs_are_structures(motifs, motif_type, require_scalar = single_motif, call = call)
+  match_degree <- validate_match_degree(match_degree, motifs, single_motif, call = call)
 
   # Return appropriate format based on single_motif flag
   if (single_motif) {
@@ -36,7 +44,8 @@ prepare_motif_args <- function(
       motif = motifs,
       alignment = alignments,
       ignore_linkages = ignore_linkages,
-      strict_sub = strict_sub
+      strict_sub = strict_sub,
+      match_degree = match_degree
     ))
   } else {
     return(list(
@@ -44,7 +53,8 @@ prepare_motif_args <- function(
       motifs = motifs,
       alignments = alignments,
       ignore_linkages = ignore_linkages,
-      strict_sub = strict_sub
+      strict_sub = strict_sub,
+      match_degree = match_degree
     ))
   }
 }
@@ -59,12 +69,87 @@ has_duplicate_motifs <- function(motifs) {
 }
 
 # Legacy wrapper functions for backward compatibility
-prepare_have_motif_args <- function(glycans, motif, alignment, ignore_linkages, strict_sub) {
-  prepare_motif_args(glycans, motif, alignment, ignore_linkages, single_motif = TRUE, strict_sub = strict_sub)
+prepare_have_motif_args <- function(glycans, motif, alignment, ignore_linkages, strict_sub, match_degree) {
+  prepare_motif_args(
+    glycans,
+    motif,
+    alignment,
+    ignore_linkages,
+    match_degree,
+    single_motif = TRUE,
+    strict_sub = strict_sub
+  )
 }
 
-prepare_have_motifs_args <- function(glycans, motifs, alignments, ignore_linkages, strict_sub) {
-  prepare_motif_args(glycans, motifs, alignments, ignore_linkages, single_motif = FALSE, strict_sub = strict_sub)
+prepare_have_motifs_args <- function(glycans, motifs, alignments, ignore_linkages, strict_sub, match_degree) {
+  prepare_motif_args(
+    glycans,
+    motifs,
+    alignments,
+    ignore_linkages,
+    match_degree,
+    single_motif = FALSE,
+    strict_sub = strict_sub
+  )
+}
+
+#' Validate Match Degree
+#'
+#' @param match_degree A logical vector or a list of logical vectors.
+#' @param motifs A `glyrepr_structure` object.
+#' @param single_motif A logical scalar indicating if `motifs` is a single motif.
+#' @param call The call environment.
+#'
+#' @return A normalized logical vector or list of logical vectors.
+#' @noRd
+validate_match_degree <- function(match_degree, motifs, single_motif, call = rlang::caller_env()) {
+  if (is.null(match_degree)) {
+    return(NULL)
+  }
+
+  if (single_motif) {
+    if (!is.logical(match_degree)) {
+      cli::cli_abort("`match_degree` must be a logical vector or NULL.", call = call)
+    }
+    if (length(match_degree) == 0) {
+      cli::cli_abort("`match_degree` cannot be empty.", call = call)
+    }
+    motif_nodes <- igraph::vcount(glyrepr::get_structure_graphs(motifs))
+    if (length(match_degree) == 1) {
+      return(rep(match_degree, motif_nodes))
+    }
+    if (length(match_degree) != motif_nodes) {
+      cli::cli_abort("`match_degree` must have length 1 or match the number of motif nodes.", call = call)
+    }
+    return(match_degree)
+  }
+
+  if (!is.list(match_degree)) {
+    cli::cli_abort("`match_degree` must be a list of logical vectors or NULL.", call = call)
+  }
+  if (length(match_degree) != length(motifs)) {
+    cli::cli_abort("`match_degree` must have the same length as `motifs`.", call = call)
+  }
+  if (any(vapply(match_degree, is.null, logical(1)))) {
+    cli::cli_abort("`match_degree` cannot be NULL.", call = call)
+  }
+
+  motif_graphs <- glyrepr::get_structure_graphs(motifs)
+  purrr::map2(match_degree, motif_graphs, function(mask, graph) {
+    if (!is.logical(mask)) {
+      cli::cli_abort("Each `match_degree` element must be a logical vector.", call = call)
+    }
+    if (length(mask) == 0) {
+      cli::cli_abort("Each `match_degree` element cannot be empty.", call = call)
+    }
+    if (length(mask) == 1) {
+      return(rep(mask, igraph::vcount(graph)))
+    }
+    if (length(mask) != igraph::vcount(graph)) {
+      cli::cli_abort("Each `match_degree` element must have length 1 or match the number of motif nodes.", call = call)
+    }
+    mask
+  })
 }
 
 # ----- Argument validation -----
@@ -259,7 +344,16 @@ ensure_motif_is_structure <- function(motif, motif_type, call = rlang::caller_en
 }
 
 # ----- Generic function for single motif mapping -----
-apply_single_motif_to_glycans <- function(glycans, motif, alignment, ignore_linkages, strict_sub, single_glycan_func, smap_func) {
+apply_single_motif_to_glycans <- function(
+  glycans,
+  motif,
+  alignment,
+  ignore_linkages,
+  strict_sub,
+  match_degree,
+  single_glycan_func,
+  smap_func
+) {
   # Generic function to apply a single motif to multiple glycans
   # single_glycan_func should be either .have_motif_single or .count_motif_single
   # smap_func should be either glyrepr::smap_lgl or glyrepr::smap_int
@@ -278,7 +372,15 @@ apply_single_motif_to_glycans <- function(glycans, motif, alignment, ignore_link
   }
 
   motif_graph <- glyrepr::get_structure_graphs(motif)
-  smap_func(glycans_to_use, single_glycan_func, motif_graph, alignment, ignore_linkages, strict_sub)
+  smap_func(
+    glycans_to_use,
+    single_glycan_func,
+    motif_graph,
+    alignment,
+    ignore_linkages,
+    strict_sub,
+    match_degree
+  )
 }
 
 #' Fast Convert Mono Types
@@ -348,7 +450,17 @@ prepare_motif_names <- function(motifs_input) {
   NULL
 }
 
-apply_motifs_to_glycans <- function(glycans, motifs, alignments, ignore_linkages, single_motif_func, glycan_names, motif_names, strict_sub) {
+apply_motifs_to_glycans <- function(
+  glycans,
+  motifs,
+  alignments,
+  ignore_linkages,
+  single_motif_func,
+  glycan_names,
+  motif_names,
+  strict_sub,
+  match_degree
+) {
   # Generic function to apply multiple motifs to multiple glycans
   # single_motif_func should be either have_motif_ or count_motif_
 
@@ -357,16 +469,23 @@ apply_motifs_to_glycans <- function(glycans, motifs, alignments, ignore_linkages
     cli::cli_abort("`motifs` cannot be empty.")
   }
 
+  match_degree_list <- if (is.null(match_degree)) {
+    rep(list(NULL), length(motifs))
+  } else {
+    match_degree
+  }
+
   # Apply each motif to all glycans using purrr
   motif_results_list <- purrr::map2(
     motifs,
-    alignments,
+    seq_along(motifs),
     ~ single_motif_func(
       glycans,
       .x,
-      alignment = .y,
+      alignment = alignments[[.y]],
       ignore_linkages = ignore_linkages,
-      strict_sub = strict_sub
+      strict_sub = strict_sub,
+      match_degree = match_degree_list[[.y]]
     )
   )
 
