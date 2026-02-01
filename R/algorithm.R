@@ -79,11 +79,6 @@ alignment_check <- function(r, glycan, motif, alignment) {
       motif_terminals <- terminal_nodes(motif)
       all(r[motif_terminals] %in% glycan_terminals)
     },
-    "exact" = {
-      glycan_degrees <- igraph::degree(glycan, mode = "out")
-      motif_degrees <- igraph::degree(motif, mode = "out")
-      all(glycan_degrees[r] == motif_degrees)
-    },
     "whole" = {
       glycan_v <- igraph::vcount(glycan)
       motif_v <- igraph::vcount(motif)
