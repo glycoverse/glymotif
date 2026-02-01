@@ -383,6 +383,23 @@ test_that("match_motif returns no names when input has no names", {
   expect_null(names(result))
 })
 
+# ========== match_degree ==========
+test_that("match_motif respects match_degree", {
+  glycan <- glyparse::parse_iupac_condensed("Gal(b1-3)[GlcNAc(b1-6)]GalNAc(a1-")
+  motif <- glyparse::parse_iupac_condensed("Gal(b1-3)GalNAc(a1-")
+
+  result_default <- match_motif(glycan, motif)
+  expect_true(length(result_default[[1]]) > 0)
+  expect_match_motif_equal(match_motif(glycan, motif, match_degree = c(FALSE, TRUE)), list(list()))
+})
+
+test_that("match_motifs validates match_degree list", {
+  glycans <- glyrepr::o_glycan_core_2()
+  motifs <- glyparse::parse_iupac_condensed(c("Gal(b1-3)GalNAc(a1-", "Gal(b1-4)GalNAc(a1-"))
+
+  expect_error(match_motifs(glycans, motifs, match_degree = list(c(TRUE, FALSE))), "match_degree.*same length")
+})
+
 
 
 # ========== match_motifs naming ==========

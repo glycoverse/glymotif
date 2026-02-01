@@ -78,13 +78,13 @@
 #' match_motifs(glycan, motifs)
 #'
 #' @export
-match_motif <- function(glycans, motif, alignment = NULL, ignore_linkages = FALSE, strict_sub = TRUE) {
+match_motif <- function(glycans, motif, alignment = NULL, ignore_linkages = FALSE, strict_sub = TRUE, match_degree = NULL) {
   # Store input names before processing
   glycan_names <- names(glycans)
 
   .assert_glycan_structure(glycans, "glycans")
   .assert_glycan_structure(motif, "motif")
-  params <- prepare_have_motif_args(glycans, motif, alignment, ignore_linkages, strict_sub)
+  params <- prepare_have_motif_args(glycans, motif, alignment, ignore_linkages, strict_sub, match_degree)
   result <- rlang::exec("match_motif_", !!!params)
 
   # Apply names to result if input had names
@@ -97,7 +97,7 @@ match_motif <- function(glycans, motif, alignment = NULL, ignore_linkages = FALS
 
 #' @rdname match_motif
 #' @export
-match_motifs <- function(glycans, motifs, alignments = NULL, ignore_linkages = FALSE, strict_sub = TRUE) {
+match_motifs <- function(glycans, motifs, alignments = NULL, ignore_linkages = FALSE, strict_sub = TRUE, match_degree = NULL) {
   # Validate inputs first (match_motifs only accepts glycan_structure objects)
   .assert_glycan_structure(glycans, "glycans")
   .assert_glycan_structure(motifs, "motifs")
@@ -106,7 +106,7 @@ match_motifs <- function(glycans, motifs, alignments = NULL, ignore_linkages = F
   glycan_names <- names(glycans)
   motif_names <- prepare_motif_names(motifs)
 
-  params <- prepare_have_motifs_args(glycans, motifs, alignments, ignore_linkages, strict_sub)
+  params <- prepare_have_motifs_args(glycans, motifs, alignments, ignore_linkages, strict_sub, match_degree)
   rlang::exec("match_motifs_", !!!params, glycan_names = glycan_names, motif_names = motif_names)
 }
 .assert_glycan_structure <- function(x, arg_name) {
@@ -129,13 +129,14 @@ match_motifs <- function(glycans, motifs, alignments = NULL, ignore_linkages = F
 #' @param ignore_linkages A logical value.
 #'
 #' @noRd
-match_motif_ <- function(glycans, motif, alignment, ignore_linkages = FALSE, strict_sub = TRUE) {
+match_motif_ <- function(glycans, motif, alignment, ignore_linkages = FALSE, strict_sub = TRUE, match_degree = NULL) {
   apply_single_motif_to_glycans(
     glycans = glycans,
     motif = motif,
     alignment = alignment,
     ignore_linkages = ignore_linkages,
     strict_sub = strict_sub,
+    match_degree = match_degree,
     single_glycan_func = .match_motif_single,
     smap_func = glyrepr::smap
   )
@@ -151,8 +152,25 @@ match_motif_ <- function(glycans, motif, alignment, ignore_linkages = FALSE, str
 #' @param ignore_linkages A logical value.
 #'
 #' @noRd
-match_motifs_ <- function(glycans, motifs, alignments, glycan_names, motif_names, ignore_linkages = FALSE, strict_sub = TRUE) {
-  results <- purrr::map2(motifs, alignments, ~ match_motif_(glycans, .x, alignment = .y, ignore_linkages = ignore_linkages, strict_sub = strict_sub))
+match_motifs_ <- function(glycans, motifs, alignments, glycan_names, motif_names, ignore_linkages = FALSE, strict_sub = TRUE, match_degree = NULL) {
+  match_degree_list <- if (is.null(match_degree)) {
+    rep(list(NULL), length(motifs))
+  } else {
+    match_degree
+  }
+
+  results <- purrr::map2(
+    motifs,
+    seq_along(motifs),
+    ~ match_motif_(
+      glycans,
+      .x,
+      alignment = alignments[[.y]],
+      ignore_linkages = ignore_linkages,
+      strict_sub = strict_sub,
+      match_degree = match_degree_list[[.y]]
+    )
+  )
   
   # Name the outer list (motifs) if motif_names provided
   if (!is.null(motif_names)) {
@@ -169,7 +187,7 @@ match_motifs_ <- function(glycans, motifs, alignments, glycan_names, motif_names
   
   results
 }
-.match_motif_single <- function(glycan_graph, motif_graph, alignment, ignore_linkages = FALSE, strict_sub = TRUE) {
+.match_motif_single <- function(glycan_graph, motif_graph, alignment, ignore_linkages = FALSE, strict_sub = TRUE, match_degree = NULL) {
   c_graphs <- colorize_graphs(glycan_graph, motif_graph)
   glycan_graph <- c_graphs$glycan
   motif_graph <- c_graphs$motif
@@ -177,7 +195,7 @@ match_motifs_ <- function(glycans, motifs, alignments, glycan_names, motif_names
   valid_mask <- purrr::map_lgl(
     res, is_valid_result,
     glycan = glycan_graph, motif = motif_graph,
-    alignment = alignment, ignore_linkages = ignore_linkages, strict_sub = strict_sub
+    alignment = alignment, ignore_linkages = ignore_linkages, strict_sub = strict_sub, match_degree = match_degree
   )
   valid_res <- res[valid_mask]
   unique_res <- unique_vf2_res(valid_res)
