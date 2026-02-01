@@ -16,7 +16,7 @@
 #' This function returns all the unique branching motifs found in the input glycans.
 #' It is very useful for analyzing N-glycan antennary patterns combined with `glydet::quantify_motifs()`.
 #' When used with `have_motif()` or related functions,
-#' we recommend setting `alignment` to "exact".
+#' we recommend setting `alignment` to "substructure".
 #'
 #' @param glycans One of:
 #'   - A [glyrepr::glycan_structure()] vector.
