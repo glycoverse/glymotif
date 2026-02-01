@@ -84,7 +84,7 @@
 #' - "whole": The motif must align with the entire glycan.
 #' See [whole-glycan](https://glycomotif.glyomics.org/glycomotif/Whole-Glycan_Alignment)
 #' for details.
-
+#' 
 #' When using known motifs in the GlycoMotif GlyGen Collection,
 #' the best practice is to not provide the `alignment` argument,
 #' and let the function decide the alignment based on the motif name.
