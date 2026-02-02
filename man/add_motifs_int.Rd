@@ -76,7 +76,7 @@ add_motifs_lgl(
 \itemize{
 \item A \code{\link[glyrepr:glycan_structure]{glyrepr::glycan_structure()}} vector.
 \item A glycan structure string vector, supported by \code{\link[glyparse:auto_parse]{glyparse::auto_parse()}}.
-\item A character vector of motif names (use \code{\link[=all_motifs]{all_motifs()}} to see all available motifs).
+\item A character vector of motif names (use \code{\link[=db_motifs]{db_motifs()}} to see all available motifs).
 }}
 
 \item{alignments}{A character vector specifying alignment types for each motif.

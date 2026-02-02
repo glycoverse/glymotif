@@ -1,5 +1,5 @@
 test_that("get all motifs", {
-  expect_snapshot(all_motifs())
+  expect_snapshot(db_motifs())
 })
 
 

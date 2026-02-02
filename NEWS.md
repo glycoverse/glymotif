@@ -2,6 +2,7 @@
 
 ## Breaking changes
 
+* `all_motifs()` is renamed to `db_motifs()`.
 * Remove "exact" alignment type from `alignment` and `alignments` arguments. This alignment type was introduced in v0.12.0 but is no longer needed. Users who previously relied on "exact" alignment can use "substructure" as the closest available alternative, but note that it is less strict and may produce more matches, so results may differ.
 
 ## New features
