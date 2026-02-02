@@ -13,3 +13,8 @@ test_that("dynamic_motifs() validates max_size", {
   expect_error(dynamic_motifs(max_size = "invalid"), "Must be")
   expect_error(dynamic_motifs(max_size = 0), ">=")
 })
+
+test_that("branch_motifs() creates a branch_motifs_spec object", {
+  spec <- branch_motifs()
+  expect_s3_class(spec, "branch_motifs_spec")
+})

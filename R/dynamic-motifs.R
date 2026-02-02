@@ -31,3 +31,36 @@ print.dynamic_motifs_spec <- function(x, ...) {
   cli::cli_text("Configuration: {.field max_size} = {.val {x$max_size}}")
   invisible(x)
 }
+
+#' Branch Motifs Specification
+#'
+#' Create a specification for branch motif extraction.
+#' This should be passed to the `motifs` argument of [have_motifs()],
+#' [count_motifs()], [match_motifs()], [add_motifs_lgl()], or [add_motifs_int()].
+#'
+#' When used, motifs will be extracted dynamically from the input glycans
+#' using [extract_branch_motif()] with `including_core = TRUE`.
+#' Motif matching will use a custom `match_degree` where the last 4 nodes
+#' of each motif are not required to match degree exactly (to allow for
+#' attachment to the glycan core).
+#'
+#' @returns A `branch_motifs_spec` object.
+#'
+#' @seealso [dynamic_motifs()], [have_motifs()], [count_motifs()]
+#'
+#' @examples
+#' # Use in have_motifs()
+#' # have_motifs(glycans, branch_motifs())
+#'
+#' @export
+branch_motifs <- function() {
+  structure(list(), class = "branch_motifs_spec")
+}
+
+#' @export
+print.branch_motifs_spec <- function(x, ...) {
+  cli::cli_text("<{.cls branch_motifs_spec}>")
+  cli::cli_text("This object should be passed to the {.arg motifs} argument of {.fn have_motifs}, {.fn count_motifs}, {.fn match_motifs}, {.fn add_motifs_lgl}, or {.fn add_motifs_int}.")
+  cli::cli_text("Configuration: extracts branch motifs with core included")
+  invisible(x)
+}
