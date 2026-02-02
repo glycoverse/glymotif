@@ -101,6 +101,9 @@ extract_branch_motif <- function(glycans, including_core = FALSE) {
       anomer_part <- stringr::str_split_i(linkage, "-", 1)
       subtree$anomer <- anomer_part
 
+      # Store the full linkage for later use when including_core
+      subtree$parent_linkage <- linkage
+
       extracted_subtrees[[length(extracted_subtrees) + 1]] <- subtree
     }
   }
@@ -116,20 +119,20 @@ extract_branch_motif <- function(glycans, including_core = FALSE) {
   # Optionally append core structure
   if (including_core && length(res) > 0) {
     mono_type <- glyrepr::get_mono_type(res)
-    # Check if the result has generic linkages (??-?) or specific linkages
-    res_char <- as.character(res[1])
-    has_generic_linkages <- grepl("\\?\\?-\\?", res_char)
     core_suffix <- if (mono_type == "concrete") {
-      if (has_generic_linkages) {
-        "?)Man(??-?)Man(??-?)GlcNAc(??-?)GlcNAc(??-"
-      } else {
-        "2)Man(??-?)Man(??-?)GlcNAc(??-?)GlcNAc(??-"
-      }
+      "Man(??-?)Man(??-?)GlcNAc(??-?)GlcNAc(??-"
     } else {
-      "?)Hex(??-?)Hex(??-?)HexNAc(??-?)HexNAc(??-"
+      "Hex(??-?)Hex(??-?)HexNAc(??-?)HexNAc(??-"
     }
+
+    # Get the parent linkages from the extracted subtrees
+    parent_linkages <- purrr::map_chr(extracted_subtrees, ~ .x$parent_linkage)
+    # Extract position part (e.g., "2" from "b1-2" or "?" from "??-?")
+    positions <- stringr::str_split_i(parent_linkages, "-", 2)
+
     res_chars <- as.character(res)
-    res_chars <- paste0(res_chars, core_suffix)
+    # Append position and core suffix to each branch
+    res_chars <- paste0(res_chars, positions, ")", core_suffix)
     res <- glyrepr::as_glycan_structure(res_chars)
   }
 
