@@ -106,9 +106,6 @@ match_motif <- function(glycans, motif, alignment = NULL, ignore_linkages = FALS
 #' @rdname match_motif
 #' @export
 match_motifs <- function(glycans, motifs, alignments = NULL, ignore_linkages = FALSE, strict_sub = TRUE, match_degree = NULL) {
-  # Validate inputs first (match_motifs only accepts glycan_structure objects)
-  .assert_glycan_structure(glycans, "glycans")
-  .assert_glycan_structure(motifs, "motifs")
 
   # Store input names before processing
   glycan_names <- names(glycans)
