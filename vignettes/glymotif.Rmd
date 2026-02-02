@@ -150,7 +150,7 @@ unname(have_motifs(glycans, motifs))  # Removing names for cleaner display
 Use predefined motif names instead:
 
 ```{r}
-all_motifs()[1:10]
+db_motifs()[1:10]
 ```
 
 ```{r}

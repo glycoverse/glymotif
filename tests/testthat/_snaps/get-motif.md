@@ -1,7 +1,7 @@
 # get all motifs
 
     Code
-      all_motifs()
+      db_motifs()
     Output
         [1] "Blood group H (type 2) - Lewis y"      
         [2] "i antigen"                             

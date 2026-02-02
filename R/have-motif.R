@@ -147,11 +147,11 @@
 #' @param motif One of:
 #'   - A [glyrepr::glycan_structure()] scalar.
 #'   - A glycan structure string, supported by [glyparse::auto_parse()].
-#'   - A known motif name (use [all_motifs()] to see all available motifs).
+#'   - A known motif name (use [db_motifs()] to see all available motifs).
 #' @param motifs One of:
 #'   - A [glyrepr::glycan_structure()] vector.
 #'   - A glycan structure string vector, supported by [glyparse::auto_parse()].
-#'   - A character vector of motif names (use [all_motifs()] to see all available motifs).
+#'   - A character vector of motif names (use [db_motifs()] to see all available motifs).
 #' @param alignment A character string.
 #'   Possible values are "substructure", "core", "terminal", and "whole".
 #'   If not provided, the value will be decided based on the `motif` argument.
