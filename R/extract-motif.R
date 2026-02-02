@@ -21,6 +21,9 @@
 #' @param glycans One of:
 #'   - A [glyrepr::glycan_structure()] vector.
 #'   - A glycan structure string vector. All formats supported by [glyparse::auto_parse()] are accepted.
+#' @param including_core A logical scalar. If `TRUE`, the N-glycan core structure
+#'   (`Man(??-?)Man(??-?)GlcNAc(??-?)GlcNAc(??-` or `Hex(??-?)Hex(??-?)HexNAc(??-?)HexNAc(??-`)
+#'   is appended to each branch motif. Default is `FALSE`.
 #'
 #' @details
 #' The function works by:
@@ -40,7 +43,8 @@
 #' extract_branch_motif(glycans)
 #'
 #' @export
-extract_branch_motif <- function(glycans) {
+extract_branch_motif <- function(glycans, including_core = FALSE) {
+  checkmate::assert_flag(including_core)
   # 1. Handle input types and deduplicate
   glycans <- ensure_glycans_are_structures(glycans)
   glycans <- unique(glycans)
@@ -108,7 +112,24 @@ extract_branch_motif <- function(glycans) {
 
   # Convert extracted graphs back to glycan_structure and return unique ones
   res <- glyrepr::as_glycan_structure(extracted_subtrees)
-  unique(res)
+  res <- unique(res)
+
+  # Optionally append core structure
+  if (including_core && length(res) > 0) {
+    mono_type <- glyrepr::get_mono_type(res)
+    core_suffix <- if (mono_type == "concrete") {
+      "?)Man(??-?)Man(??-?)GlcNAc(??-?)GlcNAc(??-"
+    } else {
+      "?)Hex(??-?)Hex(??-?)HexNAc(??-?)HexNAc(??-"
+    }
+
+    res_chars <- as.character(res)
+    # Append core suffix to each branch (position is always ?)
+    res_chars <- paste0(res_chars, core_suffix)
+    res <- glyrepr::as_glycan_structure(res_chars)
+  }
+
+  res
 }
 
 .assert_n_glycans <- function(glycans) {

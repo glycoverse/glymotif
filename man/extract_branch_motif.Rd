@@ -4,7 +4,7 @@
 \alias{extract_branch_motif}
 \title{Extract Branch Motifs}
 \usage{
-extract_branch_motif(glycans)
+extract_branch_motif(glycans, including_core = FALSE)
 }
 \arguments{
 \item{glycans}{One of:
@@ -12,6 +12,10 @@ extract_branch_motif(glycans)
 \item A \code{\link[glyrepr:glycan_structure]{glyrepr::glycan_structure()}} vector.
 \item A glycan structure string vector. All formats supported by \code{\link[glyparse:auto_parse]{glyparse::auto_parse()}} are accepted.
 }}
+
+\item{including_core}{A logical scalar. If \code{TRUE}, the N-glycan core structure
+(\verb{Man(??-?)Man(??-?)GlcNAc(??-?)GlcNAc(??-} or \verb{Hex(??-?)Hex(??-?)HexNAc(??-?)HexNAc(??-})
+is appended to each branch motif. Default is \code{FALSE}.}
 }
 \value{
 A \code{\link[glyrepr:glycan_structure]{glyrepr::glycan_structure()}} vector containing the unique extracted branching motifs.
