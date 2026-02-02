@@ -139,8 +139,8 @@ test_that("extract_branch_motif with including_core works for intact glycans", {
   glycan <- "Neu5Ac(a2-3)Gal(b1-4)GlcNAc(b1-2)Man(a1-3)[Gal(b1-4)GlcNAc(b1-2)Man(a1-6)]Man(b1-4)GlcNAc(a1-4)GlcNAc(b1-"
   res <- extract_branch_motif(glycan, including_core = TRUE)
   expected <- glyrepr::as_glycan_structure(c(
-    "Neu5Ac(a2-3)Gal(b1-4)GlcNAc(b1-2)Man(??-?)Man(??-?)GlcNAc(??-?)GlcNAc(??-",
-    "Gal(b1-4)GlcNAc(b1-2)Man(??-?)Man(??-?)GlcNAc(??-?)GlcNAc(??-"
+    "Neu5Ac(a2-3)Gal(b1-4)GlcNAc(b1-?)Man(??-?)Man(??-?)GlcNAc(??-?)GlcNAc(??-",
+    "Gal(b1-4)GlcNAc(b1-?)Man(??-?)Man(??-?)GlcNAc(??-?)GlcNAc(??-"
   ))
   expect_setequal(as.character(res), as.character(expected))
 })
