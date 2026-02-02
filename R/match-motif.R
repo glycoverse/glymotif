@@ -109,9 +109,17 @@ match_motifs <- function(glycans, motifs, alignments = NULL, ignore_linkages = F
 
   # Store input names before processing
   glycan_names <- names(glycans)
-  motif_names <- prepare_motif_names(motifs)
 
   params <- prepare_have_motifs_args(glycans, motifs, alignments, ignore_linkages, strict_sub, match_degree)
+  
+  # Use names from resolved motifs if available (e.g., from dynamic_motifs/branch_motifs)
+  # Otherwise fall back to prepare_motif_names on the original input
+  if (!is.null(names(params$motifs))) {
+    motif_names <- names(params$motifs)
+  } else {
+    motif_names <- prepare_motif_names(motifs)
+  }
+  
   rlang::exec("match_motifs_", !!!params, glycan_names = glycan_names, motif_names = motif_names)
 }
 .assert_glycan_structure <- function(x, arg_name) {

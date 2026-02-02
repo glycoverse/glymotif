@@ -455,3 +455,29 @@ test_that("match_motifs works with branch_motifs()", {
   expect_type(result, "list")
   expect_true(length(result) > 0)
 })
+
+# ========== IUPAC Names for dynamic_motifs and branch_motifs ==========
+test_that("match_motifs returns IUPAC strings as outer list names for dynamic_motifs", {
+  glycans <- glyrepr::as_glycan_structure(c(
+    "Gal(b1-4)GlcNAc(b1-",
+    "Man(b1-4)GlcNAc(b1-"
+  ))
+  result <- match_motifs(glycans, dynamic_motifs(max_size = 2))
+  
+  # Outermost list names should be the IUPAC strings of extracted motifs
+  expect_type(names(result), "character")
+  expect_equal(length(names(result)), length(result))
+  # All names should be valid IUPAC strings (non-empty)
+  expect_true(all(nchar(names(result)) > 0))
+})
+
+test_that("match_motifs returns IUPAC strings as outer list names for branch_motifs", {
+  glycans <- glyrepr::as_glycan_structure(
+    "Neu5Ac(a2-3)Gal(b1-4)GlcNAc(b1-2)Man(a1-3)[Man(a1-6)]Man(b1-4)GlcNAc(a1-4)GlcNAc(b1-"
+  )
+  result <- match_motifs(glycans, branch_motifs())
+  
+  expect_type(names(result), "character")
+  expect_equal(length(names(result)), length(result))
+  expect_true(all(nchar(names(result)) > 0))
+})

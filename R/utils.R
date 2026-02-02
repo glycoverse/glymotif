@@ -17,6 +17,11 @@ prepare_motif_args <- function(
 
     # Now prepare args normally with resolved values
     motifs <- resolved$motifs
+
+    # Add IUPAC strings as names for column naming in results
+    if (length(motifs) > 0) {
+      names(motifs) <- as.character(motifs)
+    }
     alignments <- resolved$alignments
     match_degree <- resolved$match_degree
 
