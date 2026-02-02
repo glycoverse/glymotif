@@ -309,6 +309,23 @@ glycans <- c(
 extract_branch_motif(glycans)
 ```
 
+### `dynamic_motifs()` and `branch_motifs()`
+
+`extract_motif()` and `extract_branch_motif()` are useful if you only want to know what motifs exist.
+However, when using dynamic motifs in motif matching functions like `have_motifs()`,
+additional intricacies should be taken into account.
+
+For these cases, you should pass the `dynamic_motifs()` or the `branch_motifs()` helpers
+to the `motifs` argument of supported functions instead.
+They are just empty sentinel objects to inform the passed functions to perform dynamic motif matching.
+
+```{r}
+count_motifs(glycans, branch_motifs())
+```
+
+Functions supporting `dynamic_motifs()` and `branch_motifs()`:
+`have_motifs()`, `count_motifs()`, `match_motifs()`, `add_motifs_lgl()`, and `add_motifs_int()`.
+
 ## What's Next?
 
 - Want to known all the details about motif matching rules? [Here](https://glycoverse.github.io/glymotif/articles/motif-matching.html)
