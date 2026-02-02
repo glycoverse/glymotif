@@ -230,3 +230,22 @@ test_that("add_motifs_lgl raises error for duplicate motifs", {
     "cannot have duplications"
   )
 })
+
+# ========== match_degree ==========
+test_that("add_motifs_lgl passes match_degree", {
+  exp <- create_test_exp(c("S1", "S2"), c("V1", "V2"))
+  structures <- glyparse::parse_iupac_condensed(c(
+    "Gal(b1-3)GalNAc(a1-",
+    "Gal(b1-3)[GlcNAc(b1-6)]GalNAc(a1-"
+  ))
+  exp$var_info$glycan_structure <- structures
+  motifs <- c(motif = "Gal(b1-3)GalNAc(a1-")
+
+  suppressWarnings({
+    exp_default <- add_motifs_lgl(exp, motifs)
+    exp_degree <- add_motifs_lgl(exp, motifs, match_degree = list(c(FALSE, TRUE)))
+  })
+
+  expect_identical(exp_default$var_info$motif, c(TRUE, TRUE))
+  expect_identical(exp_degree$var_info$motif, c(TRUE, FALSE))
+})

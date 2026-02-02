@@ -15,6 +15,7 @@ add_motifs_int(
   alignments = NULL,
   ignore_linkages = FALSE,
   strict_sub = TRUE,
+  match_degree = NULL,
   ...
 )
 
@@ -24,6 +25,7 @@ add_motifs_lgl(
   alignments = NULL,
   ignore_linkages = FALSE,
   strict_sub = TRUE,
+  match_degree = NULL,
   ...
 )
 
@@ -33,6 +35,7 @@ add_motifs_lgl(
   alignments = NULL,
   ignore_linkages = FALSE,
   strict_sub = TRUE,
+  match_degree = NULL,
   ...
 )
 
@@ -42,6 +45,7 @@ add_motifs_lgl(
   alignments = NULL,
   ignore_linkages = FALSE,
   strict_sub = TRUE,
+  match_degree = NULL,
   ...
 )
 
@@ -51,6 +55,7 @@ add_motifs_lgl(
   alignments = NULL,
   ignore_linkages = FALSE,
   strict_sub = TRUE,
+  match_degree = NULL,
   ...
 )
 
@@ -60,6 +65,7 @@ add_motifs_lgl(
   alignments = NULL,
   ignore_linkages = FALSE,
   strict_sub = TRUE,
+  match_degree = NULL,
   ...
 )
 }
@@ -82,6 +88,14 @@ Default is \code{FALSE}.}
 \item{strict_sub}{A logical value. If \code{TRUE} (default), substituents will be matched in strict mode,
 which means if the glycan has a substituent in some residue,
 the motif must have the same substituent to be matched.}
+
+\item{match_degree}{A logical vector indicating which motif nodes must match the
+glycan's in- and out-degree exactly. For \code{have_motif()}, \code{count_motif()}, and
+\code{match_motif()}, this must be a logical vector with length 1 or the number of
+motif nodes (length 1 is recycled). For \code{have_motifs()}, \code{count_motifs()}, and
+\code{match_motifs()}, this must be a list of logical vectors with length equal to
+\code{motifs}; each element follows the same length rules. When \code{match_degree} is
+provided, \code{alignment} and \code{alignments} are silently ignored.}
 
 \item{...}{Additional arguments passed to the method.}
 }

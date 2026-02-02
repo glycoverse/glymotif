@@ -91,6 +91,17 @@
 #' However, it is still possible to override the default alignments.
 #' In this case, the user-provided alignments will be used,
 #' but a warning will be issued.
+#' When `match_degree` is provided, `alignment` and `alignments` are ignored
+#' without warning.
+#'
+#' # Degree matching
+#'
+#' `match_degree` is used to require exact degree matching for specific motif nodes.
+#' For each node marked `TRUE`, the matched glycan node must have the same in-degree
+#' and out-degree as the motif node. Nodes marked `FALSE` do not enforce degree
+#' equality. This is useful to prevent matches where the motif node is embedded in
+#' a more highly branched glycan region (extra outgoing edges) or has extra incoming
+#' connections compared to the motif.
 #'
 #' # Substituents
 #'
@@ -124,6 +135,7 @@
 #' For all possible matches, the function checks the following:
 #' - Alignment: using `alignment_check()`
 #' - Substituents: using `substituent_check()`
+#' - Degree: using `degree_check()` (only when `match_degree` is provided)
 #' - Linkages: using `linkage_check()`
 #' - Anomer: using `anomer_check()`
 #' The function returns `TRUE` if any of the matches pass all checks.
@@ -147,6 +159,13 @@
 #'   Otherwise, "substructure" will be used.
 #' @param alignments A character vector specifying alignment types for each motif.
 #'   Can be a single value (applied to all motifs) or a vector of the same length as motifs.
+#' @param match_degree A logical vector indicating which motif nodes must match the
+#'   glycan's in- and out-degree exactly. For `have_motif()`, `count_motif()`, and
+#'   `match_motif()`, this must be a logical vector with length 1 or the number of
+#'   motif nodes (length 1 is recycled). For `have_motifs()`, `count_motifs()`, and
+#'   `match_motifs()`, this must be a list of logical vectors with length equal to
+#'   `motifs`; each element follows the same length rules. When `match_degree` is
+#'   provided, `alignment` and `alignments` are silently ignored.
 #' @param ignore_linkages A logical value. If `TRUE`, linkages will be ignored in the comparison.
 #'   Default is `FALSE`.
 #' @param strict_sub A logical value. If `TRUE` (default), substituents will be matched in strict mode,
@@ -249,11 +268,11 @@
 #' have_motifs(glycans, motifs)
 #'
 #' @export
-have_motif <- function(glycans, motif, alignment = NULL, ignore_linkages = FALSE, strict_sub = TRUE) {
+have_motif <- function(glycans, motif, alignment = NULL, ignore_linkages = FALSE, strict_sub = TRUE, match_degree = NULL) {
   # Store input names before processing
   glycan_names <- names(glycans)
   
-  params <- prepare_have_motif_args(glycans, motif, alignment, ignore_linkages, strict_sub)
+  params <- prepare_have_motif_args(glycans, motif, alignment, ignore_linkages, strict_sub, match_degree)
   result <- rlang::exec("have_motif_", !!!params)
   
   # Apply names to result if input had names
@@ -266,8 +285,8 @@ have_motif <- function(glycans, motif, alignment = NULL, ignore_linkages = FALSE
 
 #' @rdname have_motif
 #' @export
-have_motifs <- function(glycans, motifs, alignments = NULL, ignore_linkages = FALSE, strict_sub = TRUE) {
-  params <- prepare_have_motifs_args(glycans, motifs, alignments, ignore_linkages, strict_sub)
+have_motifs <- function(glycans, motifs, alignments = NULL, ignore_linkages = FALSE, strict_sub = TRUE, match_degree = NULL) {
+  params <- prepare_have_motifs_args(glycans, motifs, alignments, ignore_linkages, strict_sub, match_degree)
   glycan_names <- prepare_struc_names(glycans, params$glycans)
   motif_names <- prepare_motif_names(motifs)
   rlang::exec("have_motifs_", !!!params, glycan_names = glycan_names, motif_names = motif_names)
@@ -284,7 +303,7 @@ have_motifs <- function(glycans, motifs, alignments = NULL, ignore_linkages = FA
 #' @param strict_sub A logical value.
 #'
 #' @noRd
-have_motif_ <- function(glycans, motif, alignment, ignore_linkages = FALSE, strict_sub = TRUE) {
+have_motif_ <- function(glycans, motif, alignment, ignore_linkages = FALSE, strict_sub = TRUE, match_degree = NULL) {
   # This function is a simpler version of `have_motif()`.
   # It performs the logic directly without argument validations and conversions.
   # It is a necessary abstraction for other functions.
@@ -294,12 +313,13 @@ have_motif_ <- function(glycans, motif, alignment, ignore_linkages = FALSE, stri
     alignment = alignment,
     ignore_linkages = ignore_linkages,
     strict_sub = strict_sub,
+    match_degree = match_degree,
     single_glycan_func = .have_motif_single,
     smap_func = glyrepr::smap_lgl
   )
 }
 
-.have_motif_single <- function(glycan_graph, motif_graph, alignment, ignore_linkages = FALSE, strict_sub = TRUE) {
+.have_motif_single <- function(glycan_graph, motif_graph, alignment, ignore_linkages = FALSE, strict_sub = TRUE, match_degree = NULL) {
   # Optimized version with early termination
   # Check if any match is valid, returning immediately on first valid match
   c_graphs <- colorize_graphs(glycan_graph, motif_graph)
@@ -309,7 +329,7 @@ have_motif_ <- function(glycans, motif, alignment, ignore_linkages = FALSE, stri
   purrr::some(
     res, is_valid_result,
     glycan = glycan_graph, motif = motif_graph,
-    alignment = alignment, ignore_linkages = ignore_linkages, strict_sub = strict_sub
+    alignment = alignment, ignore_linkages = ignore_linkages, strict_sub = strict_sub, match_degree = match_degree
   )
 }
 
@@ -322,8 +342,19 @@ have_motif_ <- function(glycans, motif, alignment, ignore_linkages = FALSE, stri
 #' @param alignments A character vector with the same length as `motifs`.
 #' @param ignore_linkages A logical value.
 #' @param strict_sub A logical value.
+#' @param match_degree A logical vector or list of logical vectors.
 #'
 #' @noRd
-have_motifs_ <- function(glycans, motifs, alignments, glycan_names, motif_names, ignore_linkages = FALSE, strict_sub = TRUE) {
-  apply_motifs_to_glycans(glycans, motifs, alignments, ignore_linkages, have_motif_, glycan_names, motif_names, strict_sub)
+have_motifs_ <- function(glycans, motifs, alignments, glycan_names, motif_names, ignore_linkages = FALSE, strict_sub = TRUE, match_degree = NULL) {
+  apply_motifs_to_glycans(
+    glycans,
+    motifs,
+    alignments,
+    ignore_linkages,
+    have_motif_,
+    glycan_names,
+    motif_names,
+    strict_sub,
+    match_degree
+  )
 }

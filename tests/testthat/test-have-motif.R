@@ -638,6 +638,53 @@ test_that("have_motif works for repeated glycans", {
   expect_equal(result, c(TRUE, TRUE, TRUE, TRUE, FALSE))
 })
 
+# ========== match_degree ==========
+test_that("match_degree enforces degree constraints on selected nodes", {
+  glycan <- glyparse::parse_iupac_condensed("Gal(b1-3)[GlcNAc(b1-6)]GalNAc(a1-")
+  motif <- glyparse::parse_iupac_condensed("Gal(b1-3)GalNAc(a1-")
+
+  expect_true(have_motif(glycan, motif))
+  expect_false(have_motif(glycan, motif, match_degree = c(FALSE, TRUE)))
+  expect_false(have_motif(glycan, motif, match_degree = c(TRUE, TRUE)))
+  expect_true(have_motif(glycan, motif, match_degree = c(TRUE, FALSE)))
+  expect_true(have_motif(glycan, motif, match_degree = c(FALSE, FALSE)))
+})
+
+test_that("match_degree can ignore alignment", {
+  glycan <- glyparse::parse_iupac_condensed("Gal(b1-3)[GlcNAc(b1-6)]GalNAc(a1-")
+  motif <- glyparse::parse_iupac_condensed("Gal(b1-3)GalNAc(a1-")
+
+  expect_true(have_motif(glycan, motif, alignment = "whole", match_degree = c(FALSE, FALSE)))
+})
+
+test_that("match_degree controls degree in branched structures", {
+  glycan <- glyparse::parse_iupac_condensed("Neu5Ac(a2-3)Gal(b1-4)[Fuc(a1-3)]GlcNAc(b1-")
+  motif <- glyparse::parse_iupac_condensed("Neu5Ac(a2-3)Gal(b1-4)GlcNAc(b1-")
+
+  expect_true(have_motif(glycan, motif, match_degree = c(FALSE, FALSE, FALSE)))
+  expect_false(have_motif(glycan, motif, match_degree = c(FALSE, FALSE, TRUE)))
+  expect_true(have_motif(glycan, motif, match_degree = c(TRUE, TRUE, FALSE)))
+})
+
+test_that("have_motif validates match_degree", {
+  glycan <- glyrepr::o_glycan_core_2()
+  motif <- glyparse::parse_iupac_condensed("Gal(b1-3)GalNAc(a1-")
+
+  expect_error(have_motif(glycan, motif, match_degree = "nope"), "match_degree.*logical")
+  expect_error(have_motif(glycan, motif, match_degree = logical()), "match_degree.*cannot be empty")
+  expect_error(have_motif(glycan, motif, match_degree = c(TRUE, TRUE, TRUE)), "match_degree.*length")
+})
+
+test_that("have_motifs validates match_degree list", {
+  glycans <- glyrepr::o_glycan_core_2()
+  motifs <- glyparse::parse_iupac_condensed(c("Gal(b1-3)GalNAc(a1-", "Gal(b1-4)GalNAc(a1-"))
+
+  expect_error(have_motifs(glycans, motifs, match_degree = TRUE), "match_degree.*list")
+  expect_error(have_motifs(glycans, motifs, match_degree = list(c(TRUE, FALSE))), "match_degree.*same length")
+  expect_error(have_motifs(glycans, motifs, match_degree = list(NULL, c(TRUE, FALSE))), "match_degree.*cannot be NULL")
+  expect_error(have_motifs(glycans, motifs, match_degree = list(c(TRUE, FALSE), c(TRUE, FALSE, TRUE))), "match_degree.*length")
+})
+
 
 # ========== Name Preservation ==========
 test_that("have_motif preserves names from glycan_structure input", {
