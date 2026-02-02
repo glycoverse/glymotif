@@ -111,7 +111,29 @@ extract_branch_motif <- function(glycans, including_core = FALSE) {
 
   # Convert extracted graphs back to glycan_structure and return unique ones
   res <- glyrepr::as_glycan_structure(extracted_subtrees)
-  unique(res)
+  res <- unique(res)
+
+  # Optionally append core structure
+  if (including_core && length(res) > 0) {
+    mono_type <- glyrepr::get_mono_type(res)
+    # Check if the result has generic linkages (??-?) or specific linkages
+    res_char <- as.character(res[1])
+    has_generic_linkages <- grepl("\\?\\?-\\?", res_char)
+    core_suffix <- if (mono_type == "concrete") {
+      if (has_generic_linkages) {
+        "?)Man(??-?)Man(??-?)GlcNAc(??-?)GlcNAc(??-"
+      } else {
+        "2)Man(??-?)Man(??-?)GlcNAc(??-?)GlcNAc(??-"
+      }
+    } else {
+      "?)Hex(??-?)Hex(??-?)HexNAc(??-?)HexNAc(??-"
+    }
+    res_chars <- as.character(res)
+    res_chars <- paste0(res_chars, core_suffix)
+    res <- glyrepr::as_glycan_structure(res_chars)
+  }
+
+  res
 }
 
 .assert_n_glycans <- function(glycans) {
