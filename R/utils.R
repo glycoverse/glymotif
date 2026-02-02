@@ -131,7 +131,7 @@ validate_match_degree <- function(match_degree, motifs, single_motif, call = rla
     cli::cli_abort("`match_degree` must have the same length as `motifs`.", call = call)
   }
   if (any(vapply(match_degree, is.null, logical(1)))) {
-    cli::cli_abort("`match_degree` cannot be NULL.", call = call)
+    cli::cli_abort("Each element of the `match_degree` list cannot be NULL.", call = call)
   }
 
   motif_graphs <- glyrepr::get_structure_graphs(motifs)
