@@ -21,6 +21,9 @@
 #' @param glycans One of:
 #'   - A [glyrepr::glycan_structure()] vector.
 #'   - A glycan structure string vector. All formats supported by [glyparse::auto_parse()] are accepted.
+#' @param including_core A logical scalar. If `TRUE`, the N-glycan core structure
+#'   (`Man(??-?)Man(??-?)GlcNAc(??-?)GlcNAc(??-` or `Hex(??-?)Hex(??-?)HexNAc(??-?)HexNAc(??-`)
+#'   is appended to each branch motif. Default is `FALSE`.
 #'
 #' @details
 #' The function works by:
@@ -40,7 +43,7 @@
 #' extract_branch_motif(glycans)
 #'
 #' @export
-extract_branch_motif <- function(glycans) {
+extract_branch_motif <- function(glycans, including_core = FALSE) {
   # 1. Handle input types and deduplicate
   glycans <- ensure_glycans_are_structures(glycans)
   glycans <- unique(glycans)
