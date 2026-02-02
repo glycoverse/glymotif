@@ -102,9 +102,6 @@ extract_branch_motif <- function(glycans, including_core = FALSE) {
       anomer_part <- stringr::str_split_i(linkage, "-", 1)
       subtree$anomer <- anomer_part
 
-      # Store the full linkage for later use when including_core
-      subtree$parent_linkage <- linkage
-
       extracted_subtrees[[length(extracted_subtrees) + 1]] <- subtree
     }
   }
