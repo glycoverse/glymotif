@@ -21,22 +21,42 @@ A `branch_motifs_spec` object.
 
 ## Details
 
-When used, motifs will be extracted dynamically from the input glycans
-using
-[`extract_branch_motif()`](https://glycoverse.github.io/glymotif/reference/extract_branch_motif.md)
-with `including_core = TRUE`. Motif matching will use a custom
-`match_degree` where the last 4 nodes of each motif are not required to
-match degree exactly (to allow for attachment to the glycan core).
+Passing `branch_motifs()` to the `motifs` argument of supported
+functions will:
+
+1.  Call
+    [`extract_branch_motif()`](https://glycoverse.github.io/glymotif/reference/extract_branch_motif.md)
+    with `including_core = TRUE` on `glycans` to get all branching
+    motifs.
+
+2.  Construct a `match_degree` list based on the motifs.
+
+3.  Perform motif matching using the constructed `match_degree` list.
+
+Specifically, setting `including_core = TRUE` will include an additional
+"Hex(??-?)Hex(??-?)HexNAc(??-?)HexNAc(??-" suffix to each branching
+motif. This suffix helps differentiate branching GlcNAc and bisecting
+GlcNAc. Then, the `match_degree` is constructed so that the four
+residues in the suffix do not have to match the node degree in the motif
+matching process.
 
 ## See also
 
 [`dynamic_motifs()`](https://glycoverse.github.io/glymotif/reference/dynamic_motifs.md),
-[`have_motifs()`](https://glycoverse.github.io/glymotif/reference/have_motif.md),
-[`count_motifs()`](https://glycoverse.github.io/glymotif/reference/count_motif.md)
+[`extract_branch_motif()`](https://glycoverse.github.io/glymotif/reference/extract_branch_motif.md)
 
 ## Examples
 
 ``` r
-# Use in have_motifs()
-# have_motifs(glycans, branch_motifs())
+glycans <- c(
+  "GlcNAc(b1-2)Man(a1-3)[GlcNAc(b1-2)Man(a1-6)]Man(b1-4)GlcNAc(b1-4)GlcNAc(b1-",
+  "Gal(b1-4)GlcNAc(b1-2)Man(a1-3)[Man(a1-6)]Man(b1-4)GlcNAc(b1-4)GlcNAc(b1-"
+)
+have_motifs(glycans, branch_motifs())
+#>                                                                             GlcNAc(b1-
+#> GlcNAc(b1-2)Man(a1-3)[GlcNAc(b1-2)Man(a1-6)]Man(b1-4)GlcNAc(b1-4)GlcNAc(b1-       TRUE
+#> Gal(b1-4)GlcNAc(b1-2)Man(a1-3)[Man(a1-6)]Man(b1-4)GlcNAc(b1-4)GlcNAc(b1-         FALSE
+#>                                                                             Gal(b1-4)GlcNAc(b1-
+#> GlcNAc(b1-2)Man(a1-3)[GlcNAc(b1-2)Man(a1-6)]Man(b1-4)GlcNAc(b1-4)GlcNAc(b1-               FALSE
+#> Gal(b1-4)GlcNAc(b1-2)Man(a1-3)[Man(a1-6)]Man(b1-4)GlcNAc(b1-4)GlcNAc(b1-                   TRUE
 ```

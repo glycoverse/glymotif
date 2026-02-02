@@ -29,20 +29,33 @@ A `dynamic_motifs_spec` object.
 
 ## Details
 
-When used, motifs will be extracted dynamically from the input glycans
-using
-[`extract_motif()`](https://glycoverse.github.io/glymotif/reference/extract_motif.md),
-and motif matching will use `alignment = "substructure"`.
+Passing `dynamic_motifs()` to the `motifs` argument of supported
+functions will:
+
+1.  Call
+    [`extract_motif()`](https://glycoverse.github.io/glymotif/reference/extract_motif.md)
+    on `glycans` to get all dynamic motifs.
+
+2.  Perform motif matching with `alignments` as "substructure".
 
 ## See also
 
 [`branch_motifs()`](https://glycoverse.github.io/glymotif/reference/branch_motifs.md),
-[`have_motifs()`](https://glycoverse.github.io/glymotif/reference/have_motif.md),
-[`count_motifs()`](https://glycoverse.github.io/glymotif/reference/count_motif.md)
+[`extract_motif()`](https://glycoverse.github.io/glymotif/reference/extract_motif.md)
 
 ## Examples
 
 ``` r
-# Use in have_motifs()
-# have_motifs(glycans, dynamic_motifs(max_size = 4))
+library(glyrepr)
+glycans <- c(o_glycan_core_1(), o_glycan_core_2())
+have_motifs(glycans, dynamic_motifs())
+#>                                   Gal(b1- GalNAc(a1- Gal(b1-3)GalNAc(a1-
+#> Gal(b1-3)GalNAc(a1-                  TRUE       TRUE                TRUE
+#> Gal(b1-3)[GlcNAc(b1-6)]GalNAc(a1-    TRUE       TRUE                TRUE
+#>                                   GlcNAc(b1- GlcNAc(b1-6)GalNAc(a1-
+#> Gal(b1-3)GalNAc(a1-                    FALSE                  FALSE
+#> Gal(b1-3)[GlcNAc(b1-6)]GalNAc(a1-       TRUE                   TRUE
+#>                                   Gal(b1-3)[GlcNAc(b1-6)]GalNAc(a1-
+#> Gal(b1-3)GalNAc(a1-                                           FALSE
+#> Gal(b1-3)[GlcNAc(b1-6)]GalNAc(a1-                              TRUE
 ```

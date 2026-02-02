@@ -12,11 +12,14 @@ For example:
                             Man
 
 This function returns all the unique branching motifs found in the input
-glycans. It is very useful for analyzing N-glycan antennary patterns
-combined with `glydet::quantify_motifs()`. When used with
-[`have_motif()`](https://glycoverse.github.io/glymotif/reference/have_motif.md)
-or related functions, we recommend setting `alignment` to
-"substructure".
+glycans.
+
+If you want to perform branching motif matching in functions like
+[`have_motifs()`](https://glycoverse.github.io/glymotif/reference/have_motif.md)
+or `glydet::quantify_motifs()`, use the
+[`branch_motifs()`](https://glycoverse.github.io/glymotif/reference/branch_motifs.md)
+helper instead, which handles additional intricacies related to how the
+motifs should be matched.
 
 ## Usage
 

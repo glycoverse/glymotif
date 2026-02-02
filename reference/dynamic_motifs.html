@@ -68,18 +68,28 @@ Default is 3. Passed to <code><a href="extract_motif.html">extract_motif()</a></
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>When used, motifs will be extracted dynamically from the input glycans
-using <code><a href="extract_motif.html">extract_motif()</a></code>, and motif matching will use <code>alignment = "substructure"</code>.</p>
-    </div>
+    <p>Passing <code>dynamic_motifs()</code> to the <code>motifs</code> argument of supported functions will:</p><ol><li><p>Call <code><a href="extract_motif.html">extract_motif()</a></code> on <code>glycans</code> to get all dynamic motifs.</p></li>
+<li><p>Perform motif matching with <code>alignments</code> as "substructure".</p></li>
+</ol></div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
-    <div class="dont-index"><p><code><a href="branch_motifs.html">branch_motifs()</a></code>, <code><a href="have_motif.html">have_motifs()</a></code>, <code><a href="count_motif.html">count_motifs()</a></code></p></div>
+    <div class="dont-index"><p><code><a href="branch_motifs.html">branch_motifs()</a></code>, <code><a href="extract_motif.html">extract_motif()</a></code></p></div>
     </div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># Use in have_motifs()</span></span></span>
-<span class="r-in"><span><span class="co"># have_motifs(glycans, dynamic_motifs(max_size = 4))</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://glycoverse.github.io/glyrepr/" class="external-link">glyrepr</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">glycans</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://glycoverse.github.io/glyrepr/reference/n_glycan_core.html" class="external-link">o_glycan_core_1</a></span><span class="op">(</span><span class="op">)</span>, <span class="fu"><a href="https://glycoverse.github.io/glyrepr/reference/n_glycan_core.html" class="external-link">o_glycan_core_2</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="have_motif.html">have_motifs</a></span><span class="op">(</span><span class="va">glycans</span>, <span class="fu">dynamic_motifs</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                                   Gal(b1- GalNAc(a1- Gal(b1-3)GalNAc(a1-</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Gal(b1-3)GalNAc(a1-                  TRUE       TRUE                TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Gal(b1-3)[GlcNAc(b1-6)]GalNAc(a1-    TRUE       TRUE                TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                                   GlcNAc(b1- GlcNAc(b1-6)GalNAc(a1-</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Gal(b1-3)GalNAc(a1-                    FALSE                  FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Gal(b1-3)[GlcNAc(b1-6)]GalNAc(a1-       TRUE                   TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                                   Gal(b1-3)[GlcNAc(b1-6)]GalNAc(a1-</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Gal(b1-3)GalNAc(a1-                                           FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Gal(b1-3)[GlcNAc(b1-6)]GalNAc(a1-                              TRUE</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

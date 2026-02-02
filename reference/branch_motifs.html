@@ -59,21 +59,33 @@ This should be passed to the <code>motifs</code> argument of <code><a href="have
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>When used, motifs will be extracted dynamically from the input glycans
-using <code><a href="extract_branch_motif.html">extract_branch_motif()</a></code> with <code>including_core = TRUE</code>.
-Motif matching will use a custom <code>match_degree</code> where the last 4 nodes
-of each motif are not required to match degree exactly (to allow for
-attachment to the glycan core).</p>
+    <p>Passing <code>branch_motifs()</code> to the <code>motifs</code> argument of supported functions will:</p><ol><li><p>Call <code><a href="extract_branch_motif.html">extract_branch_motif()</a></code> with <code>including_core = TRUE</code> on <code>glycans</code> to get all branching motifs.</p></li>
+<li><p>Construct a <code>match_degree</code> list based on the motifs.</p></li>
+<li><p>Perform motif matching using the constructed <code>match_degree</code> list.</p></li>
+</ol><p>Specifically, setting <code>including_core = TRUE</code> will include an additional
+"Hex(??-?)Hex(??-?)HexNAc(??-?)HexNAc(??-" suffix to each branching motif.
+This suffix helps differentiate branching GlcNAc and bisecting GlcNAc.
+Then, the <code>match_degree</code> is constructed so that the four residues in the suffix
+do not have to match the node degree in the motif matching process.</p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
-    <div class="dont-index"><p><code><a href="dynamic_motifs.html">dynamic_motifs()</a></code>, <code><a href="have_motif.html">have_motifs()</a></code>, <code><a href="count_motif.html">count_motifs()</a></code></p></div>
+    <div class="dont-index"><p><code><a href="dynamic_motifs.html">dynamic_motifs()</a></code>, <code><a href="extract_branch_motif.html">extract_branch_motif()</a></code></p></div>
     </div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># Use in have_motifs()</span></span></span>
-<span class="r-in"><span><span class="co"># have_motifs(glycans, branch_motifs())</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">glycans</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>  <span class="st">"GlcNAc(b1-2)Man(a1-3)[GlcNAc(b1-2)Man(a1-6)]Man(b1-4)GlcNAc(b1-4)GlcNAc(b1-"</span>,</span></span>
+<span class="r-in"><span>  <span class="st">"Gal(b1-4)GlcNAc(b1-2)Man(a1-3)[Man(a1-6)]Man(b1-4)GlcNAc(b1-4)GlcNAc(b1-"</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="have_motif.html">have_motifs</a></span><span class="op">(</span><span class="va">glycans</span>, <span class="fu">branch_motifs</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                                                                             GlcNAc(b1-</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> GlcNAc(b1-2)Man(a1-3)[GlcNAc(b1-2)Man(a1-6)]Man(b1-4)GlcNAc(b1-4)GlcNAc(b1-       TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Gal(b1-4)GlcNAc(b1-2)Man(a1-3)[Man(a1-6)]Man(b1-4)GlcNAc(b1-4)GlcNAc(b1-         FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                                                                             Gal(b1-4)GlcNAc(b1-</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> GlcNAc(b1-2)Man(a1-3)[GlcNAc(b1-2)Man(a1-6)]Man(b1-4)GlcNAc(b1-4)GlcNAc(b1-               FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Gal(b1-4)GlcNAc(b1-2)Man(a1-3)[Man(a1-6)]Man(b1-4)GlcNAc(b1-4)GlcNAc(b1-                   TRUE</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

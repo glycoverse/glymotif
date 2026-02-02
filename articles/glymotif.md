@@ -357,6 +357,55 @@ extract_branch_motif(glycans)
 #> # Unique structures: 4
 ```
 
+### `dynamic_motifs()` and `branch_motifs()`
+
+[`extract_motif()`](https://glycoverse.github.io/glymotif/reference/extract_motif.md)
+and
+[`extract_branch_motif()`](https://glycoverse.github.io/glymotif/reference/extract_branch_motif.md)
+are useful if you only want to know what motifs exist. However, when
+using dynamic motifs in motif matching functions like
+[`have_motifs()`](https://glycoverse.github.io/glymotif/reference/have_motif.md),
+additional intricacies should be taken into account.
+
+For these cases, you should pass the
+[`dynamic_motifs()`](https://glycoverse.github.io/glymotif/reference/dynamic_motifs.md)
+or the
+[`branch_motifs()`](https://glycoverse.github.io/glymotif/reference/branch_motifs.md)
+helpers to the `motifs` argument of supported functions instead. They
+are just empty sentinel objects to inform the passed functions to
+perform dynamic motif matching.
+
+``` r
+count_motifs(glycans, branch_motifs())
+#>                                                                                                                       Neu5Ac(a2-3)Gal(b1-4)GlcNAc(b1-
+#> Neu5Ac(a2-3)Gal(b1-4)GlcNAc(b1-2)Man(a1-3)[Gal(b1-4)GlcNAc(b1-2)Man(a1-6)]Man(b1-4)GlcNAc(a1-4)GlcNAc(b1-                                           1
+#> Neu5Ac(a2-3)Gal(b1-4)GlcNAc(b1-2)Man(a1-3)[Neu5Ac(a2-6)Gal(b1-4)GlcNAc(b1-2)Man(a1-6)]Man(b1-4)GlcNAc(a1-4)GlcNAc(b1-                               1
+#> Gal(b1-4)GlcNAc(b1-2)Man(a1-3)[GlcNAc(b1-2)Man(a1-6)]Man(b1-4)GlcNAc(a1-4)GlcNAc(b1-                                                                0
+#>                                                                                                                       Gal(b1-4)GlcNAc(b1-
+#> Neu5Ac(a2-3)Gal(b1-4)GlcNAc(b1-2)Man(a1-3)[Gal(b1-4)GlcNAc(b1-2)Man(a1-6)]Man(b1-4)GlcNAc(a1-4)GlcNAc(b1-                               1
+#> Neu5Ac(a2-3)Gal(b1-4)GlcNAc(b1-2)Man(a1-3)[Neu5Ac(a2-6)Gal(b1-4)GlcNAc(b1-2)Man(a1-6)]Man(b1-4)GlcNAc(a1-4)GlcNAc(b1-                   0
+#> Gal(b1-4)GlcNAc(b1-2)Man(a1-3)[GlcNAc(b1-2)Man(a1-6)]Man(b1-4)GlcNAc(a1-4)GlcNAc(b1-                                                    1
+#>                                                                                                                       Neu5Ac(a2-6)Gal(b1-4)GlcNAc(b1-
+#> Neu5Ac(a2-3)Gal(b1-4)GlcNAc(b1-2)Man(a1-3)[Gal(b1-4)GlcNAc(b1-2)Man(a1-6)]Man(b1-4)GlcNAc(a1-4)GlcNAc(b1-                                           0
+#> Neu5Ac(a2-3)Gal(b1-4)GlcNAc(b1-2)Man(a1-3)[Neu5Ac(a2-6)Gal(b1-4)GlcNAc(b1-2)Man(a1-6)]Man(b1-4)GlcNAc(a1-4)GlcNAc(b1-                               1
+#> Gal(b1-4)GlcNAc(b1-2)Man(a1-3)[GlcNAc(b1-2)Man(a1-6)]Man(b1-4)GlcNAc(a1-4)GlcNAc(b1-                                                                0
+#>                                                                                                                       GlcNAc(b1-
+#> Neu5Ac(a2-3)Gal(b1-4)GlcNAc(b1-2)Man(a1-3)[Gal(b1-4)GlcNAc(b1-2)Man(a1-6)]Man(b1-4)GlcNAc(a1-4)GlcNAc(b1-                      0
+#> Neu5Ac(a2-3)Gal(b1-4)GlcNAc(b1-2)Man(a1-3)[Neu5Ac(a2-6)Gal(b1-4)GlcNAc(b1-2)Man(a1-6)]Man(b1-4)GlcNAc(a1-4)GlcNAc(b1-          0
+#> Gal(b1-4)GlcNAc(b1-2)Man(a1-3)[GlcNAc(b1-2)Man(a1-6)]Man(b1-4)GlcNAc(a1-4)GlcNAc(b1-                                           1
+```
+
+Functions supporting
+[`dynamic_motifs()`](https://glycoverse.github.io/glymotif/reference/dynamic_motifs.md)
+and
+[`branch_motifs()`](https://glycoverse.github.io/glymotif/reference/branch_motifs.md):
+[`have_motifs()`](https://glycoverse.github.io/glymotif/reference/have_motif.md),
+[`count_motifs()`](https://glycoverse.github.io/glymotif/reference/count_motif.md),
+[`match_motifs()`](https://glycoverse.github.io/glymotif/reference/match_motif.md),
+[`add_motifs_lgl()`](https://glycoverse.github.io/glymotif/reference/add_motifs_int.md),
+and
+[`add_motifs_int()`](https://glycoverse.github.io/glymotif/reference/add_motifs_int.md).
+
 ## What’s Next?
 
 - Want to known all the details about motif matching rules?

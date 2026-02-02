@@ -6,6 +6,13 @@ up to a specified size. This function can be useful combined with
 or `glydet::quantify_motifs()`. If so, set `alignment` to "substructure"
 for these functions.
 
+If you want to perform dynamic motif matching in functions like
+[`have_motifs()`](https://glycoverse.github.io/glymotif/reference/have_motif.md)
+or `glydet::quantify_motifs()`, use the
+[`dynamic_motifs()`](https://glycoverse.github.io/glymotif/reference/dynamic_motifs.md)
+helper instead, which handles additional intricacies related to how the
+motifs should be matched.
+
 ## Usage
 
 ``` r
