@@ -118,14 +118,14 @@ resolve_motif_spec.dynamic_motifs_spec <- function(glycans, spec, alignments, ma
 }
 
 #' Trim Branch Motif IUPAC String
-#
-# Removes the last 4 monosaccharides from a branch motif IUPAC string.
-# The core (4 residues: Man-Man-GlcNAc-GlcNAc or Hex-Hex-HexNAc-HexNAc)
-# is appended by extract_branch_motif(), but for display purposes we only want the branch part.
-#
-# @param iupac A character vector of IUPAC-condensed strings.
-# @return Trimmed IUPAC strings.
-# @noRd
+#'
+#' Removes the last 4 monosaccharides from a branch motif IUPAC string.
+#' The core (4 residues: Man-Man-GlcNAc-GlcNAc or Hex-Hex-HexNAc-HexNAc)
+#' is appended by extract_branch_motif(), but for display purposes we only want the branch part.
+#'
+#' @param iupac A character vector of IUPAC-condensed strings.
+#' @return Trimmed IUPAC strings.
+#' @noRd
 .trim_branch_iupac <- function(iupac) {
   # Remove the core suffix pattern for concrete mono types using fixed string matching
   # Pattern: ?)Man(??-?)Man(??-?)GlcNAc(??-?)GlcNAc(??-
