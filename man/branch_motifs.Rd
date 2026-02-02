@@ -29,7 +29,11 @@ Then, the \code{match_degree} is constructed so that the four residues in the su
 do not have to match the node degree in the motif matching process.
 }
 \examples{
-have_motifs(n_glycan_core(), branch_motifs())
+glycans <- c(
+  "GlcNAc(b1-2)Man(a1-3)[GlcNAc(b1-2)Man(a1-6)]Man(b1-4)GlcNAc(b1-4)GlcNAc(b1-",
+  "Gal(b1-4)GlcNAc(b1-2)Man(a1-3)[Man(a1-6)]Man(b1-4)GlcNAc(b1-4)GlcNAc(b1-"
+)
+have_motifs(glycans, branch_motifs())
 
 }
 \seealso{

@@ -17,6 +17,7 @@
 #' @seealso [branch_motifs()], [extract_motif()]
 #'
 #' @examples
+#' library(glyrepr)
 #' glycans <- c(o_glycan_core_1(), o_glycan_core_2())
 #' have_motifs(glycans, dynamic_motifs())
 #'
@@ -57,7 +58,11 @@ print.dynamic_motifs_spec <- function(x, ...) {
 #' @seealso [dynamic_motifs()], [extract_branch_motif()]
 #'
 #' @examples
-#' have_motifs(n_glycan_core(), branch_motifs())
+#' glycans <- c(
+#'   "GlcNAc(b1-2)Man(a1-3)[GlcNAc(b1-2)Man(a1-6)]Man(b1-4)GlcNAc(b1-4)GlcNAc(b1-",
+#'   "Gal(b1-4)GlcNAc(b1-2)Man(a1-3)[Man(a1-6)]Man(b1-4)GlcNAc(b1-4)GlcNAc(b1-"
+#' )
+#' have_motifs(glycans, branch_motifs())
 #'
 #' @export
 branch_motifs <- function() {

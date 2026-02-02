@@ -26,6 +26,7 @@ Passing \code{dynamic_motifs()} to the \code{motifs} argument of supported funct
 }
 }
 \examples{
+library(glyrepr)
 glycans <- c(o_glycan_core_1(), o_glycan_core_2())
 have_motifs(glycans, dynamic_motifs())
 
