@@ -100,7 +100,8 @@ so only <code><a href="https://glycoverse.github.io/glyrepr/reference/glycan_str
 <span>  <span class="va">motif</span>,</span>
 <span>  alignment <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  ignore_linkages <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  strict_sub <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span>  strict_sub <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  match_degree <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">match_motifs</span><span class="op">(</span></span>
@@ -108,7 +109,8 @@ so only <code><a href="https://glycoverse.github.io/glyrepr/reference/glycan_str
 <span>  <span class="va">motifs</span>,</span>
 <span>  alignments <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  ignore_linkages <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  strict_sub <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span>  strict_sub <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  match_degree <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -147,6 +149,16 @@ Default is <code>FALSE</code>.</p></dd>
 <dd><p>A logical value. If <code>TRUE</code> (default), substituents will be matched in strict mode,
 which means if the glycan has a substituent in some residue,
 the motif must have the same substituent to be matched.</p></dd>
+
+
+<dt id="arg-match-degree">match_degree<a class="anchor" aria-label="anchor" href="#arg-match-degree"></a></dt>
+<dd><p>A logical vector indicating which motif nodes must match the
+glycan's in- and out-degree exactly. For <code><a href="have_motif.html">have_motif()</a></code>, <code><a href="count_motif.html">count_motif()</a></code>, and
+<code>match_motif()</code>, this must be a logical vector with length 1 or the number of
+motif nodes (length 1 is recycled). For <code><a href="have_motif.html">have_motifs()</a></code>, <code><a href="count_motif.html">count_motifs()</a></code>, and
+<code>match_motifs()</code>, this must be a list of logical vectors with length equal to
+<code>motifs</code>; each element follows the same length rules. When <code>match_degree</code> is
+provided, <code>alignment</code> and <code>alignments</code> are silently ignored.</p></dd>
 
 
 <dt id="arg-motifs">motifs<a class="anchor" aria-label="anchor" href="#arg-motifs"></a></dt>

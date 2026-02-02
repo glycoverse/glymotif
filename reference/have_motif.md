@@ -18,7 +18,8 @@ have_motif(
   motif,
   alignment = NULL,
   ignore_linkages = FALSE,
-  strict_sub = TRUE
+  strict_sub = TRUE,
+  match_degree = NULL
 )
 
 have_motifs(
@@ -26,7 +27,8 @@ have_motifs(
   motifs,
   alignments = NULL,
   ignore_linkages = FALSE,
-  strict_sub = TRUE
+  strict_sub = TRUE,
+  match_degree = NULL
 )
 ```
 
@@ -77,6 +79,22 @@ have_motifs(
   A logical value. If `TRUE` (default), substituents will be matched in
   strict mode, which means if the glycan has a substituent in some
   residue, the motif must have the same substituent to be matched.
+
+- match_degree:
+
+  A logical vector indicating which motif nodes must match the glycan's
+  in- and out-degree exactly. For `have_motif()`,
+  [`count_motif()`](https://glycoverse.github.io/glymotif/reference/count_motif.md),
+  and
+  [`match_motif()`](https://glycoverse.github.io/glymotif/reference/match_motif.md),
+  this must be a logical vector with length 1 or the number of motif
+  nodes (length 1 is recycled). For `have_motifs()`,
+  [`count_motifs()`](https://glycoverse.github.io/glymotif/reference/count_motif.md),
+  and
+  [`match_motifs()`](https://glycoverse.github.io/glymotif/reference/match_motif.md),
+  this must be a list of logical vectors with length equal to `motifs`;
+  each element follows the same length rules. When `match_degree` is
+  provided, `alignment` and `alignments` are silently ignored.
 
 - motifs:
 
@@ -211,12 +229,25 @@ a motif can be classified into four alignment types:
 
 - "whole": The motif must align with the entire glycan. See
   [whole-glycan](https://glycomotif.glyomics.org/glycomotif/Whole-Glycan_Alignment)
-  for details. When using known motifs in the GlycoMotif GlyGen
-  Collection, the best practice is to not provide the `alignment`
-  argument, and let the function decide the alignment based on the motif
-  name. However, it is still possible to override the default
-  alignments. In this case, the user-provided alignments will be used,
-  but a warning will be issued.
+  for details.
+
+When using known motifs in the GlycoMotif GlyGen Collection, the best
+practice is to not provide the `alignment` argument, and let the
+function decide the alignment based on the motif name. However, it is
+still possible to override the default alignments. In this case, the
+user-provided alignments will be used, but a warning will be issued.
+When `match_degree` is provided, `alignment` and `alignments` are
+ignored without warning.
+
+## Degree matching
+
+`match_degree` is used to require exact degree matching for specific
+motif nodes. For each node marked `TRUE`, the matched glycan node must
+have the same in-degree and out-degree as the motif node. Nodes marked
+`FALSE` do not enforce degree equality. This is useful to prevent
+matches where the motif node is embedded in a more highly branched
+glycan region (extra outgoing edges) or has extra incoming connections
+compared to the motif.
 
 ## Substituents
 
@@ -264,6 +295,8 @@ following:
 - Alignment: using `alignment_check()`
 
 - Substituents: using `substituent_check()`
+
+- Degree: using `degree_check()` (only when `match_degree` is provided)
 
 - Linkages: using `linkage_check()`
 
@@ -362,7 +395,7 @@ have_motif(glycan_5, glycan_5, strict_sub = FALSE)
 
 # Multiple substituents
 glycan_6 <- "Glc3Me6S(a1-" # has both 3Me and 6S substituents
-have_motif(glycan_6, "Glc3Me6S(a1-") # TRUE: whole match
+have_motif(glycan_6, "Glc3Me6S(a1-") # TRUE: exact match
 #> [1] TRUE
 have_motif(glycan_6, "Glc?Me6S(a1-") # TRUE: obscure linkage ?Me matches 3Me
 #> [1] TRUE

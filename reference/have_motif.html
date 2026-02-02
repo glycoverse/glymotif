@@ -67,7 +67,8 @@ Monosaccharides, linkages, and substituents are all considered.</p>
 <span>  <span class="va">motif</span>,</span>
 <span>  alignment <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  ignore_linkages <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  strict_sub <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span>  strict_sub <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  match_degree <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">have_motifs</span><span class="op">(</span></span>
@@ -75,7 +76,8 @@ Monosaccharides, linkages, and substituents are all considered.</p>
 <span>  <span class="va">motifs</span>,</span>
 <span>  alignments <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  ignore_linkages <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  strict_sub <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span>  strict_sub <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  match_degree <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -114,6 +116,16 @@ Default is <code>FALSE</code>.</p></dd>
 <dd><p>A logical value. If <code>TRUE</code> (default), substituents will be matched in strict mode,
 which means if the glycan has a substituent in some residue,
 the motif must have the same substituent to be matched.</p></dd>
+
+
+<dt id="arg-match-degree">match_degree<a class="anchor" aria-label="anchor" href="#arg-match-degree"></a></dt>
+<dd><p>A logical vector indicating which motif nodes must match the
+glycan's in- and out-degree exactly. For <code>have_motif()</code>, <code><a href="count_motif.html">count_motif()</a></code>, and
+<code><a href="match_motif.html">match_motif()</a></code>, this must be a logical vector with length 1 or the number of
+motif nodes (length 1 is recycled). For <code>have_motifs()</code>, <code><a href="count_motif.html">count_motifs()</a></code>, and
+<code><a href="match_motif.html">match_motifs()</a></code>, this must be a list of logical vectors with length equal to
+<code>motifs</code>; each element follows the same length rules. When <code>match_degree</code> is
+provided, <code>alignment</code> and <code>alignments</code> are silently ignored.</p></dd>
 
 
 <dt id="arg-motifs">motifs<a class="anchor" aria-label="anchor" href="#arg-motifs"></a></dt>
@@ -198,14 +210,25 @@ See <a href="https://glycomotif.glyomics.org/glycomotif/Nonreducing-End_Alignmen
 for details.</p></li>
 <li><p>"whole": The motif must align with the entire glycan.
 See <a href="https://glycomotif.glyomics.org/glycomotif/Whole-Glycan_Alignment" class="external-link">whole-glycan</a>
-for details.
-When using known motifs in the GlycoMotif GlyGen Collection,
+for details.</p></li>
+</ul><p>When using known motifs in the GlycoMotif GlyGen Collection,
 the best practice is to not provide the <code>alignment</code> argument,
 and let the function decide the alignment based on the motif name.
 However, it is still possible to override the default alignments.
 In this case, the user-provided alignments will be used,
-but a warning will be issued.</p></li>
-</ul></div>
+but a warning will be issued.
+When <code>match_degree</code> is provided, <code>alignment</code> and <code>alignments</code> are ignored
+without warning.</p>
+    </div>
+    <div class="section level2">
+    <h2 id="degree-matching">Degree matching<a class="anchor" aria-label="anchor" href="#degree-matching"></a></h2>
+    <p><code>match_degree</code> is used to require exact degree matching for specific motif nodes.
+For each node marked <code>TRUE</code>, the matched glycan node must have the same in-degree
+and out-degree as the motif node. Nodes marked <code>FALSE</code> do not enforce degree
+equality. This is useful to prevent matches where the motif node is embedded in
+a more highly branched glycan region (extra outgoing edges) or has extra incoming
+connections compared to the motif.</p>
+    </div>
     <div class="section level2">
     <h2 id="substituents">Substituents<a class="anchor" aria-label="anchor" href="#substituents"></a></h2>
     <p>Substituents (e.g. "Ac", "SO3") are matched in strict mode.
@@ -232,6 +255,7 @@ to get all possible subgraph isomorphisms between <code>glycan</code> and <code>
 <code>color</code> vertex attributes are added to the graphs to distinguish monosaccharides.
 For all possible matches, the function checks the following:</p><ul><li><p>Alignment: using <code>alignment_check()</code></p></li>
 <li><p>Substituents: using <code>substituent_check()</code></p></li>
+<li><p>Degree: using <code>degree_check()</code> (only when <code>match_degree</code> is provided)</p></li>
 <li><p>Linkages: using <code>linkage_check()</code></p></li>
 <li><p>Anomer: using <code>anomer_check()</code>
 The function returns <code>TRUE</code> if any of the matches pass all checks.</p></li>
@@ -326,7 +350,7 @@ The function returns <code>TRUE</code> if any of the matches pass all checks.</p
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Multiple substituents</span></span></span>
 <span class="r-in"><span><span class="va">glycan_6</span> <span class="op">&lt;-</span> <span class="st">"Glc3Me6S(a1-"</span> <span class="co"># has both 3Me and 6S substituents</span></span></span>
-<span class="r-in"><span><span class="fu">have_motif</span><span class="op">(</span><span class="va">glycan_6</span>, <span class="st">"Glc3Me6S(a1-"</span><span class="op">)</span> <span class="co"># TRUE: whole match</span></span></span>
+<span class="r-in"><span><span class="fu">have_motif</span><span class="op">(</span><span class="va">glycan_6</span>, <span class="st">"Glc3Me6S(a1-"</span><span class="op">)</span> <span class="co"># TRUE: exact match</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
 <span class="r-in"><span><span class="fu">have_motif</span><span class="op">(</span><span class="va">glycan_6</span>, <span class="st">"Glc?Me6S(a1-"</span><span class="op">)</span> <span class="co"># TRUE: obscure linkage ?Me matches 3Me</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>

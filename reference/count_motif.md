@@ -17,7 +17,8 @@ count_motif(
   motif,
   alignment = NULL,
   ignore_linkages = FALSE,
-  strict_sub = TRUE
+  strict_sub = TRUE,
+  match_degree = NULL
 )
 
 count_motifs(
@@ -25,7 +26,8 @@ count_motifs(
   motifs,
   alignments = NULL,
   ignore_linkages = FALSE,
-  strict_sub = TRUE
+  strict_sub = TRUE,
+  match_degree = NULL
 )
 ```
 
@@ -76,6 +78,22 @@ count_motifs(
   A logical value. If `TRUE` (default), substituents will be matched in
   strict mode, which means if the glycan has a substituent in some
   residue, the motif must have the same substituent to be matched.
+
+- match_degree:
+
+  A logical vector indicating which motif nodes must match the glycan's
+  in- and out-degree exactly. For
+  [`have_motif()`](https://glycoverse.github.io/glymotif/reference/have_motif.md),
+  `count_motif()`, and
+  [`match_motif()`](https://glycoverse.github.io/glymotif/reference/match_motif.md),
+  this must be a logical vector with length 1 or the number of motif
+  nodes (length 1 is recycled). For
+  [`have_motifs()`](https://glycoverse.github.io/glymotif/reference/have_motif.md),
+  `count_motifs()`, and
+  [`match_motifs()`](https://glycoverse.github.io/glymotif/reference/match_motif.md),
+  this must be a list of logical vectors with length equal to `motifs`;
+  each element follows the same length rules. When `match_degree` is
+  provided, `alignment` and `alignments` are silently ignored.
 
 - motifs:
 
