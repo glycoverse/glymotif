@@ -64,3 +64,69 @@ print.branch_motifs_spec <- function(x, ...) {
   cli::cli_text("Configuration: extracts branch motifs with core included")
   invisible(x)
 }
+
+#' Resolve Motif Specification
+#'
+#' Internal function to resolve a motif specification into actual motifs
+#' and matching parameters.
+#'
+#' @param glycans A `glyrepr_structure` object.
+#' @param spec A `dynamic_motifs_spec` or `branch_motifs_spec` object.
+#' @param alignments User-provided alignments (should be NULL).
+#' @param match_degree User-provided match_degree (should be NULL).
+#'
+#' @returns A list with `motifs`, `alignments`, and `match_degree`.
+#' @noRd
+resolve_motif_spec <- function(glycans, spec, alignments, match_degree) {
+  if (!is.null(alignments)) {
+    cli::cli_abort(c(
+      "Cannot specify {.arg alignments} when using {.fn dynamic_motifs} or {.fn branch_motifs}.",
+      "i" = "Alignment is controlled automatically by the algorithm."
+    ))
+  }
+  if (!is.null(match_degree)) {
+    cli::cli_abort(c(
+      "Cannot specify {.arg match_degree} when using {.fn dynamic_motifs} or {.fn branch_motifs}.",
+      "i" = "Match degree is controlled automatically by the algorithm."
+    ))
+  }
+
+  UseMethod("resolve_motif_spec", spec)
+}
+
+#' @export
+resolve_motif_spec.dynamic_motifs_spec <- function(glycans, spec, alignments, match_degree) {
+  motifs <- extract_motif(glycans, max_size = spec$max_size)
+
+  list(
+    motifs = motifs,
+    alignments = "substructure",
+    match_degree = NULL
+  )
+}
+
+#' @export
+resolve_motif_spec.branch_motifs_spec <- function(glycans, spec, alignments, match_degree) {
+  motifs <- extract_branch_motif(glycans, including_core = TRUE)
+
+  # Construct match_degree: for each motif, last 4 nodes are FALSE, others TRUE
+  motif_graphs <- glyrepr::get_structure_graphs(motifs)
+  if (inherits(motif_graphs, "igraph")) {
+    motif_graphs <- list(motif_graphs)
+  }
+
+  match_degree <- purrr::map(motif_graphs, function(g) {
+    n_nodes <- igraph::vcount(g)
+    if (n_nodes <= 4) {
+      rep(FALSE, n_nodes)
+    } else {
+      c(rep(TRUE, n_nodes - 4), rep(FALSE, 4))
+    }
+  })
+
+  list(
+    motifs = motifs,
+    alignments = "substructure",  # Ignored when match_degree is provided
+    match_degree = match_degree
+  )
+}
