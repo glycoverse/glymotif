@@ -487,5 +487,5 @@ test_that("match_motifs returns trimmed IUPAC strings as outer list names for br
   expect_false(any(grepl(")Hex(??-?)Hex(??-?)HexNAc(??-?)HexNAc", names(result), fixed = TRUE)))
   
   # Names should end with the branch root linkage pattern
-  expect_true(all(grepl("\\([a-z]1-.$", names(result))))
+  expect_true(all(grepl("\\([a-z]1-$", names(result))))
 })

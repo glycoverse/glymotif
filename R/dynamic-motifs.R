@@ -118,12 +118,12 @@ resolve_motif_spec.dynamic_motifs_spec <- function(glycans, spec, alignments, ma
 # @noRd
 .trim_branch_iupac <- function(iupac) {
   # Remove the core suffix pattern for concrete mono types using fixed string matching
-  # Pattern: )Man(??-?)Man(??-?)GlcNAc(??-?)GlcNAc(??-
-  concrete_suffix <- ")Man(??-?)Man(??-?)GlcNAc(??-?)GlcNAc(??-"
+  # Pattern: ?)Man(??-?)Man(??-?)GlcNAc(??-?)GlcNAc(??-
+  concrete_suffix <- "?)Man(??-?)Man(??-?)GlcNAc(??-?)GlcNAc(??-"
   result <- stringr::str_remove(iupac, stringr::fixed(concrete_suffix))
 
   # Remove the core suffix pattern for generic mono types
-  generic_suffix <- ")Hex(??-?)Hex(??-?)HexNAc(??-?)HexNAc(??-"
+  generic_suffix <- "?)Hex(??-?)Hex(??-?)HexNAc(??-?)HexNAc(??-"
   result <- stringr::str_remove(result, stringr::fixed(generic_suffix))
 
   result

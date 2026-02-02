@@ -336,5 +336,5 @@ test_that("count_motifs returns trimmed IUPAC strings as colnames for branch_mot
   expect_false(any(grepl(")Hex(??-?)Hex(??-?)HexNAc(??-?)HexNAc", colnames(result), fixed = TRUE)))
   
   # Column names should end with the branch root linkage pattern
-  expect_true(all(grepl("\\([a-z]1-.$", colnames(result))))
+  expect_true(all(grepl("\\([a-z]1-$", colnames(result))))
 })
