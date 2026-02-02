@@ -117,7 +117,11 @@ add_motifs_lgl.glyexp_experiment <- function(x, motifs, alignments = NULL, ignor
   }
 
   motif_anno <- motif_anno_fn(exp$var_info$glycan_structure, motifs, alignments, ignore_linkages, strict_sub, match_degree)
-  colnames(motif_anno) <- .get_motif_colnames(motifs, exp$var_info$glycan_structure)
+  # have_motifs/count_motifs set colnames for motif specs, but may return NULL for regular motifs
+  # We always need colnames for add_motifs, so generate them if missing
+  if (is.null(colnames(motif_anno))) {
+    colnames(motif_anno) <- .get_motif_colnames(motifs)
+  }
   motif_anno <- tibble::as_tibble(motif_anno)
   exp$var_info <- dplyr::bind_cols(exp$var_info, motif_anno)
   exp
@@ -140,27 +144,12 @@ add_motifs_lgl.data.frame <- function(x, motifs, alignments = NULL, ignore_linka
 # 1. If motifs is a named vector, use the names
 # 2. If motifs is unnamed and a vector of known motif names, use the motif names
 # 3. If motifs is unnamed and a glyrepr_structure or character vector of structure strings, use IUPAC strings
-# 4. If motifs is a motif spec (dynamic_motifs_spec or branch_motifs_spec), resolve it and use IUPAC strings
-.get_motif_colnames <- function(motifs, glycans = NULL) {
+.get_motif_colnames <- function(motifs) {
   motif_names <- prepare_motif_names(motifs)
   if (!is.null(motif_names)) {
     return(motif_names)
   }
-  
-  # Handle motif specs - need glycans to resolve
-  if (inherits(motifs, "dynamic_motifs_spec") || inherits(motifs, "branch_motifs_spec")) {
-    if (is.null(glycans)) {
-      cli::cli_abort("Internal error: glycans required to resolve motif spec for column naming.")
-    }
-    resolved <- resolve_motif_spec(glycans, motifs, NULL, NULL)
-    # Use names if available (branch_motifs sets trimmed names), otherwise fall back to full IUPAC
-    resolved_names <- names(resolved$motifs)
-    if (!is.null(resolved_names)) {
-      return(resolved_names)
-    }
-    return(as.character(resolved$motifs))
-  }
-  
+
   # Fallback to IUPAC strings for unnamed structures or IUPAC strings
   as.character(motifs)
 }
@@ -170,7 +159,11 @@ add_motifs_lgl.data.frame <- function(x, motifs, alignments = NULL, ignore_linka
     cli::cli_abort("A {.field glycan_structure} column is required.")
   }
   motif_anno <- motif_anno_fn(df$glycan_structure, motifs, alignments, ignore_linkages, strict_sub, match_degree)
-  colnames(motif_anno) <- .get_motif_colnames(motifs, df$glycan_structure)
+  # have_motifs/count_motifs set colnames for motif specs, but may return NULL for regular motifs
+  # We always need colnames for add_motifs, so generate them if missing
+  if (is.null(colnames(motif_anno))) {
+    colnames(motif_anno) <- .get_motif_colnames(motifs)
+  }
   motif_anno <- tibble::as_tibble(motif_anno)
   dplyr::bind_cols(df, motif_anno)
 }
