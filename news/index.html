@@ -41,7 +41,9 @@
 <h2 class="pkg-version" data-toc-text="development version" id="glymotif-development-version">glymotif (development version)<a class="anchor" aria-label="anchor" href="#glymotif-development-version"></a></h2>
 <div class="section level3">
 <h3 id="breaking-changes-development-version">Breaking changes<a class="anchor" aria-label="anchor" href="#breaking-changes-development-version"></a></h3>
-<ul><li>Remove “exact” alignment type from <code>alignment</code> and <code>alignments</code> arguments. This alignment type was introduced in v0.12.0 but is no longer needed. Users who previously relied on “exact” alignment can use “substructure” as the closest available alternative, but note that it is less strict and may produce more matches, so results may differ.</li>
+<ul><li>
+<code>all_motifs()</code> is renamed to <code><a href="../reference/db_motifs.html">db_motifs()</a></code>.</li>
+<li>Remove “exact” alignment type from <code>alignment</code> and <code>alignments</code> arguments. This alignment type was introduced in v0.12.0 but is no longer needed. Users who previously relied on “exact” alignment can use “substructure” as the closest available alternative, but note that it is less strict and may produce more matches, so results may differ.</li>
 </ul></div>
 <div class="section level3">
 <h3 id="new-features-development-version">New features<a class="anchor" aria-label="anchor" href="#new-features-development-version"></a></h3>
@@ -143,7 +145,7 @@
 <h3 id="minor-improvements-and-bug-fixes-0-8-0">Minor improvements and bug fixes<a class="anchor" aria-label="anchor" href="#minor-improvements-and-bug-fixes-0-8-0"></a></h3>
 <ul><li>Add a section in the Get Started vignette about ambiguity handling.</li>
 <li>Update the “Working with glyexp” vignette to use <code><a href="https://glycoverse.github.io/glyexp/reference/real_experiment.html" class="external-link">glyexp::real_experiment</a></code>.</li>
-<li>Update the URL of GlycoMotif in the documentation of <code><a href="../reference/all_motifs.html">all_motifs()</a></code>.</li>
+<li>Update the URL of GlycoMotif in the documentation of <code>all_motifs()</code>.</li>
 <li>Remove old “N-glycans” vignette from README.</li>
 </ul></div>
 </div>
@@ -179,7 +181,7 @@
 <div class="section level3">
 <h3 id="breaking-changes-0-6-0">Breaking changes<a class="anchor" aria-label="anchor" href="#breaking-changes-0-6-0"></a></h3>
 <ul><li>
-<code>available_motifs()</code> is renamed to <code><a href="../reference/all_motifs.html">all_motifs()</a></code>.</li>
+<code>available_motifs()</code> is renamed to <code>all_motifs()</code>.</li>
 </ul></div>
 <div class="section level3">
 <h3 id="new-features-0-6-0">New features<a class="anchor" aria-label="anchor" href="#new-features-0-6-0"></a></h3>

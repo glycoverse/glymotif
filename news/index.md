@@ -4,6 +4,8 @@
 
 ### Breaking changes
 
+- `all_motifs()` is renamed to
+  [`db_motifs()`](https://glycoverse.github.io/glymotif/reference/db_motifs.md).
 - Remove “exact” alignment type from `alignment` and `alignments`
   arguments. This alignment type was introduced in v0.12.0 but is no
   longer needed. Users who previously relied on “exact” alignment can
@@ -152,8 +154,7 @@ purpose.
 - Add a section in the Get Started vignette about ambiguity handling.
 - Update the “Working with glyexp” vignette to use
   [`glyexp::real_experiment`](https://glycoverse.github.io/glyexp/reference/real_experiment.html).
-- Update the URL of GlycoMotif in the documentation of
-  [`all_motifs()`](https://glycoverse.github.io/glymotif/reference/all_motifs.md).
+- Update the URL of GlycoMotif in the documentation of `all_motifs()`.
 - Remove old “N-glycans” vignette from README.
 
 ## glymotif 0.7.0
@@ -190,8 +191,7 @@ purpose.
 
 ### Breaking changes
 
-- `available_motifs()` is renamed to
-  [`all_motifs()`](https://glycoverse.github.io/glymotif/reference/all_motifs.md).
+- `available_motifs()` is renamed to `all_motifs()`.
 
 ### New features
 

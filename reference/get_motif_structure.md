@@ -31,7 +31,7 @@ than 1, the return value is named with the motif names.
 
 ## See also
 
-[`all_motifs()`](https://glycoverse.github.io/glymotif/reference/all_motifs.md),
+[`db_motifs()`](https://glycoverse.github.io/glymotif/reference/db_motifs.md),
 [`is_known_motif()`](https://glycoverse.github.io/glymotif/reference/is_known_motif.md)
 
 ## Examples

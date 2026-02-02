@@ -5,11 +5,11 @@
 - [`add_motifs_int()`](https://glycoverse.github.io/glymotif/reference/add_motifs_int.md)
   [`add_motifs_lgl()`](https://glycoverse.github.io/glymotif/reference/add_motifs_int.md)
   : Add Motif Annotations
-- [`all_motifs()`](https://glycoverse.github.io/glymotif/reference/all_motifs.md)
-  : Get All Motifs
 - [`count_motif()`](https://glycoverse.github.io/glymotif/reference/count_motif.md)
   [`count_motifs()`](https://glycoverse.github.io/glymotif/reference/count_motif.md)
   : Count How Many Times Glycans have the Given Motif(s)
+- [`db_motifs()`](https://glycoverse.github.io/glymotif/reference/db_motifs.md)
+  : Get All Motifs from the Database
 - [`extract_branch_motif()`](https://glycoverse.github.io/glymotif/reference/extract_branch_motif.md)
   : Extract Branch Motifs
 - [`extract_motif()`](https://glycoverse.github.io/glymotif/reference/extract_motif.md)

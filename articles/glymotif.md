@@ -144,7 +144,7 @@ unname(have_motifs(glycans, motifs))  # Removing names for cleaner display
 predefined motif names instead:
 
 ``` r
-all_motifs()[1:10]
+db_motifs()[1:10]
 #>  [1] "Blood group H (type 2) - Lewis y" "i antigen"                       
 #>  [3] "LacdiNAc"                         "GT2"                             
 #>  [5] "Blood group B (type 1) - Lewis b" "LcGg4"                           

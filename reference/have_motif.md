@@ -58,7 +58,7 @@ have_motifs(
     [`glyparse::auto_parse()`](https://glycoverse.github.io/glyparse/reference/auto_parse.html).
 
   - A known motif name (use
-    [`all_motifs()`](https://glycoverse.github.io/glymotif/reference/all_motifs.md)
+    [`db_motifs()`](https://glycoverse.github.io/glymotif/reference/db_motifs.md)
     to see all available motifs).
 
 - alignment:
@@ -108,7 +108,7 @@ have_motifs(
     [`glyparse::auto_parse()`](https://glycoverse.github.io/glyparse/reference/auto_parse.html).
 
   - A character vector of motif names (use
-    [`all_motifs()`](https://glycoverse.github.io/glymotif/reference/all_motifs.md)
+    [`db_motifs()`](https://glycoverse.github.io/glymotif/reference/db_motifs.md)
     to see all available motifs).
 
 - alignments:
