@@ -10,6 +10,51 @@ prepare_motif_args <- function(
   strict_sub = TRUE,
   call = rlang::caller_env()
 ) {
+  # Handle motif specifications (dynamic_motifs_spec, branch_motifs_spec)
+  if (inherits(motifs, "dynamic_motifs_spec") || inherits(motifs, "branch_motifs_spec")) {
+    glycans <- ensure_glycans_are_structures(glycans, call = call)
+    resolved <- resolve_motif_spec(glycans, motifs, alignments, match_degree)
+
+    # Now prepare args normally with resolved values
+    motifs <- resolved$motifs
+    alignments <- resolved$alignments
+    match_degree <- resolved$match_degree
+
+    # Continue with normal validation on resolved motifs
+    if (has_duplicate_motifs(motifs)) {
+      dupes <- unique(motifs[duplicated(motifs)])
+      cli::cli_abort(c(
+        "`motifs` cannot have duplications.",
+        "x" = "Duplicate motifs: {.val {dupes}}.",
+        "i" = "Consider using {.fn unique}."
+      ), call = call)
+    }
+
+    motif_type <- get_motif_type(motifs, call = call)
+    motifs <- ensure_motifs_are_structures(motifs, motif_type, require_scalar = single_motif, call = call)
+    match_degree <- validate_match_degree(match_degree, motifs, single_motif, call = call)
+
+    if (single_motif) {
+      return(list(
+        glycans = glycans,
+        motif = motifs,
+        alignment = alignments,
+        ignore_linkages = ignore_linkages,
+        strict_sub = strict_sub,
+        match_degree = match_degree
+      ))
+    } else {
+      return(list(
+        glycans = glycans,
+        motifs = motifs,
+        alignments = alignments,
+        ignore_linkages = ignore_linkages,
+        strict_sub = strict_sub,
+        match_degree = match_degree
+      ))
+    }
+  }
+
   # Unified validation logic
   if (is.null(match_degree)) {
     valid_alignments_arg(alignments, motifs)
@@ -59,7 +104,6 @@ prepare_motif_args <- function(
   }
 }
 
-# Helper function to check for duplicate motifs
 # Works with both character vectors and glyrepr_structure objects
 has_duplicate_motifs <- function(motifs) {
   if (length(motifs) <= 1) {

@@ -31,3 +31,37 @@ test_that("prepare_struc_names returns values when character vector has no names
   result <- prepare_struc_names(chars, chars)
   expect_equal(result, c("a", "b"))
 })
+
+test_that("prepare_motif_args handles dynamic_motifs_spec", {
+  glycans <- glyrepr::as_glycan_structure("Gal(b1-4)GlcNAc(b1-")
+  spec <- dynamic_motifs(max_size = 2)
+
+  result <- prepare_motif_args(glycans, spec, alignments = NULL, ignore_linkages = FALSE, match_degree = NULL, single_motif = FALSE, strict_sub = TRUE)
+
+  expect_s3_class(result$motifs, "glyrepr_structure")
+  expect_equal(result$alignments, "substructure")
+  expect_null(result$match_degree)
+})
+
+test_that("prepare_motif_args handles branch_motifs_spec", {
+  glycans <- glyrepr::as_glycan_structure(
+    "Neu5Ac(a2-3)Gal(b1-4)GlcNAc(b1-2)Man(a1-3)[Man(a1-6)]Man(b1-4)GlcNAc(a1-4)GlcNAc(b1-"
+  )
+  spec <- branch_motifs()
+
+  result <- prepare_motif_args(glycans, spec, alignments = NULL, ignore_linkages = FALSE, match_degree = NULL, single_motif = FALSE, strict_sub = TRUE)
+
+  expect_s3_class(result$motifs, "glyrepr_structure")
+  expect_true(length(result$motifs) > 0)
+  expect_type(result$match_degree, "list")
+})
+
+test_that("prepare_motif_args errors on alignments conflict with spec", {
+  glycans <- glyrepr::as_glycan_structure("Gal(b1-4)GlcNAc(b1-")
+  spec <- dynamic_motifs()
+
+  expect_error(
+    prepare_motif_args(glycans, spec, alignments = "core", ignore_linkages = FALSE, match_degree = NULL, single_motif = FALSE, strict_sub = TRUE),
+    "Cannot specify.*alignments"
+  )
+})
