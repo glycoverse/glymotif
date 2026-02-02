@@ -21,7 +21,7 @@ or related functions, we recommend setting `alignment` to
 ## Usage
 
 ``` r
-extract_branch_motif(glycans)
+extract_branch_motif(glycans, including_core = FALSE)
 ```
 
 ## Arguments
@@ -37,6 +37,13 @@ extract_branch_motif(glycans)
   - A glycan structure string vector. All formats supported by
     [`glyparse::auto_parse()`](https://glycoverse.github.io/glyparse/reference/auto_parse.html)
     are accepted.
+
+- including_core:
+
+  A logical scalar. If `TRUE`, the N-glycan core structure
+  (`Man(??-?)Man(??-?)GlcNAc(??-?)GlcNAc(??-` or
+  `Hex(??-?)Hex(??-?)HexNAc(??-?)HexNAc(??-`) is appended to each branch
+  motif. Default is `FALSE`.
 
 ## Value
 
