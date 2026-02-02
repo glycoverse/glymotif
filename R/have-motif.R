@@ -94,6 +94,15 @@
 #' When `match_degree` is provided, `alignment` and `alignments` are ignored
 #' without warning.
 #'
+#' # Degree matching
+#'
+#' `match_degree` is used to require exact degree matching for specific motif nodes.
+#' For each node marked `TRUE`, the matched glycan node must have the same in-degree
+#' and out-degree as the motif node. Nodes marked `FALSE` do not enforce degree
+#' equality. This is useful to prevent matches where the motif node is embedded in
+#' a more highly branched glycan region (extra outgoing edges) or has extra incoming
+#' connections compared to the motif.
+#'
 #' # Substituents
 #'
 #' Substituents (e.g. "Ac", "SO3") are matched in strict mode.

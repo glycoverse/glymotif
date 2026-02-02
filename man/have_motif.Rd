@@ -180,6 +180,15 @@ When \code{match_degree} is provided, \code{alignment} and \code{alignments} are
 without warning.
 }
 
+\section{Degree matching}{
+\code{match_degree} is used to require exact degree matching for specific motif nodes.
+For each node marked \code{TRUE}, the matched glycan node must have the same in-degree
+and out-degree as the motif node. Nodes marked \code{FALSE} do not enforce degree
+equality. This is useful to prevent matches where the motif node is embedded in
+a more highly branched glycan region (extra outgoing edges) or has extra incoming
+connections compared to the motif.
+}
+
 \section{Substituents}{
 Substituents (e.g. "Ac", "SO3") are matched in strict mode.
 Both single and multiple substituents are supported:
