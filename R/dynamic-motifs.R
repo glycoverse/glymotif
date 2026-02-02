@@ -100,7 +100,7 @@ resolve_motif_spec.dynamic_motifs_spec <- function(glycans, spec, alignments, ma
 
   list(
     motifs = motifs,
-    alignments = "substructure",
+    alignments = rep("substructure", length(motifs)),
     match_degree = NULL
   )
 }
@@ -126,7 +126,7 @@ resolve_motif_spec.branch_motifs_spec <- function(glycans, spec, alignments, mat
 
   list(
     motifs = motifs,
-    alignments = "substructure",  # Ignored when match_degree is provided
+    alignments = rep("substructure", length(motifs)),  # Ignored when match_degree is provided
     match_degree = match_degree
   )
 }

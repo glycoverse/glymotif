@@ -483,6 +483,12 @@ prepare_struc_names <- function(x, strucs) {
 # Returns: explicit names if present, known motif names if applicable,
 #          NULL otherwise (IUPAC strings or structure input without names)
 prepare_motif_names <- function(motifs_input) {
+  # Handle motif spec objects (dynamic_motifs_spec, branch_motifs_spec)
+  # These should not use their internal list names as motif names
+  if (inherits(motifs_input, "dynamic_motifs_spec") || inherits(motifs_input, "branch_motifs_spec")) {
+    return(NULL)
+  }
+
   # If motifs_input has explicit names, use them
   if (!is.null(names(motifs_input))) {
     return(names(motifs_input))
@@ -493,7 +499,7 @@ prepare_motif_names <- function(motifs_input) {
     return(motifs_input)
   }
 
-  # Otherwise, no names (IUPAC strings or glyrepr_structure without names)
+  # Otherwise, no names (IUPAC strings or structure input without names)
   NULL
 }
 

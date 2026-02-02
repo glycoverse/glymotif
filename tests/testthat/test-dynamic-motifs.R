@@ -48,7 +48,7 @@ test_that("resolve_motif_spec extracts motifs for dynamic_motifs", {
   expect_type(result, "list")
   expect_named(result, c("motifs", "alignments", "match_degree"))
   expect_s3_class(result$motifs, "glyrepr_structure")
-  expect_equal(result$alignments, "substructure")
+  expect_equal(unique(result$alignments), "substructure")
   expect_null(result$match_degree)
 })
 

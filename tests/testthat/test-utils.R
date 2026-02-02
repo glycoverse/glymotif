@@ -39,7 +39,7 @@ test_that("prepare_motif_args handles dynamic_motifs_spec", {
   result <- prepare_motif_args(glycans, spec, alignments = NULL, ignore_linkages = FALSE, match_degree = NULL, single_motif = FALSE, strict_sub = TRUE)
 
   expect_s3_class(result$motifs, "glyrepr_structure")
-  expect_equal(result$alignments, "substructure")
+  expect_equal(unique(result$alignments), "substructure")
   expect_null(result$match_degree)
 })
 

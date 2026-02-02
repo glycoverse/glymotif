@@ -745,3 +745,47 @@ test_that("have_motifs has no colnames when motifs are IUPAC strings without nam
   result <- have_motifs(glycans, motifs)
   expect_null(colnames(result))
 })
+
+
+# ========== Integration tests with dynamic_motifs and branch_motifs ==========
+test_that("have_motifs works with dynamic_motifs()", {
+  glycans <- glyrepr::as_glycan_structure(c(
+    "Gal(b1-4)GlcNAc(b1-",
+    "Man(b1-4)GlcNAc(b1-"
+  ))
+
+  result <- have_motifs(glycans, dynamic_motifs(max_size = 2))
+
+  expect_type(result, "logical")
+  expect_equal(dim(result), c(2, length(extract_motif(glycans, max_size = 2))))
+})
+
+test_that("have_motifs works with branch_motifs()", {
+  glycans <- glyrepr::as_glycan_structure(
+    "Neu5Ac(a2-3)Gal(b1-4)GlcNAc(b1-2)Man(a1-3)[Man(a1-6)]Man(b1-4)GlcNAc(a1-4)GlcNAc(b1-"
+  )
+
+  result <- have_motifs(glycans, branch_motifs())
+
+  expect_type(result, "logical")
+  expect_equal(nrow(result), 1)
+  expect_true(ncol(result) > 0)
+})
+
+test_that("have_motifs errors when alignments specified with dynamic_motifs", {
+  glycans <- glyrepr::as_glycan_structure("Gal(b1-4)GlcNAc(b1-")
+  expect_error(
+    have_motifs(glycans, dynamic_motifs(), alignments = "core"),
+    "Cannot specify.*alignments"
+  )
+})
+
+test_that("have_motifs errors when match_degree specified with branch_motifs", {
+  glycans <- glyrepr::as_glycan_structure(
+    "Neu5Ac(a2-3)Gal(b1-4)GlcNAc(b1-2)Man(a1-3)[Man(a1-6)]Man(b1-4)GlcNAc(a1-4)GlcNAc(b1-"
+  )
+  expect_error(
+    have_motifs(glycans, branch_motifs(), match_degree = list(c(TRUE, TRUE))),
+    "Cannot specify.*match_degree"
+  )
+})
