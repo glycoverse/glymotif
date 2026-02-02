@@ -249,3 +249,32 @@ test_that("add_motifs_lgl passes match_degree", {
   expect_identical(exp_default$var_info$motif, c(TRUE, TRUE))
   expect_identical(exp_degree$var_info$motif, c(TRUE, FALSE))
 })
+
+test_that("add_motifs_lgl works with dynamic_motifs() on data frame", {
+  skip_if_not_installed("glyexp")
+  df <- tibble::tibble(
+    glycan_structure = glyrepr::as_glycan_structure(c(
+      "Gal(b1-4)GlcNAc(b1-",
+      "Man(b1-4)GlcNAc(b1-"
+    ))
+  )
+
+  result <- add_motifs_lgl(df, dynamic_motifs(max_size = 2))
+
+  expect_s3_class(result, "data.frame")
+  expect_true(ncol(result) > ncol(df))
+})
+
+test_that("add_motifs_int works with branch_motifs() on data frame", {
+  skip_if_not_installed("glyexp")
+  df <- tibble::tibble(
+    glycan_structure = glyrepr::as_glycan_structure(
+      "Neu5Ac(a2-3)Gal(b1-4)GlcNAc(b1-2)Man(a1-3)[Man(a1-6)]Man(b1-4)GlcNAc(a1-4)GlcNAc(b1-"
+    )
+  )
+
+  result <- add_motifs_int(df, branch_motifs())
+
+  expect_s3_class(result, "data.frame")
+  expect_true(ncol(result) > ncol(df))
+})

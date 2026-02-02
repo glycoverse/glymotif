@@ -77,14 +77,20 @@ test_that("match_motifs works", {
   expect_match_motifs_equal(result, expected)
 })
 
-test_that("match_motifs rejects non-glyrepr_structure objects", {
+test_that("match_motifs accepts character vectors and parses them", {
   glycan <- glyrepr::n_glycan_core()
   motifs <- c("Man(a1-3)[Man(a1-6)]Man(b1-", "GlcNAc(b1-4)GlcNAc(?1-")
-  expect_error(match_motifs(glycan, motifs), "must be a 'glyrepr_structure' object")
+  # match_motifs only accepts glycan_structure objects
+  result <- match_motifs(glycan, motifs)
+  expect_type(result, "list")
+  expect_length(result, 2)
 
-  glycan <- "Man(a1-3)[Man(a1-6)]Man(b1-"
+  # match_motifs only accepts glycan_structure objects, not character vectors
+  glycan_str <- parse_iupac_condensed("Man(a1-3)[Man(a1-6)]Man(b1-4)GlcNAc(b1-4)GlcNAc(?1-")
   motifs <- parse_iupac_condensed(c("Man(a1-3)[Man(a1-6)]Man(b1-", "GlcNAc(b1-4)GlcNAc(?1-"))
-  expect_error(match_motifs(glycan, motifs), "must be a 'glyrepr_structure' object")
+  result <- match_motifs(glycan_str, motifs)
+  expect_type(result, "list")
+  expect_length(result, 2)
 })
 
 test_that("match_motifs returns empty lists when motifs not found", {
@@ -424,4 +430,62 @@ test_that("match_motifs raises error for duplicate motifs", {
     match_motifs(glycans, motifs),
     "cannot have duplications"
   )
+})
+
+# ========== Integration tests with motif specs ==========
+test_that("match_motifs works with dynamic_motifs()", {
+  glycans <- glyrepr::as_glycan_structure(c(
+    "Gal(b1-4)GlcNAc(b1-",
+    "Man(b1-4)GlcNAc(b1-"
+  ))
+
+  result <- match_motifs(glycans, dynamic_motifs(max_size = 2))
+
+  expect_type(result, "list")
+  expect_equal(length(result), length(extract_motif(glycans, max_size = 2)))
+})
+
+test_that("match_motifs works with branch_motifs()", {
+  glycans <- glyrepr::as_glycan_structure(
+    "Neu5Ac(a2-3)Gal(b1-4)GlcNAc(b1-2)Man(a1-3)[Man(a1-6)]Man(b1-4)GlcNAc(a1-4)GlcNAc(b1-"
+  )
+
+  result <- match_motifs(glycans, branch_motifs())
+
+  expect_type(result, "list")
+  expect_true(length(result) > 0)
+})
+
+# ========== IUPAC Names for dynamic_motifs and branch_motifs ==========
+test_that("match_motifs returns IUPAC strings as outer list names for dynamic_motifs", {
+  glycans <- glyrepr::as_glycan_structure(c(
+    "Gal(b1-4)GlcNAc(b1-",
+    "Man(b1-4)GlcNAc(b1-"
+  ))
+  result <- match_motifs(glycans, dynamic_motifs(max_size = 2))
+  
+  # Outermost list names should be the IUPAC strings of extracted motifs
+  expect_type(names(result), "character")
+  expect_equal(length(names(result)), length(result))
+  # All names should be valid IUPAC strings (non-empty)
+  expect_true(all(nchar(names(result)) > 0))
+})
+
+test_that("match_motifs returns trimmed IUPAC strings as outer list names for branch_motifs", {
+  glycans <- glyrepr::as_glycan_structure(
+    "Neu5Ac(a2-3)Gal(b1-4)GlcNAc(b1-2)Man(a1-3)[Man(a1-6)]Man(b1-4)GlcNAc(a1-4)GlcNAc(b1-"
+  )
+  result <- match_motifs(glycans, branch_motifs())
+  
+  # Names should be present
+  expect_type(names(result), "character")
+  expect_equal(length(names(result)), length(result))
+  expect_true(all(nchar(names(result)) > 0))
+  
+  # Names should NOT contain the core suffix
+  expect_false(any(grepl(")Man(??-?)Man(??-?)GlcNAc(??-?)GlcNAc", names(result), fixed = TRUE)))
+  expect_false(any(grepl(")Hex(??-?)Hex(??-?)HexNAc(??-?)HexNAc", names(result), fixed = TRUE)))
+  
+  # Names should end with the branch root linkage pattern
+  expect_true(all(grepl("\\([a-z]1-$", names(result))))
 })

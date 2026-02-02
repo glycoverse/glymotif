@@ -279,3 +279,62 @@ test_that("count_motifs has no colnames when motifs are IUPAC strings without na
   result <- count_motifs(glycans, motifs)
   expect_null(colnames(result))
 })
+
+# ========== Integration tests with motif specs ==========
+test_that("count_motifs works with dynamic_motifs()", {
+  glycans <- glyrepr::as_glycan_structure(c(
+    "Gal(b1-4)GlcNAc(b1-",
+    "Man(b1-4)GlcNAc(b1-"
+  ))
+
+  result <- count_motifs(glycans, dynamic_motifs(max_size = 2))
+
+  expect_type(result, "integer")
+  expect_equal(dim(result), c(2, length(extract_motif(glycans, max_size = 2))))
+})
+
+test_that("count_motifs works with branch_motifs()", {
+  glycans <- glyrepr::as_glycan_structure(
+    "Neu5Ac(a2-3)Gal(b1-4)GlcNAc(b1-2)Man(a1-3)[Man(a1-6)]Man(b1-4)GlcNAc(a1-4)GlcNAc(b1-"
+  )
+
+  result <- count_motifs(glycans, branch_motifs())
+
+  expect_type(result, "integer")
+  expect_equal(nrow(result), 1)
+  expect_true(ncol(result) > 0)
+})
+
+# ========== IUPAC Column Names for dynamic_motifs and branch_motifs ==========
+test_that("count_motifs returns IUPAC strings as colnames for dynamic_motifs", {
+  glycans <- glyrepr::as_glycan_structure(c(
+    "Gal(b1-4)GlcNAc(b1-",
+    "Man(b1-4)GlcNAc(b1-"
+  ))
+  result <- count_motifs(glycans, dynamic_motifs(max_size = 2))
+  
+  # Column names should be the IUPAC strings of extracted motifs
+  expect_type(colnames(result), "character")
+  expect_equal(length(colnames(result)), ncol(result))
+  # All column names should be valid IUPAC strings (non-empty)
+  expect_true(all(nchar(colnames(result)) > 0))
+})
+
+test_that("count_motifs returns trimmed IUPAC strings as colnames for branch_motifs", {
+  glycans <- glyrepr::as_glycan_structure(
+    "Neu5Ac(a2-3)Gal(b1-4)GlcNAc(b1-2)Man(a1-3)[Man(a1-6)]Man(b1-4)GlcNAc(a1-4)GlcNAc(b1-"
+  )
+  result <- count_motifs(glycans, branch_motifs())
+  
+  # Column names should be present
+  expect_type(colnames(result), "character")
+  expect_equal(length(colnames(result)), ncol(result))
+  expect_true(all(nchar(colnames(result)) > 0))
+  
+  # Column names should NOT contain the core suffix
+  expect_false(any(grepl(")Man(??-?)Man(??-?)GlcNAc(??-?)GlcNAc", colnames(result), fixed = TRUE)))
+  expect_false(any(grepl(")Hex(??-?)Hex(??-?)HexNAc(??-?)HexNAc", colnames(result), fixed = TRUE)))
+  
+  # Column names should end with the branch root linkage pattern
+  expect_true(all(grepl("\\([a-z]1-$", colnames(result))))
+})

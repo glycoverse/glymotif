@@ -286,7 +286,13 @@ have_motif <- function(glycans, motif, alignment = NULL, ignore_linkages = FALSE
 have_motifs <- function(glycans, motifs, alignments = NULL, ignore_linkages = FALSE, strict_sub = TRUE, match_degree = NULL) {
   params <- prepare_have_motifs_args(glycans, motifs, alignments, ignore_linkages, strict_sub, match_degree)
   glycan_names <- prepare_struc_names(glycans, params$glycans)
-  motif_names <- prepare_motif_names(motifs)
+  # Use names from resolved motifs if available (e.g., from dynamic_motifs/branch_motifs)
+  # Otherwise fall back to prepare_motif_names on the original input
+  if (!is.null(names(params$motifs))) {
+    motif_names <- names(params$motifs)
+  } else {
+    motif_names <- prepare_motif_names(motifs)
+  }
   rlang::exec("have_motifs_", !!!params, glycan_names = glycan_names, motif_names = motif_names)
 }
 

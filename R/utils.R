@@ -10,6 +10,56 @@ prepare_motif_args <- function(
   strict_sub = TRUE,
   call = rlang::caller_env()
 ) {
+  # Handle motif specifications (dynamic_motifs_spec, branch_motifs_spec)
+  if (inherits(motifs, "dynamic_motifs_spec") || inherits(motifs, "branch_motifs_spec")) {
+    glycans <- ensure_glycans_are_structures(glycans, call = call)
+    resolved <- resolve_motif_spec(glycans, motifs, alignments, match_degree)
+
+    # Now prepare args normally with resolved values
+    motifs <- resolved$motifs
+
+    # Add IUPAC strings as names for column naming in results (if not already set by resolve_motif_spec)
+    if (length(motifs) > 0 && is.null(names(motifs))) {
+      names(motifs) <- as.character(motifs)
+    }
+    alignments <- resolved$alignments
+    match_degree <- resolved$match_degree
+
+    # Continue with normal validation on resolved motifs
+    if (has_duplicate_motifs(motifs)) {
+      dupes <- unique(motifs[duplicated(motifs)])
+      cli::cli_abort(c(
+        "`motifs` cannot have duplications.",
+        "x" = "Duplicate motifs: {.val {dupes}}.",
+        "i" = "Consider using {.fn unique}."
+      ), call = call)
+    }
+
+    motif_type <- get_motif_type(motifs, call = call)
+    motifs <- ensure_motifs_are_structures(motifs, motif_type, require_scalar = single_motif, call = call)
+    match_degree <- validate_match_degree(match_degree, motifs, single_motif, call = call)
+
+    if (single_motif) {
+      return(list(
+        glycans = glycans,
+        motif = motifs,
+        alignment = alignments,
+        ignore_linkages = ignore_linkages,
+        strict_sub = strict_sub,
+        match_degree = match_degree
+      ))
+    } else {
+      return(list(
+        glycans = glycans,
+        motifs = motifs,
+        alignments = alignments,
+        ignore_linkages = ignore_linkages,
+        strict_sub = strict_sub,
+        match_degree = match_degree
+      ))
+    }
+  }
+
   # Unified validation logic
   if (is.null(match_degree)) {
     valid_alignments_arg(alignments, motifs)
@@ -59,7 +109,6 @@ prepare_motif_args <- function(
   }
 }
 
-# Helper function to check for duplicate motifs
 # Works with both character vectors and glyrepr_structure objects
 has_duplicate_motifs <- function(motifs) {
   if (length(motifs) <= 1) {
@@ -439,6 +488,12 @@ prepare_struc_names <- function(x, strucs) {
 # Returns: explicit names if present, known motif names if applicable,
 #          NULL otherwise (IUPAC strings or structure input without names)
 prepare_motif_names <- function(motifs_input) {
+  # Handle motif spec objects (dynamic_motifs_spec, branch_motifs_spec)
+  # These should not use their internal list names as motif names
+  if (inherits(motifs_input, "dynamic_motifs_spec") || inherits(motifs_input, "branch_motifs_spec")) {
+    return(NULL)
+  }
+
   # If motifs_input has explicit names, use them
   if (!is.null(names(motifs_input))) {
     return(names(motifs_input))
@@ -449,7 +504,7 @@ prepare_motif_names <- function(motifs_input) {
     return(motifs_input)
   }
 
-  # Otherwise, no names (IUPAC strings or glyrepr_structure without names)
+  # Otherwise, no names (IUPAC strings or structure input without names)
   NULL
 }
 
