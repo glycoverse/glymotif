@@ -179,6 +179,8 @@ the motif names are used as column names.</p></li>
 <li><p>If <code>motifs</code> is unnamed and contains <code><a href="https://glycoverse.github.io/glyrepr/reference/glycan_structure.html" class="external-link">glyrepr::glycan_structure()</a></code> objects
 or IUPAC-condensed structure strings, the IUPAC-condensed strings are used
 as column names.</p></li>
+<li><p>If <code>motifs</code> is a motif spec from <code><a href="dynamic_motifs.html">dynamic_motifs()</a></code> or <code><a href="branch_motifs.html">branch_motifs()</a></code>,
+the IUPAC-condensed strings of the extracted motifs are used as column names.</p></li>
 </ol><p>Note: This behavior differs from <code><a href="have_motif.html">have_motifs()</a></code> and <code><a href="count_motif.html">count_motifs()</a></code>, which
 return matrices with NULL column names for unnamed IUPAC string or structure
 motifs. The functions here always provide column names since they are designed

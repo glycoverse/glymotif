@@ -158,6 +158,13 @@ The naming rule for the new columns follows these priorities:
     objects or IUPAC-condensed structure strings, the IUPAC-condensed
     strings are used as column names.
 
+4.  If `motifs` is a motif spec from
+    [`dynamic_motifs()`](https://glycoverse.github.io/glymotif/reference/dynamic_motifs.md)
+    or
+    [`branch_motifs()`](https://glycoverse.github.io/glymotif/reference/branch_motifs.md),
+    the IUPAC-condensed strings of the extracted motifs are used as
+    column names.
+
 Note: This behavior differs from
 [`have_motifs()`](https://glycoverse.github.io/glymotif/reference/have_motif.md)
 and
