@@ -120,6 +120,8 @@ the motif names are used as column names.
 \item If \code{motifs} is unnamed and contains \code{glyrepr::glycan_structure()} objects
 or IUPAC-condensed structure strings, the IUPAC-condensed strings are used
 as column names.
+\item If \code{motifs} is a motif spec from \code{\link[=dynamic_motifs]{dynamic_motifs()}} or \code{\link[=branch_motifs]{branch_motifs()}},
+the IUPAC-condensed strings of the extracted motifs are used as column names.
 }
 
 Note: This behavior differs from \code{\link[=have_motifs]{have_motifs()}} and \code{\link[=count_motifs]{count_motifs()}}, which
