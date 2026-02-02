@@ -19,14 +19,17 @@ This should be passed to the \code{motifs} argument of \code{\link[=have_motifs]
 \code{\link[=count_motifs]{count_motifs()}}, \code{\link[=match_motifs]{match_motifs()}}, \code{\link[=add_motifs_lgl]{add_motifs_lgl()}}, or \code{\link[=add_motifs_int]{add_motifs_int()}}.
 }
 \details{
-When used, motifs will be extracted dynamically from the input glycans
-using \code{\link[=extract_motif]{extract_motif()}}, and motif matching will use \code{alignment = "substructure"}.
+Passing \code{dynamic_motifs()} to the \code{motifs} argument of supported functions will:
+\enumerate{
+\item Call \code{\link[=extract_motif]{extract_motif()}} on \code{glycans} to get all dynamic motifs.
+\item Perform motif matching with \code{alignments} as "substructure".
+}
 }
 \examples{
-# Use in have_motifs()
-# have_motifs(glycans, dynamic_motifs(max_size = 4))
+glycans <- c(o_glycan_core_1(), o_glycan_core_2())
+have_motifs(glycans, dynamic_motifs())
 
 }
 \seealso{
-\code{\link[=branch_motifs]{branch_motifs()}}, \code{\link[=have_motifs]{have_motifs()}}, \code{\link[=count_motifs]{count_motifs()}}
+\code{\link[=branch_motifs]{branch_motifs()}}, \code{\link[=extract_motif]{extract_motif()}}
 }

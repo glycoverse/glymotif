@@ -24,6 +24,10 @@ A \code{\link[glyrepr:glycan_structure]{glyrepr::glycan_structure()}} vector con
 Extract all unique connected subgraphs (motifs) from the input glycans up to a specified size.
 This function can be useful combined with \code{count_motifs()} or \code{glydet::quantify_motifs()}.
 If so, set \code{alignment} to "substructure" for these functions.
+
+If you want to perform dynamic motif matching in functions like \code{have_motifs()} or \code{glydet::quantify_motifs()},
+use the \code{\link[=dynamic_motifs]{dynamic_motifs()}} helper instead,
+which handles additional intricacies related to how the motifs should be matched.
 }
 \examples{
 glycan <- "Gal(b1-3)[GlcNAc(a1-6)]GalNAc(a1-"

@@ -4,19 +4,21 @@
 #' This should be passed to the `motifs` argument of [have_motifs()],
 #' [count_motifs()], [match_motifs()], [add_motifs_lgl()], or [add_motifs_int()].
 #'
-#' When used, motifs will be extracted dynamically from the input glycans
-#' using [extract_motif()], and motif matching will use `alignment = "substructure"`.
+#' @details
+#' Passing `dynamic_motifs()` to the `motifs` argument of supported functions will:
+#' 1. Call [extract_motif()] on `glycans` to get all dynamic motifs.
+#' 2. Perform motif matching with `alignments` as "substructure".
 #'
 #' @param max_size The maximum number of monosaccharides in the extracted motifs.
 #'   Default is 3. Passed to [extract_motif()].
 #'
 #' @returns A `dynamic_motifs_spec` object.
 #'
-#' @seealso [branch_motifs()], [have_motifs()], [count_motifs()]
+#' @seealso [branch_motifs()], [extract_motif()]
 #'
 #' @examples
-#' # Use in have_motifs()
-#' # have_motifs(glycans, dynamic_motifs(max_size = 4))
+#' glycans <- c(o_glycan_core_1(), o_glycan_core_2())
+#' have_motifs(glycans, dynamic_motifs())
 #'
 #' @export
 dynamic_motifs <- function(max_size = 3) {
@@ -38,19 +40,24 @@ print.dynamic_motifs_spec <- function(x, ...) {
 #' This should be passed to the `motifs` argument of [have_motifs()],
 #' [count_motifs()], [match_motifs()], [add_motifs_lgl()], or [add_motifs_int()].
 #'
-#' When used, motifs will be extracted dynamically from the input glycans
-#' using [extract_branch_motif()] with `including_core = TRUE`.
-#' Motif matching will use a custom `match_degree` where the last 4 nodes
-#' of each motif are not required to match degree exactly (to allow for
-#' attachment to the glycan core).
+#' @details
+#' Passing `branch_motifs()` to the `motifs` argument of supported functions will:
+#' 1. Call [extract_branch_motif()] with `including_core = TRUE` on `glycans` to get all branching motifs.
+#' 2. Construct a `match_degree` list based on the motifs.
+#' 3. Perform motif matching using the constructed `match_degree` list.
+#'
+#' Specifically, setting `including_core = TRUE` will include an additional
+#' "Hex(??-?)Hex(??-?)HexNAc(??-?)HexNAc(??-" suffix to each branching motif.
+#' This suffix helps differentiate branching GlcNAc and bisecting GlcNAc.
+#' Then, the `match_degree` is constructed so that the four residues in the suffix
+#' do not have to match the node degree in the motif matching process.
 #'
 #' @returns A `branch_motifs_spec` object.
 #'
-#' @seealso [dynamic_motifs()], [have_motifs()], [count_motifs()]
+#' @seealso [dynamic_motifs()], [extract_branch_motif()]
 #'
 #' @examples
-#' # Use in have_motifs()
-#' # have_motifs(glycans, branch_motifs())
+#' have_motifs(n_glycan_core(), branch_motifs())
 #'
 #' @export
 branch_motifs <- function() {
@@ -127,6 +134,7 @@ resolve_motif_spec.dynamic_motifs_spec <- function(glycans, spec, alignments, ma
   result
 }
 
+#' @export
 resolve_motif_spec.branch_motifs_spec <- function(glycans, spec, alignments, match_degree) {
   motifs <- extract_branch_motif(glycans, including_core = TRUE)
 

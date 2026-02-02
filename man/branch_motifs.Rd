@@ -15,17 +15,23 @@ This should be passed to the \code{motifs} argument of \code{\link[=have_motifs]
 \code{\link[=count_motifs]{count_motifs()}}, \code{\link[=match_motifs]{match_motifs()}}, \code{\link[=add_motifs_lgl]{add_motifs_lgl()}}, or \code{\link[=add_motifs_int]{add_motifs_int()}}.
 }
 \details{
-When used, motifs will be extracted dynamically from the input glycans
-using \code{\link[=extract_branch_motif]{extract_branch_motif()}} with \code{including_core = TRUE}.
-Motif matching will use a custom \code{match_degree} where the last 4 nodes
-of each motif are not required to match degree exactly (to allow for
-attachment to the glycan core).
+Passing \code{branch_motifs()} to the \code{motifs} argument of supported functions will:
+\enumerate{
+\item Call \code{\link[=extract_branch_motif]{extract_branch_motif()}} with \code{including_core = TRUE} on \code{glycans} to get all branching motifs.
+\item Construct a \code{match_degree} list based on the motifs.
+\item Perform motif matching using the constructed \code{match_degree} list.
+}
+
+Specifically, setting \code{including_core = TRUE} will include an additional
+"Hex(??-?)Hex(??-?)HexNAc(??-?)HexNAc(??-" suffix to each branching motif.
+This suffix helps differentiate branching GlcNAc and bisecting GlcNAc.
+Then, the \code{match_degree} is constructed so that the four residues in the suffix
+do not have to match the node degree in the motif matching process.
 }
 \examples{
-# Use in have_motifs()
-# have_motifs(glycans, branch_motifs())
+have_motifs(n_glycan_core(), branch_motifs())
 
 }
 \seealso{
-\code{\link[=dynamic_motifs]{dynamic_motifs()}}, \code{\link[=have_motifs]{have_motifs()}}, \code{\link[=count_motifs]{count_motifs()}}
+\code{\link[=dynamic_motifs]{dynamic_motifs()}}, \code{\link[=extract_branch_motif]{extract_branch_motif()}}
 }

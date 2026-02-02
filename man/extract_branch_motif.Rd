@@ -33,9 +33,10 @@ For example:
 }\if{html}{\out{</div>}}
 
 This function returns all the unique branching motifs found in the input glycans.
-It is very useful for analyzing N-glycan antennary patterns combined with \code{glydet::quantify_motifs()}.
-When used with \code{have_motif()} or related functions,
-we recommend setting \code{alignment} to "substructure".
+
+If you want to perform branching motif matching in functions like \code{have_motifs()} or \code{glydet::quantify_motifs()},
+use the \code{\link[=branch_motifs]{branch_motifs()}} helper instead,
+which handles additional intricacies related to how the motifs should be matched.
 }
 \details{
 The function works by:

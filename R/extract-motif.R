@@ -14,9 +14,10 @@
 #' ```
 #'
 #' This function returns all the unique branching motifs found in the input glycans.
-#' It is very useful for analyzing N-glycan antennary patterns combined with `glydet::quantify_motifs()`.
-#' When used with `have_motif()` or related functions,
-#' we recommend setting `alignment` to "substructure".
+#'
+#' If you want to perform branching motif matching in functions like `have_motifs()` or `glydet::quantify_motifs()`,
+#' use the [branch_motifs()] helper instead,
+#' which handles additional intricacies related to how the motifs should be matched.
 #'
 #' @param glycans One of:
 #'   - A [glyrepr::glycan_structure()] vector.
@@ -145,9 +146,14 @@ extract_branch_motif <- function(glycans, including_core = FALSE) {
 
 #' Extract All Substructures (Motifs)
 #'
+#' @description
 #' Extract all unique connected subgraphs (motifs) from the input glycans up to a specified size.
 #' This function can be useful combined with `count_motifs()` or `glydet::quantify_motifs()`.
 #' If so, set `alignment` to "substructure" for these functions.
+#'
+#' If you want to perform dynamic motif matching in functions like `have_motifs()` or `glydet::quantify_motifs()`,
+#' use the [dynamic_motifs()] helper instead,
+#' which handles additional intricacies related to how the motifs should be matched.
 #'
 #' @param glycans One of:
 #'   - A [glyrepr::glycan_structure()] vector.
