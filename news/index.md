@@ -17,6 +17,16 @@
 - Add a `match_degree` argument to all motif matching functions.
   `match_degree` provides a more delicate way to control the alignment
   of each monosaccharide residue.
+- Add
+  [`dynamic_motifs()`](https://glycoverse.github.io/glymotif/reference/dynamic_motifs.md)
+  and
+  [`branch_motifs()`](https://glycoverse.github.io/glymotif/reference/branch_motifs.md)
+  for better dynamic motif matching UX.
+
+### Minor improvements and bug fixes
+
+- Update outdated documentations about naming behavior introduced in
+  v0.12.2.
 
 ## glymotif 0.12.2
 
