@@ -4,6 +4,10 @@
 
 * Remove "exact" alignment type from `alignment` and `alignments` arguments. This alignment type was introduced in v0.12.0 but is no longer needed. Users who previously relied on "exact" alignment can use "substructure" as the closest available alternative, but note that it is less strict and may produce more matches, so results may differ.
 
+## New features
+
+* Add a `match_degree` argument to all motif matching functions. `match_degree` provides a more delicate way to control the alignment of each monosaccharide residue.
+
 # glymotif 0.12.2
 
 ## Minor improvements and fixes
