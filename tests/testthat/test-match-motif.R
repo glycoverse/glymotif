@@ -80,14 +80,14 @@ test_that("match_motifs works", {
 test_that("match_motifs accepts character vectors and parses them", {
   glycan <- glyrepr::n_glycan_core()
   motifs <- c("Man(a1-3)[Man(a1-6)]Man(b1-", "GlcNAc(b1-4)GlcNAc(?1-")
-  # Character vectors should be auto-parsed
+  # match_motifs only accepts glycan_structure objects
   result <- match_motifs(glycan, motifs)
   expect_type(result, "list")
   expect_length(result, 2)
 
-  glycan_str <- "Man(a1-3)[Man(a1-6)]Man(b1-4)GlcNAc(b1-4)GlcNAc(?1-"
+  # match_motifs only accepts glycan_structure objects, not character vectors
+  glycan_str <- parse_iupac_condensed("Man(a1-3)[Man(a1-6)]Man(b1-4)GlcNAc(b1-4)GlcNAc(?1-")
   motifs <- parse_iupac_condensed(c("Man(a1-3)[Man(a1-6)]Man(b1-", "GlcNAc(b1-4)GlcNAc(?1-"))
-  # Character glycans should be auto-parsed
   result <- match_motifs(glycan_str, motifs)
   expect_type(result, "list")
   expect_length(result, 2)

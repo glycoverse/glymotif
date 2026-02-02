@@ -105,8 +105,6 @@ resolve_motif_spec.dynamic_motifs_spec <- function(glycans, spec, alignments, ma
   )
 }
 
-#' @export
-
 #' Trim Branch Motif IUPAC String
 #
 # Removes the last 4 monosaccharides from a branch motif IUPAC string.

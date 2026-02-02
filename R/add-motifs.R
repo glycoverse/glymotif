@@ -153,6 +153,11 @@ add_motifs_lgl.data.frame <- function(x, motifs, alignments = NULL, ignore_linka
       cli::cli_abort("Internal error: glycans required to resolve motif spec for column naming.")
     }
     resolved <- resolve_motif_spec(glycans, motifs, NULL, NULL)
+    # Use names if available (branch_motifs sets trimmed names), otherwise fall back to full IUPAC
+    resolved_names <- names(resolved$motifs)
+    if (!is.null(resolved_names)) {
+      return(resolved_names)
+    }
     return(as.character(resolved$motifs))
   }
   
