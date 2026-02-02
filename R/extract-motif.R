@@ -44,6 +44,7 @@
 #'
 #' @export
 extract_branch_motif <- function(glycans, including_core = FALSE) {
+  checkmate::assert_flag(including_core)
   # 1. Handle input types and deduplicate
   glycans <- ensure_glycans_are_structures(glycans)
   glycans <- unique(glycans)
