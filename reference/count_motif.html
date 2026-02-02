@@ -174,17 +174,13 @@ substituents, and implementation, see <code><a href="have_motif.html">have_motif
     </div>
     <div class="section level2">
     <h2 id="about-names">About Names<a class="anchor" aria-label="anchor" href="#about-names"></a></h2>
-    <p><code><a href="have_motif.html">have_motif()</a></code> and <code>count_motif()</code> return a vector with no names.
-It is easy to trace the names back to the original glycans.</p>
+    <p><code><a href="have_motif.html">have_motif()</a></code> and <code>count_motif()</code> perserve names from the input <code>glycans</code> vector.</p>
 <p><code><a href="have_motif.html">have_motifs()</a></code> and <code>count_motifs()</code> return a matrix with both row and column names.
-The row names are the glycan names, and the column names are the motif names.
-The names are decided according to the following rules:</p><ol><li><p>If <code>glycans</code> or <code>motifs</code> is a <code><a href="https://glycoverse.github.io/glyrepr/reference/glycan_structure.html" class="external-link">glyrepr::glycan_structure()</a></code> object,
-the names are the IUPAC-condensed structure strings.
-(Sadly due to the constrains of the <code>vctrs</code> package <code><a href="https://glycoverse.github.io/glyrepr/reference/glycan_structure.html" class="external-link">glyrepr::glycan_structure()</a></code> is built on,
-a <code><a href="https://glycoverse.github.io/glyrepr/reference/glycan_structure.html" class="external-link">glyrepr::glycan_structure()</a></code> vector cannot have names.)</p></li>
-<li><p>If <code>glycans</code> or <code>motifs</code> is a character vector, either IUPAC-condensed structure strings or
-motif names, it will use the names of the character vector if exists,
-otherwise use the character vector itself as the names.</p></li>
+The row names are the glycan names, and the column names are the motif names.</p>
+<p>Glycan names follow the same rule as <code><a href="have_motif.html">have_motif()</a></code> and <code>count_motif()</code>.</p>
+<p>Motif names have the following rules:</p><ol><li><p>If <code>motifs</code> have names, use the names.</p></li>
+<li><p>If <code>motifs</code> don't have names and are known motif names in the database (e.g. "N-glycan core"), use them.</p></li>
+<li><p>Otherwise, no colnames.</p></li>
 </ol></div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>

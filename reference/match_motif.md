@@ -172,6 +172,16 @@ Thus, matching the motif "Man(a1-3)Man(b1-4)" to this glycan yields
 corresponds to the first vertex in the glycan, and the second motif
 vertex (the b1-4 Man) corresponds to the third vertex in the glycan.
 
+## About Names
+
+`match_motif()` perserve names from the input `glycans` vector.\`
+
+For `match_motifs()`, the outermost list is named by motifs, and the
+inner lists are named by glycans, following the same rules as in
+[`have_motifs()`](https://glycoverse.github.io/glymotif/reference/have_motif.md)
+and
+[`count_motifs()`](https://glycoverse.github.io/glymotif/reference/count_motif.md).
+
 ## See also
 
 [`have_motif()`](https://glycoverse.github.io/glymotif/reference/have_motif.md),

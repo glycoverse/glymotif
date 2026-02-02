@@ -174,27 +174,25 @@ alignment, substituents, and implementation, see
 ## About Names
 
 [`have_motif()`](https://glycoverse.github.io/glymotif/reference/have_motif.md)
-and `count_motif()` return a vector with no names. It is easy to trace
-the names back to the original glycans.
+and `count_motif()` perserve names from the input `glycans` vector.
 
 [`have_motifs()`](https://glycoverse.github.io/glymotif/reference/have_motif.md)
 and `count_motifs()` return a matrix with both row and column names. The
 row names are the glycan names, and the column names are the motif
-names. The names are decided according to the following rules:
+names.
 
-1.  If `glycans` or `motifs` is a
-    [`glyrepr::glycan_structure()`](https://glycoverse.github.io/glyrepr/reference/glycan_structure.html)
-    object, the names are the IUPAC-condensed structure strings. (Sadly
-    due to the constrains of the `vctrs` package
-    [`glyrepr::glycan_structure()`](https://glycoverse.github.io/glyrepr/reference/glycan_structure.html)
-    is built on, a
-    [`glyrepr::glycan_structure()`](https://glycoverse.github.io/glyrepr/reference/glycan_structure.html)
-    vector cannot have names.)
+Glycan names follow the same rule as
+[`have_motif()`](https://glycoverse.github.io/glymotif/reference/have_motif.md)
+and `count_motif()`.
 
-2.  If `glycans` or `motifs` is a character vector, either
-    IUPAC-condensed structure strings or motif names, it will use the
-    names of the character vector if exists, otherwise use the character
-    vector itself as the names.
+Motif names have the following rules:
+
+1.  If `motifs` have names, use the names.
+
+2.  If `motifs` don't have names and are known motif names in the
+    database (e.g. "N-glycan core"), use them.
+
+3.  Otherwise, no colnames.
 
 ## See also
 
