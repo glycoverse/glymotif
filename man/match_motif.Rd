@@ -122,6 +122,14 @@ the first vertex in the glycan, and the second motif vertex (the b1-4 Man)
 corresponds to the third vertex in the glycan.
 }
 
+\section{About Names}{
+\code{match_motif()} perserve names from the input \code{glycans} vector.`
+
+For \code{match_motifs()}, the outermost list is named by motifs,
+and the inner lists are named by glycans,
+following the same rules as in \code{have_motifs()} and \code{count_motifs()}.
+}
+
 \examples{
 library(glyparse)
 library(glyrepr)

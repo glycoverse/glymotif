@@ -129,20 +129,18 @@ For other details about the handling of monosaccharide, linkages, alignment,
 substituents, and implementation, see \code{\link[=have_motif]{have_motif()}}.
 }
 \section{About Names}{
-\code{have_motif()} and \code{count_motif()} return a vector with no names.
-It is easy to trace the names back to the original glycans.
+\code{have_motif()} and \code{count_motif()} perserve names from the input \code{glycans} vector.
 
 \code{have_motifs()} and \code{count_motifs()} return a matrix with both row and column names.
 The row names are the glycan names, and the column names are the motif names.
-The names are decided according to the following rules:
+
+Glycan names follow the same rule as \code{have_motif()} and \code{count_motif()}.
+
+Motif names have the following rules:
 \enumerate{
-\item If \code{glycans} or \code{motifs} is a \code{glyrepr::glycan_structure()} object,
-the names are the IUPAC-condensed structure strings.
-(Sadly due to the constrains of the \code{vctrs} package \code{glyrepr::glycan_structure()} is built on,
-a \code{glyrepr::glycan_structure()} vector cannot have names.)
-\item If \code{glycans} or \code{motifs} is a character vector, either IUPAC-condensed structure strings or
-motif names, it will use the names of the character vector if exists,
-otherwise use the character vector itself as the names.
+\item If \code{motifs} have names, use the names.
+\item If \code{motifs} don't have names and are known motif names in the database (e.g. "N-glycan core"), use them.
+\item Otherwise, no colnames.
 }
 }
 

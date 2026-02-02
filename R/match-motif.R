@@ -37,6 +37,14 @@
 #' the first vertex in the glycan, and the second motif vertex (the b1-4 Man)
 #' corresponds to the third vertex in the glycan.
 #'
+#' # About Names
+#'
+#' `match_motif()` perserve names from the input `glycans` vector.`
+#'
+#' For `match_motifs()`, the outermost list is named by motifs,
+#' and the inner lists are named by glycans,
+#' following the same rules as in `have_motifs()` and `count_motifs()`.
+#'
 #' @inheritParams have_motif
 #'
 #' @returns
