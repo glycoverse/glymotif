@@ -805,13 +805,21 @@ test_that("have_motifs returns IUPAC strings as colnames for dynamic_motifs", {
   expect_true(all(nchar(colnames(result)) > 0))
 })
 
-test_that("have_motifs returns IUPAC strings as colnames for branch_motifs", {
+test_that("have_motifs returns trimmed IUPAC strings as colnames for branch_motifs", {
   glycans <- glyrepr::as_glycan_structure(
     "Neu5Ac(a2-3)Gal(b1-4)GlcNAc(b1-2)Man(a1-3)[Man(a1-6)]Man(b1-4)GlcNAc(a1-4)GlcNAc(b1-"
   )
   result <- have_motifs(glycans, branch_motifs())
   
+  # Column names should be present
   expect_type(colnames(result), "character")
   expect_equal(length(colnames(result)), ncol(result))
   expect_true(all(nchar(colnames(result)) > 0))
+  
+  # Column names should NOT contain the core suffix
+  expect_false(any(grepl(")Man(??-?)Man(??-?)GlcNAc(??-?)GlcNAc", colnames(result), fixed = TRUE)))
+  expect_false(any(grepl(")Hex(??-?)Hex(??-?)HexNAc(??-?)HexNAc", colnames(result), fixed = TRUE)))
+  
+  # Column names should end with the branch root linkage pattern
+  expect_true(all(grepl("\\([a-z]1-.$", colnames(result))))
 })

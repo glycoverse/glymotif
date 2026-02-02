@@ -471,13 +471,21 @@ test_that("match_motifs returns IUPAC strings as outer list names for dynamic_mo
   expect_true(all(nchar(names(result)) > 0))
 })
 
-test_that("match_motifs returns IUPAC strings as outer list names for branch_motifs", {
+test_that("match_motifs returns trimmed IUPAC strings as outer list names for branch_motifs", {
   glycans <- glyrepr::as_glycan_structure(
     "Neu5Ac(a2-3)Gal(b1-4)GlcNAc(b1-2)Man(a1-3)[Man(a1-6)]Man(b1-4)GlcNAc(a1-4)GlcNAc(b1-"
   )
   result <- match_motifs(glycans, branch_motifs())
   
+  # Names should be present
   expect_type(names(result), "character")
   expect_equal(length(names(result)), length(result))
   expect_true(all(nchar(names(result)) > 0))
+  
+  # Names should NOT contain the core suffix
+  expect_false(any(grepl(")Man(??-?)Man(??-?)GlcNAc(??-?)GlcNAc", names(result), fixed = TRUE)))
+  expect_false(any(grepl(")Hex(??-?)Hex(??-?)HexNAc(??-?)HexNAc", names(result), fixed = TRUE)))
+  
+  # Names should end with the branch root linkage pattern
+  expect_true(all(grepl("\\([a-z]1-.$", names(result))))
 })
