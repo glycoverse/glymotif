@@ -13,7 +13,7 @@ prepare_motif_args <- function(
   # Handle motif specifications (dynamic_motifs_spec, branch_motifs_spec)
   if (inherits(motifs, "dynamic_motifs_spec") || inherits(motifs, "branch_motifs_spec")) {
     glycans <- ensure_glycans_are_structures(glycans, call = call)
-    resolved <- resolve_motif_spec(glycans, motifs, alignments, match_degree, strict_sub)
+    resolved <- resolve_motif_spec(glycans, motifs, alignments, match_degree, strict_sub, ignore_linkages)
 
     # Now prepare args normally with resolved values
     motifs <- resolved$motifs

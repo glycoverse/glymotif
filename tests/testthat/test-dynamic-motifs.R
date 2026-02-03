@@ -85,3 +85,22 @@ test_that("strict_sub is locked for branch_motifs", {
     "Cannot specify.*strict_sub"
   )
 })
+
+test_that("ignore_linkages is locked for dynamic_motifs", {
+  glycans <- c(glyrepr::o_glycan_core_1(), glyrepr::o_glycan_core_2())
+  expect_error(
+    have_motifs(glycans, dynamic_motifs(), ignore_linkages = TRUE),
+    "Cannot specify.*ignore_linkages"
+  )
+})
+
+test_that("ignore_linkages is locked for branch_motifs", {
+  glycans <- c(
+    "GlcNAc(b1-2)Man(a1-3)[GlcNAc(b1-2)Man(a1-6)]Man(b1-4)GlcNAc(b1-4)GlcNAc(b1-",
+    "Gal(b1-4)GlcNAc(b1-2)Man(a1-3)[Man(a1-6)]Man(b1-4)GlcNAc(b1-4)GlcNAc(b1-"
+  )
+  expect_error(
+    have_motifs(glycans, branch_motifs(), ignore_linkages = TRUE),
+    "Cannot specify.*ignore_linkages"
+  )
+})

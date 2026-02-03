@@ -95,10 +95,11 @@ print.branch_motifs_spec <- function(x, ...) {
 #' @param alignments User-provided alignments (should be NULL).
 #' @param match_degree User-provided match_degree (should be NULL).
 #' @param strict_sub User-provided strict_sub (should be TRUE).
+#' @param ignore_linkages User-provided ignore_linkages (should be FALSE).
 #'
 #' @returns A list with `motifs`, `alignments`, and `match_degree`.
 #' @noRd
-resolve_motif_spec <- function(glycans, spec, alignments, match_degree, strict_sub = TRUE) {
+resolve_motif_spec <- function(glycans, spec, alignments, match_degree, strict_sub = TRUE, ignore_linkages = FALSE) {
   if (!is.null(alignments)) {
     cli::cli_abort(c(
       "Cannot specify {.arg alignments} when using {.fn dynamic_motifs} or {.fn branch_motifs}.",
@@ -117,12 +118,18 @@ resolve_motif_spec <- function(glycans, spec, alignments, match_degree, strict_s
       "i" = "Strict substituent matching is controlled automatically by the algorithm."
     ))
   }
+  if (ignore_linkages) {
+    cli::cli_abort(c(
+      "Cannot specify {.arg ignore_linkages} when using {.fn dynamic_motifs} or {.fn branch_motifs}.",
+      "i" = "Linkage matching is controlled automatically by the algorithm."
+    ))
+  }
 
   UseMethod("resolve_motif_spec", spec)
 }
 
 #' @export
-resolve_motif_spec.dynamic_motifs_spec <- function(glycans, spec, alignments, match_degree, strict_sub = TRUE) {
+resolve_motif_spec.dynamic_motifs_spec <- function(glycans, spec, alignments, match_degree, strict_sub = TRUE, ignore_linkages = FALSE) {
   motifs <- extract_motif(glycans, max_size = spec$max_size)
 
   list(
@@ -155,7 +162,7 @@ resolve_motif_spec.dynamic_motifs_spec <- function(glycans, spec, alignments, ma
 }
 
 #' @export
-resolve_motif_spec.branch_motifs_spec <- function(glycans, spec, alignments, match_degree, strict_sub = TRUE) {
+resolve_motif_spec.branch_motifs_spec <- function(glycans, spec, alignments, match_degree, strict_sub = TRUE, ignore_linkages = FALSE) {
   motifs <- extract_branch_motif(glycans, including_core = TRUE)
 
   # Construct match_degree: for each motif, last 4 nodes are FALSE, others TRUE
