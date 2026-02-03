@@ -2,13 +2,14 @@
 
 ## Breaking changes
 
-* `all_motifs()` is renamed to `db_motifs()`.
-* Remove "exact" alignment type from `alignment` and `alignments` arguments. This alignment type was introduced in v0.12.0 but is no longer needed. Users who previously relied on "exact" alignment can use "substructure" as the closest available alternative, but note that it is less strict and may produce more matches, so results may differ.
+* `all_motifs()` is renamed to `db_motifs()`. (#11)
+* Remove "exact" alignment type from `alignment` and `alignments` arguments. This alignment type was introduced in v0.12.0 but is no longer needed. Users who previously relied on "exact" alignment can use "substructure" as the closest available alternative, but note that it is less strict and may produce more matches, so results may differ. (#9)
 
 ## New features
 
-* Add a `match_degree` argument to all motif matching functions. `match_degree` provides a more delicate way to control the alignment of each monosaccharide residue.
-* Add `dynamic_motifs()` and `branch_motifs()` for better dynamic motif matching UX.
+* Add a `match_degree` argument to all motif matching functions. `match_degree` provides a more delicate way to control the alignment of each monosaccharide residue. (#10)
+* Add `dynamic_motifs()` and `branch_motifs()` for better dynamic motif matching UX. (#14)
+* Add a `including_core` parameter to `extract_branch_motif()`. (#13)
 
 ## Minor improvements and bug fixes
 
