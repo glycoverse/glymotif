@@ -94,10 +94,11 @@ print.branch_motifs_spec <- function(x, ...) {
 #' @param spec A `dynamic_motifs_spec` or `branch_motifs_spec` object.
 #' @param alignments User-provided alignments (should be NULL).
 #' @param match_degree User-provided match_degree (should be NULL).
+#' @param strict_sub User-provided strict_sub (should be TRUE).
 #'
 #' @returns A list with `motifs`, `alignments`, and `match_degree`.
 #' @noRd
-resolve_motif_spec <- function(glycans, spec, alignments, match_degree) {
+resolve_motif_spec <- function(glycans, spec, alignments, match_degree, strict_sub = TRUE) {
   if (!is.null(alignments)) {
     cli::cli_abort(c(
       "Cannot specify {.arg alignments} when using {.fn dynamic_motifs} or {.fn branch_motifs}.",
@@ -110,12 +111,18 @@ resolve_motif_spec <- function(glycans, spec, alignments, match_degree) {
       "i" = "Match degree is controlled automatically by the algorithm."
     ))
   }
+  if (!strict_sub) {
+    cli::cli_abort(c(
+      "Cannot specify {.arg strict_sub} when using {.fn dynamic_motifs} or {.fn branch_motifs}.",
+      "i" = "Strict substituent matching is controlled automatically by the algorithm."
+    ))
+  }
 
   UseMethod("resolve_motif_spec", spec)
 }
 
 #' @export
-resolve_motif_spec.dynamic_motifs_spec <- function(glycans, spec, alignments, match_degree) {
+resolve_motif_spec.dynamic_motifs_spec <- function(glycans, spec, alignments, match_degree, strict_sub = TRUE) {
   motifs <- extract_motif(glycans, max_size = spec$max_size)
 
   list(
@@ -148,7 +155,7 @@ resolve_motif_spec.dynamic_motifs_spec <- function(glycans, spec, alignments, ma
 }
 
 #' @export
-resolve_motif_spec.branch_motifs_spec <- function(glycans, spec, alignments, match_degree) {
+resolve_motif_spec.branch_motifs_spec <- function(glycans, spec, alignments, match_degree, strict_sub = TRUE) {
   motifs <- extract_branch_motif(glycans, including_core = TRUE)
 
   # Construct match_degree: for each motif, last 4 nodes are FALSE, others TRUE
