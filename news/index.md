@@ -6,22 +6,29 @@
 
 - `all_motifs()` is renamed to
   [`db_motifs()`](https://glycoverse.github.io/glymotif/reference/db_motifs.md).
+  ([\#11](https://github.com/glycoverse/glymotif/issues/11))
 - Remove “exact” alignment type from `alignment` and `alignments`
   arguments. This alignment type was introduced in v0.12.0 but is no
   longer needed. Users who previously relied on “exact” alignment can
   use “substructure” as the closest available alternative, but note that
   it is less strict and may produce more matches, so results may differ.
+  ([\#9](https://github.com/glycoverse/glymotif/issues/9))
 
 ### New features
 
 - Add a `match_degree` argument to all motif matching functions.
   `match_degree` provides a more delicate way to control the alignment
   of each monosaccharide residue.
+  ([\#10](https://github.com/glycoverse/glymotif/issues/10))
 - Add
   [`dynamic_motifs()`](https://glycoverse.github.io/glymotif/reference/dynamic_motifs.md)
   and
   [`branch_motifs()`](https://glycoverse.github.io/glymotif/reference/branch_motifs.md)
   for better dynamic motif matching UX.
+  ([\#14](https://github.com/glycoverse/glymotif/issues/14))
+- Add a `including_core` parameter to
+  [`extract_branch_motif()`](https://glycoverse.github.io/glymotif/reference/extract_branch_motif.md).
+  ([\#13](https://github.com/glycoverse/glymotif/issues/13))
 
 ### Minor improvements and bug fixes
 

@@ -42,13 +42,14 @@
 <div class="section level3">
 <h3 id="breaking-changes-development-version">Breaking changes<a class="anchor" aria-label="anchor" href="#breaking-changes-development-version"></a></h3>
 <ul><li>
-<code>all_motifs()</code> is renamed to <code><a href="../reference/db_motifs.html">db_motifs()</a></code>.</li>
-<li>Remove “exact” alignment type from <code>alignment</code> and <code>alignments</code> arguments. This alignment type was introduced in v0.12.0 but is no longer needed. Users who previously relied on “exact” alignment can use “substructure” as the closest available alternative, but note that it is less strict and may produce more matches, so results may differ.</li>
+<code>all_motifs()</code> is renamed to <code><a href="../reference/db_motifs.html">db_motifs()</a></code>. (<a href="https://github.com/glycoverse/glymotif/issues/11" class="external-link">#11</a>)</li>
+<li>Remove “exact” alignment type from <code>alignment</code> and <code>alignments</code> arguments. This alignment type was introduced in v0.12.0 but is no longer needed. Users who previously relied on “exact” alignment can use “substructure” as the closest available alternative, but note that it is less strict and may produce more matches, so results may differ. (<a href="https://github.com/glycoverse/glymotif/issues/9" class="external-link">#9</a>)</li>
 </ul></div>
 <div class="section level3">
 <h3 id="new-features-development-version">New features<a class="anchor" aria-label="anchor" href="#new-features-development-version"></a></h3>
-<ul><li>Add a <code>match_degree</code> argument to all motif matching functions. <code>match_degree</code> provides a more delicate way to control the alignment of each monosaccharide residue.</li>
-<li>Add <code><a href="../reference/dynamic_motifs.html">dynamic_motifs()</a></code> and <code><a href="../reference/branch_motifs.html">branch_motifs()</a></code> for better dynamic motif matching UX.</li>
+<ul><li>Add a <code>match_degree</code> argument to all motif matching functions. <code>match_degree</code> provides a more delicate way to control the alignment of each monosaccharide residue. (<a href="https://github.com/glycoverse/glymotif/issues/10" class="external-link">#10</a>)</li>
+<li>Add <code><a href="../reference/dynamic_motifs.html">dynamic_motifs()</a></code> and <code><a href="../reference/branch_motifs.html">branch_motifs()</a></code> for better dynamic motif matching UX. (<a href="https://github.com/glycoverse/glymotif/issues/14" class="external-link">#14</a>)</li>
+<li>Add a <code>including_core</code> parameter to <code><a href="../reference/extract_branch_motif.html">extract_branch_motif()</a></code>. (<a href="https://github.com/glycoverse/glymotif/issues/13" class="external-link">#13</a>)</li>
 </ul></div>
 <div class="section level3">
 <h3 id="minor-improvements-and-bug-fixes-development-version">Minor improvements and bug fixes<a class="anchor" aria-label="anchor" href="#minor-improvements-and-bug-fixes-development-version"></a></h3>
