@@ -8,11 +8,8 @@
   [`db_motifs()`](https://glycoverse.github.io/glymotif/reference/db_motifs.md).
   ([\#11](https://github.com/glycoverse/glymotif/issues/11))
 - Remove “exact” alignment type from `alignment` and `alignments`
-  arguments. This alignment type was introduced in v0.12.0 but is no
-  longer needed. Users who previously relied on “exact” alignment can
-  use “substructure” as the closest available alternative, but note that
-  it is less strict and may produce more matches, so results may differ.
-  ([\#9](https://github.com/glycoverse/glymotif/issues/9))
+  arguments. This alignment type was introduced in v0.12.0 but is
+  problematic. ([\#9](https://github.com/glycoverse/glymotif/issues/9))
 
 ### New features
 
