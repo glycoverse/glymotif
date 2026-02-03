@@ -40,6 +40,12 @@ GlcNAc. Then, the `match_degree` is constructed so that the four
 residues in the suffix do not have to match the node degree in the motif
 matching process.
 
+Therefore, `have_motifs(glycans, branch_motifs())` doesn't equal to
+`have_motifs(glycans, extract_branch_motif(glycans))`. Never use the
+results from
+[`extract_branch_motif()`](https://glycoverse.github.io/glymotif/reference/extract_branch_motif.md)
+directly in these functions.
+
 ## See also
 
 [`dynamic_motifs()`](https://glycoverse.github.io/glymotif/reference/dynamic_motifs.md),

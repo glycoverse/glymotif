@@ -70,7 +70,10 @@ Default is 3. Passed to <code><a href="extract_motif.html">extract_motif()</a></
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>Passing <code>dynamic_motifs()</code> to the <code>motifs</code> argument of supported functions will:</p><ol><li><p>Call <code><a href="extract_motif.html">extract_motif()</a></code> on <code>glycans</code> to get all dynamic motifs.</p></li>
 <li><p>Perform motif matching with <code>alignments</code> as "substructure".</p></li>
-</ol></div>
+</ol><p>In fact, <code>have_motifs(glycans, dynamic_motifs())</code> is just a syntatic sugar of
+<code>have_motifs(glycans, extract_motif(glycans))</code>.
+This function exists to align with the <code><a href="db_motifs.html">db_motifs()</a></code> and <code><a href="branch_motifs.html">branch_motifs()</a></code> API.</p>
+    </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
     <div class="dont-index"><p><code><a href="branch_motifs.html">branch_motifs()</a></code>, <code><a href="extract_motif.html">extract_motif()</a></code></p></div>

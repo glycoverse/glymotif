@@ -38,6 +38,14 @@ functions will:
 
 2.  Perform motif matching with `alignments` as "substructure".
 
+In fact, `have_motifs(glycans, dynamic_motifs())` is just a syntatic
+sugar of `have_motifs(glycans, extract_motif(glycans))`. This function
+exists to align with the
+[`db_motifs()`](https://glycoverse.github.io/glymotif/reference/db_motifs.md)
+and
+[`branch_motifs()`](https://glycoverse.github.io/glymotif/reference/branch_motifs.md)
+API.
+
 ## See also
 
 [`branch_motifs()`](https://glycoverse.github.io/glymotif/reference/branch_motifs.md),
