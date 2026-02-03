@@ -111,12 +111,13 @@ match_motifs <- function(glycans, motifs, alignments = NULL, ignore_linkages = F
 
   # Store input names before processing
   glycan_names <- names(glycans)
+  is_branch_spec <- inherits(motifs, "branch_motifs_spec")
 
   params <- prepare_have_motifs_args(glycans, motifs, alignments, ignore_linkages, strict_sub, match_degree)
 
   # Validate resolved motifs (must be glycan_structure, not raw strings)
   .assert_glycan_structure(params$motifs, "motifs")
-  
+
   # Use names from resolved motifs if available (e.g., from dynamic_motifs/branch_motifs)
   # Otherwise fall back to prepare_motif_names on the original input
   if (!is.null(names(params$motifs))) {
@@ -124,9 +125,16 @@ match_motifs <- function(glycans, motifs, alignments = NULL, ignore_linkages = F
   } else {
     motif_names <- prepare_motif_names(motifs)
   }
-  
-  rlang::exec("match_motifs_", !!!params, glycan_names = glycan_names, motif_names = motif_names)
+
+  results <- rlang::exec("match_motifs_", !!!params, glycan_names = glycan_names, motif_names = motif_names)
+
+  if (is_branch_spec && is.list(params$match_degree)) {
+    results <- .trim_result_for_branch_motifs(results)
+  }
+
+  results
 }
+
 .assert_glycan_structure <- function(x, arg_name) {
   if (!glyrepr::is_glycan_structure(x)) {
     cli::cli_abort(c(
@@ -134,6 +142,14 @@ match_motifs <- function(glycans, motifs, alignments = NULL, ignore_linkages = F
       "i" = "Use `glyparse::auto_parse()` to parse glycan structure strings into `glyrepr_structure`."
     ))
   }
+}
+
+.trim_result_for_branch_motifs <- function(res) {
+  purrr::map(res, function(motif_res) {
+    purrr::map(motif_res, function(glycan_res) {
+      purrr::map(glycan_res, ~ .x[1: (length(.x) - 4)])
+    })
+  })
 }
 
 #' Internal verison of `match_motif()`
@@ -189,12 +205,12 @@ match_motifs_ <- function(glycans, motifs, alignments, glycan_names, motif_names
       match_degree = match_degree_list[[.y]]
     )
   )
-  
+
   # Name the outer list (motifs) if motif_names provided
   if (!is.null(motif_names)) {
     names(results) <- motif_names
   }
-  
+
   # Name the inner lists (glycans) if glycan_names provided
   if (!is.null(glycan_names)) {
     results <- purrr::map(results, ~ {
@@ -202,9 +218,10 @@ match_motifs_ <- function(glycans, motifs, alignments, glycan_names, motif_names
       .x
     })
   }
-  
+
   results
 }
+
 .match_motif_single <- function(glycan_graph, motif_graph, alignment, ignore_linkages = FALSE, strict_sub = TRUE, match_degree = NULL) {
   c_graphs <- colorize_graphs(glycan_graph, motif_graph)
   glycan_graph <- c_graphs$glycan

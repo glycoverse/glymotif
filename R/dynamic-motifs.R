@@ -9,6 +9,10 @@
 #' 1. Call [extract_motif()] on `glycans` to get all dynamic motifs.
 #' 2. Perform motif matching with `alignments` as "substructure".
 #'
+#' In fact, `have_motifs(glycans, dynamic_motifs())` is just a syntatic sugar of
+#' `have_motifs(glycans, extract_motif(glycans))`.
+#' This function exists to align with the `db_motifs()` and `branch_motifs()` API.
+#'
 #' @param max_size The maximum number of monosaccharides in the extracted motifs.
 #'   Default is 3. Passed to [extract_motif()].
 #'
@@ -52,6 +56,10 @@ print.dynamic_motifs_spec <- function(x, ...) {
 #' This suffix helps differentiate branching GlcNAc and bisecting GlcNAc.
 #' Then, the `match_degree` is constructed so that the four residues in the suffix
 #' do not have to match the node degree in the motif matching process.
+#'
+#' Therefore, `have_motifs(glycans, branch_motifs())` doesn't equal to
+#' `have_motifs(glycans, extract_branch_motif(glycans))`.
+#' Never use the results from `extract_branch_motif()` directly in these functions.
 #'
 #' @returns A `branch_motifs_spec` object.
 #'
