@@ -27,6 +27,10 @@ Specifically, setting \code{including_core = TRUE} will include an additional
 This suffix helps differentiate branching GlcNAc and bisecting GlcNAc.
 Then, the \code{match_degree} is constructed so that the four residues in the suffix
 do not have to match the node degree in the motif matching process.
+
+Therefore, \code{have_motifs(glycans, branch_motifs())} doesn't equal to
+\code{have_motifs(glycans, extract_branch_motif(glycans))}.
+Never use the results from \code{extract_branch_motif()} directly in these functions.
 }
 \examples{
 glycans <- c(

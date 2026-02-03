@@ -24,6 +24,10 @@ Passing \code{dynamic_motifs()} to the \code{motifs} argument of supported funct
 \item Call \code{\link[=extract_motif]{extract_motif()}} on \code{glycans} to get all dynamic motifs.
 \item Perform motif matching with \code{alignments} as "substructure".
 }
+
+In fact, \code{have_motifs(glycans, dynamic_motifs())} is just a syntatic sugar of
+\code{have_motifs(glycans, extract_motif(glycans))}.
+This function exists to align with the \code{db_motifs()} and \code{branch_motifs()} API.
 }
 \examples{
 library(glyrepr)
