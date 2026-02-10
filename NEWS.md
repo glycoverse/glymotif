@@ -1,4 +1,8 @@
-# glymotif (development version)
+# glymotif 0.13.1
+
+## Minor improvements and bug fixes
+
+* Update dependency strategy to use the r-universe repo.
 
 # glymotif 0.13.0
 
