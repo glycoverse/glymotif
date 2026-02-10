@@ -33,23 +33,25 @@ understanding glycan-mediated biological processes.
 ## Installation
 
 You can install the latest release of glymotif from
-[r-universe](https://glycoverse.r-universe.dev/glymotif):
+[r-universe](https://glycoverse.r-universe.dev/glymotif)
+(**recommended**):
 
 ``` r
-install.packages('glymotif', repos = c('https://glycoverse.r-universe.dev', 'https://cloud.r-project.org'))
+# install.packages("pak")
+pak::repo_add(glycoverse = "https://glycoverse.r-universe.dev")
+pak::pkg_install("glymotif")
 ```
 
 Or from [GitHub](https://github.com/glycoverse/glymotif):
 
 ``` r
-# install.packages("remotes")
-remotes::install_github("glycoverse/glymotif@*release")
+pak::pkg_install("glycoverse/glymotif@*release")
 ```
 
-Or install the development version:
+Or install the development version (NOT recommended):
 
 ``` r
-remotes::install_github("glycoverse/glymotif")
+pak::pkg_install("glycoverse/glymotif")
 ```
 
 ## Documentation
