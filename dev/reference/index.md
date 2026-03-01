@@ -1,0 +1,32 @@
+# Package index
+
+## All functions
+
+- [`add_motifs_int()`](https://glycoverse.github.io/glymotif/dev/reference/add_motifs_int.md)
+  [`add_motifs_lgl()`](https://glycoverse.github.io/glymotif/dev/reference/add_motifs_int.md)
+  : Add Motif Annotations
+- [`branch_motifs()`](https://glycoverse.github.io/glymotif/dev/reference/branch_motifs.md)
+  : Branch Motifs Specification
+- [`count_motif()`](https://glycoverse.github.io/glymotif/dev/reference/count_motif.md)
+  [`count_motifs()`](https://glycoverse.github.io/glymotif/dev/reference/count_motif.md)
+  : Count How Many Times Glycans have the Given Motif(s)
+- [`db_motifs()`](https://glycoverse.github.io/glymotif/dev/reference/db_motifs.md)
+  : Get All Motifs from the Database
+- [`dynamic_motifs()`](https://glycoverse.github.io/glymotif/dev/reference/dynamic_motifs.md)
+  : Dynamic Motifs Specification
+- [`extract_branch_motif()`](https://glycoverse.github.io/glymotif/dev/reference/extract_branch_motif.md)
+  : Extract Branch Motifs
+- [`extract_motif()`](https://glycoverse.github.io/glymotif/dev/reference/extract_motif.md)
+  : Extract All Substructures (Motifs)
+- [`get_motif_structure()`](https://glycoverse.github.io/glymotif/dev/reference/get_motif_structure.md)
+  [`get_motif_alignment()`](https://glycoverse.github.io/glymotif/dev/reference/get_motif_structure.md)
+  [`get_motif_aglycon()`](https://glycoverse.github.io/glymotif/dev/reference/get_motif_structure.md)
+  : Get the Structures, Alignments, or Aglycons of Known Motifs
+- [`have_motif()`](https://glycoverse.github.io/glymotif/dev/reference/have_motif.md)
+  [`have_motifs()`](https://glycoverse.github.io/glymotif/dev/reference/have_motif.md)
+  : Check if the Glycans have the Given Motif(s)
+- [`is_known_motif()`](https://glycoverse.github.io/glymotif/dev/reference/is_known_motif.md)
+  : Check if a Motif is Known
+- [`match_motif()`](https://glycoverse.github.io/glymotif/dev/reference/match_motif.md)
+  [`match_motifs()`](https://glycoverse.github.io/glymotif/dev/reference/match_motif.md)
+  : Match Motif(s) in Glycans
