@@ -2,3 +2,5 @@ url: https://glycoverse.github.io/glymotif/
 template:
   bootstrap: 5
 
+development:
+  mode: auto
