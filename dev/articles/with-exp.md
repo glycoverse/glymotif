@@ -100,16 +100,16 @@ get_var_info(exp)
 #> # A tibble: 3,979 × 6
 #>    variable       protein glycan_composition glycan_structure protein_site gene 
 #>    <chr>          <chr>   <comp>             <struct>                <int> <chr>
-#>  1 P08185-N176-H… P08185  Hex(5)HexNAc(4)Ne… NeuAc(??-?)Hex(…          176 SERP…
-#>  2 P04196-N344-H… P04196  Hex(5)HexNAc(4)Ne… NeuAc(??-?)Hex(…          344 HRG  
-#>  3 P04196-N344-H… P04196  Hex(5)HexNAc(4)    Hex(??-?)HexNAc…          344 HRG  
-#>  4 P04196-N344-H… P04196  Hex(5)HexNAc(4)Ne… NeuAc(??-?)Hex(…          344 HRG  
-#>  5 P10909-N291-H… P10909  Hex(6)HexNAc(5)    Hex(??-?)HexNAc…          291 CLU  
-#>  6 P04196-N344-H… P04196  Hex(5)HexNAc(4)Ne… NeuAc(??-?)Hex(…          344 HRG  
-#>  7 P04196-N345-H… P04196  Hex(5)HexNAc(4)    Hex(??-?)HexNAc…          345 HRG  
-#>  8 P04196-N344-H… P04196  Hex(5)HexNAc(4)dH… dHex(??-?)Hex(?…          344 HRG  
-#>  9 P04196-N344-H… P04196  Hex(4)HexNAc(3)    Hex(??-?)HexNAc…          344 HRG  
-#> 10 P04196-N344-H… P04196  Hex(4)HexNAc(4)Ne… NeuAc(??-?)Hex(…          344 HRG  
+#>  1 P08185-176-He… P08185  Hex(5)HexNAc(4)Ne… NeuAc(??-?)Hex(…          176 SERP…
+#>  2 P04196-344-He… P04196  Hex(5)HexNAc(4)Ne… NeuAc(??-?)Hex(…          344 HRG  
+#>  3 P04196-344-He… P04196  Hex(5)HexNAc(4)    Hex(??-?)HexNAc…          344 HRG  
+#>  4 P04196-344-He… P04196  Hex(5)HexNAc(4)Ne… NeuAc(??-?)Hex(…          344 HRG  
+#>  5 P10909-291-He… P10909  Hex(6)HexNAc(5)    Hex(??-?)HexNAc…          291 CLU  
+#>  6 P04196-344-He… P04196  Hex(5)HexNAc(4)Ne… NeuAc(??-?)Hex(…          344 HRG  
+#>  7 P04196-345-He… P04196  Hex(5)HexNAc(4)    Hex(??-?)HexNAc…          345 HRG  
+#>  8 P04196-344-He… P04196  Hex(5)HexNAc(4)dH… dHex(??-?)Hex(?…          344 HRG  
+#>  9 P04196-344-He… P04196  Hex(4)HexNAc(3)    Hex(??-?)HexNAc…          344 HRG  
+#> 10 P04196-344-He… P04196  Hex(4)HexNAc(4)Ne… NeuAc(??-?)Hex(…          344 HRG  
 #> # ℹ 3,969 more rows
 ```
 
@@ -157,18 +157,18 @@ exp |>
   get_var_info() |>
   select(variable, protein, glycan_structure, n_hex)
 #> # A tibble: 3,979 × 4
-#>    variable                              protein glycan_structure          n_hex
-#>    <chr>                                 <chr>   <struct>                  <lgl>
-#>  1 P08185-N176-Hex(5)HexNAc(4)NeuAc(2)   P08185  NeuAc(??-?)Hex(??-?)HexN… FALSE
-#>  2 P04196-N344-Hex(5)HexNAc(4)NeuAc(1)-1 P04196  NeuAc(??-?)Hex(??-?)HexN… FALSE
-#>  3 P04196-N344-Hex(5)HexNAc(4)           P04196  Hex(??-?)HexNAc(??-?)Hex… FALSE
-#>  4 P04196-N344-Hex(5)HexNAc(4)NeuAc(1)-2 P04196  NeuAc(??-?)Hex(??-?)HexN… FALSE
-#>  5 P10909-N291-Hex(6)HexNAc(5)-1         P10909  Hex(??-?)HexNAc(??-?)Hex… FALSE
-#>  6 P04196-N344-Hex(5)HexNAc(4)NeuAc(2)   P04196  NeuAc(??-?)Hex(??-?)HexN… FALSE
-#>  7 P04196-N345-Hex(5)HexNAc(4)           P04196  Hex(??-?)HexNAc(??-?)Hex… FALSE
-#>  8 P04196-N344-Hex(5)HexNAc(4)dHex(2)    P04196  dHex(??-?)Hex(??-?)HexNA… FALSE
-#>  9 P04196-N344-Hex(4)HexNAc(3)-1         P04196  Hex(??-?)HexNAc(??-?)Hex… FALSE
-#> 10 P04196-N344-Hex(4)HexNAc(4)NeuAc(1)   P04196  NeuAc(??-?)Hex(??-?)HexN… FALSE
+#>    variable                             protein glycan_structure           n_hex
+#>    <chr>                                <chr>   <struct>                   <lgl>
+#>  1 P08185-176-Hex(5)HexNAc(4)NeuAc(2)   P08185  NeuAc(??-?)Hex(??-?)HexNA… FALSE
+#>  2 P04196-344-Hex(5)HexNAc(4)NeuAc(1)-1 P04196  NeuAc(??-?)Hex(??-?)HexNA… FALSE
+#>  3 P04196-344-Hex(5)HexNAc(4)           P04196  Hex(??-?)HexNAc(??-?)Hex(… FALSE
+#>  4 P04196-344-Hex(5)HexNAc(4)NeuAc(1)-2 P04196  NeuAc(??-?)Hex(??-?)HexNA… FALSE
+#>  5 P10909-291-Hex(6)HexNAc(5)-1         P10909  Hex(??-?)HexNAc(??-?)Hex(… FALSE
+#>  6 P04196-344-Hex(5)HexNAc(4)NeuAc(2)   P04196  NeuAc(??-?)Hex(??-?)HexNA… FALSE
+#>  7 P04196-345-Hex(5)HexNAc(4)           P04196  Hex(??-?)HexNAc(??-?)Hex(… FALSE
+#>  8 P04196-344-Hex(5)HexNAc(4)dHex(2)    P04196  dHex(??-?)Hex(??-?)HexNAc… FALSE
+#>  9 P04196-344-Hex(4)HexNAc(3)-1         P04196  Hex(??-?)HexNAc(??-?)Hex(… FALSE
+#> 10 P04196-344-Hex(4)HexNAc(4)NeuAc(1)   P04196  NeuAc(??-?)Hex(??-?)HexNA… FALSE
 #> # ℹ 3,969 more rows
 ```
 
@@ -216,18 +216,18 @@ exp2 |>
   get_var_info() |>
   select(variable, motif1, motif2, motif3)
 #> # A tibble: 3,979 × 4
-#>    variable                              motif1 motif2 motif3
-#>    <chr>                                 <lgl>  <lgl>  <lgl> 
-#>  1 P08185-N176-Hex(5)HexNAc(4)NeuAc(2)   TRUE   TRUE   FALSE 
-#>  2 P04196-N344-Hex(5)HexNAc(4)NeuAc(1)-1 TRUE   TRUE   FALSE 
-#>  3 P04196-N344-Hex(5)HexNAc(4)           TRUE   TRUE   FALSE 
-#>  4 P04196-N344-Hex(5)HexNAc(4)NeuAc(1)-2 TRUE   TRUE   FALSE 
-#>  5 P10909-N291-Hex(6)HexNAc(5)-1         TRUE   TRUE   FALSE 
-#>  6 P04196-N344-Hex(5)HexNAc(4)NeuAc(2)   TRUE   TRUE   FALSE 
-#>  7 P04196-N345-Hex(5)HexNAc(4)           TRUE   TRUE   FALSE 
-#>  8 P04196-N344-Hex(5)HexNAc(4)dHex(2)    TRUE   TRUE   TRUE  
-#>  9 P04196-N344-Hex(4)HexNAc(3)-1         TRUE   TRUE   FALSE 
-#> 10 P04196-N344-Hex(4)HexNAc(4)NeuAc(1)   TRUE   TRUE   FALSE 
+#>    variable                             motif1 motif2 motif3
+#>    <chr>                                <lgl>  <lgl>  <lgl> 
+#>  1 P08185-176-Hex(5)HexNAc(4)NeuAc(2)   TRUE   TRUE   FALSE 
+#>  2 P04196-344-Hex(5)HexNAc(4)NeuAc(1)-1 TRUE   TRUE   FALSE 
+#>  3 P04196-344-Hex(5)HexNAc(4)           TRUE   TRUE   FALSE 
+#>  4 P04196-344-Hex(5)HexNAc(4)NeuAc(1)-2 TRUE   TRUE   FALSE 
+#>  5 P10909-291-Hex(6)HexNAc(5)-1         TRUE   TRUE   FALSE 
+#>  6 P04196-344-Hex(5)HexNAc(4)NeuAc(2)   TRUE   TRUE   FALSE 
+#>  7 P04196-345-Hex(5)HexNAc(4)           TRUE   TRUE   FALSE 
+#>  8 P04196-344-Hex(5)HexNAc(4)dHex(2)    TRUE   TRUE   TRUE  
+#>  9 P04196-344-Hex(4)HexNAc(3)-1         TRUE   TRUE   FALSE 
+#> 10 P04196-344-Hex(4)HexNAc(4)NeuAc(1)   TRUE   TRUE   FALSE 
 #> # ℹ 3,969 more rows
 ```
 
