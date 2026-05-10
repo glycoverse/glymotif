@@ -153,45 +153,6 @@ has_duplicate_motifs <- function(motifs) {
   length(unique(motifs)) < length(motifs)
 }
 
-# Legacy wrapper functions for backward compatibility
-prepare_have_motif_args <- function(
-  glycans,
-  motif,
-  alignment,
-  ignore_linkages,
-  strict_sub,
-  match_degree
-) {
-  prepare_motif_args(
-    glycans,
-    motif,
-    alignment,
-    ignore_linkages,
-    match_degree,
-    single_motif = TRUE,
-    strict_sub = strict_sub
-  )
-}
-
-prepare_have_motifs_args <- function(
-  glycans,
-  motifs,
-  alignments,
-  ignore_linkages,
-  strict_sub,
-  match_degree
-) {
-  prepare_motif_args(
-    glycans,
-    motifs,
-    alignments,
-    ignore_linkages,
-    match_degree,
-    single_motif = FALSE,
-    strict_sub = strict_sub
-  )
-}
-
 #' Validate Match Degree
 #'
 #' @param match_degree A logical vector or a list of logical vectors.

@@ -99,13 +99,14 @@ match_motif <- function(
 
   .assert_glycan_structure(glycans, "glycans")
   .assert_glycan_structure(motif, "motif")
-  params <- prepare_have_motif_args(
-    glycans,
-    motif,
-    alignment,
-    ignore_linkages,
-    strict_sub,
-    match_degree
+  params <- prepare_motif_args(
+    glycans = glycans,
+    motifs = motif,
+    alignments = alignment,
+    ignore_linkages = ignore_linkages,
+    match_degree = match_degree,
+    single_motif = TRUE,
+    strict_sub = strict_sub
   )
   result <- rlang::exec("match_motif_", !!!params)
 
@@ -134,13 +135,14 @@ match_motifs <- function(
   glycan_names <- names(glycans)
   is_branch_spec <- inherits(motifs, "branch_motifs_spec")
 
-  params <- prepare_have_motifs_args(
-    glycans,
-    motifs,
-    alignments,
-    ignore_linkages,
-    strict_sub,
-    match_degree
+  params <- prepare_motif_args(
+    glycans = glycans,
+    motifs = motifs,
+    alignments = alignments,
+    ignore_linkages = ignore_linkages,
+    match_degree = match_degree,
+    single_motif = FALSE,
+    strict_sub = strict_sub
   )
 
   # Validate resolved motifs (must be glycan_structure, not raw strings)
