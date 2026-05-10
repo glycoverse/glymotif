@@ -34,7 +34,9 @@ dynamic_motifs <- function(max_size = 3) {
 #' @export
 print.dynamic_motifs_spec <- function(x, ...) {
   cli::cli_text("<{.cls dynamic_motifs_spec}>")
-  cli::cli_text("This object should be passed to the {.arg motifs} argument of {.fn have_motifs}, {.fn count_motifs}, {.fn match_motifs}, {.fn add_motifs_lgl}, or {.fn add_motifs_int}.")
+  cli::cli_text(
+    "This object should be passed to the {.arg motifs} argument of {.fn have_motifs}, {.fn count_motifs}, {.fn match_motifs}, {.fn add_motifs_lgl}, or {.fn add_motifs_int}."
+  )
   cli::cli_text("Configuration: {.field max_size} = {.val {x$max_size}}")
   invisible(x)
 }
@@ -80,7 +82,9 @@ branch_motifs <- function() {
 #' @export
 print.branch_motifs_spec <- function(x, ...) {
   cli::cli_text("<{.cls branch_motifs_spec}>")
-  cli::cli_text("This object should be passed to the {.arg motifs} argument of {.fn have_motifs}, {.fn count_motifs}, {.fn match_motifs}, {.fn add_motifs_lgl}, or {.fn add_motifs_int}.")
+  cli::cli_text(
+    "This object should be passed to the {.arg motifs} argument of {.fn have_motifs}, {.fn count_motifs}, {.fn match_motifs}, {.fn add_motifs_lgl}, or {.fn add_motifs_int}."
+  )
   cli::cli_text("Configuration: extracts branch motifs with core included")
   invisible(x)
 }
@@ -99,7 +103,14 @@ print.branch_motifs_spec <- function(x, ...) {
 #'
 #' @returns A list with `motifs`, `alignments`, and `match_degree`.
 #' @noRd
-resolve_motif_spec <- function(glycans, spec, alignments, match_degree, strict_sub = TRUE, ignore_linkages = FALSE) {
+resolve_motif_spec <- function(
+  glycans,
+  spec,
+  alignments,
+  match_degree,
+  strict_sub = TRUE,
+  ignore_linkages = FALSE
+) {
   if (!is.null(alignments)) {
     cli::cli_abort(c(
       "Cannot specify {.arg alignments} when using {.fn dynamic_motifs} or {.fn branch_motifs}.",
@@ -129,7 +140,14 @@ resolve_motif_spec <- function(glycans, spec, alignments, match_degree, strict_s
 }
 
 #' @export
-resolve_motif_spec.dynamic_motifs_spec <- function(glycans, spec, alignments, match_degree, strict_sub = TRUE, ignore_linkages = FALSE) {
+resolve_motif_spec.dynamic_motifs_spec <- function(
+  glycans,
+  spec,
+  alignments,
+  match_degree,
+  strict_sub = TRUE,
+  ignore_linkages = FALSE
+) {
   motifs <- extract_motif(glycans, max_size = spec$max_size)
 
   list(
@@ -162,7 +180,14 @@ resolve_motif_spec.dynamic_motifs_spec <- function(glycans, spec, alignments, ma
 }
 
 #' @export
-resolve_motif_spec.branch_motifs_spec <- function(glycans, spec, alignments, match_degree, strict_sub = TRUE, ignore_linkages = FALSE) {
+resolve_motif_spec.branch_motifs_spec <- function(
+  glycans,
+  spec,
+  alignments,
+  match_degree,
+  strict_sub = TRUE,
+  ignore_linkages = FALSE
+) {
   motifs <- extract_branch_motif(glycans, including_core = TRUE)
 
   # Construct match_degree: for each motif, last 4 nodes are FALSE, others TRUE
@@ -189,7 +214,7 @@ resolve_motif_spec.branch_motifs_spec <- function(glycans, spec, alignments, mat
 
   list(
     motifs = motifs,
-    alignments = rep("substructure", length(motifs)),  # Ignored when match_degree is provided
+    alignments = rep("substructure", length(motifs)), # Ignored when match_degree is provided
     match_degree = match_degree
   )
 }

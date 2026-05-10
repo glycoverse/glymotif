@@ -2,14 +2,20 @@
 test_that("wrong glycan types", {
   glycan <- igraph::make_empty_graph()
   motif <- glyparse::parse_iupac_condensed("Gal(b1-4)GalNAc(b1-")
-  expect_error(have_motif(glycan, motif), "`glycans` must be a 'glyrepr_structure' object")
+  expect_error(
+    have_motif(glycan, motif),
+    "`glycans` must be a 'glyrepr_structure' object"
+  )
 })
 
 
 test_that("wrong motif types", {
   glycan <- glyrepr::o_glycan_core_2()
   motif <- igraph::make_empty_graph()
-  expect_error(have_motif(glycan, motif), "The `motif` argument must be a scalar vector")
+  expect_error(
+    have_motif(glycan, motif),
+    "The `motif` argument must be a scalar vector"
+  )
 })
 
 
@@ -43,14 +49,20 @@ test_that("motif name used as input", {
 test_that("unkown motif name used as input", {
   glycan <- glyrepr::o_glycan_core_2()
   motif <- "unknown motif name"
-  expect_error(have_motif(glycan, motif), "Some motifs are neither valid glycan structures nor known motif names")
+  expect_error(
+    have_motif(glycan, motif),
+    "Some motifs are neither valid glycan structures nor known motif names"
+  )
 })
 
 
 test_that("bad glycan structure", {
   glycan <- "bad structure"
   motif <- glyparse::parse_iupac_condensed("Gal(b1-3)GalNAc(b1-")
-  expect_error(have_motif(glycan, motif), "Some glycans could not be parsed as valid glycan structures")
+  expect_error(
+    have_motif(glycan, motif),
+    "Some glycans could not be parsed as valid glycan structures"
+  )
 })
 
 
@@ -105,7 +117,9 @@ test_that("complex positive case", {
 
 test_that("complex negative case", {
   glycan <- glyrepr::n_glycan_core()
-  motif <- glyparse::parse_iupac_condensed("Man(b1-4)GlcNAc(b1-4)[Fuc(a1-6)]GlcNAc(?1-")
+  motif <- glyparse::parse_iupac_condensed(
+    "Man(b1-4)GlcNAc(b1-4)[Fuc(a1-6)]GlcNAc(?1-"
+  )
   expect_false(have_motif(glycan, motif))
 })
 
@@ -139,12 +153,16 @@ patrick::with_parameters_test_that("obscure linkages in glycan", {
 })
 
 
-patrick::with_parameters_test_that("obscure linkages in motif", {
-  glycan <- glyparse::parse_iupac_condensed("Gal(b1-3)Gal(b1-3)GalNAc(a1-")
-  motif_iupac <- stringr::str_glue("Gal({linkage})GalNAc(a1-")
-  motif <- glyparse::parse_iupac_condensed(motif_iupac)
-  expect_true(have_motif(glycan, motif))
-}, linkage = c("b1-?", "b?-3", "b?-?", "??-?", "b1-3/6", "b1-6/3"))
+patrick::with_parameters_test_that(
+  "obscure linkages in motif",
+  {
+    glycan <- glyparse::parse_iupac_condensed("Gal(b1-3)Gal(b1-3)GalNAc(a1-")
+    motif_iupac <- stringr::str_glue("Gal({linkage})GalNAc(a1-")
+    motif <- glyparse::parse_iupac_condensed(motif_iupac)
+    expect_true(have_motif(glycan, motif))
+  },
+  linkage = c("b1-?", "b?-3", "b?-?", "??-?", "b1-3/6", "b1-6/3")
+)
 
 
 test_that("many obscure linkages in motif", {
@@ -206,7 +224,9 @@ test_that("whole alignment complex positive case", {
 
 test_that("whole alignment complex negative case", {
   glycan <- glyrepr::n_glycan_core()
-  motif <- glyparse::parse_iupac_condensed("Man(a1-3)Man(b1-4)GlcNAc(b1-4)GlcNAc(a1-")
+  motif <- glyparse::parse_iupac_condensed(
+    "Man(a1-3)Man(b1-4)GlcNAc(b1-4)GlcNAc(a1-"
+  )
   expect_false(have_motif(glycan, motif, alignment = "whole"))
 })
 
@@ -240,14 +260,18 @@ test_that("core alignment complex negative case", {
 
 
 test_that("core alignment more complex positive case", {
-  glycan <- glyparse::parse_iupac_condensed("Man(a1-3)[Man(b1-6)]Man(b1-4)GlcNAc(b1-4)[Fuc(a1-6)]GlcNAc(?1-")
+  glycan <- glyparse::parse_iupac_condensed(
+    "Man(a1-3)[Man(b1-6)]Man(b1-4)GlcNAc(b1-4)[Fuc(a1-6)]GlcNAc(?1-"
+  )
   motif <- glyparse::parse_iupac_condensed("GlcNAc(b1-4)GlcNAc(?1-")
   expect_true(have_motif(glycan, motif, alignment = "core"))
 })
 
 
 test_that("core alignment more complex negative case", {
-  glycan <- glyparse::parse_iupac_condensed("Man(a1-3)[Man(b1-6)]Man(b1-4)GlcNAc(b1-4)[Fuc(a1-6)]GlcNAc(?1-")
+  glycan <- glyparse::parse_iupac_condensed(
+    "Man(a1-3)[Man(b1-6)]Man(b1-4)GlcNAc(b1-4)[Fuc(a1-6)]GlcNAc(?1-"
+  )
   motif <- glyparse::parse_iupac_condensed("Man(a1-6)Man(b1-4)GlcNAc(?1-")
   expect_false(have_motif(glycan, motif, alignment = "core"))
 })
@@ -282,29 +306,44 @@ test_that("terminal alignment complex negative case", {
 
 
 test_that("termimal alignment more complex positive case", {
-  glycan <- glyparse::parse_iupac_condensed("Neu5Ac(a2-3)Gal(b1-4)[Fuc(a1-3)]GlcNAc(b1-4)GlcNAc(?1-")
+  glycan <- glyparse::parse_iupac_condensed(
+    "Neu5Ac(a2-3)Gal(b1-4)[Fuc(a1-3)]GlcNAc(b1-4)GlcNAc(?1-"
+  )
   motif <- glyparse::parse_iupac_condensed("Neu5Ac(a2-3)Gal(b1-4)GlcNAc(?1-")
   expect_true(have_motif(glycan, motif, alignment = "terminal"))
 })
 
 
 test_that("terminal alignment more complex negative case", {
-  glycan <- glyparse::parse_iupac_condensed("Neu5Ac(a2-3)Gal(b1-4)[Fuc(a1-3)]GlcNAc(b1-4)GlcNAc(?1-")
+  glycan <- glyparse::parse_iupac_condensed(
+    "Neu5Ac(a2-3)Gal(b1-4)[Fuc(a1-3)]GlcNAc(b1-4)GlcNAc(?1-"
+  )
   motif <- glyparse::parse_iupac_condensed("Gal(b1-4)[Fuc(a1-3)]GlcNAc(?1-")
   expect_false(have_motif(glycan, motif, alignment = "terminal"))
 })
 
 
-
 test_that("custom alignment is same as database", {
-  expect_false(have_motif("Gal(b1-3)GalNAc(a1-3)GlcNAc(?1-", "O-Glycan core 1", alignment = "core"))
-  expect_true(have_motif("Gal(b1-3)GalNAc(a1-", "O-Glycan core 1", alignment = "core"))
+  expect_false(have_motif(
+    "Gal(b1-3)GalNAc(a1-3)GlcNAc(?1-",
+    "O-Glycan core 1",
+    alignment = "core"
+  ))
+  expect_true(have_motif(
+    "Gal(b1-3)GalNAc(a1-",
+    "O-Glycan core 1",
+    alignment = "core"
+  ))
 })
 
 
 test_that("custom alignment is different from database", {
   expect_warning(
-    result <- have_motif("Gal(b1-3)GalNAc(a1-3)GlcNAc(?1-", "O-Glycan core 1", alignment = "substructure"),
+    result <- have_motif(
+      "Gal(b1-3)GalNAc(a1-3)GlcNAc(?1-",
+      "O-Glycan core 1",
+      alignment = "substructure"
+    ),
     "The provided alignment type.*is different from.*the motif's alignment type"
   )
   expect_true(result)
@@ -313,7 +352,9 @@ test_that("custom alignment is different from database", {
 
 # ========== Substituents ==========
 test_that("substituents are considered", {
-  glycan1 <- glyparse::parse_iupac_condensed("Neu5Ac9Ac(a2-3)Gal(b1-4)GlcNAc(?1-")
+  glycan1 <- glyparse::parse_iupac_condensed(
+    "Neu5Ac9Ac(a2-3)Gal(b1-4)GlcNAc(?1-"
+  )
   glycan2 <- glyparse::parse_iupac_condensed("Neu5Ac(a2-3)Gal(b1-4)GlcNAc(?1-")
 
   expect_true(have_motif(glycan1, glycan1))
@@ -324,14 +365,18 @@ test_that("substituents are considered", {
 
 
 test_that("obscure substituent linkages in motif", {
-  glycan <- glyparse::parse_iupac_condensed("Neu5Ac9Ac(a2-3)Gal(b1-4)GlcNAc(?1-")
+  glycan <- glyparse::parse_iupac_condensed(
+    "Neu5Ac9Ac(a2-3)Gal(b1-4)GlcNAc(?1-"
+  )
   motif <- glyparse::parse_iupac_condensed("Neu5Ac?Ac(a2-3)Gal(b1-4)GlcNAc(?1-")
   expect_true(have_motif(glycan, motif))
 })
 
 
 test_that("obscure substituent linkages in glycan", {
-  glycan <- glyparse::parse_iupac_condensed("Neu5Ac9Ac(a2-3)Gal(b1-4)GlcNAc(?1-")
+  glycan <- glyparse::parse_iupac_condensed(
+    "Neu5Ac9Ac(a2-3)Gal(b1-4)GlcNAc(?1-"
+  )
   motif <- glyparse::parse_iupac_condensed("Neu5Ac(a2-3)Gal(b1-4)GlcNAc(?1-")
   expect_false(have_motif(glycan, motif))
 })
@@ -360,7 +405,9 @@ test_that("multiple substituents in motif", {
 
 
 test_that("substituents are not mandatory if strict_sub is FALSE", {
-  glycan <- glyparse::parse_iupac_condensed("Neu5Ac9Ac(a2-3)Gal(b1-4)GlcNAc(?1-")
+  glycan <- glyparse::parse_iupac_condensed(
+    "Neu5Ac9Ac(a2-3)Gal(b1-4)GlcNAc(?1-"
+  )
   motif <- glyparse::parse_iupac_condensed("Neu5Ac(a2-3)Gal(b1-4)GlcNAc(?1-")
 
   expect_true(have_motif(glycan, motif, strict_sub = FALSE))
@@ -421,44 +468,50 @@ test_that("have_motifs works with multiple motifs", {
   glycan2 <- "Gal(b1-?)[GlcNAc(b1-6)]GalNAc(?1-"
   glycans <- c(glycan1, glycan2)
   names(glycans) <- c("core2", "test_glycan")
-  
-  motifs <- c("Gal(b1-3)GalNAc(?1-", "Gal(b1-4)GalNAc(?1-", "GlcNAc(b1-6)GalNAc(?1-")
-  
+
+  motifs <- c(
+    "Gal(b1-3)GalNAc(?1-",
+    "Gal(b1-4)GalNAc(?1-",
+    "GlcNAc(b1-6)GalNAc(?1-"
+  )
+
   result <- have_motifs(glycans, motifs)
-  
+
   expect_true(is.matrix(result))
   expect_equal(nrow(result), 2)
   expect_equal(ncol(result), 3)
   # IUPAC strings without names should have no colnames
   expect_null(colnames(result))
   expect_equal(rownames(result), c("core2", "test_glycan"))
-  
+
   # Check specific results
-  expect_true(result[1, 1])  # Gal(b1-3)GalNAc(?1-
+  expect_true(result[1, 1]) # Gal(b1-3)GalNAc(?1-
   expect_false(result[1, 2]) # Gal(b1-4)GalNAc(?1-
-  expect_true(result[1, 3])  # GlcNAc(b1-6)GalNAc(?1-
-  
+  expect_true(result[1, 3]) # GlcNAc(b1-6)GalNAc(?1-
+
   expect_false(result[2, 1]) # Gal(b1-3)GalNAc(?1-
   expect_false(result[2, 2]) # Gal(b1-4)GalNAc(?1-
-  expect_true(result[2, 3])  # GlcNAc(b1-6)GalNAc(?1-
+  expect_true(result[2, 3]) # GlcNAc(b1-6)GalNAc(?1-
 })
 
 
 test_that("have_motifs works without glycan names", {
   glycan1 <- glyrepr::o_glycan_core_2()
-  glycan2 <- glyparse::parse_iupac_condensed("Gal(b1-?)[GlcNAc(b1-6)]GalNAc(?1-")
+  glycan2 <- glyparse::parse_iupac_condensed(
+    "Gal(b1-?)[GlcNAc(b1-6)]GalNAc(?1-"
+  )
   glycans <- c(glycan1, glycan2)
-  
+
   motifs <- c("Gal(b1-3)GalNAc(?1-", "GlcNAc(b1-6)GalNAc(?1-")
-  
+
   result <- have_motifs(glycans, motifs)
-  
+
   expect_true(is.matrix(result))
   expect_equal(nrow(result), 2)
   expect_equal(ncol(result), 2)
   # IUPAC strings without names should have no colnames
   expect_null(colnames(result))
-  
+
   # Check that row names contain IUPAC strings
   expect_true(grepl("Gal\\(b1-3\\)", rownames(result)[1]))
   expect_true(grepl("Gal\\(b1-\\?\\)", rownames(result)[2]))
@@ -466,14 +519,16 @@ test_that("have_motifs works without glycan names", {
 
 
 test_that("have_motifs works with different alignments", {
-  glycan <- glyparse::parse_iupac_condensed("Gal(a1-3)Gal(a1-4)Gal(a1-6)Gal(?1-")
+  glycan <- glyparse::parse_iupac_condensed(
+    "Gal(a1-3)Gal(a1-4)Gal(a1-6)Gal(?1-"
+  )
   glycans <- c(glycan, glycan)
-  
+
   motifs <- c("Gal(a1-3)Gal(a1-4)Gal(?1-", "Gal(a1-4)Gal(a1-6)Gal(?1-")
   alignments <- c("core", "terminal")
-  
+
   result <- have_motifs(glycans, motifs, alignments = alignments)
-  
+
   expect_true(is.matrix(result))
   expect_equal(nrow(result), 2)
   expect_equal(ncol(result), 2)
@@ -484,7 +539,7 @@ test_that("have_motifs handles empty motifs", {
   glycan <- glyrepr::o_glycan_core_2()
   glycans <- c(glycan)
   motifs <- character(0)
-  
+
   expect_error(have_motifs(glycans, motifs), "`motifs` cannot be empty")
 })
 
@@ -527,30 +582,41 @@ test_that("have_motifs handles invalid motifs argument", {
   glycans <- c(glycan)
   motifs <- 123
 
-  expect_error(have_motifs(glycans, motifs), "`motifs` must be a 'glyrepr_structure' object")
+  expect_error(
+    have_motifs(glycans, motifs),
+    "`motifs` must be a 'glyrepr_structure' object"
+  )
 })
 
 
 test_that("have_motifs handles mismatched alignments length", {
   glycan <- glyrepr::o_glycan_core_2()
   glycans <- c(glycan)
-  motifs <- c("Gal(b1-3)GalNAc(?1-", "GlcNAc(b1-6)GalNAc(?1-", "Gal(b1-4)GalNAc(?1-")
-  alignments <- c("substructure", "core")  # length 2, motifs length 3
-  
-  expect_error(have_motifs(glycans, motifs, alignments = alignments), 
-               "`alignments` must be NULL, a single value, or have the same length as `motifs`")
+  motifs <- c(
+    "Gal(b1-3)GalNAc(?1-",
+    "GlcNAc(b1-6)GalNAc(?1-",
+    "Gal(b1-4)GalNAc(?1-"
+  )
+  alignments <- c("substructure", "core") # length 2, motifs length 3
+
+  expect_error(
+    have_motifs(glycans, motifs, alignments = alignments),
+    "`alignments` must be NULL, a single value, or have the same length as `motifs`"
+  )
 })
 
 
 test_that("have_motifs works with single alignment for all motifs", {
   glycan1 <- glyrepr::o_glycan_core_2()
-  glycan2 <- glyparse::parse_iupac_condensed("Gal(b1-?)[GlcNAc(b1-6)]GalNAc(?1-")
+  glycan2 <- glyparse::parse_iupac_condensed(
+    "Gal(b1-?)[GlcNAc(b1-6)]GalNAc(?1-"
+  )
   glycans <- c(glycan1, glycan2)
-  
+
   motifs <- c("Gal(b1-3)GalNAc(?1-", "GlcNAc(b1-6)GalNAc(?1-")
-  
+
   result <- have_motifs(glycans, motifs, alignments = "substructure")
-  
+
   expect_true(is.matrix(result))
   expect_equal(nrow(result), 2)
   expect_equal(ncol(result), 2)
@@ -560,15 +626,15 @@ test_that("have_motifs works with single alignment for all motifs", {
 test_that("have_motifs works with ignore_linkages", {
   glycan1 <- glyrepr::o_glycan_core_2()
   glycans <- c(glycan1)
-  
+
   motifs <- c("Gal(b1-3)GalNAc(?1-", "Gal(b1-4)GalNAc(?1-")
-  
+
   result_normal <- have_motifs(glycans, motifs, ignore_linkages = FALSE)
   result_ignore <- have_motifs(glycans, motifs, ignore_linkages = TRUE)
-  
+
   # Use numeric indices since IUPAC strings without names have no colnames
-  expect_false(result_normal[1, 2])  # Gal(b1-4)GalNAc(?1-
-  expect_true(result_ignore[1, 2])   # Gal(b1-4)GalNAc(?1-
+  expect_false(result_normal[1, 2]) # Gal(b1-4)GalNAc(?1-
+  expect_true(result_ignore[1, 2]) # Gal(b1-4)GalNAc(?1-
 })
 
 
@@ -612,21 +678,21 @@ test_that("have_motif: complex structures with type conversion", {
 test_that("have_motif: vectorized glycans with single motif", {
   # Test vectorized behavior with mixed types
   glycans <- c("Glc(?1-", "Man(?1-", "Gal(?1-")
-  motif <- "Hex(?1-"  # generic motif
+  motif <- "Hex(?1-" # generic motif
 
   result <- have_motif(glycans, motif)
 
   expect_length(result, 3)
-  expect_true(all(result))  # All should match the generic motif
+  expect_true(all(result)) # All should match the generic motif
 
   # Test with concrete motif
-  motif <- "Man(?1-"  # concrete motif
+  motif <- "Man(?1-" # concrete motif
   result <- have_motif(glycans, motif)
 
   expect_length(result, 3)
-  expect_false(result[1])  # Glc should not match Man
-  expect_true(result[2])   # Man should match Man
-  expect_false(result[3])  # Gal should not match Man
+  expect_false(result[1]) # Glc should not match Man
+  expect_true(result[2]) # Man should match Man
+  expect_false(result[3]) # Gal should not match Man
 })
 
 test_that("have_motif works for repeated glycans", {
@@ -654,11 +720,18 @@ test_that("match_degree can ignore alignment", {
   glycan <- glyparse::parse_iupac_condensed("Gal(b1-3)[GlcNAc(b1-6)]GalNAc(a1-")
   motif <- glyparse::parse_iupac_condensed("Gal(b1-3)GalNAc(a1-")
 
-  expect_true(have_motif(glycan, motif, alignment = "whole", match_degree = c(FALSE, FALSE)))
+  expect_true(have_motif(
+    glycan,
+    motif,
+    alignment = "whole",
+    match_degree = c(FALSE, FALSE)
+  ))
 })
 
 test_that("match_degree controls degree in branched structures", {
-  glycan <- glyparse::parse_iupac_condensed("Neu5Ac(a2-3)Gal(b1-4)[Fuc(a1-3)]GlcNAc(b1-")
+  glycan <- glyparse::parse_iupac_condensed(
+    "Neu5Ac(a2-3)Gal(b1-4)[Fuc(a1-3)]GlcNAc(b1-"
+  )
   motif <- glyparse::parse_iupac_condensed("Neu5Ac(a2-3)Gal(b1-4)GlcNAc(b1-")
 
   expect_true(have_motif(glycan, motif, match_degree = c(FALSE, FALSE, FALSE)))
@@ -670,19 +743,47 @@ test_that("have_motif validates match_degree", {
   glycan <- glyrepr::o_glycan_core_2()
   motif <- glyparse::parse_iupac_condensed("Gal(b1-3)GalNAc(a1-")
 
-  expect_error(have_motif(glycan, motif, match_degree = "nope"), "match_degree.*logical")
-  expect_error(have_motif(glycan, motif, match_degree = logical()), "match_degree.*cannot be empty")
-  expect_error(have_motif(glycan, motif, match_degree = c(TRUE, TRUE, TRUE)), "match_degree.*length")
+  expect_error(
+    have_motif(glycan, motif, match_degree = "nope"),
+    "match_degree.*logical"
+  )
+  expect_error(
+    have_motif(glycan, motif, match_degree = logical()),
+    "match_degree.*cannot be empty"
+  )
+  expect_error(
+    have_motif(glycan, motif, match_degree = c(TRUE, TRUE, TRUE)),
+    "match_degree.*length"
+  )
 })
 
 test_that("have_motifs validates match_degree list", {
   glycans <- glyrepr::o_glycan_core_2()
-  motifs <- glyparse::parse_iupac_condensed(c("Gal(b1-3)GalNAc(a1-", "Gal(b1-4)GalNAc(a1-"))
+  motifs <- glyparse::parse_iupac_condensed(c(
+    "Gal(b1-3)GalNAc(a1-",
+    "Gal(b1-4)GalNAc(a1-"
+  ))
 
-  expect_error(have_motifs(glycans, motifs, match_degree = TRUE), "match_degree.*list")
-  expect_error(have_motifs(glycans, motifs, match_degree = list(c(TRUE, FALSE))), "match_degree.*same length")
-  expect_error(have_motifs(glycans, motifs, match_degree = list(NULL, c(TRUE, FALSE))), "match_degree.*cannot be NULL")
-  expect_error(have_motifs(glycans, motifs, match_degree = list(c(TRUE, FALSE), c(TRUE, FALSE, TRUE))), "match_degree.*length")
+  expect_error(
+    have_motifs(glycans, motifs, match_degree = TRUE),
+    "match_degree.*list"
+  )
+  expect_error(
+    have_motifs(glycans, motifs, match_degree = list(c(TRUE, FALSE))),
+    "match_degree.*same length"
+  )
+  expect_error(
+    have_motifs(glycans, motifs, match_degree = list(NULL, c(TRUE, FALSE))),
+    "match_degree.*cannot be NULL"
+  )
+  expect_error(
+    have_motifs(
+      glycans,
+      motifs,
+      match_degree = list(c(TRUE, FALSE), c(TRUE, FALSE, TRUE))
+    ),
+    "match_degree.*length"
+  )
 })
 
 
@@ -797,7 +898,7 @@ test_that("have_motifs returns IUPAC strings as colnames for dynamic_motifs", {
     "Man(b1-4)GlcNAc(b1-"
   ))
   result <- have_motifs(glycans, dynamic_motifs(max_size = 2))
-  
+
   # Column names should be the IUPAC strings of extracted motifs
   expect_type(colnames(result), "character")
   expect_equal(length(colnames(result)), ncol(result))
@@ -810,16 +911,24 @@ test_that("have_motifs returns trimmed IUPAC strings as colnames for branch_moti
     "Neu5Ac(a2-3)Gal(b1-4)GlcNAc(b1-2)Man(a1-3)[Man(a1-6)]Man(b1-4)GlcNAc(a1-4)GlcNAc(b1-"
   )
   result <- have_motifs(glycans, branch_motifs())
-  
+
   # Column names should be present
   expect_type(colnames(result), "character")
   expect_equal(length(colnames(result)), ncol(result))
   expect_true(all(nchar(colnames(result)) > 0))
-  
+
   # Column names should NOT contain the core suffix
-  expect_false(any(grepl(")Man(??-?)Man(??-?)GlcNAc(??-?)GlcNAc", colnames(result), fixed = TRUE)))
-  expect_false(any(grepl(")Hex(??-?)Hex(??-?)HexNAc(??-?)HexNAc", colnames(result), fixed = TRUE)))
-  
+  expect_false(any(grepl(
+    ")Man(??-?)Man(??-?)GlcNAc(??-?)GlcNAc",
+    colnames(result),
+    fixed = TRUE
+  )))
+  expect_false(any(grepl(
+    ")Hex(??-?)Hex(??-?)HexNAc(??-?)HexNAc",
+    colnames(result),
+    fixed = TRUE
+  )))
+
   # Column names should end with the branch root linkage pattern (e.g., "GlcNAc(b1-")
   expect_true(all(grepl("\\([a-z]1-$", colnames(result))))
 })

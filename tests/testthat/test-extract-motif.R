@@ -116,7 +116,9 @@ test_that("extract_branch_motif works for tri-antennary glycans", {
 test_that("extract_branch_motif works for glycans with complex branching patterns", {
   glycan <- "Neu5Ac(a2-3)[Fuc(a1-2)]Gal(b1-4)[Fuc(a1-3)]GlcNAc(b1-2)Man(a1-3)[Man(a1-6)]Man(b1-4)GlcNAc(a1-4)GlcNAc(b1-"
   res <- extract_branch_motif(glycan)
-  expected <- glyrepr::as_glycan_structure("Neu5Ac(a2-3)[Fuc(a1-2)]Gal(b1-4)[Fuc(a1-3)]GlcNAc(b1-")
+  expected <- glyrepr::as_glycan_structure(
+    "Neu5Ac(a2-3)[Fuc(a1-2)]Gal(b1-4)[Fuc(a1-3)]GlcNAc(b1-"
+  )
   expect_setequal(as.character(res), as.character(expected))
 })
 

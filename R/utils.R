@@ -11,9 +11,19 @@ prepare_motif_args <- function(
   call = rlang::caller_env()
 ) {
   # Handle motif specifications (dynamic_motifs_spec, branch_motifs_spec)
-  if (inherits(motifs, "dynamic_motifs_spec") || inherits(motifs, "branch_motifs_spec")) {
+  if (
+    inherits(motifs, "dynamic_motifs_spec") ||
+      inherits(motifs, "branch_motifs_spec")
+  ) {
     glycans <- ensure_glycans_are_structures(glycans, call = call)
-    resolved <- resolve_motif_spec(glycans, motifs, alignments, match_degree, strict_sub, ignore_linkages)
+    resolved <- resolve_motif_spec(
+      glycans,
+      motifs,
+      alignments,
+      match_degree,
+      strict_sub,
+      ignore_linkages
+    )
 
     # Now prepare args normally with resolved values
     motifs <- resolved$motifs
@@ -28,16 +38,29 @@ prepare_motif_args <- function(
     # Continue with normal validation on resolved motifs
     if (has_duplicate_motifs(motifs)) {
       dupes <- unique(motifs[duplicated(motifs)])
-      cli::cli_abort(c(
-        "`motifs` cannot have duplications.",
-        "x" = "Duplicate motifs: {.val {dupes}}.",
-        "i" = "Consider using {.fn unique}."
-      ), call = call)
+      cli::cli_abort(
+        c(
+          "`motifs` cannot have duplications.",
+          "x" = "Duplicate motifs: {.val {dupes}}.",
+          "i" = "Consider using {.fn unique}."
+        ),
+        call = call
+      )
     }
 
     motif_type <- get_motif_type(motifs, call = call)
-    motifs <- ensure_motifs_are_structures(motifs, motif_type, require_scalar = single_motif, call = call)
-    match_degree <- validate_match_degree(match_degree, motifs, single_motif, call = call)
+    motifs <- ensure_motifs_are_structures(
+      motifs,
+      motif_type,
+      require_scalar = single_motif,
+      call = call
+    )
+    match_degree <- validate_match_degree(
+      match_degree,
+      motifs,
+      single_motif,
+      call = call
+    )
 
     if (single_motif) {
       return(list(
@@ -69,11 +92,14 @@ prepare_motif_args <- function(
   # Check for duplicate motifs
   if (has_duplicate_motifs(motifs)) {
     dupes <- unique(motifs[duplicated(motifs)])
-    cli::cli_abort(c(
-      "`motifs` cannot have duplications.",
-      "x" = "Duplicate motifs: {.val {dupes}}.",
-      "i" = "Consider using {.fn unique}."
-    ), call = call)
+    cli::cli_abort(
+      c(
+        "`motifs` cannot have duplications.",
+        "x" = "Duplicate motifs: {.val {dupes}}.",
+        "i" = "Consider using {.fn unique}."
+      ),
+      call = call
+    )
   }
 
   motif_type <- get_motif_type(motifs, call = call)
@@ -84,8 +110,18 @@ prepare_motif_args <- function(
   }
 
   glycans <- ensure_glycans_are_structures(glycans, call = call)
-  motifs <- ensure_motifs_are_structures(motifs, motif_type, require_scalar = single_motif, call = call)
-  match_degree <- validate_match_degree(match_degree, motifs, single_motif, call = call)
+  motifs <- ensure_motifs_are_structures(
+    motifs,
+    motif_type,
+    require_scalar = single_motif,
+    call = call
+  )
+  match_degree <- validate_match_degree(
+    match_degree,
+    motifs,
+    single_motif,
+    call = call
+  )
 
   # Return appropriate format based on single_motif flag
   if (single_motif) {
@@ -118,7 +154,14 @@ has_duplicate_motifs <- function(motifs) {
 }
 
 # Legacy wrapper functions for backward compatibility
-prepare_have_motif_args <- function(glycans, motif, alignment, ignore_linkages, strict_sub, match_degree) {
+prepare_have_motif_args <- function(
+  glycans,
+  motif,
+  alignment,
+  ignore_linkages,
+  strict_sub,
+  match_degree
+) {
   prepare_motif_args(
     glycans,
     motif,
@@ -130,7 +173,14 @@ prepare_have_motif_args <- function(glycans, motif, alignment, ignore_linkages, 
   )
 }
 
-prepare_have_motifs_args <- function(glycans, motifs, alignments, ignore_linkages, strict_sub, match_degree) {
+prepare_have_motifs_args <- function(
+  glycans,
+  motifs,
+  alignments,
+  ignore_linkages,
+  strict_sub,
+  match_degree
+) {
   prepare_motif_args(
     glycans,
     motifs,
@@ -151,14 +201,22 @@ prepare_have_motifs_args <- function(glycans, motifs, alignments, ignore_linkage
 #'
 #' @return A normalized logical vector or list of logical vectors.
 #' @noRd
-validate_match_degree <- function(match_degree, motifs, single_motif, call = rlang::caller_env()) {
+validate_match_degree <- function(
+  match_degree,
+  motifs,
+  single_motif,
+  call = rlang::caller_env()
+) {
   if (is.null(match_degree)) {
     return(NULL)
   }
 
   if (single_motif) {
     if (!is.logical(match_degree)) {
-      cli::cli_abort("`match_degree` must be a logical vector or NULL.", call = call)
+      cli::cli_abort(
+        "`match_degree` must be a logical vector or NULL.",
+        call = call
+      )
     }
     if (length(match_degree) == 0) {
       cli::cli_abort("`match_degree` cannot be empty.", call = call)
@@ -168,19 +226,31 @@ validate_match_degree <- function(match_degree, motifs, single_motif, call = rla
       return(rep(match_degree, motif_nodes))
     }
     if (length(match_degree) != motif_nodes) {
-      cli::cli_abort("`match_degree` must have length 1 or match the number of motif nodes.", call = call)
+      cli::cli_abort(
+        "`match_degree` must have length 1 or match the number of motif nodes.",
+        call = call
+      )
     }
     return(match_degree)
   }
 
   if (!is.list(match_degree)) {
-    cli::cli_abort("`match_degree` must be a list of logical vectors or NULL.", call = call)
+    cli::cli_abort(
+      "`match_degree` must be a list of logical vectors or NULL.",
+      call = call
+    )
   }
   if (length(match_degree) != length(motifs)) {
-    cli::cli_abort("`match_degree` must have the same length as `motifs`.", call = call)
+    cli::cli_abort(
+      "`match_degree` must have the same length as `motifs`.",
+      call = call
+    )
   }
   if (any(vapply(match_degree, is.null, logical(1)))) {
-    cli::cli_abort("Each element of the `match_degree` list cannot be NULL.", call = call)
+    cli::cli_abort(
+      "Each element of the `match_degree` list cannot be NULL.",
+      call = call
+    )
   }
 
   motif_graphs <- glyrepr::get_structure_graphs(motifs)
@@ -189,16 +259,25 @@ validate_match_degree <- function(match_degree, motifs, single_motif, call = rla
   }
   purrr::map2(match_degree, motif_graphs, function(mask, graph) {
     if (!is.logical(mask)) {
-      cli::cli_abort("Each `match_degree` element must be a logical vector.", call = call)
+      cli::cli_abort(
+        "Each `match_degree` element must be a logical vector.",
+        call = call
+      )
     }
     if (length(mask) == 0) {
-      cli::cli_abort("Each `match_degree` element cannot be empty.", call = call)
+      cli::cli_abort(
+        "Each `match_degree` element cannot be empty.",
+        call = call
+      )
     }
     if (length(mask) == 1) {
       return(rep(mask, igraph::vcount(graph)))
     }
     if (length(mask) != igraph::vcount(graph)) {
-      cli::cli_abort("Each `match_degree` element must have length 1 or match the number of motif nodes.", call = call)
+      cli::cli_abort(
+        "Each `match_degree` element must have length 1 or match the number of motif nodes.",
+        call = call
+      )
     }
     mask
   })
@@ -206,14 +285,20 @@ validate_match_degree <- function(match_degree, motifs, single_motif, call = rla
 
 # ----- Argument validation -----
 valid_alignment_arg <- function(x) {
-  checkmate::assert_choice(x, c("substructure", "core", "terminal", "whole"), null.ok = TRUE)
+  checkmate::assert_choice(
+    x,
+    c("substructure", "core", "terminal", "whole"),
+    null.ok = TRUE
+  )
 }
 
 valid_alignments_arg <- function(alignments, motifs) {
   # Validate alignments parameter without modification
   if (!is.null(alignments)) {
     if (length(alignments) != 1 && length(alignments) != length(motifs)) {
-      rlang::abort("`alignments` must be NULL, a single value, or have the same length as `motifs`.")
+      rlang::abort(
+        "`alignments` must be NULL, a single value, or have the same length as `motifs`."
+      )
     }
     # Validate each alignment
     purrr::walk(alignments, valid_alignment_arg)
@@ -225,7 +310,6 @@ valid_ignore_linkages_arg <- function(x) {
 }
 
 # Error messages are now centralized in errors.R
-
 
 motifs_type_err_msg <- paste(
   "`motifs` must be either a `glyrepr_structure` object,",
@@ -308,30 +392,45 @@ ensure_glycans_are_structures <- function(glycans, call = rlang::caller_env()) {
     tryCatch(
       return(glyparse::auto_parse(glycans)),
       error = function(cnd) {
-        cli::cli_abort(c(
-          "`glycans` must be a 'glyrepr_structure' object or a glycan structure character vector.",
-          "x" = "Some glycans could not be parsed as valid glycan structures."
-        ), call = call, parent = cnd)
+        cli::cli_abort(
+          c(
+            "`glycans` must be a 'glyrepr_structure' object or a glycan structure character vector.",
+            "x" = "Some glycans could not be parsed as valid glycan structures."
+          ),
+          call = call,
+          parent = cnd
+        )
       }
     )
   }
 
   # Case 3: `glycans` has other types
-  cli::cli_abort(c(
-    "`glycans` must be a 'glyrepr_structure' object or a glycan structure character vector.",
-    "x" = "The input is of class {.cls {class(glycans)}}."
-  ), call = call)
+  cli::cli_abort(
+    c(
+      "`glycans` must be a 'glyrepr_structure' object or a glycan structure character vector.",
+      "x" = "The input is of class {.cls {class(glycans)}}."
+    ),
+    call = call
+  )
 }
 
 # Make sure `motifs` is a `glyrepr_structure` object.
 # This function handles both single and multiple motifs
-ensure_motifs_are_structures <- function(motifs, motif_type, require_scalar = FALSE, call = rlang::caller_env()) {
+ensure_motifs_are_structures <- function(
+  motifs,
+  motif_type,
+  require_scalar = FALSE,
+  call = rlang::caller_env()
+) {
   # Check scalar requirement first if needed
   if (require_scalar && length(motifs) != 1) {
-    cli::cli_abort(c(
-      "The `motif` argument must be a scalar vector.",
-      "x" = "The input is of length {.val {length(motifs)}}."
-    ), call = call)
+    cli::cli_abort(
+      c(
+        "The `motif` argument must be a scalar vector.",
+        "x" = "The input is of length {.val {length(motifs)}}."
+      ),
+      call = call
+    )
   }
 
   # Determine which error message to use based on scalar requirement
@@ -351,10 +450,13 @@ ensure_motifs_are_structures <- function(motifs, motif_type, require_scalar = FA
 
   # Case 1: `motifs` is of other types
   if (is.na(motif_type)) {
-    cli::cli_abort(c(
-      base_err_msg,
-      "x" = "The input is of class {.cls {class(motifs)}}."
-    ), call = call)
+    cli::cli_abort(
+      c(
+        base_err_msg,
+        "x" = "The input is of class {.cls {class(motifs)}}."
+      ),
+      call = call
+    )
   }
 
   # Case 2: `motifs` is already a `glyrepr_structure` object
@@ -367,10 +469,14 @@ ensure_motifs_are_structures <- function(motifs, motif_type, require_scalar = FA
     tryCatch(
       return(get_motif_structure(motifs)),
       error = function(cnd) {
-        cli::cli_abort(c(
-          base_err_msg,
-          "i" = "Use {.fn available_motifs} to see all valid motif names."
-        ), call = call, parent = cnd)
+        cli::cli_abort(
+          c(
+            base_err_msg,
+            "i" = "Use {.fn available_motifs} to see all valid motif names."
+          ),
+          call = call,
+          parent = cnd
+        )
       }
     )
   }
@@ -380,19 +486,32 @@ ensure_motifs_are_structures <- function(motifs, motif_type, require_scalar = FA
     tryCatch(
       return(glyparse::auto_parse(motifs)),
       error = function(cnd) {
-        cli::cli_abort(c(
-          base_err_msg,
-          "x" = "Some motifs are neither valid glycan structures nor known motif names.",
-          "i" = "Use {.fn available_motifs} to see all valid motif names."
-        ), call = call, parent = cnd)
+        cli::cli_abort(
+          c(
+            base_err_msg,
+            "x" = "Some motifs are neither valid glycan structures nor known motif names.",
+            "i" = "Use {.fn available_motifs} to see all valid motif names."
+          ),
+          call = call,
+          parent = cnd
+        )
       }
     )
   }
 }
 
 # Simplified wrapper function for single motifs
-ensure_motif_is_structure <- function(motif, motif_type, call = rlang::caller_env()) {
-  ensure_motifs_are_structures(motif, motif_type, require_scalar = TRUE, call = call)
+ensure_motif_is_structure <- function(
+  motif,
+  motif_type,
+  call = rlang::caller_env()
+) {
+  ensure_motifs_are_structures(
+    motif,
+    motif_type,
+    require_scalar = TRUE,
+    call = call
+  )
 }
 
 # ----- Generic function for single motif mapping -----
@@ -475,7 +594,8 @@ prepare_struc_names <- function(x, strucs) {
     } else {
       return(names(x))
     }
-  } else {  # must be a character vector
+  } else {
+    # must be a character vector
     if (is.null(names(x))) {
       return(x)
     } else {
@@ -490,7 +610,10 @@ prepare_struc_names <- function(x, strucs) {
 prepare_motif_names <- function(motifs_input) {
   # Handle motif spec objects (dynamic_motifs_spec, branch_motifs_spec)
   # These should not use their internal list names as motif names
-  if (inherits(motifs_input, "dynamic_motifs_spec") || inherits(motifs_input, "branch_motifs_spec")) {
+  if (
+    inherits(motifs_input, "dynamic_motifs_spec") ||
+      inherits(motifs_input, "branch_motifs_spec")
+  ) {
     return(NULL)
   }
 
@@ -555,12 +678,12 @@ apply_motifs_to_glycans <- function(
   # Convert results to matrix format
   # Each element in motif_results_list should be a vector of results for all glycans
   result_matrix <- do.call(cbind, motif_results_list)
-  
+
   # Set rownames if provided
   if (!is.null(glycan_names)) {
     rownames(result_matrix) <- glycan_names
   }
-  
+
   # Set colnames if provided
   if (!is.null(motif_names)) {
     colnames(result_matrix) <- motif_names

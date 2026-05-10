@@ -85,11 +85,25 @@
 #' count_motif("Hex(?1-", "Man(?1-") # Returns 0
 #'
 #' @export
-count_motif <- function(glycans, motif, alignment = NULL, ignore_linkages = FALSE, strict_sub = TRUE, match_degree = NULL) {
+count_motif <- function(
+  glycans,
+  motif,
+  alignment = NULL,
+  ignore_linkages = FALSE,
+  strict_sub = TRUE,
+  match_degree = NULL
+) {
   # Store input names before processing
   glycan_names <- names(glycans)
 
-  params <- prepare_have_motif_args(glycans, motif, alignment, ignore_linkages, strict_sub, match_degree)
+  params <- prepare_have_motif_args(
+    glycans,
+    motif,
+    alignment,
+    ignore_linkages,
+    strict_sub,
+    match_degree
+  )
   result <- rlang::exec("count_motif_", !!!params)
 
   # Apply names to result if input had names
@@ -102,8 +116,22 @@ count_motif <- function(glycans, motif, alignment = NULL, ignore_linkages = FALS
 
 #' @rdname count_motif
 #' @export
-count_motifs <- function(glycans, motifs, alignments = NULL, ignore_linkages = FALSE, strict_sub = TRUE, match_degree = NULL) {
-  params <- prepare_have_motifs_args(glycans, motifs, alignments, ignore_linkages, strict_sub, match_degree)
+count_motifs <- function(
+  glycans,
+  motifs,
+  alignments = NULL,
+  ignore_linkages = FALSE,
+  strict_sub = TRUE,
+  match_degree = NULL
+) {
+  params <- prepare_have_motifs_args(
+    glycans,
+    motifs,
+    alignments,
+    ignore_linkages,
+    strict_sub,
+    match_degree
+  )
   glycan_names <- prepare_struc_names(glycans, params$glycans)
   # Use names from resolved motifs if available (e.g., from dynamic_motifs/branch_motifs)
   # Otherwise fall back to prepare_motif_names on the original input
@@ -112,7 +140,12 @@ count_motifs <- function(glycans, motifs, alignments = NULL, ignore_linkages = F
   } else {
     motif_names <- prepare_motif_names(motifs)
   }
-  rlang::exec("count_motifs_", !!!params, glycan_names = glycan_names, motif_names = motif_names)
+  rlang::exec(
+    "count_motifs_",
+    !!!params,
+    glycan_names = glycan_names,
+    motif_names = motif_names
+  )
 }
 
 #' Internal verison of `count_motif()`
@@ -127,7 +160,14 @@ count_motifs <- function(glycans, motifs, alignments = NULL, ignore_linkages = F
 #' @param strict_sub A logical value.
 #'
 #' @noRd
-count_motif_ <- function(glycans, motif, alignment, ignore_linkages = FALSE, strict_sub = TRUE, match_degree = NULL) {
+count_motif_ <- function(
+  glycans,
+  motif,
+  alignment,
+  ignore_linkages = FALSE,
+  strict_sub = TRUE,
+  match_degree = NULL
+) {
   # This function is a simpler version of `count_motif()`.
   # It performs the logic directly without argument validations and conversions.
   # It is a necessary abstraction for other functions.
@@ -143,16 +183,28 @@ count_motif_ <- function(glycans, motif, alignment, ignore_linkages = FALSE, str
   )
 }
 
-.count_motif_single <- function(glycan_graph, motif_graph, alignment, ignore_linkages = FALSE, strict_sub = TRUE, match_degree = NULL) {
+.count_motif_single <- function(
+  glycan_graph,
+  motif_graph,
+  alignment,
+  ignore_linkages = FALSE,
+  strict_sub = TRUE,
+  match_degree = NULL
+) {
   # This function is the logic part of `count_motif()`.
   c_graphs <- colorize_graphs(glycan_graph, motif_graph)
   glycan_graph <- c_graphs$glycan
   motif_graph <- c_graphs$motif
   res <- perform_vf2(glycan_graph, motif_graph)
   valid_mask <- purrr::map_lgl(
-    res, is_valid_result,
-    glycan = glycan_graph, motif = motif_graph,
-    alignment = alignment, ignore_linkages = ignore_linkages, strict_sub = strict_sub, match_degree = match_degree
+    res,
+    is_valid_result,
+    glycan = glycan_graph,
+    motif = motif_graph,
+    alignment = alignment,
+    ignore_linkages = ignore_linkages,
+    strict_sub = strict_sub,
+    match_degree = match_degree
   )
   valid_res <- res[valid_mask]
   length(unique_vf2_res(valid_res))
@@ -169,7 +221,16 @@ count_motif_ <- function(glycans, motif, alignment, ignore_linkages = FALSE, str
 #' @param strict_sub A logical value.
 #'
 #' @noRd
-count_motifs_ <- function(glycans, motifs, alignments, glycan_names, motif_names, ignore_linkages = FALSE, strict_sub = TRUE, match_degree = NULL) {
+count_motifs_ <- function(
+  glycans,
+  motifs,
+  alignments,
+  glycan_names,
+  motif_names,
+  ignore_linkages = FALSE,
+  strict_sub = TRUE,
+  match_degree = NULL
+) {
   apply_motifs_to_glycans(
     glycans,
     motifs,

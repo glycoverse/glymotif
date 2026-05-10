@@ -53,7 +53,9 @@ extract_branch_motif <- function(glycans, including_core = FALSE) {
 
   # 2. Define the motif
   # The motif represents an N-glycan branch, rooted at the GlcNAc attached to the Mannose core.
-  motif <- glyrepr::as_glycan_structure("HexNAc(??-?)Hex(??-?)Hex(??-?)HexNAc(??-?)HexNAc(??-")
+  motif <- glyrepr::as_glycan_structure(
+    "HexNAc(??-?)Hex(??-?)Hex(??-?)HexNAc(??-?)HexNAc(??-"
+  )
 
   # 3. Find matches
   # Use match_motif to find where the motif maps to the glycan
@@ -71,7 +73,9 @@ extract_branch_motif <- function(glycans, including_core = FALSE) {
     g <- structure_graphs[[i]]
     g_matches <- matches[[i]]
 
-    if (length(g_matches) == 0) next
+    if (length(g_matches) == 0) {
+      next
+    }
 
     for (match_idx in g_matches) {
       # The match_idx is a vector of node indices in 'g' corresponding to nodes in 'motif'.
@@ -134,7 +138,9 @@ extract_branch_motif <- function(glycans, including_core = FALSE) {
 }
 
 .assert_n_glycans <- function(glycans) {
-  n_motif <- glyrepr::as_glycan_structure("Hex(??-?)[Hex(??-?)]Hex(??-?)HexNAc(??-?)HexNAc(??-")
+  n_motif <- glyrepr::as_glycan_structure(
+    "Hex(??-?)[Hex(??-?)]Hex(??-?)HexNAc(??-?)HexNAc(??-"
+  )
   have_n_motif <- have_motif(glycans, n_motif, alignment = "core")
   if (!all(have_n_motif)) {
     cli::cli_abort(c(
@@ -175,9 +181,12 @@ extract_motif <- function(glycans, max_size = 3) {
   glycans <- unique(glycans)
   structure_graphs <- glyrepr::get_structure_graphs(glycans, return_list = TRUE)
 
-  extracted_subtrees <- unlist(purrr::map(structure_graphs, function(g) {
-    .extract_motifs_from_graph(g, max_size)
-  }), recursive = FALSE)
+  extracted_subtrees <- unlist(
+    purrr::map(structure_graphs, function(g) {
+      .extract_motifs_from_graph(g, max_size)
+    }),
+    recursive = FALSE
+  )
 
   if (length(extracted_subtrees) == 0) {
     return(glyrepr::glycan_structure())
@@ -189,9 +198,12 @@ extract_motif <- function(glycans, max_size = 3) {
 
 .extract_motifs_from_graph <- function(g, max_size) {
   nodes <- as.numeric(igraph::V(g))
-  unlist(purrr::map(nodes, function(node) {
-    .extract_motifs_rooted_at(g, node, max_size)
-  }), recursive = FALSE)
+  unlist(
+    purrr::map(nodes, function(node) {
+      .extract_motifs_rooted_at(g, node, max_size)
+    }),
+    recursive = FALSE
+  )
 }
 
 .extract_motifs_rooted_at <- function(g, root_id, max_size) {

@@ -82,7 +82,9 @@ get_motif_structure <- function(name) {
 get_motif_alignment <- function(name) {
   check_names(name)
   res <- glygen_motifs$alignment[match(name, glygen_motifs$name)]
-  if (length(res) > 1) res <- rlang::set_names(res, name)
+  if (length(res) > 1) {
+    res <- rlang::set_names(res, name)
+  }
   res
 }
 
@@ -92,7 +94,9 @@ get_motif_alignment <- function(name) {
 get_motif_aglycon <- function(name) {
   check_names(name)
   res <- glygen_motifs$aglycon[match(name, glygen_motifs$name)]
-  if (length(res) > 1) res <- rlang::set_names(res, name)
+  if (length(res) > 1) {
+    res <- rlang::set_names(res, name)
+  }
   res
 }
 

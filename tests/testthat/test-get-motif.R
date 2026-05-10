@@ -16,7 +16,7 @@ test_that("get known motif", {
 
 test_that("getting motif structure works", {
   result <- get_motif_structure("N-Glycan core basic")
-  expect_snapshot(result)  # A `glyrepr_structure`
+  expect_snapshot(result) # A `glyrepr_structure`
 })
 
 

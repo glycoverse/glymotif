@@ -89,34 +89,99 @@
 #' @seealso [glymotif::have_motifs()], [glymotif::count_motifs()], [glyexp::experiment()]
 #'
 #' @export
-add_motifs_int <- function(x, motifs, alignments = NULL, ignore_linkages = FALSE, strict_sub = TRUE, match_degree = NULL, ...) {
+add_motifs_int <- function(
+  x,
+  motifs,
+  alignments = NULL,
+  ignore_linkages = FALSE,
+  strict_sub = TRUE,
+  match_degree = NULL,
+  ...
+) {
   UseMethod("add_motifs_int")
 }
 
 #' @rdname add_motifs_int
 #' @export
-add_motifs_lgl <- function(x, motifs, alignments = NULL, ignore_linkages = FALSE, strict_sub = TRUE, match_degree = NULL, ...) {
+add_motifs_lgl <- function(
+  x,
+  motifs,
+  alignments = NULL,
+  ignore_linkages = FALSE,
+  strict_sub = TRUE,
+  match_degree = NULL,
+  ...
+) {
   UseMethod("add_motifs_lgl")
 }
 
 #' @rdname add_motifs_int
 #' @export
-add_motifs_int.glyexp_experiment <- function(x, motifs, alignments = NULL, ignore_linkages = FALSE, strict_sub = TRUE, match_degree = NULL, ...) {
-  .add_motifs_anno_exp(x, count_motifs, motifs, alignments, ignore_linkages, strict_sub, match_degree)
+add_motifs_int.glyexp_experiment <- function(
+  x,
+  motifs,
+  alignments = NULL,
+  ignore_linkages = FALSE,
+  strict_sub = TRUE,
+  match_degree = NULL,
+  ...
+) {
+  .add_motifs_anno_exp(
+    x,
+    count_motifs,
+    motifs,
+    alignments,
+    ignore_linkages,
+    strict_sub,
+    match_degree
+  )
 }
 
 #' @rdname add_motifs_int
 #' @export
-add_motifs_lgl.glyexp_experiment <- function(x, motifs, alignments = NULL, ignore_linkages = FALSE, strict_sub = TRUE, match_degree = NULL, ...) {
-  .add_motifs_anno_exp(x, have_motifs, motifs, alignments, ignore_linkages, strict_sub, match_degree)
+add_motifs_lgl.glyexp_experiment <- function(
+  x,
+  motifs,
+  alignments = NULL,
+  ignore_linkages = FALSE,
+  strict_sub = TRUE,
+  match_degree = NULL,
+  ...
+) {
+  .add_motifs_anno_exp(
+    x,
+    have_motifs,
+    motifs,
+    alignments,
+    ignore_linkages,
+    strict_sub,
+    match_degree
+  )
 }
 
-.add_motifs_anno_exp <- function(exp, motif_anno_fn, motifs, alignments = NULL, ignore_linkages = FALSE, strict_sub = TRUE, match_degree = NULL) {
+.add_motifs_anno_exp <- function(
+  exp,
+  motif_anno_fn,
+  motifs,
+  alignments = NULL,
+  ignore_linkages = FALSE,
+  strict_sub = TRUE,
+  match_degree = NULL
+) {
   if (!"glycan_structure" %in% colnames(exp$var_info)) {
-    cli::cli_abort("The experiment must have a {.field glycan_structure} column.")
+    cli::cli_abort(
+      "The experiment must have a {.field glycan_structure} column."
+    )
   }
 
-  motif_anno <- motif_anno_fn(exp$var_info$glycan_structure, motifs, alignments, ignore_linkages, strict_sub, match_degree)
+  motif_anno <- motif_anno_fn(
+    exp$var_info$glycan_structure,
+    motifs,
+    alignments,
+    ignore_linkages,
+    strict_sub,
+    match_degree
+  )
   # have_motifs/count_motifs set colnames for motif specs, but may return NULL for regular motifs
   # We always need colnames for add_motifs, so generate them if missing
   if (is.null(colnames(motif_anno))) {
@@ -129,14 +194,46 @@ add_motifs_lgl.glyexp_experiment <- function(x, motifs, alignments = NULL, ignor
 
 #' @rdname add_motifs_int
 #' @export
-add_motifs_int.data.frame <- function(x, motifs, alignments = NULL, ignore_linkages = FALSE, strict_sub = TRUE, match_degree = NULL, ...) {
-  .add_motifs_anno_df(x, count_motifs, motifs, alignments, ignore_linkages, strict_sub, match_degree)
+add_motifs_int.data.frame <- function(
+  x,
+  motifs,
+  alignments = NULL,
+  ignore_linkages = FALSE,
+  strict_sub = TRUE,
+  match_degree = NULL,
+  ...
+) {
+  .add_motifs_anno_df(
+    x,
+    count_motifs,
+    motifs,
+    alignments,
+    ignore_linkages,
+    strict_sub,
+    match_degree
+  )
 }
 
 #' @rdname add_motifs_int
 #' @export
-add_motifs_lgl.data.frame <- function(x, motifs, alignments = NULL, ignore_linkages = FALSE, strict_sub = TRUE, match_degree = NULL, ...) {
-  .add_motifs_anno_df(x, have_motifs, motifs, alignments, ignore_linkages, strict_sub, match_degree)
+add_motifs_lgl.data.frame <- function(
+  x,
+  motifs,
+  alignments = NULL,
+  ignore_linkages = FALSE,
+  strict_sub = TRUE,
+  match_degree = NULL,
+  ...
+) {
+  .add_motifs_anno_df(
+    x,
+    have_motifs,
+    motifs,
+    alignments,
+    ignore_linkages,
+    strict_sub,
+    match_degree
+  )
 }
 
 # Helper function to get column names for motif annotations
@@ -154,11 +251,26 @@ add_motifs_lgl.data.frame <- function(x, motifs, alignments = NULL, ignore_linka
   as.character(motifs)
 }
 
-.add_motifs_anno_df <- function(df, motif_anno_fn, motifs, alignments = NULL, ignore_linkages = FALSE, strict_sub = TRUE, match_degree = NULL) {
+.add_motifs_anno_df <- function(
+  df,
+  motif_anno_fn,
+  motifs,
+  alignments = NULL,
+  ignore_linkages = FALSE,
+  strict_sub = TRUE,
+  match_degree = NULL
+) {
   if (!"glycan_structure" %in% colnames(df)) {
     cli::cli_abort("A {.field glycan_structure} column is required.")
   }
-  motif_anno <- motif_anno_fn(df$glycan_structure, motifs, alignments, ignore_linkages, strict_sub, match_degree)
+  motif_anno <- motif_anno_fn(
+    df$glycan_structure,
+    motifs,
+    alignments,
+    ignore_linkages,
+    strict_sub,
+    match_degree
+  )
   # have_motifs/count_motifs set colnames for motif specs, but may return NULL for regular motifs
   # We always need colnames for add_motifs, so generate them if missing
   if (is.null(colnames(motif_anno))) {

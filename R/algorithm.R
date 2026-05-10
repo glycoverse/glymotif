@@ -28,7 +28,9 @@ perform_vf2 <- function(glycan, motif) {
 
 
 unique_vf2_res <- function(res) {
-  if (length(res) <= 1) return(res)
+  if (length(res) <= 1) {
+    return(res)
+  }
   keys <- vapply(
     res,
     function(x) paste(sort(x), collapse = ","),
@@ -39,7 +41,15 @@ unique_vf2_res <- function(res) {
 }
 
 
-is_valid_result <- function(r, glycan, motif, alignment, ignore_linkages, strict_sub = TRUE, match_degree = NULL) {
+is_valid_result <- function(
+  r,
+  glycan,
+  motif,
+  alignment,
+  ignore_linkages,
+  strict_sub = TRUE,
+  match_degree = NULL
+) {
   # Optimized early exit using most selective checks first
   # Alignment check is often the most selective and fastest
   if (is.null(match_degree)) {
@@ -73,7 +83,8 @@ is_valid_result <- function(r, glycan, motif, alignment, ignore_linkages, strict
 
 
 alignment_check <- function(r, glycan, motif, alignment) {
-  switch(alignment,
+  switch(
+    alignment,
     "substructure" = TRUE,
     "core" = {
       glycan_core <- core_node(glycan)
@@ -90,7 +101,9 @@ alignment_check <- function(r, glycan, motif, alignment) {
       motif_v <- igraph::vcount(motif)
       glycan_e <- igraph::ecount(glycan)
       motif_e <- igraph::ecount(motif)
-      motif_v == glycan_v && length(unique(r)) == glycan_v && motif_e == glycan_e
+      motif_v == glycan_v &&
+        length(unique(r)) == glycan_v &&
+        motif_e == glycan_e
     }
   )
 }
@@ -148,28 +161,28 @@ match_sub <- function(glycan_sub, motif_sub, strict_sub) {
   # Split substituents by comma
   glycan_subs <- stringr::str_split(glycan_sub, ",")[[1]]
   motif_subs <- stringr::str_split(motif_sub, ",")[[1]]
-  
+
   # Remove empty strings
   glycan_subs <- glycan_subs[glycan_subs != ""]
   motif_subs <- motif_subs[motif_subs != ""]
-  
+
   # For strict matching: every motif substituent must match a glycan substituent
   # and every glycan substituent must be matched by some motif substituent
-  
+
   # Check if all motif substituents are matched
   motif_matched <- purrr::map_lgl(motif_subs, function(m_sub) {
     any(purrr::map_lgl(glycan_subs, function(g_sub) {
       match_single_sub(g_sub, m_sub)
     }))
   })
-  
+
   # Check if all glycan substituents are matched (unless motif has wildcards)
   glycan_matched <- purrr::map_lgl(glycan_subs, function(g_sub) {
     any(purrr::map_lgl(motif_subs, function(m_sub) {
       match_single_sub(g_sub, m_sub)
     }))
   })
-  
+
   all(motif_matched) && all(glycan_matched)
 }
 
@@ -212,13 +225,16 @@ linkage_check <- function(r, glycan, motif) {
 get_corresponding_edges <- function(r, glycan, motif) {
   motif_edge_list <- igraph::as_edgelist(motif, names = FALSE)
 
-  glycan_edge_ids <- purrr::map_int(seq_len(nrow(motif_edge_list)), function(i) {
-    motif_edge <- motif_edge_list[i, ]  # c(node_id_1, node_id_2)
-    glycan_edge <- r[motif_edge]
-    # Convert igraph.vs to vector as get_edge_ids expects a simple vector
-    # This fix a bug introduced by igraph v2.2.0
-    igraph::get_edge_ids(glycan, as.vector(glycan_edge))
-  })
+  glycan_edge_ids <- purrr::map_int(
+    seq_len(nrow(motif_edge_list)),
+    function(i) {
+      motif_edge <- motif_edge_list[i, ] # c(node_id_1, node_id_2)
+      glycan_edge <- r[motif_edge]
+      # Convert igraph.vs to vector as get_edge_ids expects a simple vector
+      # This fix a bug introduced by igraph v2.2.0
+      igraph::get_edge_ids(glycan, as.vector(glycan_edge))
+    }
+  )
 
   motif_edges <- igraph::E(motif)
   glycan_edges <- igraph::E(glycan)[glycan_edge_ids]
@@ -237,7 +253,8 @@ match_linkage <- function(glycan_linkage, motif_linkage) {
     ml[["pos1"]] == "?" || ml[["pos1"]] == gl[["pos1"]]
   }
   pos2_ok <- function(gl, ml) {
-    ml[["pos2"]] == "?" || all(parse_pos2(gl[["pos2"]]) %in% parse_pos2(ml[["pos2"]]))
+    ml[["pos2"]] == "?" ||
+      all(parse_pos2(gl[["pos2"]]) %in% parse_pos2(ml[["pos2"]]))
   }
 
   anomer_ok(gl, ml) && pos1_ok(gl, ml) && pos2_ok(gl, ml)
@@ -247,8 +264,8 @@ match_linkage <- function(glycan_linkage, motif_linkage) {
 parse_linkage <- function(linkage) {
   c(
     anomer = stringr::str_sub(linkage, 1, 1),
-    pos1   = stringr::str_sub(linkage, 2, 2),
-    pos2   = stringr::str_sub(linkage, 4, -1)
+    pos1 = stringr::str_sub(linkage, 2, 2),
+    pos2 = stringr::str_sub(linkage, 4, -1)
   )
 }
 

@@ -23,7 +23,12 @@ test_that("resolve_motif_spec errors on alignments conflict for dynamic_motifs",
   spec <- dynamic_motifs()
   glycans <- glyrepr::as_glycan_structure("Gal(b1-4)GlcNAc(b1-")
   expect_error(
-    resolve_motif_spec(glycans, spec, alignments = "substructure", match_degree = NULL),
+    resolve_motif_spec(
+      glycans,
+      spec,
+      alignments = "substructure",
+      match_degree = NULL
+    ),
     "Cannot specify.*alignments"
   )
 })
@@ -32,7 +37,12 @@ test_that("resolve_motif_spec errors on match_degree conflict for dynamic_motifs
   spec <- dynamic_motifs()
   glycans <- glyrepr::as_glycan_structure("Gal(b1-4)GlcNAc(b1-")
   expect_error(
-    resolve_motif_spec(glycans, spec, alignments = NULL, match_degree = list(c(TRUE, TRUE))),
+    resolve_motif_spec(
+      glycans,
+      spec,
+      alignments = NULL,
+      match_degree = list(c(TRUE, TRUE))
+    ),
     "Cannot specify.*match_degree"
   )
 })
@@ -43,7 +53,12 @@ test_that("resolve_motif_spec extracts motifs for dynamic_motifs", {
     "Gal(b1-4)GlcNAc(b1-",
     "Man(b1-4)GlcNAc(b1-"
   ))
-  result <- resolve_motif_spec(glycans, spec, alignments = NULL, match_degree = NULL)
+  result <- resolve_motif_spec(
+    glycans,
+    spec,
+    alignments = NULL,
+    match_degree = NULL
+  )
 
   expect_type(result, "list")
   expect_named(result, c("motifs", "alignments", "match_degree"))
@@ -57,7 +72,12 @@ test_that("resolve_motif_spec extracts motifs for branch_motifs", {
   glycans <- glyrepr::as_glycan_structure(
     "Neu5Ac(a2-3)Gal(b1-4)GlcNAc(b1-2)Man(a1-3)[Man(a1-6)]Man(b1-4)GlcNAc(a1-4)GlcNAc(b1-"
   )
-  result <- resolve_motif_spec(glycans, spec, alignments = NULL, match_degree = NULL)
+  result <- resolve_motif_spec(
+    glycans,
+    spec,
+    alignments = NULL,
+    match_degree = NULL
+  )
 
   expect_type(result, "list")
   expect_named(result, c("motifs", "alignments", "match_degree"))
