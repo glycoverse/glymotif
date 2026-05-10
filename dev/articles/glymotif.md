@@ -37,6 +37,7 @@ used it before, we highly recommend checking out its
 first.
 
 ``` r
+
 library(glyrepr)
 library(glymotif)
 ```
@@ -58,6 +59,7 @@ looks unfamiliar, don’t worry—check out [this helpful
 guide](https://glycoverse.github.io/glyrepr/articles/iupac.html) first.
 
 ``` r
+
 glycans <- c(
   "Neu5Ac(a2-3)Gal(b1-3)[Fuc(a1-6)]GlcNAc(b1-3)Gal(b1-3)GalNAc(b1-",
   "Neu5Ac(a2-?)Gal(b1-3)[Fuc(a1-6)]GlcNAc(b1-",
@@ -109,6 +111,7 @@ they avoid redundant computations.
 Let’s define some motifs to work with:
 
 ``` r
+
 motifs <- c(
   "Neu5Ac(a2-3)Gal(b1-3)[Fuc(a1-6)]GlcNAc(b1-",
   "Fuc(a1-",
@@ -126,11 +129,13 @@ All functions follow the same pattern:
   object, or predefined motif names)
 
 ``` r
+
 have_motif(glycans, motif)
 #> [1]  TRUE FALSE FALSE FALSE FALSE
 ```
 
 ``` r
+
 unname(have_motifs(glycans, motifs))  # Removing names for cleaner display
 #>       [,1]  [,2]  [,3]
 #> [1,]  TRUE  TRUE  TRUE
@@ -144,6 +149,7 @@ unname(have_motifs(glycans, motifs))  # Removing names for cleaner display
 predefined motif names instead:
 
 ``` r
+
 db_motifs()[1:10]
 #>  [1] "Blood group H (type 2) - Lewis y" "i antigen"                       
 #>  [3] "LacdiNAc"                         "GT2"                             
@@ -153,6 +159,7 @@ db_motifs()[1:10]
 ```
 
 ``` r
+
 have_motif(glycans, "Type 2 LN2")
 #> [1] FALSE FALSE FALSE FALSE FALSE
 ```
@@ -203,6 +210,7 @@ glycan cannot be more ambiguous than the motif it’s being matched
 against.**
 
 ``` r
+
 # Ambiguous linkages won't match specific ones
 have_motif("Gal(??-?)GalNAc(??-", "Gal(a1-6)GalNAc(a1-")
 #> [1] FALSE
@@ -227,9 +235,10 @@ and the motif. You can use
 to help you with this task.
 
 ``` r
+
 # get_structure_level() expects a glycan structure vector
 get_structure_level(as_glycan_structure(c("Gal(??-?)GalNAc(??-", "Gal(a1-6)GalNAc(a1-")))
-#> [1] "topological" "intact"
+#> [1] "partial"
 ```
 
 here are two strategies:
@@ -237,6 +246,7 @@ here are two strategies:
 **1. Ignore linkage information** when linkages are unreliable:
 
 ``` r
+
 have_motif("Gal(??-?)GalNAc(??-", "Gal(a1-6)GalNAc(a1-", ignore_linkages = TRUE)
 #> [1] TRUE
 ```
@@ -245,6 +255,7 @@ have_motif("Gal(??-?)GalNAc(??-", "Gal(a1-6)GalNAc(a1-", ignore_linkages = TRUE)
 monosaccharides of your data:
 
 ``` r
+
 motif <- glyparse::auto_parse("Gal(a1-6)GalNAc(a1-")  # First, create a `glycan_structure()`
 motif <- glyrepr::convert_to_generic(motif)  # Then, convert to generic
 have_motif("Hex(a1-6)HexNAc(a1-", motif)
@@ -270,6 +281,7 @@ allows you to detect all motifs appears in a set of glycans. Take a
 simple O-glycan for example:
 
 ``` r
+
 extract_motif("Gal(b1-3)[GlcNAc(b1-6)]GalNAc(a1-")
 #> <glycan_structure[6]>
 #> [1] Gal(b1-
@@ -285,6 +297,7 @@ This function works vectorizedly, and only a unique set of motifs will
 be returned.
 
 ``` r
+
 extract_motif(c(
   "Gal(b1-3)[GlcNAc(b1-6)]GalNAc(a1-",
   "Gal(b1-3)GalNAc(a1-"
@@ -307,6 +320,7 @@ extracted. By default, `max_size = 3`, this restricts the motifs to be
 extracted to those with at most 3 monosaccharides.
 
 ``` r
+
 extract_motif("Glc(a1-2)Glc(a1-2)Glc(a1-2)Glc(a1-")
 #> <glycan_structure[3]>
 #> [1] Glc(a1-
@@ -318,6 +332,7 @@ extract_motif("Glc(a1-2)Glc(a1-2)Glc(a1-2)Glc(a1-")
 You can increase the `max_size` to extract larger motifs.
 
 ``` r
+
 extract_motif("Glc(a1-2)Glc(a1-2)Glc(a1-2)Glc(a1-", max_size = 4)
 #> <glycan_structure[4]>
 #> [1] Glc(a1-
@@ -342,6 +357,7 @@ Therefore, we provide
 to extract only the branching motifs.
 
 ``` r
+
 glycans <- c(
   "Neu5Ac(a2-3)Gal(b1-4)GlcNAc(b1-2)Man(a1-3)[Gal(b1-4)GlcNAc(b1-2)Man(a1-6)]Man(b1-4)GlcNAc(a1-4)GlcNAc(b1-",
   "Neu5Ac(a2-3)Gal(b1-4)GlcNAc(b1-2)Man(a1-3)[Neu5Ac(a2-6)Gal(b1-4)GlcNAc(b1-2)Man(a1-6)]Man(b1-4)GlcNAc(a1-4)GlcNAc(b1-",
@@ -376,6 +392,7 @@ are just empty sentinel objects to inform the passed functions to
 perform dynamic motif matching.
 
 ``` r
+
 count_motifs(glycans, branch_motifs())
 #>                                                                                                                       Neu5Ac(a2-3)Gal(b1-4)GlcNAc(b1-
 #> Neu5Ac(a2-3)Gal(b1-4)GlcNAc(b1-2)Man(a1-3)[Gal(b1-4)GlcNAc(b1-2)Man(a1-6)]Man(b1-4)GlcNAc(a1-4)GlcNAc(b1-                                           1

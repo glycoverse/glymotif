@@ -22,6 +22,7 @@ primer](https://glycoverse.github.io/glyrepr/articles/iupac.html) first.
 Trust us—it’s worth it!
 
 ``` r
+
 library(glymotif)
 ```
 
@@ -55,6 +56,7 @@ while the counting aspect is handled by
 [`count_motif()`](https://glycoverse.github.io/glymotif/dev/reference/count_motif.md).
 
 ``` r
+
 glycan <- "Neu5Ac(a2-3)Gal(b1-3)[Fuc(a1-6)]GlcNAc(b1-3)Gal(b1-3)GalNAc(b1-"
 motif <- "Neu5Ac(a2-3)Gal(b1-3)[Fuc(a1-6)]GlcNAc(b1-"
 
@@ -70,6 +72,7 @@ You might be thinking: “This example looks straightforward—why not just
 use string matching?” Great question! 💭 Let’s test that hypothesis:
 
 ``` r
+
 stringr::str_detect(glycan, stringr::fixed(motif))
 #> [1] TRUE
 ```
@@ -105,6 +108,7 @@ clarity in our demonstrations, let’s create simplified wrapper
 functions:
 
 ``` r
+
 # You don't have to understand this.
 have_motifs_simple <- function(glycan, motifs, ...) {
   unname(have_motifs(glycan, motifs, ...)[1, ])
@@ -132,6 +136,7 @@ of structural complexity:
 3.  The complete glycan structure itself
 
 ``` r
+
 glycan <- "Neu5Ac(??-?)Gal(??-?)[Fuc(??-?)]GlcNAc(??-?)Gal(??-?)GalNAc(b1-"
 motifs <- c(
   "Gal(??-",
@@ -154,6 +159,7 @@ and non-reducing end (left side) are biologically distinct. Direction
 affects function:
 
 ``` r
+
 motifs <- c("Fuc(??-?)GlcNAc(??-", "GlcNAc(??-?)Fuc(??-")
 have_motifs_simple(glycan, motifs)
 #> [1]  TRUE FALSE
@@ -175,6 +181,7 @@ mannose residues doesn’t matter. Therefore,
 reports exactly one match:
 
 ``` r
+
 glycan <- "Man(??-?)[Man(??-?)]Man(??-?)GlcNAc(??-?)GlcNAc(??-"
 motif <- "Man(??-?)[Man(??-?)]Man(??-"
 count_motif(glycan, motif)
@@ -211,6 +218,7 @@ often abbreviate linkages by omitting the anomeric carbon number. So
 known.
 
 ``` r
+
 glycan <- "Man(a1-3)[Man(a1-6)]Man(b1-4)GlcNAc(b1-4)[Fuc(a1-6)]GlcNAc(b1-"
 motifs <- c(
   "Fuc(a1-?)GlcNAc(b1-",  # Motif 1: anomer known, position flexible
@@ -244,6 +252,7 @@ Specifically:
 - Generic monosaccharides in glycans can only match generic motifs ✅
 
 ``` r
+
 have_motif("Gal(a1-", "Gal(a1-")
 #> [1] TRUE
 have_motif("Gal(a1-", "Hex(a1-")
@@ -276,6 +285,7 @@ The matching rules are straightforward but powerful:
 Let’s see this in action:
 
 ``` r
+
 glycans <- c("Neu5Ac9Ac(a2-", "Neu5Ac?Ac(a2-", "Neu5Ac(a2-")
 motifs <- c("Neu5Ac9Ac(a2-", "Neu5Ac?Ac(a2-", "Neu5Ac(a2-")
 mat <- have_motifs(glycans, motifs)
@@ -296,6 +306,7 @@ substituent is optional in the motif, so the glycan “Neu5Ac9Ac” can
 match the motif “Neu5Ac”.
 
 ``` r
+
 have_motif("Neu5Ac9Ac(a2-", "Neu5Ac(a2-", strict_sub = FALSE)
 #> [1] TRUE
 ```
@@ -325,6 +336,7 @@ recognize four alignment types:
 Let’s verify these behaviors computationally:
 
 ``` r
+
 glycan <- "Gal(a1-3)Gal(a1-4)Gal(a1-6)Gal(a1-"
 motifs <- c(
   "Gal(a1-3)Gal(a1-4)Gal(a1-6)Gal(a1-",  # motif 1: complete structure
@@ -357,6 +369,7 @@ The matching behavior depends on motif alignment:
 the corresponding internal linkage.
 
 ``` r
+
 glycan <- "Gal(a1-3)GalNAc(b1-"
 motifs <- c("Gal(a1-", "Gal(b1-")
 have_motifs_simple(glycan, motifs)
@@ -367,6 +380,7 @@ have_motifs_simple(glycan, motifs)
 the glycan’s actual reducing end anomer.
 
 ``` r
+
 glycan <- "Gal(a1-3)GalNAc(b1-"
 motifs <- c("GalNAc(a1-", "GalNAc(b1-")
 have_motifs_simple(glycan, motifs)

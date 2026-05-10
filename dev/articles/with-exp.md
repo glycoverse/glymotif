@@ -17,6 +17,7 @@ checking out its
 first. Trust us—it’s worth the detour! 🚀
 
 ``` r
+
 library(glymotif)
 library(glyexp)
 library(dplyr)
@@ -41,6 +42,7 @@ samples. Firstly, let’s use
 to preprocess the data.
 
 ``` r
+
 library(glyclean)
 #> 
 #> Attaching package: 'glyclean'
@@ -96,6 +98,7 @@ Now, let’s peek under the hood and see what treasures we’re working
 with! 👀
 
 ``` r
+
 get_var_info(exp)
 #> # A tibble: 3,979 × 6
 #>    variable       protein glycan_composition glycan_structure protein_site gene 
@@ -114,6 +117,7 @@ get_var_info(exp)
 ```
 
 ``` r
+
 get_sample_info(exp)
 #> # A tibble: 12 × 2
 #>    sample group
@@ -152,6 +156,7 @@ columns that tell us about the motifs hiding in our glycans?
 **The simple approach:** One motif at a time (very intuitive!) 🎯
 
 ``` r
+
 exp |> 
   mutate_var(n_hex = have_motif(glycan_structure, "Hex(a1-")) |>
   get_var_info() |>
@@ -176,6 +181,7 @@ exp |>
 to do this…) 🤷‍♀️
 
 ``` r
+
 # Don't do this
 exp |>
   mutate_var(
@@ -204,6 +210,7 @@ they’re actually optimized powerhouses designed specifically for this
 exact scenario:
 
 ``` r
+
 exp2 <- exp |> 
   add_motifs_lgl(c(motif1 = "Hex(??-", motif2 = "HexNAc(??-", motif3 = "dHex(??-"))
 ```
@@ -212,6 +219,7 @@ Voilà! 🎉 The motif annotations are now seamlessly integrated into your
 variable information tibble.
 
 ``` r
+
 exp2 |>
   get_var_info() |>
   select(variable, motif1, motif2, motif3)
@@ -236,6 +244,7 @@ The possibilities are endless, but here’s a tantalizing example to get
 your creative juices flowing:
 
 ``` r
+
 # You can perform pathway enrichment on all glycoproteins containing some motif:
 exp2 |>
   filter_var(motif1 == TRUE) |>
