@@ -1,6 +1,3 @@
-# Load required packages
-library(glyparse)
-
 # Check if two match results are the same, ignoring orders.
 expect_match_motif_equal <- function(result, expected) {
   # Process all match results of one glycan
@@ -37,7 +34,7 @@ expect_match_motifs_equal <- function(result, expected) {
 # ========== `match_motif()` ==========
 test_that("match_motif works", {
   glycan <- glyrepr::n_glycan_core()
-  motif <- parse_iupac_condensed("Man(a1-3)[Man(a1-6)]Man(b1-")
+  motif <- glyparse::parse_iupac_condensed("Man(a1-3)[Man(a1-6)]Man(b1-")
   result <- match_motif(glycan, motif)
   expect_match_motif_equal(result, list(list(c(1, 2, 3))))
 })
@@ -51,7 +48,7 @@ test_that("match_motif rejects non-glyrepr_structure objects", {
   )
 
   glycan <- "Man(a1-3)[Man(a1-6)]Man(b1-"
-  motif <- parse_iupac_condensed("Man(a1-3)[Man(a1-6)]Man(b1-")
+  motif <- glyparse::parse_iupac_condensed("Man(a1-3)[Man(a1-6)]Man(b1-")
   expect_error(
     match_motif(glycan, motif),
     "must be a 'glyrepr_structure' object"
@@ -60,7 +57,7 @@ test_that("match_motif rejects non-glyrepr_structure objects", {
 
 test_that("match_motif return empty list when motif not found", {
   glycan <- glyrepr::n_glycan_core()
-  motif <- parse_iupac_condensed("Gal(b1-3)GalNAc(a1-")
+  motif <- glyparse::parse_iupac_condensed("Gal(b1-3)GalNAc(a1-")
   result <- match_motif(glycan, motif)
   expect_match_motif_equal(result, list(list()))
 })
@@ -72,7 +69,7 @@ test_that("match_motifs works", {
     "Man(a1-3)[Man(a1-6)]Man(b1-",
     "Man(a1-?)Man(b1-4)GlcNAc(b1-4)GlcNAc(?1-"
   )
-  motifs <- parse_iupac_condensed(motifs)
+  motifs <- glyparse::parse_iupac_condensed(motifs)
   result <- match_motifs(glycan, motifs)
   expected <- list(
     # Motif 1
@@ -92,10 +89,10 @@ test_that("match_motifs accepts character vectors and parses them", {
   expect_length(result, 2)
 
   # match_motifs only accepts glycan_structure objects, not character vectors
-  glycan_str <- parse_iupac_condensed(
+  glycan_str <- glyparse::parse_iupac_condensed(
     "Man(a1-3)[Man(a1-6)]Man(b1-4)GlcNAc(b1-4)GlcNAc(?1-"
   )
-  motifs <- parse_iupac_condensed(c(
+  motifs <- glyparse::parse_iupac_condensed(c(
     "Man(a1-3)[Man(a1-6)]Man(b1-",
     "GlcNAc(b1-4)GlcNAc(?1-"
   ))
@@ -107,7 +104,7 @@ test_that("match_motifs accepts character vectors and parses them", {
 test_that("match_motifs returns empty lists when motifs not found", {
   glycan <- glyrepr::n_glycan_core()
   motifs <- c("Gal(b1-3)GalNAc(a1-", "Neu5Ac(a2-3)Gal(b1-")
-  motifs <- parse_iupac_condensed(motifs)
+  motifs <- glyparse::parse_iupac_condensed(motifs)
   result <- match_motifs(glycan, motifs)
   expected <- list(
     # Motif 1
@@ -121,7 +118,7 @@ test_that("match_motifs returns empty lists when motifs not found", {
 # ========== Multiple glycans ==========
 test_that("match_motif works with multiple glycans", {
   glycans <- c(glyrepr::n_glycan_core(), glyrepr::o_glycan_core_2())
-  motif <- parse_iupac_condensed("Man(a1-3)[Man(a1-6)]Man(b1-")
+  motif <- glyparse::parse_iupac_condensed("Man(a1-3)[Man(a1-6)]Man(b1-")
   result <- match_motif(glycans, motif)
   expected <- list(
     # Glycan 1 (N-glycan core)
@@ -135,7 +132,7 @@ test_that("match_motif works with multiple glycans", {
 test_that("match_motifs works with multiple glycans", {
   glycans <- c(glyrepr::n_glycan_core(), glyrepr::o_glycan_core_2())
   motifs <- c("Man(a1-3)[Man(a1-6)]Man(b1-", "Gal(b1-3)GalNAc(?1-")
-  motifs <- parse_iupac_condensed(motifs)
+  motifs <- glyparse::parse_iupac_condensed(motifs)
   result <- match_motifs(glycans, motifs)
   expected <- list(
     # Motif 1
@@ -163,23 +160,23 @@ test_that("match_motif works with whole alignment", {
 
 test_that("match_motif returns empty with whole alignment when not identical", {
   glycan <- glyrepr::o_glycan_core_2()
-  motif <- parse_iupac_condensed("Gal(b1-3)GalNAc(?1-")
+  motif <- glyparse::parse_iupac_condensed("Gal(b1-3)GalNAc(?1-")
   result <- match_motif(glycan, motif, alignment = "whole")
   expected <- list(list())
   expect_match_motif_equal(result, expected)
 })
 
 test_that("match_motif works with core alignment", {
-  glycan <- parse_iupac_condensed("GlcNAc(b1-6)Gal(b1-6)Gal(a1-")
-  motif <- parse_iupac_condensed("Gal(b1-6)Gal(a1-")
+  glycan <- glyparse::parse_iupac_condensed("GlcNAc(b1-6)Gal(b1-6)Gal(a1-")
+  motif <- glyparse::parse_iupac_condensed("Gal(b1-6)Gal(a1-")
   result <- match_motif(glycan, motif, alignment = "core")
   expected <- list(list(c(2, 3))) # Gal=node2, Gal=node3 (core is node1)
   expect_match_motif_equal(result, expected)
 })
 
 test_that("match_motif works with terminal alignment", {
-  glycan <- parse_iupac_condensed("Gal(b1-3)Gal(b1-4)GlcNAc(b1-")
-  motif <- parse_iupac_condensed("Gal(b1-3)Gal(b1-")
+  glycan <- glyparse::parse_iupac_condensed("Gal(b1-3)Gal(b1-4)GlcNAc(b1-")
+  motif <- glyparse::parse_iupac_condensed("Gal(b1-3)Gal(b1-")
   result <- match_motif(glycan, motif, alignment = "terminal")
   expected <- list(list(c(1, 2))) # Terminal Gal=node1, Gal=node2
   expect_match_motif_equal(result, expected)
@@ -188,7 +185,7 @@ test_that("match_motif works with terminal alignment", {
 test_that("match_motifs works with different alignments", {
   glycan <- glyrepr::o_glycan_core_2()
   motifs <- c("Gal(b1-3)GalNAc(?1-", "GlcNAc(b1-6)GalNAc(?1-")
-  motifs <- parse_iupac_condensed(motifs)
+  motifs <- glyparse::parse_iupac_condensed(motifs)
   alignments <- c("substructure", "whole")
   result <- match_motifs(glycan, motifs, alignments = alignments)
   expected <- list(
@@ -203,7 +200,7 @@ test_that("match_motifs works with different alignments", {
 # ========== ignore_linkages parameter ==========
 test_that("match_motif works with ignore_linkages = TRUE", {
   glycan <- glyrepr::o_glycan_core_2() # Gal(b1-3)GalNAc and GlcNAc(b1-6)GalNAc
-  motif <- parse_iupac_condensed("Gal(b1-4)GalNAc(?1-") # Wrong linkage
+  motif <- glyparse::parse_iupac_condensed("Gal(b1-4)GalNAc(?1-") # Wrong linkage
 
   # Should not match with default ignore_linkages = FALSE
   result_false <- match_motif(glycan, motif, ignore_linkages = FALSE)
@@ -218,7 +215,7 @@ test_that("match_motif works with ignore_linkages = TRUE", {
 test_that("match_motifs works with ignore_linkages = TRUE", {
   glycan <- glyrepr::o_glycan_core_2()
   motifs <- c("Gal(b1-4)GalNAc(?1-", "GlcNAc(b1-3)GalNAc(?1-") # Wrong linkages
-  motifs <- parse_iupac_condensed(motifs)
+  motifs <- glyparse::parse_iupac_condensed(motifs)
 
   result <- match_motifs(glycan, motifs, ignore_linkages = TRUE)
   expected <- list(
@@ -232,18 +229,18 @@ test_that("match_motifs works with ignore_linkages = TRUE", {
 
 # ========== Multiple matches ==========
 test_that("match_motif finds multiple matches in same glycan", {
-  glycan <- parse_iupac_condensed("Gal(b1-3)Gal(b1-3)GalNAc(a1-")
-  motif <- parse_iupac_condensed("Gal(b1-3)GalNAc(a1-")
+  glycan <- glyparse::parse_iupac_condensed("Gal(b1-3)Gal(b1-3)GalNAc(a1-")
+  motif <- glyparse::parse_iupac_condensed("Gal(b1-3)GalNAc(a1-")
   result <- match_motif(glycan, motif)
   expected <- list(list(c(2, 3))) # Gal=node2, GalNAc=node3 (terminal match)
   expect_match_motif_equal(result, expected)
 })
 
 test_that("match_motif finds multiple instances of simple motif", {
-  glycan <- parse_iupac_condensed(
+  glycan <- glyparse::parse_iupac_condensed(
     "Man(a1-3)Man(a1-6)Man(b1-4)GlcNAc(b1-4)GlcNAc(?1-"
   )
-  motif <- parse_iupac_condensed("Man(a1-")
+  motif <- glyparse::parse_iupac_condensed("Man(a1-")
   result <- match_motif(glycan, motif)
   # Should find Man residues at nodes 4 and 5 (terminal Man residues)
   expected <- list(list(c(1), c(2))) # Terminal Man nodes
@@ -252,10 +249,10 @@ test_that("match_motif finds multiple instances of simple motif", {
 
 # ========== Substituents ==========
 test_that("match_motif considers substituents", {
-  glycan1 <- parse_iupac_condensed("Neu5Ac9Ac(a2-3)Gal(b1-4)GlcNAc(?1-")
-  glycan2 <- parse_iupac_condensed("Neu5Ac(a2-3)Gal(b1-4)GlcNAc(?1-")
-  motif1 <- parse_iupac_condensed("Neu5Ac9Ac(a2-3)Gal(b1-")
-  motif2 <- parse_iupac_condensed("Neu5Ac(a2-3)Gal(b1-")
+  glycan1 <- glyparse::parse_iupac_condensed("Neu5Ac9Ac(a2-3)Gal(b1-4)GlcNAc(?1-")
+  glycan2 <- glyparse::parse_iupac_condensed("Neu5Ac(a2-3)Gal(b1-4)GlcNAc(?1-")
+  motif1 <- glyparse::parse_iupac_condensed("Neu5Ac9Ac(a2-3)Gal(b1-")
+  motif2 <- glyparse::parse_iupac_condensed("Neu5Ac(a2-3)Gal(b1-")
 
   # Exact match
   result1 <- match_motif(glycan1, motif1)
@@ -272,8 +269,8 @@ test_that("match_motif considers substituents", {
 
 # ========== Edge cases ==========
 test_that("match_motif works with single monosaccharide", {
-  glycan <- parse_iupac_condensed("Man(?1-")
-  motif <- parse_iupac_condensed("Man(?1-")
+  glycan <- glyparse::parse_iupac_condensed("Man(?1-")
+  motif <- glyparse::parse_iupac_condensed("Man(?1-")
   result <- match_motif(glycan, motif)
   expected <- list(list(c(1)))
   expect_match_motif_equal(result, expected)
@@ -281,7 +278,7 @@ test_that("match_motif works with single monosaccharide", {
 
 test_that("match_motif works with complex branched structure", {
   glycan <- glyrepr::n_glycan_core()
-  motif <- parse_iupac_condensed("GlcNAc(b1-4)GlcNAc(?1-")
+  motif <- glyparse::parse_iupac_condensed("GlcNAc(b1-4)GlcNAc(?1-")
   result <- match_motif(glycan, motif)
   expected <- list(list(c(4, 5)))
   expect_match_motif_equal(result, expected)
@@ -289,16 +286,16 @@ test_that("match_motif works with complex branched structure", {
 
 # ========== Linkage flexibility ==========
 test_that("match_motif works with flexible linkages", {
-  glycan <- parse_iupac_condensed("Fuc(a1-6)GlcNAc(b1-")
-  motif <- parse_iupac_condensed("Fuc(a1-?)GlcNAc(b1-") # Flexible position
+  glycan <- glyparse::parse_iupac_condensed("Fuc(a1-6)GlcNAc(b1-")
+  motif <- glyparse::parse_iupac_condensed("Fuc(a1-?)GlcNAc(b1-") # Flexible position
   result <- match_motif(glycan, motif)
   expected <- list(list(c(1, 2)))
   expect_match_motif_equal(result, expected)
 })
 
 test_that("match_motif works with flexible anomer", {
-  glycan <- parse_iupac_condensed("Gal(a1-3)GalNAc(b1-")
-  motif <- parse_iupac_condensed("Gal(?1-3)GalNAc(b1-") # Flexible anomer
+  glycan <- glyparse::parse_iupac_condensed("Gal(a1-3)GalNAc(b1-")
+  motif <- glyparse::parse_iupac_condensed("Gal(?1-3)GalNAc(b1-") # Flexible anomer
   result <- match_motif(glycan, motif)
   expected <- list(list(c(1, 2)))
   expect_match_motif_equal(result, expected)
@@ -308,7 +305,7 @@ test_that("match_motif works with flexible anomer", {
 test_that("match_motifs handles mismatched alignments length", {
   glycan <- glyrepr::o_glycan_core_2()
   motifs <- c("Gal(b1-3)GalNAc(?1-", "GlcNAc(b1-6)GalNAc(?1-", "Man(a1-")
-  motifs <- parse_iupac_condensed(motifs)
+  motifs <- glyparse::parse_iupac_condensed(motifs)
   alignments <- c("substructure", "core") # length 2, motifs length 3
 
   expect_error(
@@ -320,7 +317,7 @@ test_that("match_motifs handles mismatched alignments length", {
 test_that("match_motifs works with single alignment for all motifs", {
   glycan <- glyrepr::o_glycan_core_2()
   motifs <- c("Gal(b1-3)GalNAc(?1-", "GlcNAc(b1-6)GalNAc(?1-")
-  motifs <- parse_iupac_condensed(motifs)
+  motifs <- glyparse::parse_iupac_condensed(motifs)
 
   result <- match_motifs(glycan, motifs, alignments = "substructure")
   expected <- list(
@@ -335,7 +332,7 @@ test_that("match_motifs works with single alignment for all motifs", {
 # ========== Return value structure ==========
 test_that("match_motif returns correct nested list structure", {
   glycan <- glyrepr::n_glycan_core()
-  motif <- parse_iupac_condensed("Man(a1-3)[Man(a1-6)]Man(b1-")
+  motif <- glyparse::parse_iupac_condensed("Man(a1-3)[Man(a1-6)]Man(b1-")
   result <- match_motif(glycan, motif)
 
   # Check structure: list of glycans, each containing list of matches
@@ -350,7 +347,7 @@ test_that("match_motif returns correct nested list structure", {
 test_that("match_motifs returns correct nested list structure", {
   glycan <- glyrepr::n_glycan_core()
   motifs <- c("Man(a1-3)[Man(a1-6)]Man(b1-", "GlcNAc(b1-4)GlcNAc(?1-")
-  motifs <- parse_iupac_condensed(motifs)
+  motifs <- glyparse::parse_iupac_condensed(motifs)
   result <- match_motifs(glycan, motifs)
 
   # Check structure: list of motifs, each containing list of glycans, each containing list of matches
@@ -365,8 +362,8 @@ test_that("match_motifs returns correct nested list structure", {
 
 # ========== Empty results ==========
 test_that("match_motif handles empty results correctly", {
-  glycan <- parse_iupac_condensed("Man(?1-")
-  motif <- parse_iupac_condensed("Gal(b1-3)GalNAc(a1-")
+  glycan <- glyparse::parse_iupac_condensed("Man(?1-")
+  motif <- glyparse::parse_iupac_condensed("Gal(b1-3)GalNAc(a1-")
   result <- match_motif(glycan, motif)
 
   expect_type(result, "list")
@@ -378,7 +375,7 @@ test_that("match_motif handles empty results correctly", {
 test_that("match_motifs handles mixed empty and non-empty results", {
   glycan <- glyrepr::o_glycan_core_2()
   motifs <- c("Gal(b1-3)GalNAc(?1-", "Neu5Ac(a2-3)Gal(b1-") # First matches, second doesn't
-  motifs <- parse_iupac_condensed(motifs)
+  motifs <- glyparse::parse_iupac_condensed(motifs)
   result <- match_motifs(glycan, motifs)
 
   expect_length(result, 2) # Two motifs
