@@ -36,6 +36,7 @@ Imports:
     cli,
     glyrepr (>= 0.10.0),
     glyparse (>= 0.5.4),
+    glydraw (>= 0.4.0),
     igraph,
     purrr,
     rlang,
