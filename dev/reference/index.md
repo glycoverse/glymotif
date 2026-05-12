@@ -30,3 +30,5 @@
 - [`match_motif()`](https://glycoverse.github.io/glymotif/dev/reference/match_motif.md)
   [`match_motifs()`](https://glycoverse.github.io/glymotif/dev/reference/match_motif.md)
   : Match Motif(s) in Glycans
+- [`view_motif()`](https://glycoverse.github.io/glymotif/dev/reference/view_motif.md)
+  : View motif matches on a glycan
