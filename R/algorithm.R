@@ -14,6 +14,172 @@ colorize_graphs <- function(glycan, motif) {
 }
 
 
+#' Create a Base Validation Context
+#'
+#' @param glycan A colored glycan graph.
+#' @param motif A colored motif graph.
+#'
+#' @return A base validation context.
+#' @noRd
+new_validation_context <- function(glycan, motif) {
+  list(
+    glycan = glycan,
+    motif = motif,
+    glycan_sub = igraph::vertex_attr(glycan, "sub"),
+    motif_sub = igraph::vertex_attr(motif, "sub"),
+    glycan_in = NULL,
+    glycan_out = NULL,
+    motif_in = NULL,
+    motif_out = NULL,
+    glycan_core = NULL,
+    motif_core = NULL,
+    glycan_terminals = NULL,
+    motif_terminals = NULL,
+    glycan_v = NULL,
+    motif_v = NULL,
+    glycan_e = NULL,
+    motif_e = NULL,
+    motif_edge_list = NULL,
+    motif_linkages = NULL,
+    glycan_edge_linkages = NULL,
+    glycan_anomer = NULL,
+    motif_anomer = NULL,
+    glycan_incoming_linkages = NULL
+  )
+}
+
+
+#' Add Alignment Data to a Validation Context
+#'
+#' @param context A validation context.
+#' @param alignment Alignment mode.
+#'
+#' @return A validation context with alignment-specific data.
+#' @noRd
+add_alignment_context <- function(context, alignment) {
+  switch(
+    alignment,
+    "substructure" = context,
+    "core" = add_core_context(context),
+    "terminal" = {
+      context$glycan_terminals <- which(
+        igraph::degree(context$glycan, mode = "out") == 0
+      )
+      context$motif_terminals <- which(
+        igraph::degree(context$motif, mode = "out") == 0
+      )
+      context
+    },
+    "whole" = {
+      context$glycan_v <- igraph::vcount(context$glycan)
+      context$motif_v <- igraph::vcount(context$motif)
+      context$glycan_e <- igraph::ecount(context$glycan)
+      context$motif_e <- igraph::ecount(context$motif)
+      context
+    }
+  )
+}
+
+
+#' Add Degree Data to a Validation Context
+#'
+#' @param context A validation context.
+#'
+#' @return A validation context with degree vectors.
+#' @noRd
+add_degree_context <- function(context) {
+  context$motif_in <- igraph::degree(context$motif, mode = "in")
+  context$motif_out <- igraph::degree(context$motif, mode = "out")
+  context$glycan_in <- igraph::degree(context$glycan, mode = "in")
+  context$glycan_out <- igraph::degree(context$glycan, mode = "out")
+  context
+}
+
+
+#' Add Core Node Data to a Validation Context
+#'
+#' @param context A validation context.
+#'
+#' @return A validation context with core node indices.
+#' @noRd
+add_core_context <- function(context) {
+  if (is.null(context$glycan_core)) {
+    context$glycan_core <- which(
+      igraph::degree(context$glycan, mode = "in") == 0
+    )
+    context$motif_core <- which(igraph::degree(context$motif, mode = "in") == 0)
+  }
+  context
+}
+
+
+#' Add Linkage and Anomer Data to a Validation Context
+#'
+#' @param context A validation context.
+#'
+#' @return A validation context with linkage and anomer data.
+#' @noRd
+add_linkage_context <- function(context) {
+  context <- add_core_context(context)
+
+  context$glycan_anomer <- igraph::graph_attr(context$glycan, "anomer")
+  context$motif_anomer <- igraph::graph_attr(context$motif, "anomer")
+
+  glycan_edge_list <- igraph::as_edgelist(context$glycan, names = FALSE)
+  glycan_linkages <- igraph::edge_attr(context$glycan, "linkage")
+  context$glycan_incoming_linkages <- rep(
+    NA_character_,
+    igraph::vcount(context$glycan)
+  )
+  if (nrow(glycan_edge_list) > 0) {
+    context$glycan_incoming_linkages[glycan_edge_list[, 2]] <- glycan_linkages
+  }
+
+  motif_edge_list <- igraph::as_edgelist(context$motif, names = FALSE)
+  context$motif_edge_list <- motif_edge_list
+  context$motif_linkages <- igraph::edge_attr(context$motif, "linkage")
+  if (nrow(motif_edge_list) > 0) {
+    context$glycan_edge_linkages <- matrix(
+      NA_character_,
+      nrow = igraph::vcount(context$glycan),
+      ncol = igraph::vcount(context$glycan)
+    )
+    context$glycan_edge_linkages[glycan_edge_list] <- glycan_linkages
+  }
+
+  context
+}
+
+
+#' Prepare Reusable Graph Data for Candidate Validation
+#'
+#' @param glycan A colored glycan graph.
+#' @param motif A colored motif graph.
+#' @param alignment Alignment mode.
+#' @param ignore_linkages Whether linkage/anomer checks are skipped.
+#' @param match_degree Degree matching vector.
+#'
+#' @return A validation context containing only data needed for this validation mode.
+#' @noRd
+prepare_validation_context <- function(
+  glycan,
+  motif,
+  alignment = "substructure",
+  ignore_linkages = FALSE,
+  match_degree = NULL
+) {
+  context <- new_validation_context(glycan, motif)
+  context <- add_alignment_context(context, alignment)
+  if (!is.null(match_degree) && any(match_degree)) {
+    context <- add_degree_context(context)
+  }
+  if (!ignore_linkages) {
+    context <- add_linkage_context(context)
+  }
+  context
+}
+
+
 perform_vf2 <- function(glycan, motif) {
   # Perform "VF2" algorithm
   # `res` is a list of all possible matches between `glycan` and `motif`.
@@ -48,32 +214,57 @@ is_valid_result <- function(
   alignment,
   ignore_linkages,
   strict_sub = TRUE,
-  match_degree = NULL
+  match_degree = NULL,
+  context = NULL
 ) {
   # Optimized early exit using most selective checks first
   # Alignment check is often the most selective and fastest
   if (is.null(match_degree)) {
-    if (!alignment_check(r, glycan, motif, alignment = alignment)) {
+    if (
+      !alignment_check(
+        r,
+        glycan,
+        motif,
+        context = context,
+        alignment = alignment
+      )
+    ) {
       return(FALSE)
     }
   }
 
   # Substituent check is relatively fast and often selective
-  if (!substituent_check(r, glycan, motif, strict_sub = strict_sub)) {
+  if (
+    !substituent_check(
+      r,
+      glycan,
+      motif,
+      context = context,
+      strict_sub = strict_sub
+    )
+  ) {
     return(FALSE)
   }
 
-  if (!degree_check(r, glycan, motif, match_degree)) {
+  if (
+    !degree_check(
+      r,
+      glycan,
+      motif,
+      context = context,
+      match_degree = match_degree
+    )
+  ) {
     return(FALSE)
   }
 
   # Only check linkages and anomer if linkages are not ignored
   # These are the most expensive checks, so do them last
   if (!ignore_linkages) {
-    if (!linkage_check(r, glycan, motif)) {
+    if (!linkage_check(r, glycan, motif, context = context)) {
       return(FALSE)
     }
-    if (!anomer_check(r, glycan, motif)) {
+    if (!anomer_check(r, glycan, motif, context = context)) {
       return(FALSE)
     }
   }
@@ -128,36 +319,67 @@ graph_has_linkages <- function(glycan) {
 }
 
 
-alignment_check <- function(r, glycan, motif, alignment) {
+alignment_check <- function(
+  r,
+  glycan = NULL,
+  motif = NULL,
+  alignment,
+  context = NULL
+) {
   switch(
     alignment,
     "substructure" = TRUE,
     "core" = {
-      glycan_core <- core_node(glycan)
-      motif_core <- core_node(motif)
-      r[[motif_core]] == glycan_core
+      if (is.null(context)) {
+        glycan_core <- core_node(glycan)
+        motif_core <- core_node(motif)
+        r[[motif_core]] == glycan_core
+      } else {
+        r[[context$motif_core]] == context$glycan_core
+      }
     },
     "terminal" = {
-      glycan_terminals <- terminal_nodes(glycan)
-      motif_terminals <- terminal_nodes(motif)
-      all(r[motif_terminals] %in% glycan_terminals)
+      if (is.null(context)) {
+        glycan_terminals <- terminal_nodes(glycan)
+        motif_terminals <- terminal_nodes(motif)
+        all(r[motif_terminals] %in% glycan_terminals)
+      } else {
+        all(r[context$motif_terminals] %in% context$glycan_terminals)
+      }
     },
     "whole" = {
-      glycan_v <- igraph::vcount(glycan)
-      motif_v <- igraph::vcount(motif)
-      glycan_e <- igraph::ecount(glycan)
-      motif_e <- igraph::ecount(motif)
-      motif_v == glycan_v &&
-        length(unique(r)) == glycan_v &&
-        motif_e == glycan_e
+      if (is.null(context)) {
+        glycan_v <- igraph::vcount(glycan)
+        motif_v <- igraph::vcount(motif)
+        glycan_e <- igraph::ecount(glycan)
+        motif_e <- igraph::ecount(motif)
+        motif_v == glycan_v &&
+          length(unique(r)) == glycan_v &&
+          motif_e == glycan_e
+      } else {
+        context$motif_v == context$glycan_v &&
+          length(unique(r)) == context$glycan_v &&
+          context$motif_e == context$glycan_e
+      }
     }
   )
 }
 
 
-substituent_check <- function(r, glycan, motif, strict_sub) {
-  glycan_subs <- igraph::V(glycan)$sub[r]
-  motif_subs <- igraph::V(motif)$sub
+substituent_check <- function(
+  r,
+  glycan = NULL,
+  motif = NULL,
+  strict_sub,
+  context = NULL
+) {
+  if (!is.null(context)) {
+    glycan_subs <- context$glycan_sub[r]
+    motif_subs <- context$motif_sub
+  } else {
+    glycan_subs <- igraph::V(glycan)$sub[r]
+    motif_subs <- igraph::V(motif)$sub
+  }
   for (i in seq_along(glycan_subs)) {
     if (!match_sub(glycan_subs[[i]], motif_subs[[i]], strict_sub)) {
       return(FALSE)
@@ -175,15 +397,28 @@ substituent_check <- function(r, glycan, motif, strict_sub) {
 #'
 #' @return `TRUE` if all selected nodes have matching in- and out-degrees.
 #' @noRd
-degree_check <- function(r, glycan, motif, match_degree) {
+degree_check <- function(
+  r,
+  glycan = NULL,
+  motif = NULL,
+  match_degree,
+  context = NULL
+) {
   if (is.null(match_degree) || !any(match_degree)) {
     return(TRUE)
   }
 
-  motif_in <- igraph::degree(motif, mode = "in")
-  motif_out <- igraph::degree(motif, mode = "out")
-  glycan_in <- igraph::degree(glycan, mode = "in")
-  glycan_out <- igraph::degree(glycan, mode = "out")
+  if (!is.null(context)) {
+    motif_in <- context$motif_in
+    motif_out <- context$motif_out
+    glycan_in <- context$glycan_in
+    glycan_out <- context$glycan_out
+  } else {
+    motif_in <- igraph::degree(motif, mode = "in")
+    motif_out <- igraph::degree(motif, mode = "out")
+    glycan_in <- igraph::degree(glycan, mode = "in")
+    glycan_out <- igraph::degree(glycan, mode = "out")
+  }
 
   motif_idx <- which(match_degree)
   all(purrr::map_lgl(motif_idx, function(i) {
@@ -255,10 +490,23 @@ match_single_sub <- function(glycan_sub, motif_sub) {
 }
 
 
-linkage_check <- function(r, glycan, motif) {
-  edges <- get_corresponding_edges(r, glycan, motif)
-  glycan_linkages <- edges$glycan$linkage
-  motif_linkages <- edges$motif$linkage
+linkage_check <- function(r, glycan = NULL, motif = NULL, context = NULL) {
+  if (is.null(context)) {
+    edges <- get_corresponding_edges(r, glycan, motif)
+    glycan_linkages <- edges$glycan$linkage
+    motif_linkages <- edges$motif$linkage
+  } else {
+    if (nrow(context$motif_edge_list) == 0) {
+      return(TRUE)
+    }
+
+    glycan_edge_list <- matrix(
+      r[as.vector(context$motif_edge_list)],
+      ncol = 2L
+    )
+    glycan_linkages <- context$glycan_edge_linkages[glycan_edge_list]
+    motif_linkages <- context$motif_linkages
+  }
   for (i in seq_along(glycan_linkages)) {
     if (!match_linkage(glycan_linkages[[i]], motif_linkages[[i]])) {
       return(FALSE)
@@ -325,19 +573,33 @@ parse_pos2 <- function(pos2) {
 }
 
 
-anomer_check <- function(r, glycan, motif) {
-  glycan_core <- core_node(glycan)
-  motif_core <- core_node(motif)
-  matched_g_node <- r[[motif_core]]
+anomer_check <- function(r, glycan = NULL, motif = NULL, context = NULL) {
+  if (is.null(context)) {
+    glycan_core <- core_node(glycan)
+    motif_core <- core_node(motif)
+    matched_g_node <- r[[motif_core]]
 
-  if (matched_g_node == glycan_core) {
-    # This means two cores are matched.
-    match_anomer(glycan$anomer, motif$anomer)
+    if (matched_g_node == glycan_core) {
+      # This means two cores are matched.
+      match_anomer(glycan$anomer, motif$anomer)
+    } else {
+      # The motif anomer should match a linkage in the glycan.
+      linkage <- igraph::incident(glycan, matched_g_node, mode = "in")$linkage
+      linkage_anomer <- stringr::str_split_1(linkage, "-")[[1]]
+      match_anomer(linkage_anomer, motif$anomer)
+    }
   } else {
-    # The motif anomer should match a linkage in the glycan.
-    linkage <- igraph::incident(glycan, matched_g_node, mode = "in")$linkage
-    linkage_anomer <- stringr::str_split_1(linkage, "-")[[1]]
-    match_anomer(linkage_anomer, motif$anomer)
+    matched_g_node <- r[[context$motif_core]]
+
+    if (matched_g_node == context$glycan_core) {
+      # This means two cores are matched.
+      match_anomer(context$glycan_anomer, context$motif_anomer)
+    } else {
+      # The motif anomer should match a linkage in the glycan.
+      linkage <- context$glycan_incoming_linkages[[matched_g_node]]
+      linkage_anomer <- stringr::str_split_1(linkage, "-")[[1]]
+      match_anomer(linkage_anomer, context$motif_anomer)
+    }
   }
 }
 
