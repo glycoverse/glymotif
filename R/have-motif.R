@@ -368,6 +368,7 @@ have_motif_ <- function(
 .have_motif_single <- function(
   glycan_graph,
   motif_graph,
+  motif_has_linkages,
   alignment,
   ignore_linkages = FALSE,
   strict_sub = TRUE,
@@ -375,6 +376,18 @@ have_motif_ <- function(
 ) {
   # Optimized version with early termination
   # Check if any match is valid, returning immediately on first valid match
+  linkage_match_mode <- resolve_linkage_match_mode(
+    glycan_graph,
+    motif_has_linkages,
+    ignore_linkages
+  )
+
+  # "none" is an early no-match result: the motif requires linkage information,
+  # but the glycan has none, so no candidate can become valid.
+  if (linkage_match_mode == "none") {
+    return(FALSE)
+  }
+
   c_graphs <- colorize_graphs(glycan_graph, motif_graph)
   glycan_graph <- c_graphs$glycan
   motif_graph <- c_graphs$motif
@@ -385,7 +398,9 @@ have_motif_ <- function(
     glycan = glycan_graph,
     motif = motif_graph,
     alignment = alignment,
-    ignore_linkages = ignore_linkages,
+    # "ignore" still runs VF2 and the non-linkage validators, but bypasses the
+    # expensive linkage/anomer checks inside is_valid_result().
+    ignore_linkages = linkage_match_mode == "ignore",
     strict_sub = strict_sub,
     match_degree = match_degree
   )
