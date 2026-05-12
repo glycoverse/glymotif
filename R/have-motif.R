@@ -392,11 +392,32 @@ have_motif_ <- function(
   glycan_graph <- c_graphs$glycan
   motif_graph <- c_graphs$motif
   res <- perform_vf2(glycan_graph, motif_graph)
+  if (length(res) == 0) {
+    return(FALSE)
+  }
+
+  use_validation_context <- length(res) > 1 &&
+    alignment == "substructure" &&
+    is.null(match_degree) &&
+    igraph::vcount(motif_graph) == 1
+
+  validation_context <- if (use_validation_context) {
+    prepare_validation_context(
+      glycan_graph,
+      motif_graph,
+      alignment = alignment,
+      ignore_linkages = linkage_match_mode == "ignore",
+      match_degree = match_degree
+    )
+  } else {
+    NULL
+  }
   purrr::some(
     res,
     is_valid_result,
     glycan = glycan_graph,
     motif = motif_graph,
+    context = validation_context,
     alignment = alignment,
     # "ignore" still runs VF2 and the non-linkage validators, but bypasses the
     # expensive linkage/anomer checks inside is_valid_result().
