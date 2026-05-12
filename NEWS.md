@@ -1,5 +1,13 @@
 # glymotif (development version)
 
+## New features
+
+* Add `view_motif()` to visualize motif structures with `glydraw` (#21).
+
+## Minor improvements and bug fixes
+
+* Performance optimization for all motif matching functions for motifs with unknown linkages (#23).
+
 # glymotif 0.13.1
 
 ## Minor improvements and bug fixes
