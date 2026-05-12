@@ -37,14 +37,6 @@ view_motif <- function(
   strict_sub = TRUE,
   match_degree = NULL
 ) {
-  params <- prepare_motif_args(
-    glycans = glycan,
-    motifs = motif,
-    alignments = alignment,
-    ignore_linkages = ignore_linkages,
-    match_degree = match_degree,
-    strict_sub = strict_sub
-  )
   if (length(glycan) != 1) {
     cli::cli_abort(c(
       "Only one glycan can be visualized at a time.",
@@ -57,11 +49,20 @@ view_motif <- function(
       "x" = "Got {.val {length(motif)}} motifs."
     ))
   }
+  params <- prepare_motif_args(
+    glycans = glycan,
+    motifs = motif,
+    alignments = alignment,
+    ignore_linkages = ignore_linkages,
+    match_degree = match_degree,
+    strict_sub = strict_sub,
+    single_motif = TRUE
+  )
 
   match_res <- match_motif(
     params$glycans,
-    params$motifs,
-    params$alignments,
+    params$motif,
+    params$alignment,
     ignore_linkages = params$ignore_linkages,
     strict_sub = params$strict_sub,
     match_degree = params$match_degree
