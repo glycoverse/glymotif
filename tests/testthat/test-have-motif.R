@@ -704,6 +704,78 @@ test_that("have_motif works for repeated glycans", {
   expect_equal(result, c(TRUE, TRUE, TRUE, TRUE, FALSE))
 })
 
+test_that("have_motif skips linkage validation when motif linkages are all unknown", {
+  testthat::local_mocked_bindings(
+    linkage_check = function(...) {
+      stop("linkage_check should not be called")
+    },
+    anomer_check = function(...) {
+      stop("anomer_check should not be called")
+    },
+    .package = "glymotif"
+  )
+
+  expect_true(have_motif(
+    "Gal(b1-3)GalNAc(?1-",
+    "Gal(??-?)GalNAc(??-"
+  ))
+})
+
+test_that("have_motif skips linkage validation for unknown anomer with unknown target", {
+  testthat::local_mocked_bindings(
+    linkage_check = function(...) {
+      stop("linkage_check should not be called")
+    },
+    anomer_check = function(...) {
+      stop("anomer_check should not be called")
+    },
+    .package = "glymotif"
+  )
+
+  expect_true(have_motif(
+    "Gal(b1-3)GalNAc(?1-",
+    "Gal(?1-?)GalNAc(?1-"
+  ))
+})
+
+test_that("have_motif skips linkage validation for unknown Neu5Ac anomer with unknown target", {
+  testthat::local_mocked_bindings(
+    linkage_check = function(...) {
+      stop("linkage_check should not be called")
+    },
+    anomer_check = function(...) {
+      stop("anomer_check should not be called")
+    },
+    .package = "glymotif"
+  )
+
+  expect_true(have_motif(
+    "Neu5Ac(a2-3)Gal(?1-",
+    "Neu5Ac(?2-?)Gal(?1-"
+  ))
+})
+
+test_that("have_motif keeps linkage validation when motif has informative linkages", {
+  linkage_checked <- FALSE
+
+  testthat::local_mocked_bindings(
+    linkage_check = function(...) {
+      linkage_checked <<- TRUE
+      TRUE
+    },
+    anomer_check = function(...) {
+      TRUE
+    },
+    .package = "glymotif"
+  )
+
+  expect_true(have_motif(
+    "Gal(b1-3)GalNAc(?1-",
+    "Gal(b1-?)GalNAc(??-"
+  ))
+  expect_true(linkage_checked)
+})
+
 # ========== match_degree ==========
 test_that("match_degree enforces degree constraints on selected nodes", {
   glycan <- glyparse::parse_iupac_condensed("Gal(b1-3)[GlcNAc(b1-6)]GalNAc(a1-")

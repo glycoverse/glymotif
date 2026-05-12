@@ -69,7 +69,7 @@ is_valid_result <- function(
 
   # Only check linkages and anomer if linkages are not ignored
   # These are the most expensive checks, so do them last
-  if (!ignore_linkages) {
+  if (!should_skip_linkage_validation(ignore_linkages, motif)) {
     if (!linkage_check(r, glycan, motif)) {
       return(FALSE)
     }
@@ -79,6 +79,55 @@ is_valid_result <- function(
   }
 
   return(TRUE)
+}
+
+#' Check Whether Linkage Validation Can Be Skipped
+#'
+#' @param ignore_linkages A logical scalar.
+#' @param motif A motif graph.
+#'
+#' @return `TRUE` when linkage and anomer validation cannot further filter
+#'   matched candidates.
+#' @noRd
+should_skip_linkage_validation <- function(ignore_linkages, motif) {
+  if (ignore_linkages) {
+    return(TRUE)
+  }
+
+  motif_linkages <- igraph::E(motif)$linkage
+  if (length(motif_linkages) == 0L) {
+    return(FALSE)
+  }
+
+  is_unknown_anomer(motif$anomer) &&
+    all(purrr::map_lgl(motif_linkages, is_unknown_linkage))
+}
+
+#' Check Whether a Linkage Has No Informative Constraint
+#'
+#' @param linkage A linkage string.
+#'
+#' @return `TRUE` when the linkage does not constrain the anomer or acceptor
+#'   position.
+#' @noRd
+is_unknown_linkage <- function(linkage) {
+  parsed <- parse_linkage(linkage)
+
+  parsed[["anomer"]] == "?" &&
+    parsed[["pos1"]] %in% c("?", "1", "2") &&
+    parsed[["pos2"]] == "?"
+}
+
+#' Check Whether an Anomer Has No Informative Constraint
+#'
+#' @param anomer An anomer string.
+#'
+#' @return `TRUE` when the anomer does not constrain the anomeric state.
+#' @noRd
+is_unknown_anomer <- function(anomer) {
+  parsed <- parse_anomer(anomer)
+
+  parsed[["anomer"]] == "?" && parsed[["pos"]] %in% c("?", "1", "2")
 }
 
 
