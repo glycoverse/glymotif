@@ -1,5 +1,20 @@
 # ----- Prepare arguments -----
-# Unified function to prepare arguments for both single and multiple motifs
+#' Prepare Motif Arguments
+#'
+#' Normalizes glycan, motif, alignment, linkage, substituent, and match-degree
+#' arguments for public motif-matching entry points.
+#'
+#' @param glycans A glycan structure vector or parseable character vector.
+#' @param motifs Motifs, known motif names, or a motif specification object.
+#' @param alignments Optional alignment values.
+#' @param ignore_linkages Whether linkage matching should be ignored.
+#' @param match_degree Optional degree-matching mask.
+#' @param single_motif Whether the caller expects exactly one motif.
+#' @param strict_sub Whether substituent matching should be strict.
+#' @param call The call environment used for errors.
+#'
+#' @return A normalized argument list for single- or multiple-motif internals.
+#' @noRd
 prepare_motif_args <- function(
   glycans,
   motifs,
@@ -10,139 +25,241 @@ prepare_motif_args <- function(
   strict_sub = TRUE,
   call = rlang::caller_env()
 ) {
-  # Handle motif specifications (dynamic_motifs_spec, branch_motifs_spec)
-  if (
-    inherits(motifs, "dynamic_motifs_spec") ||
-      inherits(motifs, "branch_motifs_spec")
-  ) {
-    glycans <- ensure_glycans_are_structures(glycans, call = call)
-    resolved <- resolve_motif_spec(
+  prepared <- if (is_motif_spec(motifs)) {
+    prepare_spec_motif_args(
       glycans,
       motifs,
       alignments,
       match_degree,
       strict_sub,
-      ignore_linkages
-    )
-
-    # Now prepare args normally with resolved values
-    motifs <- resolved$motifs
-
-    # Add IUPAC strings as names for column naming in results (if not already set by resolve_motif_spec)
-    if (length(motifs) > 0 && is.null(names(motifs))) {
-      names(motifs) <- as.character(motifs)
-    }
-    alignments <- resolved$alignments
-    match_degree <- resolved$match_degree
-
-    # Continue with normal validation on resolved motifs
-    if (has_duplicate_motifs(motifs)) {
-      dupes <- unique(motifs[duplicated(motifs)])
-      cli::cli_abort(
-        c(
-          "`motifs` cannot have duplications.",
-          "x" = "Duplicate motifs: {.val {dupes}}.",
-          "i" = "Consider using {.fn unique}."
-        ),
-        call = call
-      )
-    }
-
-    motif_type <- get_motif_type(motifs, call = call)
-    motifs <- ensure_motifs_are_structures(
-      motifs,
-      motif_type,
-      require_scalar = single_motif,
+      ignore_linkages,
       call = call
     )
-    match_degree <- validate_match_degree(
-      match_degree,
-      motifs,
-      single_motif,
-      call = call
-    )
-
-    if (single_motif) {
-      return(list(
-        glycans = glycans,
-        motif = motifs,
-        alignment = alignments,
-        ignore_linkages = ignore_linkages,
-        strict_sub = strict_sub,
-        match_degree = match_degree
-      ))
-    } else {
-      return(list(
-        glycans = glycans,
-        motifs = motifs,
-        alignments = alignments,
-        ignore_linkages = ignore_linkages,
-        strict_sub = strict_sub,
-        match_degree = match_degree
-      ))
-    }
-  }
-
-  # Unified validation logic
-  if (is.null(match_degree)) {
-    valid_alignments_arg(alignments, motifs)
-  }
-  valid_ignore_linkages_arg(ignore_linkages)
-
-  # Check for duplicate motifs
-  if (has_duplicate_motifs(motifs)) {
-    dupes <- unique(motifs[duplicated(motifs)])
-    cli::cli_abort(
-      c(
-        "`motifs` cannot have duplications.",
-        "x" = "Duplicate motifs: {.val {dupes}}.",
-        "i" = "Consider using {.fn unique}."
-      ),
-      call = call
-    )
-  }
-
-  motif_type <- get_motif_type(motifs, call = call)
-  alignments <- if (is.null(match_degree)) {
-    decide_alignments(motifs, motif_type, alignments)
   } else {
-    vctrs::vec_recycle("substructure", length(motifs))
+    prepare_regular_motif_args(
+      glycans,
+      motifs,
+      alignments,
+      match_degree,
+      ignore_linkages,
+      call = call
+    )
   }
 
-  glycans <- ensure_glycans_are_structures(glycans, call = call)
+  validate_duplicate_motifs(prepared$motifs, call = call)
+
+  motif_type <- get_motif_type(prepared$motifs, call = call)
+  alignments <- resolve_prepared_alignments(
+    prepared$motifs,
+    motif_type,
+    prepared$alignments,
+    prepared$match_degree,
+    prepared$from_spec
+  )
+  glycans <- if (prepared$from_spec) {
+    prepared$glycans
+  } else {
+    ensure_glycans_are_structures(prepared$glycans, call = call)
+  }
+
   motifs <- ensure_motifs_are_structures(
-    motifs,
+    prepared$motifs,
     motif_type,
     require_scalar = single_motif,
     call = call
   )
   match_degree <- validate_match_degree(
-    match_degree,
+    prepared$match_degree,
     motifs,
     single_motif,
     call = call
   )
 
-  # Return appropriate format based on single_motif flag
+  new_prepared_motif_args(
+    glycans = glycans,
+    motifs = motifs,
+    alignments = alignments,
+    ignore_linkages = ignore_linkages,
+    strict_sub = strict_sub,
+    match_degree = match_degree,
+    single_motif = single_motif
+  )
+}
+
+#' Test if an Object is a Motif Specification
+#'
+#' @param motifs An object passed to the `motifs` argument.
+#'
+#' @return `TRUE` if `motifs` is a dynamic or branch motif specification.
+#' @noRd
+is_motif_spec <- function(motifs) {
+  inherits(motifs, "dynamic_motifs_spec") ||
+    inherits(motifs, "branch_motifs_spec")
+}
+
+#' Resolve Motif Specification Arguments
+#'
+#' @inheritParams prepare_motif_args
+#'
+#' @return A partially normalized motif argument list.
+#' @noRd
+prepare_spec_motif_args <- function(
+  glycans,
+  motifs,
+  alignments,
+  match_degree,
+  strict_sub,
+  ignore_linkages,
+  call = rlang::caller_env()
+) {
+  glycans <- ensure_glycans_are_structures(glycans, call = call)
+  resolved <- resolve_motif_spec(
+    glycans,
+    motifs,
+    alignments,
+    match_degree,
+    strict_sub,
+    ignore_linkages
+  )
+  motifs <- name_resolved_motifs(resolved$motifs)
+
+  list(
+    glycans = glycans,
+    motifs = motifs,
+    alignments = resolved$alignments,
+    match_degree = resolved$match_degree,
+    from_spec = TRUE
+  )
+}
+
+#' Normalize Regular Motif Arguments
+#'
+#' @inheritParams prepare_motif_args
+#'
+#' @return A partially normalized motif argument list.
+#' @noRd
+prepare_regular_motif_args <- function(
+  glycans,
+  motifs,
+  alignments,
+  match_degree,
+  ignore_linkages,
+  call = rlang::caller_env()
+) {
+  if (is.null(match_degree)) {
+    valid_alignments_arg(alignments, motifs)
+  }
+  valid_ignore_linkages_arg(ignore_linkages)
+
+  list(
+    glycans = glycans,
+    motifs = motifs,
+    alignments = alignments,
+    match_degree = match_degree,
+    from_spec = FALSE
+  )
+}
+
+#' Resolve Prepared Alignments
+#'
+#' @param motifs Motifs after any specification resolution.
+#' @param motif_type The motif input type.
+#' @param alignments User-provided or resolved alignments.
+#' @param match_degree Optional degree-matching mask.
+#' @param from_spec Whether the motifs came from a motif specification.
+#'
+#' @return A character vector of alignments.
+#' @noRd
+resolve_prepared_alignments <- function(
+  motifs,
+  motif_type,
+  alignments,
+  match_degree,
+  from_spec
+) {
+  if (from_spec) {
+    return(alignments)
+  }
+  if (!is.null(match_degree)) {
+    return(vctrs::vec_recycle("substructure", length(motifs)))
+  }
+  decide_alignments(motifs, motif_type, alignments)
+}
+
+#' Name Resolved Motifs
+#'
+#' Adds IUPAC names to resolved motifs when the resolver did not already assign
+#' names for downstream matrix or list labeling.
+#'
+#' @param motifs A resolved motif vector.
+#'
+#' @return `motifs`, possibly with names.
+#' @noRd
+name_resolved_motifs <- function(motifs) {
+  if (length(motifs) > 0 && is.null(names(motifs))) {
+    names(motifs) <- as.character(motifs)
+  }
+  motifs
+}
+
+#' Validate Duplicate Motifs
+#'
+#' @param motifs Motifs to check.
+#' @param call The call environment used for errors.
+#'
+#' @return `NULL`, invisibly.
+#' @noRd
+validate_duplicate_motifs <- function(motifs, call = rlang::caller_env()) {
+  if (!has_duplicate_motifs(motifs)) {
+    return(invisible(NULL))
+  }
+
+  dupes <- unique(motifs[duplicated(motifs)])
+  cli::cli_abort(
+    c(
+      "`motifs` cannot have duplications.",
+      "x" = "Duplicate motifs: {.val {dupes}}.",
+      "i" = "Consider using {.fn unique}."
+    ),
+    call = call
+  )
+}
+
+#' Create Prepared Motif Argument List
+#'
+#' @inheritParams prepare_motif_args
+#'
+#' @return A normalized argument list for downstream motif internals.
+#' @noRd
+new_prepared_motif_args <- function(
+  glycans,
+  motifs,
+  alignments,
+  ignore_linkages,
+  strict_sub,
+  match_degree,
+  single_motif
+) {
+  common_args <- list(
+    glycans = glycans,
+    ignore_linkages = ignore_linkages,
+    strict_sub = strict_sub,
+    match_degree = match_degree
+  )
+
   if (single_motif) {
-    return(list(
-      glycans = glycans,
-      motif = motifs,
-      alignment = alignments,
-      ignore_linkages = ignore_linkages,
-      strict_sub = strict_sub,
-      match_degree = match_degree
-    ))
-  } else {
-    return(list(
-      glycans = glycans,
-      motifs = motifs,
-      alignments = alignments,
-      ignore_linkages = ignore_linkages,
-      strict_sub = strict_sub,
-      match_degree = match_degree
+    return(c(
+      common_args["glycans"],
+      list(motif = motifs, alignment = alignments),
+      common_args[c("ignore_linkages", "strict_sub", "match_degree")]
     ))
   }
+
+  c(
+    common_args["glycans"],
+    list(motifs = motifs, alignments = alignments),
+    common_args[c("ignore_linkages", "strict_sub", "match_degree")]
+  )
 }
 
 # Works with both character vectors and glyrepr_structure objects

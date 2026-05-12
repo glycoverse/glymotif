@@ -249,7 +249,9 @@ test_that("match_motif finds multiple instances of simple motif", {
 
 # ========== Substituents ==========
 test_that("match_motif considers substituents", {
-  glycan1 <- glyparse::parse_iupac_condensed("Neu5Ac9Ac(a2-3)Gal(b1-4)GlcNAc(?1-")
+  glycan1 <- glyparse::parse_iupac_condensed(
+    "Neu5Ac9Ac(a2-3)Gal(b1-4)GlcNAc(?1-"
+  )
   glycan2 <- glyparse::parse_iupac_condensed("Neu5Ac(a2-3)Gal(b1-4)GlcNAc(?1-")
   motif1 <- glyparse::parse_iupac_condensed("Neu5Ac9Ac(a2-3)Gal(b1-")
   motif2 <- glyparse::parse_iupac_condensed("Neu5Ac(a2-3)Gal(b1-")
