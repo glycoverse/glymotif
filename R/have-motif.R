@@ -64,6 +64,16 @@
 #' or the half linkage of the glycan.
 #' e.g. Glycan "GlcNAc(b1-4)Gal(a1-" will have both "GlcNAc(b1-" and "Gal(a1-" motifs.
 #'
+#' Linkages such as "?1-?" and "?2-?" are treated as effectively unknown when
+#' the anomer and acceptor position are both unknown.
+#' If all motif linkages and the motif reducing-end anomer are unknown in this way,
+#' linkage and anomer validation is skipped because it cannot further filter candidate matches.
+#' This also means malformed or uncertain input can still match in some cases.
+#' For example, a glycan with "Neu5Ac(?1-?)Gal(?1-" can match a motif
+#' with "Neu5Ac(?2-?)Gal(?1-", and vice versa.
+#' This is acceptable for invalid or uncertain structures;
+#' correct results are only guaranteed for valid input.
+#'
 #' # Alignment
 #'
 #' According to the [GlycoMotif](https://glycomotif.glyomics.org) database,
