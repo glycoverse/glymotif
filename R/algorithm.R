@@ -1,6 +1,6 @@
 colorize_graphs <- function(glycan, motif) {
-  # Add "color" vertex attributes to the graph.
-  # The colors are converted from the "mono" vertex attributes.
+  # Prepare VF2 color vectors from the "mono" vertex attributes without
+  # mutating the input graphs.
   unique_monos <- unique(c(igraph::V(glycan)$mono, igraph::V(motif)$mono))
   color_map <- seq_along(unique_monos)
   names(color_map) <- unique_monos
@@ -8,16 +8,14 @@ colorize_graphs <- function(glycan, motif) {
   motif_colors <- color_map[igraph::V(motif)$mono]
   names(glycan_colors) <- NULL
   names(motif_colors) <- NULL
-  igraph::V(glycan)$color <- glycan_colors
-  igraph::V(motif)$color <- motif_colors
-  list(glycan = glycan, motif = motif)
+  list(glycan_colors = glycan_colors, motif_colors = motif_colors)
 }
 
 
 #' Create a Base Validation Context
 #'
-#' @param glycan A colored glycan graph.
-#' @param motif A colored motif graph.
+#' @param glycan A glycan graph.
+#' @param motif A motif graph.
 #'
 #' @return A base validation context.
 #' @noRd
@@ -153,8 +151,8 @@ add_linkage_context <- function(context) {
 
 #' Prepare Reusable Graph Data for Candidate Validation
 #'
-#' @param glycan A colored glycan graph.
-#' @param motif A colored motif graph.
+#' @param glycan A glycan graph.
+#' @param motif A motif graph.
 #' @param alignment Alignment mode.
 #' @param ignore_linkages Whether linkage/anomer checks are skipped.
 #' @param match_degree Degree matching vector.
@@ -180,7 +178,12 @@ prepare_validation_context <- function(
 }
 
 
-perform_vf2 <- function(glycan, motif) {
+perform_vf2 <- function(
+  glycan,
+  motif,
+  glycan_colors = NULL,
+  motif_colors = NULL
+) {
   # Perform "VF2" algorithm
   # `res` is a list of all possible matches between `glycan` and `motif`.
   # Each match is an integer vector, with the same length as `vcount(motif)`.
@@ -189,7 +192,16 @@ perform_vf2 <- function(glycan, motif) {
   # e.g. If `res[[1]] = c(2, 3)`,
   # it means the 1st vertex in `motif` matches the 2nd vertex in `glycan`,
   # and the 2nd vertex in `motif` matches the 3rd vertex in `glycan`.
-  igraph::graph.get.subisomorphisms.vf2(glycan, motif)
+  if (is.null(glycan_colors) && is.null(motif_colors)) {
+    igraph::graph.get.subisomorphisms.vf2(glycan, motif)
+  } else {
+    igraph::graph.get.subisomorphisms.vf2(
+      glycan,
+      motif,
+      vertex.color1 = glycan_colors,
+      vertex.color2 = motif_colors
+    )
+  }
 }
 
 

@@ -389,9 +389,12 @@ have_motif_ <- function(
   }
 
   c_graphs <- colorize_graphs(glycan_graph, motif_graph)
-  glycan_graph <- c_graphs$glycan
-  motif_graph <- c_graphs$motif
-  res <- perform_vf2(glycan_graph, motif_graph)
+  res <- perform_vf2(
+    glycan_graph,
+    motif_graph,
+    glycan_colors = c_graphs$glycan_colors,
+    motif_colors = c_graphs$motif_colors
+  )
   if (length(res) == 0) {
     return(FALSE)
   }
