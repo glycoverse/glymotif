@@ -621,10 +621,12 @@ apply_single_motif_to_glycans <- function(
   }
 
   motif_graph <- glyrepr::get_structure_graphs(motif)
+  motif_has_linkages <- glyrepr::has_linkages(motif)[[1]]
   smap_func(
     glycans_to_use,
     single_glycan_func,
     motif_graph,
+    motif_has_linkages,
     alignment,
     ignore_linkages,
     strict_sub,

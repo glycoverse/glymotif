@@ -81,6 +81,52 @@ is_valid_result <- function(
   return(TRUE)
 }
 
+#' Resolve Linkage Matching Mode
+#'
+#' @param glycan A glycan graph.
+#' @param motif_has_linkages Whether the motif has informative linkages.
+#' @param ignore_linkages Whether linkage matching should be ignored.
+#'
+#' @return One of three linkage modes:
+#'   * `"ignore"`: skip `linkage_check()` and `anomer_check()` because the
+#'     user requested `ignore_linkages = TRUE`, or because the motif has no
+#'     informative linkage constraints to enforce.
+#'   * `"none"`: return no matches before VF2 because the motif has informative
+#'     linkage constraints but the glycan has no informative linkages to match.
+#'   * `"check"`: run the normal VF2 candidate validation with linkage and
+#'     anomer checks enabled.
+#' @noRd
+resolve_linkage_match_mode <- function(
+  glycan,
+  motif_has_linkages,
+  ignore_linkages
+) {
+  # Unlinked motifs are linkage-agnostic: once mono/sub/alignment checks pass,
+  # wildcard linkage checks cannot reject additional candidates.
+  if (ignore_linkages || !motif_has_linkages) {
+    return("ignore")
+  }
+
+  # A linked motif cannot match an unlinked glycan. Returning "none" lets callers
+  # bypass VF2 entirely and return the empty result for their output type.
+  if (!graph_has_linkages(glycan)) {
+    return("none")
+  }
+
+  "check"
+}
+
+#' Determine Whether a Graph Has Informative Linkages
+#'
+#' @param glycan A glycan graph.
+#'
+#' @return A logical scalar.
+#' @noRd
+graph_has_linkages <- function(glycan) {
+  any(igraph::edge_attr(glycan, "linkage") != "??-?") ||
+    igraph::graph_attr(glycan, "anomer") != "??"
+}
+
 
 alignment_check <- function(r, glycan, motif, alignment) {
   switch(
