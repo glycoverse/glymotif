@@ -1,32 +1,27 @@
 # The Science Behind Motif Matching
 
-## Welcome to the Heart of `glymotif` 🔬
+## How Motif Matching Works
 
-Ever wondered what’s happening under the hood when you call
+This vignette explains what happens when you call
 [`have_motif()`](https://glycoverse.github.io/glymotif/dev/reference/have_motif.md)
 or
-[`count_motif()`](https://glycoverse.github.io/glymotif/dev/reference/count_motif.md)?
-You’re about to embark on a fascinating journey through the intricate
-world of glycan pattern recognition! 🚀
+[`count_motif()`](https://glycoverse.github.io/glymotif/dev/reference/count_motif.md).
 
-In this vignette, we’ll demystify the sophisticated algorithms that
-power all `glymotif` functions. The rules are rooted in the
-comprehensive [GlycoMotif](https://glycomotif.glyomics.org/) database,
-but we’ve tailored them specifically for practical glycan analysis
-workflows.
+In this vignette, we describe the matching rules that power all
+`glymotif` functions. The rules are rooted in the comprehensive
+[GlycoMotif](https://glycomotif.glyomics.org/) database, and adapted for
+practical glycan analysis workflows.
 
-**A quick note:** 📝 We use IUPAC-condensed glycan text representations
-throughout. If this format looks like hieroglyphics to you, take a
-detour to [this excellent
-primer](https://glycoverse.github.io/glyrepr/articles/iupac.html) first.
-Trust us—it’s worth it!
+**A quick note:** We use IUPAC-condensed glycan text representations
+throughout. If this format is unfamiliar, start with [this
+primer](https://glycoverse.github.io/glyrepr/articles/iupac.html).
 
 ``` r
 
 library(glymotif)
 ```
 
-## The Biological Reality: Defining Our Terms 🧬
+## Defining Our Terms
 
 Before diving into the technical details, let’s establish some clarity
 about what we’re actually matching.
@@ -38,12 +33,12 @@ attached to proteins or lipids) to its non-reducing termini.
 **“Motif”**, on the other hand, is any structurally meaningful pattern
 within that tree. It could be:
 
-- A single monosaccharide 🍯
-- A small oligosaccharide unit 🔗
-- An entire glycan structure 🌳
+- A single monosaccharide
+- A small oligosaccharide unit
+- An entire glycan structure
 
-Our central question is beautifully simple: **Does the given glycan
-contain this particular motif?**
+Our central question is simple: **Does the given glycan contain this
+particular motif?**
 
 Let’s start with a visual example that illustrates this concept:
 
@@ -66,10 +61,10 @@ print(paste0("How many occurrences of the motif are there in the glycan? ", coun
 #> [1] "How many occurrences of the motif are there in the glycan? 1"
 ```
 
-## Why Not Just Use `str_detect()`? 🤔
+## Why Not Just Use `str_detect()`?
 
 You might be thinking: “This example looks straightforward—why not just
-use string matching?” Great question! 💭 Let’s test that hypothesis:
+use string matching?” Let’s test that hypothesis:
 
 ``` r
 
@@ -77,27 +72,25 @@ stringr::str_detect(glycan, stringr::fixed(motif))
 #> [1] TRUE
 ```
 
-Indeed, it works for this simple case. But here’s where the plot
-thickens… 🎭
+Indeed, it works for this simple case. But string matching does not
+handle the common complications in glycan data.
 
-Real-world glycan analysis is gloriously complex. Consider these
-challenging scenarios:
+Real-world glycan analysis is often complex. Consider these challenging
+scenarios:
 
-- **Complex branching patterns** with multiple attachment points 🌿
+- **Complex branching patterns** with multiple attachment points
 - **Ambiguous linkage annotations** where details are missing or
-  uncertain ❓
-- **Generic monosaccharide assignments** from mass spectrometry data 🔍
-- **Chemical modifications and substituents** that add layers of
-  complexity ⚗️
+  uncertain
+- **Generic monosaccharide assignments** from mass spectrometry data
+- **Chemical modifications and substituents** that add complexity
 - **Positional constraints** where context determines biological meaning
-  📍
-- **Reducing end anomers** that affect molecular recognition 🔄
+- **Reducing end anomers** that affect molecular recognition
 
-Writing regular expressions to handle all these nuances? That’s a
-one-way ticket to debugging hell! 😱 That’s precisely why we need
-sophisticated computational tools for this task.
+Writing regular expressions to handle all these nuances? That becomes
+difficult to maintain quickly. That is why `glymotif` uses glycan-aware
+matching rules.
 
-## Demystifying the Complexity: One Rule at a Time 🧩
+## Matching Rules
 
 The
 [`have_motifs()`](https://glycoverse.github.io/glymotif/dev/reference/have_motif.md)
@@ -121,10 +114,10 @@ count_motifs_simple <- function(glycan, motifs, ...) {
 
 Now, let’s explore each matching rule systematically.
 
-### Rule 1: Branching Logic 🌳
+### Rule 1: Branching Logic
 
-Branching patterns are actually quite intuitive once you think of
-glycans as tree structures. Let’s examine this with a concrete example:
+Branching patterns are easier to reason about when glycans are treated
+as tree structures. Let’s examine this with a concrete example:
 
 ![](img/branches_1.png)
 
@@ -147,15 +140,14 @@ count_motifs_simple(glycan, motifs)
 #> [1] 2 1 1
 ```
 
-**The computational perspective:** 🖥️ Behind the scenes, we’re
-performing subgraph isomorphism matching. Glycans and motifs are
-represented as mathematical graphs, and we’re searching for structural
-embeddings.
+**The computational perspective:** Behind the scenes, we’re performing
+subgraph isomorphism matching. Glycans and motifs are represented as
+mathematical graphs, and we’re searching for structural embeddings.
 
-**But there are two crucial distinctions from standard graph theory:**
+**But there are two distinctions from standard graph theory:**
 
-**First, directionality matters.** ⬅️➡️ The reducing end (right side)
-and non-reducing end (left side) are biologically distinct. Direction
+**First, directionality matters.** The reducing end (right side) and
+non-reducing end (left side) are biologically distinct. Direction
 affects function:
 
 ``` r
@@ -165,11 +157,11 @@ have_motifs_simple(glycan, motifs)
 #> [1]  TRUE FALSE
 ```
 
-**Second, biological equivalence trumps mathematical multiplicity.** 🔄
-When multiple mathematically distinct matches have identical biological
-meaning, we count them as one.
+**Second, biological equivalence matters more than mathematical
+multiplicity.** When multiple mathematically distinct matches have
+identical biological meaning, we count them as one.
 
-Consider this elegant example:
+Consider this example:
 
 ![](img/branches_2.png)
 
@@ -188,21 +180,21 @@ count_motif(glycan, motif)
 #> [1] 1
 ```
 
-### Rule 2: Linkage Flexibility 🔗
+### Rule 2: Linkage Flexibility
 
-Linkage information in glycomics can be frustratingly incomplete. You
-might encounter patterns like “??-6”, “a2-?”, or complete unknowns. Our
-matching philosophy is elegantly simple:
+Linkage information in glycomics is often incomplete. You might
+encounter patterns like “??-6”, “a2-?”, or complete unknowns. The
+matching rule is:
 
 **The glycan cannot be more ambiguous than the motif.**
 
 This means a concrete linkage like “a2-6” in your glycan data will
 match:
 
-- “a2-6” (exact match) ✅
-- “a2-?” (position-specific, anomer flexible) ✅  
-- “??-6” (anomer-specific, position flexible) ✅
-- “??-?” (completely flexible wildcard) ✅
+- “a2-6” (exact match)
+- “a2-?” (position-specific, anomer flexible)
+- “??-6” (anomer-specific, position flexible)
+- “??-?” (completely flexible wildcard)
 
 But an ambiguous linkage like “a2-?” will only match equally or more
 flexible patterns in the motif.
@@ -211,7 +203,7 @@ Let’s see this in practice:
 
 ![](img/linkages.png)
 
-**Pro tip about notation:** 💡 Following
+**A note about notation:** Following
 [SNFG](https://www.ncbi.nlm.nih.gov/glycans/snfg.html) conventions, we
 often abbreviate linkages by omitting the anomeric carbon number. So
 “a1-6” becomes simply “a6” since the anomeric position is typically
@@ -229,7 +221,7 @@ have_motifs_simple(glycan, motifs)
 #> [1]  TRUE  TRUE FALSE
 ```
 
-### Rule 3: Monosaccharide Resolution 🔬
+### Rule 3: Monosaccharide Resolution
 
 Mass spectrometry often provides incomplete monosaccharide
 identification. You might know there’s a hexose present but not whether
@@ -248,8 +240,8 @@ more ambiguous than the motif.**
 Specifically:
 
 - Concrete monosaccharides in glycans can match both concrete and
-  generic motifs ✅
-- Generic monosaccharides in glycans can only match generic motifs ✅
+  generic motifs
+- Generic monosaccharides in glycans can only match generic motifs
 
 ``` r
 
@@ -263,7 +255,7 @@ have_motif("Hex(a1-", "Hex(a1-")
 #> [1] TRUE
 ```
 
-### Rule 4: Chemical Modifications 🧪
+### Rule 4: Chemical Modifications
 
 Real glycans are often decorated with chemical
 modifications—acetylation, sulfation, methylation, and more. These
@@ -273,7 +265,7 @@ identity (what they are).
 For example, “Neu5Ac9Ac” represents N-acetylneuraminic acid with an
 additional 9-O-acetyl group.
 
-The matching rules are straightforward but powerful:
+The matching rules are:
 
 1.  **Identity matching**: If the glycan has a substituent, the motif
     must have the same type to match
@@ -311,10 +303,9 @@ have_motif("Neu5Ac9Ac(a2-", "Neu5Ac(a2-", strict_sub = FALSE)
 #> [1] TRUE
 ```
 
-### Rule 5: Alignment Constraints 📍
+### Rule 5: Alignment Constraints
 
-Here’s where biology meets computation in fascinating ways! 🎯 Some
-motifs are only meaningful in specific structural contexts.
+Some motifs are only meaningful in specific structural contexts.
 
 Consider the N-glycan core—it’s biologically significant only when
 positioned at the reducing end. Similarly, the Tn antigen (simply
@@ -324,12 +315,11 @@ GalNAc residue buried within a larger molecule.
 Following [GlycoMotif](https://glycomotif.glyomics.org/) standards, we
 recognize four alignment types:
 
-- **“substructure”**: The motif can appear anywhere within the glycan 🔍
+- **“substructure”**: The motif can appear anywhere within the glycan
 - **“core”**: Must align with a connected subtree at the reducing end
-  🌱  
 - **“terminal”**: Must align with a connected subtree at non-reducing
-  ends 🍃
-- **“whole”**: Must match the entire glycan structure 🌳
+  ends
+- **“whole”**: Must match the entire glycan structure
 
 ![](img/alignment.png)
 
@@ -356,7 +346,7 @@ mat
 #> motif_4         TRUE FALSE FALSE    FALSE
 ```
 
-### Rule 6: Reducing End Anomers 🔄
+### Rule 6: Reducing End Anomers
 
 The reducing end of a glycan—that special monosaccharide connected to
 proteins or lipids—deserves special attention. Its anomeric
@@ -387,10 +377,10 @@ have_motifs_simple(glycan, motifs)
 #> [1] FALSE  TRUE
 ```
 
-## The Big Picture: Why This Complexity Matters 🌟
+## Why This Complexity Matters
 
 You might be wondering: “Why all these intricate rules?” The answer lies
-in the beautiful complexity of biological systems. 🧬
+in the complexity of biological systems.
 
 Unlike artificial pattern matching, biological recognition systems are:
 
@@ -408,19 +398,20 @@ By encoding these biological principles into our matching algorithms,
 reality.
 
 Whether you’re analyzing clinical glycomics data, exploring evolutionary
-relationships, or designing glycan-based therapeutics, these
-sophisticated matching rules ensure your results are both
-computationally sound and biologically meaningful.
+relationships, or designing glycan-based therapeutics, these matching
+rules help keep results both computationally sound and biologically
+meaningful.
 
-## Ready for More? 🚀
+## Ready for More?
 
-This deep dive into motif matching rules provides the foundation for
-understanding how `glymotif` works. Armed with this knowledge, you’re
-ready to tackle even the most complex glycan analysis challenges!
+These motif matching rules provide the foundation for understanding how
+`glymotif` works. With this knowledge, you can interpret motif matching
+results in more complex glycan analysis workflows.
 
 For practical applications and real-world examples, head back to the
 [Getting Started
 guide](https://glycoverse.github.io/glymotif/dev/articles/glymotif.md).
 For detailed function documentation, explore the reference manual.
 
-Happy glycan hunting! 🔍✨
+This should give you a practical basis for using the matching functions
+in your own analyses.
