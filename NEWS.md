@@ -7,6 +7,8 @@
 ## Minor improvements and bug fixes
 
 * Performance optimization for all motif matching functions (#23, #24).
+* Update internal data management strategy so that `library(glymotif)` does not have time delay due anymore (#25).
+* Fix an error about return value type in the documentation of `get_motif_structure()`.
 
 # glymotif 0.13.1
 
