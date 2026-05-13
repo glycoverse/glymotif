@@ -1,16 +1,9 @@
-rlang::on_load({
-  structures <- glyparse::parse_iupac_condensed(glygen_motifs$iupac)
-  glygen_motifs$graph <- glyrepr::get_structure_graphs(structures)
-  glygen_motifs <- tibble::as_tibble(glygen_motifs)
-})
-
 # `glygen_motifs` is a tibble with the following columns:
 # - `accession`: the GlyGen accession number of the motif
 # - `name`: the name of the motif
 # - `aglycon`: the aglycon of the motif
 # - `alignment`: the alignment of the motif
-# - `iupac`: the IUPAC condensed string of the motif
-# - `graph`: the structure graph (igraph object) of the motif
+# - `glycan_structure`: the glycan structure (glyrepr::glycan_structure()) of the motif
 
 #' Get All Motifs from the Database
 #'
@@ -72,8 +65,7 @@ is_known_motif <- function(name) {
 #' @export
 get_motif_structure <- function(name) {
   check_names(name)
-  res <- glygen_motifs$graph[match(name, glygen_motifs$name)]
-  glyrepr::as_glycan_structure(res)
+  glygen_motifs$glycan_structure[match(name, glygen_motifs$name)]
 }
 
 
