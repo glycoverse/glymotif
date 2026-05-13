@@ -14,6 +14,12 @@
 - Performance optimization for all motif matching functions
   ([\#23](https://github.com/glycoverse/glymotif/issues/23),
   [\#24](https://github.com/glycoverse/glymotif/issues/24)).
+- Update internal data management strategy so that
+  [`library(glymotif)`](https://glycoverse.github.io/glymotif/) does not
+  have time delay due anymore
+  ([\#25](https://github.com/glycoverse/glymotif/issues/25)).
+- Fix an error about return value type in the documentation of
+  [`get_motif_structure()`](https://glycoverse.github.io/glymotif/dev/reference/get_motif_structure.md).
 
 ## glymotif 0.13.1
 
