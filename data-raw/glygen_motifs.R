@@ -60,6 +60,8 @@ good_df[good_df$accession == "001041", "name"] <- "N-glycan core, Man truncated"
 good_df[good_df$accession == "000106", "name"] <- "GD1alpha"
 good_df <- good_df[!good_df$accession %in% c("001026", "001027"), ]
 
-glygen_motifs <- select(good_df, -wurcs)
+glygen_motifs <- good_df |>
+  mutate(glycan_structure = glyparse::parse_iupac_condensed(iupac)) |>
+  select(-iupac, -wurcs)
 
 usethis::use_data(glygen_motifs, internal = TRUE, overwrite = TRUE)
