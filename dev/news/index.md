@@ -11,9 +11,9 @@
 
 ### Minor improvements and bug fixes
 
-- Performance optimization for all motif matching functions for motifs
-  with unknown linkages
-  ([\#23](https://github.com/glycoverse/glymotif/issues/23)).
+- Performance optimization for all motif matching functions
+  ([\#23](https://github.com/glycoverse/glymotif/issues/23),
+  [\#24](https://github.com/glycoverse/glymotif/issues/24)).
 
 ## glymotif 0.13.1
 
