@@ -22,12 +22,15 @@ get_motif_aglycon(name)
 
 ## Value
 
-`get_motif_structure()` returns a `glycan_graph` when `name` is a
-character scalar, and a list of `glycan_graph` when `name` is a
-character vector. `get_motif_alignment()` returns a character vector of
-motif alignments. `get_motif_aglycon()` returns a character vector of
-motif aglycons. For all three functions, if `name` has length greater
-than 1, the return value is named with the motif names.
+- `get_motif_structure()`: a
+  [`glyrepr::glycan_structure()`](https://glycoverse.github.io/glyrepr/reference/glycan_structure.html)
+
+- `get_motif_alignment()`: a character vector of motif alignments.
+
+- `get_motif_aglycon()`: a character vector of motif aglycons.
+
+For all three functions, if `name` has length greater than 1, the return
+value is named with the motif names.
 
 ## See also
 

@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">glymotif</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.13.1.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.14.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -67,56 +67,50 @@
     
     
 <div class="section level2">
-<h2 id="what-is-a-glycan-motif">What is a Glycan Motif? 🧬<a class="anchor" aria-label="anchor" href="#what-is-a-glycan-motif"></a>
+<h2 id="what-is-a-glycan-motif">What is a Glycan Motif?<a class="anchor" aria-label="anchor" href="#what-is-a-glycan-motif"></a>
 </h2>
-<p>Imagine you’re looking at a complex glycan structure—those intricate
-branched molecules that decorate your cells. Hidden within these
-molecular architectures are recurring patterns called “motifs.” Think of
-them as the molecular equivalent of architectural motifs: recognizable
-design elements that appear across different buildings (or in this case,
-different glycans).</p>
+<p>Glycans are branched molecules that appear on cells and biomolecules.
+Within these structures, recurring patterns are called “motifs.” In this
+package, a motif is a recognizable substructure that may appear across
+different glycans.</p>
 <p>A glycan motif is simply a substructure that appears in multiple
-glycans. (Don’t confuse this with protein motifs—we’re talking about
-carbohydrates here! 🍭) Some famous examples include the N-glycan core,
-Lewis X antigen, and the Tn antigen.</p>
+glycans. (This is separate from protein motifs; here we are working with
+carbohydrates.) Some famous examples include the N-glycan core, Lewis X
+antigen, and the Tn antigen.</p>
 </div>
 <div class="section level2">
-<h2 id="why-should-you-care">Why Should You Care? 🤔<a class="anchor" aria-label="anchor" href="#why-should-you-care"></a>
+<h2 id="why-motifs-matter">Why Motifs Matter<a class="anchor" aria-label="anchor" href="#why-motifs-matter"></a>
 </h2>
-<p>Here’s where it gets exciting: these motifs aren’t just
-decorative—they’re functional. They determine how cells interact, how
-pathogens bind, and how your immune system recognizes friend from
-foe.</p>
-<p>This package, <code>glymotif</code>, is your computational microscope
-🔬 for advanced glycan motif analysis. It helps you answer two
-fundamental questions:</p>
+<p>Motifs are not just labels for repeated structure. They can be
+functional. They determine how cells interact, how pathogens bind, and
+how your immune system recognizes friend from foe.</p>
+<p>This package, <code>glymotif</code>, provides tools for glycan motif
+analysis. It helps you answer two questions:</p>
 <ul>
 <li><strong>Does this glycan contain a specific motif?</strong></li>
 <li><strong>How many times does this motif appear?</strong></li>
 </ul>
-<p>The best part? ✨ Everything works with vectors of glycans, so you
-can analyze hundreds or thousands at once.</p>
-<p><strong>Important note:</strong> This package builds on the powerful
-<a href="https://github.com/glycoverse/glyrepr" class="external-link">glyrepr</a> package. If
-you haven’t used it before, we highly recommend checking out its <a href="https://glycoverse.github.io/glyrepr/articles/glyrepr.html" class="external-link">introduction</a>
-first.</p>
+<p>Everything works with vectors of glycans, so you can analyze hundreds
+or thousands at once.</p>
+<p><strong>Important note:</strong> This package builds on the <a href="https://github.com/glycoverse/glyrepr" class="external-link">glyrepr</a> package. If you
+haven’t used it before, start with its <a href="https://glycoverse.github.io/glyrepr/articles/glyrepr.html" class="external-link">introduction</a>.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://glycoverse.github.io/glyrepr/" class="external-link">glyrepr</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://glycoverse.github.io/glymotif/">glymotif</a></span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 id="a-quick-challenge">A Quick Challenge 🧩<a class="anchor" aria-label="anchor" href="#a-quick-challenge"></a>
+<h2 id="a-quick-challenge">A Quick Challenge<a class="anchor" aria-label="anchor" href="#a-quick-challenge"></a>
 </h2>
 <p>Let’s start with a visual puzzle. Can you tell if the glycan on the
 left contains the motif on the right?</p>
 <p><img src="img/intro_example.png"></p>
-<p>If you said “yes,” congratulations—you have a keen eye! 👀 But what
-if I gave you 500 glycans and 20 motifs to check? That’s where
-<code>glymotif</code> becomes indispensable.</p>
+<p>If you said “yes,” you are reading the structure correctly. But what
+if I gave you 500 glycans and 20 motifs to check? That is where
+<code>glymotif</code> becomes useful.</p>
 <p>Let’s see it in action using IUPAC-condensed notation (the standard
 text format for glycans in the <code>glycoverse</code> ecosystem). If
-this notation looks unfamiliar, don’t worry—check out <a href="https://glycoverse.github.io/glyrepr/articles/iupac.html" class="external-link">this
-helpful guide</a> first.</p>
+this notation looks unfamiliar, start with <a href="https://glycoverse.github.io/glyrepr/articles/iupac.html" class="external-link">this
+guide</a>.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">glycans</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
 <span>  <span class="st">"Neu5Ac(a2-3)Gal(b1-3)[Fuc(a1-6)]GlcNAc(b1-3)Gal(b1-3)GalNAc(b1-"</span>,</span>
@@ -128,13 +122,12 @@ helpful guide</a> first.</p>
 <span><span class="va">motif</span> <span class="op">&lt;-</span> <span class="st">"Neu5Ac(a2-3)Gal(b1-3)[Fuc(a1-6)]GlcNAc(b1-"</span></span>
 <span><span class="fu"><a href="../reference/have_motif.html">have_motif</a></span><span class="op">(</span><span class="va">glycans</span>, <span class="va">motif</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1]  TRUE FALSE FALSE FALSE FALSE</span></span></code></pre></div>
-<p>Pretty neat, right? 😎</p>
+<p>The result shows which glycans contain the motif.</p>
 </div>
 <div class="section level2">
-<h2 id="your-toolkit-four-essential-functions">Your Toolkit: Four Essential Functions 🛠️<a class="anchor" aria-label="anchor" href="#your-toolkit-four-essential-functions"></a>
+<h2 id="your-toolkit-four-essential-functions">Your Toolkit: Four Essential Functions<a class="anchor" aria-label="anchor" href="#your-toolkit-four-essential-functions"></a>
 </h2>
-<p><code>glymotif</code> provides four core functions that work together
-like a well-designed instrument panel:</p>
+<p><code>glymotif</code> provides four core functions:</p>
 <ul>
 <li>
 <strong><code><a href="../reference/have_motif.html">have_motif()</a></code></strong>: Returns TRUE/FALSE for
@@ -150,16 +143,16 @@ version—checks multiple motifs at once, returns a matrix</li>
 simultaneously, returns a matrix</li>
 </ul>
 <div class="section level3">
-<h3 id="why-the-plural-functions">Why the Plural Functions? 🤷‍♀️<a class="anchor" aria-label="anchor" href="#why-the-plural-functions"></a>
+<h3 id="why-the-plural-functions">Why the Plural Functions?<a class="anchor" aria-label="anchor" href="#why-the-plural-functions"></a>
 </h3>
 <p>You might wonder: “Why not just use <code><a href="../reference/have_motif.html">have_motif()</a></code> in a
-loop?” Great question! 💭 There are two compelling reasons:</p>
-<p><strong>1. Predictable output format</strong> 📊 Just like the
+loop?” There are two reasons:</p>
+<p><strong>1. Predictable output format</strong> Just like the
 <code>purrr</code> package has different <code>map</code> functions for
 different return types, our functions guarantee consistent outputs. The
 singular functions return vectors; the plural functions return matrices.
-No surprises, no wrestling with data types.</p>
-<p><strong>2. Optimized performance</strong> ⚡ The plural functions are
+No surprises, and no extra work reshaping return values.</p>
+<p><strong>2. Optimized performance</strong> The plural functions are
 specifically optimized for multiple motifs. They’re significantly faster
 than looping or using <code><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">purrr::map()</a></code> because they avoid
 redundant computations.</p>
@@ -195,8 +188,8 @@ names)</li>
 <span><span class="co">#&gt; [3,] FALSE  TRUE FALSE</span></span>
 <span><span class="co">#&gt; [4,] FALSE FALSE  TRUE</span></span>
 <span><span class="co">#&gt; [5,] FALSE FALSE FALSE</span></span></code></pre></div>
-<p><strong>Pro tip:</strong> 💡 You don’t need to memorize complex IUPAC
-strings! Use predefined motif names instead:</p>
+<p><strong>Tip:</strong> You don’t need to memorize complex IUPAC
+strings. Use predefined motif names instead:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/db_motifs.html">db_motifs</a></span><span class="op">(</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">]</span></span>
 <span><span class="co">#&gt;  [1] "Blood group H (type 2) - Lewis y" "i antigen"                       </span></span>
@@ -214,12 +207,11 @@ for more details.</p>
 </div>
 </div>
 <div class="section level2">
-<h2 id="the-art-and-science-of-motif-matching">The Art and Science of Motif Matching 🎨🔬<a class="anchor" aria-label="anchor" href="#the-art-and-science-of-motif-matching"></a>
+<h2 id="motif-matching-rules">Motif Matching Rules<a class="anchor" aria-label="anchor" href="#motif-matching-rules"></a>
 </h2>
-<p>Now we enter the fascinating complexity of motif recognition. You
-might think: “It’s just pattern matching, right?” Well, not quite.
-🤨</p>
-<p>Real-world glycan data is beautifully messy:</p>
+<p>Motif recognition has a few important details. You might think: “It’s
+just pattern matching, right?” Well, not quite.</p>
+<p>Real-world glycan data is often incomplete or heterogeneous:</p>
 <ul>
 <li>
 <strong>Missing linkage information</strong>: Sometimes we only know
@@ -239,13 +231,13 @@ shouldn’t match every GalNAc in a complex N-glycan, should it? Context
 matters.</p>
 <p>Similarly, an O-glycan core motif should only be recognized at the
 reducing end, not buried in the middle of a structure.</p>
-<p><code>glymotif</code> handles all these complexities through its
-sophisticated matching engine. The algorithm considers structural
-context, chemical modifications, and biological relevance to make
-intelligent matching decisions.</p>
+<p><code>glymotif</code> handles these cases through its matching
+engine. The algorithm considers structural context, chemical
+modifications, and biological relevance when deciding whether a motif is
+present.</p>
 </div>
 <div class="section level2">
-<h2 id="handling-structural-ambiguity">Handling Structural Ambiguity 🤔<a class="anchor" aria-label="anchor" href="#handling-structural-ambiguity"></a>
+<h2 id="handling-structural-ambiguity">Handling Structural Ambiguity<a class="anchor" aria-label="anchor" href="#handling-structural-ambiguity"></a>
 </h2>
 <p>Real-world glycan data often comes with structural ambiguity. Mass
 spectrometry might only tell us “HexNAc” instead of “GlcNAc”, or linkage
@@ -265,8 +257,8 @@ being matched against.</strong></p>
 <span><span class="co"># Generic monosaccharides won't match specific ones</span></span>
 <span><span class="fu"><a href="../reference/have_motif.html">have_motif</a></span><span class="op">(</span><span class="st">"Hex(a1-6)HexNAc(a1-"</span>, <span class="st">"Gal(a1-6)GalNAc(a1-"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] FALSE</span></span></code></pre></div>
-<p>This behavior is <strong>intentional</strong>, not a bug. ✨ True
-motif identification requires confidence: structural possibilities alone
+<p>This behavior is <strong>intentional</strong>, not a bug. True motif
+identification requires confidence: structural possibilities alone
 aren’t sufficient evidence.</p>
 </div>
 <div class="section level3">
@@ -281,7 +273,7 @@ task.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># get_structure_level() expects a glycan structure vector</span></span>
 <span><span class="fu"><a href="https://glycoverse.github.io/glyrepr/reference/get_structure_level.html" class="external-link">get_structure_level</a></span><span class="op">(</span><span class="fu"><a href="https://glycoverse.github.io/glyrepr/reference/as_glycan_structure.html" class="external-link">as_glycan_structure</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Gal(??-?)GalNAc(??-"</span>, <span class="st">"Gal(a1-6)GalNAc(a1-"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "topological" "intact"</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] "partial"</span></span></code></pre></div>
 <p>here are two strategies:</p>
 <p><strong>1. Ignore linkage information</strong> when linkages are
 unreliable:</p>
@@ -295,15 +287,15 @@ generic monosaccharides of your data:</p>
 <span><span class="va">motif</span> <span class="op">&lt;-</span> <span class="fu">glyrepr</span><span class="fu">::</span><span class="fu"><a href="https://glycoverse.github.io/glyrepr/reference/convert_to_generic.html" class="external-link">convert_to_generic</a></span><span class="op">(</span><span class="va">motif</span><span class="op">)</span>  <span class="co"># Then, convert to generic</span></span>
 <span><span class="fu"><a href="../reference/have_motif.html">have_motif</a></span><span class="op">(</span><span class="st">"Hex(a1-6)HexNAc(a1-"</span>, <span class="va">motif</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] TRUE</span></span></code></pre></div>
-<p>⚠️ <strong>Important:</strong> When using these workarounds,
-interpret your results with appropriate caution. You’re trading
-specificity for coverage.</p>
+<p><strong>Important:</strong> When using these workarounds, interpret
+your results with appropriate caution. You’re trading specificity for
+coverage.</p>
 </div>
 </div>
 <div class="section level2">
 <h2 id="dynamic-motif-detection">Dynamic Motif Detection<a class="anchor" aria-label="anchor" href="#dynamic-motif-detection"></a>
 </h2>
-<p>While matching against a database of known motifs is powerful,
+<p>While matching against a database of known motifs is useful,
 sometimes you want to discover what motifs are actually present in your
 specific dataset, even those not in the database. This is where dynamic
 motif detection comes in.</p>
@@ -433,27 +425,27 @@ matching.</p>
 <h2 id="whats-next">What’s Next?<a class="anchor" aria-label="anchor" href="#whats-next"></a>
 </h2>
 <ul>
-<li>Want to known all the details about motif matching rules? <a href="https://glycoverse.github.io/glymotif/articles/motif-matching.html">Here</a>
-</li>
-<li>Working with <code><a href="https://glycoverse.github.io/glyexp/reference/experiment.html" class="external-link">glyexp::experiment()</a></code>? <a href="https://glycoverse.github.io/glymotif/articles/with-exp.html">Here</a>
-</li>
+<li>Want more detail about motif matching rules? See <a href="https://glycoverse.github.io/glymotif/articles/motif-matching.html">Motif
+Matching Rules</a>.</li>
+<li>Working with <code><a href="https://glycoverse.github.io/glyexp/reference/experiment.html" class="external-link">glyexp::experiment()</a></code>? See <a href="https://glycoverse.github.io/glymotif/articles/with-exp.html">Working
+with glyexp</a>.</li>
 </ul>
 </div>
 <div class="section level2">
-<h2 id="standing-on-the-shoulders-of-giants">Standing on the Shoulders of Giants 🏔️<a class="anchor" aria-label="anchor" href="#standing-on-the-shoulders-of-giants"></a>
+<h2 id="related-projects">Related Projects<a class="anchor" aria-label="anchor" href="#related-projects"></a>
 </h2>
-<p>This work wouldn’t be possible without the inspiration and groundwork
-laid by several excellent projects:</p>
+<p>This work builds on ideas and groundwork from several excellent
+projects:</p>
 <ul>
 <li>
 <a href="https://github.com/BojarLab/glycowork" class="external-link">glycowork</a>: A
-comprehensive Python toolkit for glycan analysis 🐍</li>
+comprehensive Python toolkit for glycan analysis</li>
 <li>
 <a href="https://github.com/LewisLabUCSD/GlyCompare" class="external-link">GlyCompare</a>:
-Advanced glycan comparison algorithms 🔬</li>
+Advanced glycan comparison algorithms</li>
 </ul>
-<p>We’re proud to contribute to this growing ecosystem of computational
-glycobiology tools! 🌱</p>
+<p><code>glymotif</code> is one contribution to this growing ecosystem
+of computational glycobiology tools.</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>

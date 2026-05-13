@@ -32,6 +32,7 @@ You can install the latest release of glymotif from
 (**recommended**):
 
 ``` r
+
 # install.packages("pak")
 pak::repo_add(glycoverse = "https://glycoverse.r-universe.dev")
 pak::pkg_install("glymotif")
@@ -40,12 +41,14 @@ pak::pkg_install("glymotif")
 Or from [GitHub](https://github.com/glycoverse/glymotif):
 
 ``` r
+
 pak::pkg_install("glycoverse/glymotif@*release")
 ```
 
 Or install the development version (NOT recommended):
 
 ``` r
+
 pak::pkg_install("glycoverse/glymotif")
 ```
 
@@ -77,6 +80,7 @@ ecosystem.
 ## Example
 
 ``` r
+
 library(glymotif)
 library(glyparse)
 ```
@@ -84,6 +88,7 @@ library(glyparse)
 Say we have a glycan, …
 
 ``` r
+
 (glycan <- parse_iupac_condensed("Gal(b1-3)GlcNAc(b1-3)Gal(b1-3)GalNAc(a1-"))
 #> <glycan_structure[1]>
 #> [1] Gal(b1-3)GlcNAc(b1-3)Gal(b1-3)GalNAc(a1-
@@ -93,6 +98,7 @@ Say we have a glycan, …
 … and we want to check if it has the O-Glycan core 1 motif.
 
 ``` r
+
 have_motif(glycan, "Gal(b1-3)GalNAc(a1-", alignment = "core")
 #> [1] TRUE
 ```
@@ -100,6 +106,7 @@ have_motif(glycan, "Gal(b1-3)GalNAc(a1-", alignment = "core")
 Or use the motif name directly.
 
 ``` r
+
 have_motif(glycan, "O-Glycan core 1")
 #> [1] TRUE
 ```
@@ -136,6 +143,8 @@ have_motif(glycan, "O-Glycan core 1")
 - [`match_motif()`](https://glycoverse.github.io/glymotif/reference/match_motif.md)
   [`match_motifs()`](https://glycoverse.github.io/glymotif/reference/match_motif.md)
   : Match Motif(s) in Glycans
+- [`view_motif()`](https://glycoverse.github.io/glymotif/reference/view_motif.md)
+  : View motif matches on a glycan
 
 # Articles
 

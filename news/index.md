@@ -1,6 +1,25 @@
 # Changelog
 
-## glymotif (development version)
+## glymotif 0.14.0
+
+### New features
+
+- Add
+  [`view_motif()`](https://glycoverse.github.io/glymotif/reference/view_motif.md)
+  to visualize motif structures with `glydraw`
+  ([\#21](https://github.com/glycoverse/glymotif/issues/21)).
+
+### Minor improvements and bug fixes
+
+- Performance optimization for all motif matching functions
+  ([\#23](https://github.com/glycoverse/glymotif/issues/23),
+  [\#24](https://github.com/glycoverse/glymotif/issues/24)).
+- Update internal data management strategy so that
+  [`library(glymotif)`](https://glycoverse.github.io/glymotif/) does not
+  have time delay due anymore
+  ([\#25](https://github.com/glycoverse/glymotif/issues/25)).
+- Fix an error about return value type in the documentation of
+  [`get_motif_structure()`](https://glycoverse.github.io/glymotif/reference/get_motif_structure.md).
 
 ## glymotif 0.13.1
 

@@ -1,63 +1,61 @@
 # Getting Started with glymotif
 
-## What is a Glycan Motif? 🧬
+## What is a Glycan Motif?
 
-Imagine you’re looking at a complex glycan structure—those intricate
-branched molecules that decorate your cells. Hidden within these
-molecular architectures are recurring patterns called “motifs.” Think of
-them as the molecular equivalent of architectural motifs: recognizable
-design elements that appear across different buildings (or in this case,
-different glycans).
+Glycans are branched molecules that appear on cells and biomolecules.
+Within these structures, recurring patterns are called “motifs.” In this
+package, a motif is a recognizable substructure that may appear across
+different glycans.
 
 A glycan motif is simply a substructure that appears in multiple
-glycans. (Don’t confuse this with protein motifs—we’re talking about
-carbohydrates here! 🍭) Some famous examples include the N-glycan core,
-Lewis X antigen, and the Tn antigen.
+glycans. (This is separate from protein motifs; here we are working with
+carbohydrates.) Some famous examples include the N-glycan core, Lewis X
+antigen, and the Tn antigen.
 
-## Why Should You Care? 🤔
+## Why Motifs Matter
 
-Here’s where it gets exciting: these motifs aren’t just
-decorative—they’re functional. They determine how cells interact, how
-pathogens bind, and how your immune system recognizes friend from foe.
+Motifs are not just labels for repeated structure. They can be
+functional. They determine how cells interact, how pathogens bind, and
+how your immune system recognizes friend from foe.
 
-This package, `glymotif`, is your computational microscope 🔬 for
-advanced glycan motif analysis. It helps you answer two fundamental
-questions:
+This package, `glymotif`, provides tools for glycan motif analysis. It
+helps you answer two questions:
 
 - **Does this glycan contain a specific motif?**
 - **How many times does this motif appear?**
 
-The best part? ✨ Everything works with vectors of glycans, so you can
-analyze hundreds or thousands at once.
+Everything works with vectors of glycans, so you can analyze hundreds or
+thousands at once.
 
-**Important note:** This package builds on the powerful
+**Important note:** This package builds on the
 [glyrepr](https://github.com/glycoverse/glyrepr) package. If you haven’t
-used it before, we highly recommend checking out its
-[introduction](https://glycoverse.github.io/glyrepr/articles/glyrepr.html)
-first.
+used it before, start with its
+[introduction](https://glycoverse.github.io/glyrepr/articles/glyrepr.html).
 
 ``` r
+
 library(glyrepr)
 library(glymotif)
 ```
 
-## A Quick Challenge 🧩
+## A Quick Challenge
 
 Let’s start with a visual puzzle. Can you tell if the glycan on the left
 contains the motif on the right?
 
 ![](img/intro_example.png)
 
-If you said “yes,” congratulations—you have a keen eye! 👀 But what if I
-gave you 500 glycans and 20 motifs to check? That’s where `glymotif`
-becomes indispensable.
+If you said “yes,” you are reading the structure correctly. But what if
+I gave you 500 glycans and 20 motifs to check? That is where `glymotif`
+becomes useful.
 
 Let’s see it in action using IUPAC-condensed notation (the standard text
 format for glycans in the `glycoverse` ecosystem). If this notation
-looks unfamiliar, don’t worry—check out [this helpful
-guide](https://glycoverse.github.io/glyrepr/articles/iupac.html) first.
+looks unfamiliar, start with [this
+guide](https://glycoverse.github.io/glyrepr/articles/iupac.html).
 
 ``` r
+
 glycans <- c(
   "Neu5Ac(a2-3)Gal(b1-3)[Fuc(a1-6)]GlcNAc(b1-3)Gal(b1-3)GalNAc(b1-",
   "Neu5Ac(a2-?)Gal(b1-3)[Fuc(a1-6)]GlcNAc(b1-",
@@ -70,12 +68,11 @@ have_motif(glycans, motif)
 #> [1]  TRUE FALSE FALSE FALSE FALSE
 ```
 
-Pretty neat, right? 😎
+The result shows which glycans contain the motif.
 
-## Your Toolkit: Four Essential Functions 🛠️
+## Your Toolkit: Four Essential Functions
 
-`glymotif` provides four core functions that work together like a
-well-designed instrument panel:
+`glymotif` provides four core functions:
 
 - **[`have_motif()`](https://glycoverse.github.io/glymotif/reference/have_motif.md)**:
   Returns TRUE/FALSE for each glycan—does it contain the motif?
@@ -86,19 +83,19 @@ well-designed instrument panel:
 - **[`count_motifs()`](https://glycoverse.github.io/glymotif/reference/count_motif.md)**:
   Counts multiple motifs simultaneously, returns a matrix
 
-### Why the Plural Functions? 🤷‍♀️
+### Why the Plural Functions?
 
 You might wonder: “Why not just use
 [`have_motif()`](https://glycoverse.github.io/glymotif/reference/have_motif.md)
-in a loop?” Great question! 💭 There are two compelling reasons:
+in a loop?” There are two reasons:
 
-**1. Predictable output format** 📊 Just like the `purrr` package has
+**1. Predictable output format** Just like the `purrr` package has
 different `map` functions for different return types, our functions
 guarantee consistent outputs. The singular functions return vectors; the
-plural functions return matrices. No surprises, no wrestling with data
-types.
+plural functions return matrices. No surprises, and no extra work
+reshaping return values.
 
-**2. Optimized performance** ⚡ The plural functions are specifically
+**2. Optimized performance** The plural functions are specifically
 optimized for multiple motifs. They’re significantly faster than looping
 or using
 [`purrr::map()`](https://purrr.tidyverse.org/reference/map.html) because
@@ -109,6 +106,7 @@ they avoid redundant computations.
 Let’s define some motifs to work with:
 
 ``` r
+
 motifs <- c(
   "Neu5Ac(a2-3)Gal(b1-3)[Fuc(a1-6)]GlcNAc(b1-",
   "Fuc(a1-",
@@ -126,11 +124,13 @@ All functions follow the same pattern:
   object, or predefined motif names)
 
 ``` r
+
 have_motif(glycans, motif)
 #> [1]  TRUE FALSE FALSE FALSE FALSE
 ```
 
 ``` r
+
 unname(have_motifs(glycans, motifs))  # Removing names for cleaner display
 #>       [,1]  [,2]  [,3]
 #> [1,]  TRUE  TRUE  TRUE
@@ -140,10 +140,11 @@ unname(have_motifs(glycans, motifs))  # Removing names for cleaner display
 #> [5,] FALSE FALSE FALSE
 ```
 
-**Pro tip:** 💡 You don’t need to memorize complex IUPAC strings! Use
+**Tip:** You don’t need to memorize complex IUPAC strings. Use
 predefined motif names instead:
 
 ``` r
+
 db_motifs()[1:10]
 #>  [1] "Blood group H (type 2) - Lewis y" "i antigen"                       
 #>  [3] "LacdiNAc"                         "GT2"                             
@@ -153,6 +154,7 @@ db_motifs()[1:10]
 ```
 
 ``` r
+
 have_motif(glycans, "Type 2 LN2")
 #> [1] FALSE FALSE FALSE FALSE FALSE
 ```
@@ -161,12 +163,12 @@ have_motif(glycans, "Type 2 LN2")
 aware that all of the built-in motifs have “intact” structure level. See
 the “Handling Structural Ambiguity” section below for more details.
 
-## The Art and Science of Motif Matching 🎨🔬
+## Motif Matching Rules
 
-Now we enter the fascinating complexity of motif recognition. You might
-think: “It’s just pattern matching, right?” Well, not quite. 🤨
+Motif recognition has a few important details. You might think: “It’s
+just pattern matching, right?” Well, not quite.
 
-Real-world glycan data is beautifully messy:
+Real-world glycan data is often incomplete or heterogeneous:
 
 - **Missing linkage information**: Sometimes we only know “there’s a
   link” but not its exact type
@@ -184,12 +186,11 @@ matters.
 Similarly, an O-glycan core motif should only be recognized at the
 reducing end, not buried in the middle of a structure.
 
-`glymotif` handles all these complexities through its sophisticated
-matching engine. The algorithm considers structural context, chemical
-modifications, and biological relevance to make intelligent matching
-decisions.
+`glymotif` handles these cases through its matching engine. The
+algorithm considers structural context, chemical modifications, and
+biological relevance when deciding whether a motif is present.
 
-## Handling Structural Ambiguity 🤔
+## Handling Structural Ambiguity
 
 Real-world glycan data often comes with structural ambiguity. Mass
 spectrometry might only tell us “HexNAc” instead of “GlcNAc”, or linkage
@@ -203,6 +204,7 @@ glycan cannot be more ambiguous than the motif it’s being matched
 against.**
 
 ``` r
+
 # Ambiguous linkages won't match specific ones
 have_motif("Gal(??-?)GalNAc(??-", "Gal(a1-6)GalNAc(a1-")
 #> [1] FALSE
@@ -212,9 +214,9 @@ have_motif("Hex(a1-6)HexNAc(a1-", "Gal(a1-6)GalNAc(a1-")
 #> [1] FALSE
 ```
 
-This behavior is **intentional**, not a bug. ✨ True motif
-identification requires confidence: structural possibilities alone
-aren’t sufficient evidence.
+This behavior is **intentional**, not a bug. True motif identification
+requires confidence: structural possibilities alone aren’t sufficient
+evidence.
 
 ### Working Around Ambiguity
 
@@ -227,9 +229,10 @@ and the motif. You can use
 to help you with this task.
 
 ``` r
+
 # get_structure_level() expects a glycan structure vector
 get_structure_level(as_glycan_structure(c("Gal(??-?)GalNAc(??-", "Gal(a1-6)GalNAc(a1-")))
-#> [1] "topological" "intact"
+#> [1] "partial"
 ```
 
 here are two strategies:
@@ -237,6 +240,7 @@ here are two strategies:
 **1. Ignore linkage information** when linkages are unreliable:
 
 ``` r
+
 have_motif("Gal(??-?)GalNAc(??-", "Gal(a1-6)GalNAc(a1-", ignore_linkages = TRUE)
 #> [1] TRUE
 ```
@@ -245,18 +249,19 @@ have_motif("Gal(??-?)GalNAc(??-", "Gal(a1-6)GalNAc(a1-", ignore_linkages = TRUE)
 monosaccharides of your data:
 
 ``` r
+
 motif <- glyparse::auto_parse("Gal(a1-6)GalNAc(a1-")  # First, create a `glycan_structure()`
 motif <- glyrepr::convert_to_generic(motif)  # Then, convert to generic
 have_motif("Hex(a1-6)HexNAc(a1-", motif)
 #> [1] TRUE
 ```
 
-⚠️ **Important:** When using these workarounds, interpret your results
-with appropriate caution. You’re trading specificity for coverage.
+**Important:** When using these workarounds, interpret your results with
+appropriate caution. You’re trading specificity for coverage.
 
 ## Dynamic Motif Detection
 
-While matching against a database of known motifs is powerful, sometimes
+While matching against a database of known motifs is useful, sometimes
 you want to discover what motifs are actually present in your specific
 dataset, even those not in the database. This is where dynamic motif
 detection comes in.
@@ -270,6 +275,7 @@ allows you to detect all motifs appears in a set of glycans. Take a
 simple O-glycan for example:
 
 ``` r
+
 extract_motif("Gal(b1-3)[GlcNAc(b1-6)]GalNAc(a1-")
 #> <glycan_structure[6]>
 #> [1] Gal(b1-
@@ -285,6 +291,7 @@ This function works vectorizedly, and only a unique set of motifs will
 be returned.
 
 ``` r
+
 extract_motif(c(
   "Gal(b1-3)[GlcNAc(b1-6)]GalNAc(a1-",
   "Gal(b1-3)GalNAc(a1-"
@@ -307,6 +314,7 @@ extracted. By default, `max_size = 3`, this restricts the motifs to be
 extracted to those with at most 3 monosaccharides.
 
 ``` r
+
 extract_motif("Glc(a1-2)Glc(a1-2)Glc(a1-2)Glc(a1-")
 #> <glycan_structure[3]>
 #> [1] Glc(a1-
@@ -318,6 +326,7 @@ extract_motif("Glc(a1-2)Glc(a1-2)Glc(a1-2)Glc(a1-")
 You can increase the `max_size` to extract larger motifs.
 
 ``` r
+
 extract_motif("Glc(a1-2)Glc(a1-2)Glc(a1-2)Glc(a1-", max_size = 4)
 #> <glycan_structure[4]>
 #> [1] Glc(a1-
@@ -342,6 +351,7 @@ Therefore, we provide
 to extract only the branching motifs.
 
 ``` r
+
 glycans <- c(
   "Neu5Ac(a2-3)Gal(b1-4)GlcNAc(b1-2)Man(a1-3)[Gal(b1-4)GlcNAc(b1-2)Man(a1-6)]Man(b1-4)GlcNAc(a1-4)GlcNAc(b1-",
   "Neu5Ac(a2-3)Gal(b1-4)GlcNAc(b1-2)Man(a1-3)[Neu5Ac(a2-6)Gal(b1-4)GlcNAc(b1-2)Man(a1-6)]Man(b1-4)GlcNAc(a1-4)GlcNAc(b1-",
@@ -376,6 +386,7 @@ are just empty sentinel objects to inform the passed functions to
 perform dynamic motif matching.
 
 ``` r
+
 count_motifs(glycans, branch_motifs())
 #>                                                                                                                       Neu5Ac(a2-3)Gal(b1-4)GlcNAc(b1-
 #> Neu5Ac(a2-3)Gal(b1-4)GlcNAc(b1-2)Man(a1-3)[Gal(b1-4)GlcNAc(b1-2)Man(a1-6)]Man(b1-4)GlcNAc(a1-4)GlcNAc(b1-                                           1
@@ -408,21 +419,22 @@ and
 
 ## What’s Next?
 
-- Want to known all the details about motif matching rules?
-  [Here](https://glycoverse.github.io/glymotif/articles/motif-matching.html)
+- Want more detail about motif matching rules? See [Motif Matching
+  Rules](https://glycoverse.github.io/glymotif/articles/motif-matching.html).
 - Working with
   [`glyexp::experiment()`](https://glycoverse.github.io/glyexp/reference/experiment.html)?
-  [Here](https://glycoverse.github.io/glymotif/articles/with-exp.html)
+  See [Working with
+  glyexp](https://glycoverse.github.io/glymotif/articles/with-exp.html).
 
-## Standing on the Shoulders of Giants 🏔️
+## Related Projects
 
-This work wouldn’t be possible without the inspiration and groundwork
-laid by several excellent projects:
+This work builds on ideas and groundwork from several excellent
+projects:
 
 - [glycowork](https://github.com/BojarLab/glycowork): A comprehensive
-  Python toolkit for glycan analysis 🐍
+  Python toolkit for glycan analysis
 - [GlyCompare](https://github.com/LewisLabUCSD/GlyCompare): Advanced
-  glycan comparison algorithms 🔬
+  glycan comparison algorithms
 
-We’re proud to contribute to this growing ecosystem of computational
-glycobiology tools! 🌱
+`glymotif` is one contribution to this growing ecosystem of
+computational glycobiology tools.

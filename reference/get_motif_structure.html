@@ -9,7 +9,7 @@ these functions return the structures, alignments, or aglycons of the motifs."><
 
     <a class="navbar-brand me-2" href="../index.html">glymotif</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.13.1.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.14.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -64,11 +64,11 @@ these functions return the structures, alignments, or aglycons of the motifs.</p
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p><code>get_motif_structure()</code> returns a <code>glycan_graph</code> when <code>name</code> is a character
-scalar, and a list of <code>glycan_graph</code> when <code>name</code> is a character vector.
-<code>get_motif_alignment()</code> returns a character vector of motif alignments.
-<code>get_motif_aglycon()</code> returns a character vector of motif aglycons.
-For all three functions, if <code>name</code> has length greater than 1,
+
+<ul><li><p><code>get_motif_structure()</code>: a <code><a href="https://glycoverse.github.io/glyrepr/reference/glycan_structure.html" class="external-link">glyrepr::glycan_structure()</a></code></p></li>
+<li><p><code>get_motif_alignment()</code>: a character vector of motif alignments.</p></li>
+<li><p><code>get_motif_aglycon()</code>: a character vector of motif aglycons.</p></li>
+</ul><p>For all three functions, if <code>name</code> has length greater than 1,
 the return value is named with the motif names.</p>
     </div>
     <div class="section level2">
