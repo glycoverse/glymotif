@@ -16,10 +16,12 @@ get_motif_aglycon(name)
 \item{name}{A character vector of the motif name.}
 }
 \value{
-\code{get_motif_structure()} returns a \code{glycan_graph} when \code{name} is a character
-scalar, and a list of \code{glycan_graph} when \code{name} is a character vector.
-\code{get_motif_alignment()} returns a character vector of motif alignments.
-\code{get_motif_aglycon()} returns a character vector of motif aglycons.
+\itemize{
+\item \code{get_motif_structure()}: a \code{\link[glyrepr:glycan_structure]{glyrepr::glycan_structure()}}
+\item \code{get_motif_alignment()}: a character vector of motif alignments.
+\item \code{get_motif_aglycon()}: a character vector of motif aglycons.
+}
+
 For all three functions, if \code{name} has length greater than 1,
 the return value is named with the motif names.
 }

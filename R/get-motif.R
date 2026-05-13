@@ -44,10 +44,11 @@ is_known_motif <- function(name) {
 #' these functions return the structures, alignments, or aglycons of the motifs.
 #'
 #' @param name A character vector of the motif name.
-#' @returns `get_motif_structure()` returns a `glycan_graph` when `name` is a character
-#' scalar, and a list of `glycan_graph` when `name` is a character vector.
-#' `get_motif_alignment()` returns a character vector of motif alignments.
-#' `get_motif_aglycon()` returns a character vector of motif aglycons.
+#' @returns 
+#'   - `get_motif_structure()`: a [glyrepr::glycan_structure()]
+#'   - `get_motif_alignment()`: a character vector of motif alignments.
+#'   - `get_motif_aglycon()`: a character vector of motif aglycons.
+#'
 #' For all three functions, if `name` has length greater than 1,
 #' the return value is named with the motif names.
 #'
