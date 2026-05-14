@@ -109,6 +109,20 @@ test_that("fuzzy motif modifications match fully specified glycans", {
 })
 
 
+test_that("fuzzy motif modifications do not over-match glycans", {
+  cases <- tibble::tribble(
+    ~glycan       , ~motif        ,
+    "Gal(a1-"     , "Gal?NAc(a1-" ,
+    "Gal?NAc(a1-" , "GalNAc(a1-"  ,
+    "Gal3Me(a1-"  , "Gal?NAc(a1-"
+  )
+
+  purrr::walk2(cases$glycan, cases$motif, function(glycan, motif) {
+    expect_false(have_motif(glycan, motif))
+  })
+})
+
+
 # ========== Basic Topologies ==========
 test_that("simple positive case", {
   glycan <- glyrepr::o_glycan_core_2()
