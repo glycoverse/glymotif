@@ -238,7 +238,10 @@ have a corresponding match in the glycan, and vice versa.</p>
 <p>Obscure linkages in motif substituents will match any linkage in glycan substituents:</p><ul><li><p>Motif "Neu5Ac?Ac" will match "Neu5Ac9Ac" in the glycan</p></li>
 <li><p>Motif "Glc?Me6S" will match "Glc3Me6S" in the glycan (? matches 3)</p></li>
 <li><p>Motif "Glc3Me?S" will match "Glc3Me6S" in the glycan (? matches 6)</p></li>
-</ul><p>This default behavior is reasonable for most cases,
+</ul><p>Fuzzy built-in residue modifications in motifs also match fully specified
+target glycans. For example, motif "Gal?NAc" matches glycan "GalNAc",
+and motif "Neu?Ac" matches glycan "Neu5Ac".</p>
+<p>This default behavior is reasonable for most cases,
 because monosaccharides with different substituents should be regarded as different.
 However, you can change this behavior by setting <code>strict_sub = FALSE</code>.
 In this case, the substituent is optional in the motif,
@@ -250,7 +253,7 @@ so the glycan "Neu5Ac9Ac" can match the motif "Neu5Ac".</p>
 to get all possible subgraph isomorphisms between <code>glycan</code> and <code>motif</code>.
 <code>color</code> vertex attributes are added to the graphs to distinguish monosaccharides.
 For all possible matches, the function checks the following:</p><ul><li><p>Alignment: using <code>alignment_check()</code></p></li>
-<li><p>Substituents: using <code>substituent_check()</code></p></li>
+<li><p>Residues and substituents: using <code>residue_check()</code></p></li>
 <li><p>Degree: using <code>degree_check()</code> (only when <code>match_degree</code> is provided)</p></li>
 <li><p>Linkages: using <code>linkage_check()</code></p></li>
 <li><p>Anomer: using <code>anomer_check()</code>
