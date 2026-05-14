@@ -583,7 +583,7 @@ match_residue <- function(
 #' @return A logical scalar.
 #' @noRd
 is_fuzzy_sub <- function(sub) {
-  stringr::str_detect(sub, "(^|,)\\?")
+  isTRUE(stringr::str_detect(sub, "(^|,)\\?"))
 }
 
 
