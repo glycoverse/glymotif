@@ -119,6 +119,10 @@
 #' - Motif "Glc?Me6S" will match "Glc3Me6S" in the glycan (? matches 3)
 #' - Motif "Glc3Me?S" will match "Glc3Me6S" in the glycan (? matches 6)
 #'
+#' Fuzzy built-in residue modifications in motifs also match fully specified
+#' target glycans. For example, motif "Gal?NAc" matches glycan "GalNAc",
+#' and motif "Neu?Ac" matches glycan "Neu5Ac".
+#'
 #' This default behavior is reasonable for most cases,
 #' because monosaccharides with different substituents should be regarded as different.
 #' However, you can change this behavior by setting `strict_sub = FALSE`.
@@ -132,7 +136,7 @@
 #' `color` vertex attributes are added to the graphs to distinguish monosaccharides.
 #' For all possible matches, the function checks the following:
 #' - Alignment: using `alignment_check()`
-#' - Substituents: using `substituent_check()`
+#' - Residues and substituents: using `residue_check()`
 #' - Degree: using `degree_check()` (only when `match_degree` is provided)
 #' - Linkages: using `linkage_check()`
 #' - Anomer: using `anomer_check()`

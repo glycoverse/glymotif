@@ -208,6 +208,10 @@ Obscure linkages in motif substituents will match any linkage in glycan substitu
 \item Motif "Glc3Me?S" will match "Glc3Me6S" in the glycan (? matches 6)
 }
 
+Fuzzy built-in residue modifications in motifs also match fully specified
+target glycans. For example, motif "Gal?NAc" matches glycan "GalNAc",
+and motif "Neu?Ac" matches glycan "Neu5Ac".
+
 This default behavior is reasonable for most cases,
 because monosaccharides with different substituents should be regarded as different.
 However, you can change this behavior by setting \code{strict_sub = FALSE}.
@@ -222,7 +226,7 @@ to get all possible subgraph isomorphisms between \code{glycan} and \code{motif}
 For all possible matches, the function checks the following:
 \itemize{
 \item Alignment: using \code{alignment_check()}
-\item Substituents: using \code{substituent_check()}
+\item Residues and substituents: using \code{residue_check()}
 \item Degree: using \code{degree_check()} (only when \code{match_degree} is provided)
 \item Linkages: using \code{linkage_check()}
 \item Anomer: using \code{anomer_check()}

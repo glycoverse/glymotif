@@ -1,14 +1,50 @@
 colorize_graphs <- function(glycan, motif) {
   # Prepare VF2 color vectors from the "mono" vertex attributes without
   # mutating the input graphs.
-  unique_monos <- unique(c(igraph::V(glycan)$mono, igraph::V(motif)$mono))
+  glycan_monos <- igraph::V(glycan)$mono
+  motif_monos <- igraph::V(motif)$mono
+  if (has_fuzzy_modification(motif)) {
+    glycan_monos <- residue_color_keys(glycan_monos)
+    motif_monos <- residue_color_keys(motif_monos)
+  }
+
+  unique_monos <- unique(c(glycan_monos, motif_monos))
   color_map <- seq_along(unique_monos)
   names(color_map) <- unique_monos
-  glycan_colors <- color_map[igraph::V(glycan)$mono]
-  motif_colors <- color_map[igraph::V(motif)$mono]
+  glycan_colors <- color_map[glycan_monos]
+  motif_colors <- color_map[motif_monos]
   names(glycan_colors) <- NULL
   names(motif_colors) <- NULL
   list(glycan_colors = glycan_colors, motif_colors = motif_colors)
+}
+
+
+#' Check Whether a Motif Has Fuzzy Built-In Modifications
+#'
+#' @param motif A motif graph.
+#'
+#' @return A logical scalar.
+#' @noRd
+has_fuzzy_modification <- function(motif) {
+  any(purrr::map_lgl(igraph::V(motif)$sub, is_fuzzy_sub))
+}
+
+
+#' Create Residue Color Keys for Fuzzy Modification Matching
+#'
+#' @param monos A character vector of monosaccharide names.
+#'
+#' @return A character vector of color keys.
+#' @noRd
+residue_color_keys <- function(monos) {
+  purrr::map_chr(monos, function(mono) {
+    built_in <- decompose_builtin_modification(mono)
+    if (is.null(built_in)) {
+      mono
+    } else {
+      built_in$mono
+    }
+  })
 }
 
 
@@ -23,6 +59,8 @@ new_validation_context <- function(glycan, motif) {
   list(
     glycan = glycan,
     motif = motif,
+    glycan_mono = igraph::vertex_attr(glycan, "mono"),
+    motif_mono = igraph::vertex_attr(motif, "mono"),
     glycan_sub = igraph::vertex_attr(glycan, "sub"),
     motif_sub = igraph::vertex_attr(motif, "sub"),
     glycan_in = NULL,
@@ -245,9 +283,11 @@ is_valid_result <- function(
     }
   }
 
-  # Substituent check is relatively fast and often selective
+  # Residue check combines monosaccharide and substituent validation because
+  # built-in modifications such as NAc and 5Ac may be represented either in
+  # the mono name or in the sub attribute.
   if (
-    !substituent_check(
+    !residue_check(
       r,
       glycan,
       motif,
@@ -282,6 +322,47 @@ is_valid_result <- function(
   }
 
   return(TRUE)
+}
+
+
+#' Validate Residue Matching
+#'
+#' @param r A vector mapping motif vertices to glycan vertices.
+#' @param glycan A glycan graph.
+#' @param motif A motif graph.
+#' @param strict_sub Whether substituent matching should be strict.
+#' @param context A validation context.
+#'
+#' @return `TRUE` if all matched residues are compatible.
+#' @noRd
+residue_check <- function(
+  r,
+  glycan = NULL,
+  motif = NULL,
+  strict_sub,
+  context = NULL
+) {
+  if (!is.null(context)) {
+    glycan_monos <- context$glycan_mono[r]
+    motif_monos <- context$motif_mono
+    glycan_subs <- context$glycan_sub[r]
+    motif_subs <- context$motif_sub
+  } else {
+    glycan_monos <- igraph::V(glycan)$mono[r]
+    motif_monos <- igraph::V(motif)$mono
+    glycan_subs <- igraph::V(glycan)$sub[r]
+    motif_subs <- igraph::V(motif)$sub
+  }
+
+  purrr::every(seq_along(glycan_monos), function(i) {
+    match_residue(
+      glycan_monos[[i]],
+      glycan_subs[[i]],
+      motif_monos[[i]],
+      motif_subs[[i]],
+      strict_sub
+    )
+  })
 }
 
 #' Resolve Linkage Matching Mode
@@ -378,28 +459,6 @@ alignment_check <- function(
 }
 
 
-substituent_check <- function(
-  r,
-  glycan = NULL,
-  motif = NULL,
-  strict_sub,
-  context = NULL
-) {
-  if (!is.null(context)) {
-    glycan_subs <- context$glycan_sub[r]
-    motif_subs <- context$motif_sub
-  } else {
-    glycan_subs <- igraph::V(glycan)$sub[r]
-    motif_subs <- igraph::V(motif)$sub
-  }
-  for (i in seq_along(glycan_subs)) {
-    if (!match_sub(glycan_subs[[i]], motif_subs[[i]], strict_sub)) {
-      return(FALSE)
-    }
-  }
-  return(TRUE)
-}
-
 #' Validate Degree Matching
 #'
 #' @param r A vector mapping motif vertices to glycan vertices.
@@ -477,6 +536,108 @@ match_sub <- function(glycan_sub, motif_sub, strict_sub) {
   })
 
   all(motif_matched) && all(glycan_matched)
+}
+
+
+#' Match a Glycan Residue to a Motif Residue
+#'
+#' @param glycan_mono Glycan monosaccharide name.
+#' @param glycan_sub Glycan substituent string.
+#' @param motif_mono Motif monosaccharide name.
+#' @param motif_sub Motif substituent string.
+#' @param strict_sub Whether substituent matching should be strict.
+#'
+#' @return A logical scalar.
+#' @noRd
+match_residue <- function(
+  glycan_mono,
+  glycan_sub,
+  motif_mono,
+  motif_sub,
+  strict_sub
+) {
+  if (
+    glycan_mono == motif_mono &&
+      match_sub(glycan_sub, motif_sub, strict_sub)
+  ) {
+    return(TRUE)
+  }
+
+  if (!is_fuzzy_sub(motif_sub)) {
+    return(FALSE)
+  }
+
+  built_in <- decompose_builtin_modification(glycan_mono)
+  if (is.null(built_in) || built_in$mono != motif_mono) {
+    return(FALSE)
+  }
+
+  match_sub(combine_subs(built_in$sub, glycan_sub), motif_sub, strict_sub)
+}
+
+
+#' Test Whether a Motif Substituent Contains a Fuzzy Position
+#'
+#' @param sub A substituent string.
+#'
+#' @return A logical scalar.
+#' @noRd
+is_fuzzy_sub <- function(sub) {
+  isTRUE(stringr::str_detect(sub, "(^|,)\\?"))
+}
+
+
+#' Decompose Built-In Residue Modifications
+#'
+#' @param mono A monosaccharide name.
+#'
+#' @return `NULL` or a list with `mono` and `sub` fields.
+#' @noRd
+decompose_builtin_modification <- function(mono) {
+  patterns <- c(
+    NAc = "NAc",
+    N = "N"
+  )
+
+  if (mono == "Neu5Ac") {
+    return(list(mono = "Neu", sub = "5Ac"))
+  }
+
+  for (sub in names(patterns)) {
+    if (stringr::str_ends(mono, stringr::fixed(patterns[[sub]]))) {
+      base <- stringr::str_remove(mono, stringr::fixed(patterns[[sub]]))
+      if (base != "" && is_known_residue_base(base)) {
+        return(list(mono = base, sub = stringr::str_c("?", sub)))
+      }
+    }
+  }
+
+  NULL
+}
+
+
+#' Check Whether a Decomposed Residue Base Is Known
+#'
+#' @param mono A monosaccharide name.
+#'
+#' @return A logical scalar.
+#' @noRd
+is_known_residue_base <- function(mono) {
+  mono %in% glyrepr::available_monosaccharides()
+}
+
+
+#' Combine Implicit and Explicit Substituents
+#'
+#' @param implicit_sub A substituent from built-in residue decomposition.
+#' @param explicit_sub A substituent already stored on the glycan graph.
+#'
+#' @return A comma-separated substituent string.
+#' @noRd
+combine_subs <- function(implicit_sub, explicit_sub) {
+  subs <- c(implicit_sub, explicit_sub)
+  subs <- subs[!is.na(subs) & subs != ""]
+  stringr::str_c(subs, collapse = ",")
 }
 
 # Helper function to match a single substituent (handles obscure linkages)
