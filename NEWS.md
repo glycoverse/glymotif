@@ -1,5 +1,9 @@
 # glymotif (development version)
 
+## Minor improvements and bug fixes
+
+* Fix fuzzy residue matching for `Gal?NAc` and related motifs (#27).
+
 # glymotif 0.14.0
 
 ## New features
