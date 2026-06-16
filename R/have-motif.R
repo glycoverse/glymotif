@@ -373,6 +373,7 @@ have_motif_ <- function(
   glycan_graph,
   motif_graph,
   motif_has_linkages,
+  motif_composition_profile,
   alignment,
   ignore_linkages = FALSE,
   strict_sub = TRUE,
@@ -389,6 +390,10 @@ have_motif_ <- function(
   # "none" is an early no-match result: the motif requires linkage information,
   # but the glycan has none, so no candidate can become valid.
   if (linkage_match_mode == "none") {
+    return(FALSE)
+  }
+
+  if (!composition_can_match(glycan_graph, motif_composition_profile)) {
     return(FALSE)
   }
 
