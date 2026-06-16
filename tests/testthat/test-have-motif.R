@@ -244,6 +244,21 @@ test_that("whole alignment simple negative case", {
   expect_false(have_motif(glycan, motif, alignment = "whole"))
 })
 
+test_that("whole alignment size mismatch returns before composition filtering", {
+  glycan <- glyrepr::o_glycan_core_2()
+  motif <- glyrepr::o_glycan_core_1()
+
+  testthat::local_mocked_bindings(
+    composition_can_match = function(...) {
+      stop("composition filter should not be reached")
+    }
+  )
+
+  expect_false(have_motif(glycan, motif, alignment = "whole"))
+  expect_equal(count_motif(glycan, motif, alignment = "whole"), 0L)
+  expect_equal(match_motif(glycan, motif, alignment = "whole"), list(list()))
+})
+
 
 test_that("whole alignment complex positive case", {
   glycan <- glyrepr::n_glycan_core()
