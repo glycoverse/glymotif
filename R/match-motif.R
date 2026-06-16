@@ -286,6 +286,10 @@ match_motifs_ <- function(
   strict_sub = TRUE,
   match_degree = NULL
 ) {
+  if (!whole_alignment_size_can_match(glycan_graph, motif_graph, alignment)) {
+    return(list())
+  }
+
   linkage_match_mode <- resolve_linkage_match_mode(
     glycan_graph,
     motif_has_linkages,
