@@ -189,6 +189,7 @@ count_motif_ <- function(
   glycan_graph,
   motif_graph,
   motif_has_linkages,
+  motif_composition_profile,
   alignment,
   ignore_linkages = FALSE,
   strict_sub = TRUE,
@@ -204,6 +205,10 @@ count_motif_ <- function(
   # "none" is an early no-match result: the motif requires linkage information,
   # but the glycan has none, so the count must be zero.
   if (linkage_match_mode == "none") {
+    return(0L)
+  }
+
+  if (!composition_can_match(glycan_graph, motif_composition_profile)) {
     return(0L)
   }
 

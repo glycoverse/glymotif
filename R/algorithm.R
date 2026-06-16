@@ -18,6 +18,51 @@ colorize_graphs <- function(glycan, motif) {
   list(glycan_colors = glycan_colors, motif_colors = motif_colors)
 }
 
+#' Create a Motif Composition Profile
+#'
+#' @param motif A motif graph.
+#'
+#' @return A list containing residue keys, required counts, and keying mode.
+#' @noRd
+new_motif_composition_profile <- function(motif) {
+  use_base_keys <- has_fuzzy_modification(motif)
+  motif_monos <- igraph::vertex_attr(motif, "mono")
+  if (use_base_keys) {
+    motif_monos <- residue_color_keys(motif_monos)
+  }
+
+  keys <- unique(motif_monos)
+  counts <- tabulate(match(motif_monos, keys), nbins = length(keys))
+  list(
+    keys = keys,
+    counts = counts,
+    use_base_keys = use_base_keys
+  )
+}
+
+#' Check Whether Glycan Composition Can Contain a Motif
+#'
+#' This is a conservative negative filter. `TRUE` means VF2 is still required;
+#' `FALSE` means the glycan lacks enough residues to contain the motif.
+#'
+#' @param glycan A glycan graph.
+#' @param motif_profile A motif composition profile.
+#'
+#' @return A logical scalar.
+#' @noRd
+composition_can_match <- function(glycan, motif_profile) {
+  glycan_monos <- igraph::vertex_attr(glycan, "mono")
+  if (motif_profile$use_base_keys) {
+    glycan_monos <- residue_color_keys(glycan_monos)
+  }
+
+  glycan_counts <- tabulate(
+    match(glycan_monos, motif_profile$keys),
+    nbins = length(motif_profile$keys)
+  )
+  all(glycan_counts >= motif_profile$counts)
+}
+
 
 #' Check Whether a Motif Has Fuzzy Built-In Modifications
 #'

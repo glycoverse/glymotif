@@ -280,6 +280,7 @@ match_motifs_ <- function(
   glycan_graph,
   motif_graph,
   motif_has_linkages,
+  motif_composition_profile,
   alignment,
   ignore_linkages = FALSE,
   strict_sub = TRUE,
@@ -294,6 +295,10 @@ match_motifs_ <- function(
   # "none" is an early no-match result: the motif requires linkage information,
   # but the glycan has none, so there are no mappings to return.
   if (linkage_match_mode == "none") {
+    return(list())
+  }
+
+  if (!composition_can_match(glycan_graph, motif_composition_profile)) {
     return(list())
   }
 
