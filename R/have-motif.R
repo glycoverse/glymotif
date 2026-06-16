@@ -381,6 +381,10 @@ have_motif_ <- function(
 ) {
   # Optimized version with early termination
   # Check if any match is valid, returning immediately on first valid match
+  if (!whole_alignment_size_can_match(glycan_graph, motif_graph, alignment)) {
+    return(FALSE)
+  }
+
   linkage_match_mode <- resolve_linkage_match_mode(
     glycan_graph,
     motif_has_linkages,

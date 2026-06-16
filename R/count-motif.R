@@ -196,6 +196,10 @@ count_motif_ <- function(
   match_degree = NULL
 ) {
   # This function is the logic part of `count_motif()`.
+  if (!whole_alignment_size_can_match(glycan_graph, motif_graph, alignment)) {
+    return(0L)
+  }
+
   linkage_match_mode <- resolve_linkage_match_mode(
     glycan_graph,
     motif_has_linkages,

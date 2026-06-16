@@ -64,6 +64,24 @@ composition_can_match <- function(glycan, motif_profile) {
 }
 
 
+#' Check Whether Whole-Alignment Graph Sizes Can Match
+#'
+#' @param glycan A glycan graph.
+#' @param motif A motif graph.
+#' @param alignment Alignment mode.
+#'
+#' @return A logical scalar.
+#' @noRd
+whole_alignment_size_can_match <- function(glycan, motif, alignment) {
+  if (alignment != "whole") {
+    return(TRUE)
+  }
+
+  igraph::vcount(glycan) == igraph::vcount(motif) &&
+    igraph::ecount(glycan) == igraph::ecount(motif)
+}
+
+
 #' Check Whether a Motif Has Fuzzy Built-In Modifications
 #'
 #' @param motif A motif graph.
