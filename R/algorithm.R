@@ -82,6 +82,41 @@ whole_alignment_size_can_match <- function(glycan, motif, alignment) {
 }
 
 
+#' Check Whether Core-Alignment Root Residues Can Match
+#'
+#' This is a conservative negative filter. `TRUE` means VF2 is still required;
+#' `FALSE` means the glycan and motif core residues are incompatible.
+#'
+#' @param glycan A glycan graph.
+#' @param motif A motif graph.
+#' @param alignment Alignment mode.
+#' @param strict_sub Whether substituent matching should be strict.
+#'
+#' @return A logical scalar.
+#' @noRd
+core_alignment_root_can_match <- function(
+  glycan,
+  motif,
+  alignment,
+  strict_sub
+) {
+  if (alignment != "core") {
+    return(TRUE)
+  }
+
+  glycan_core <- core_node(glycan)
+  motif_core <- core_node(motif)
+
+  match_residue(
+    igraph::vertex_attr(glycan, "mono", index = glycan_core),
+    igraph::vertex_attr(glycan, "sub", index = glycan_core),
+    igraph::vertex_attr(motif, "mono", index = motif_core),
+    igraph::vertex_attr(motif, "sub", index = motif_core),
+    strict_sub = strict_sub
+  )
+}
+
+
 #' Check Whether a Motif Has Fuzzy Built-In Modifications
 #'
 #' @param motif A motif graph.
@@ -875,6 +910,9 @@ terminal_nodes <- function(glycan) {
 
 
 core_node <- function(glycan) {
-  in_degree <- igraph::degree(glycan, mode = "in")
-  igraph::V(glycan)[in_degree == 0]
+  # This is a hack based on one important property of glyrepr's glycan structure vectors:
+  # the order of the nodes in the graph is consistent with the order they appear
+  # in the IUPAC-condensed sequences.
+  # Therefore, the last node in the graph is guaranteed to be the root node.
+  igraph::vcount(glycan)
 }
