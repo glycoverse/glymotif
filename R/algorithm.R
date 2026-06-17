@@ -104,11 +104,8 @@ core_alignment_root_can_match <- function(
     return(TRUE)
   }
 
-  glycan_core <- which(igraph::degree(glycan, mode = "in") == 0)
-  motif_core <- which(igraph::degree(motif, mode = "in") == 0)
-  if (length(glycan_core) != 1 || length(motif_core) != 1) {
-    return(TRUE)
-  }
+  glycan_core <- core_node(glycan)
+  motif_core <- core_node(motif)
 
   match_residue(
     igraph::vertex_attr(glycan, "mono", index = glycan_core),
@@ -913,6 +910,9 @@ terminal_nodes <- function(glycan) {
 
 
 core_node <- function(glycan) {
-  in_degree <- igraph::degree(glycan, mode = "in")
-  igraph::V(glycan)[in_degree == 0]
+  # This is a hack based on one important property of glyrepr's glycan structure vectors:
+  # the order of the nodes in the graph is consistent with the order they appear
+  # in the IUPAC-condensed sequences.
+  # Therefore, the last node in the graph is guaranteed to be the root node.
+  igraph::vcount(glycan)
 }
