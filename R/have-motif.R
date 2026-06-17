@@ -384,6 +384,16 @@ have_motif_ <- function(
   if (!whole_alignment_size_can_match(glycan_graph, motif_graph, alignment)) {
     return(FALSE)
   }
+  if (
+    !core_alignment_root_can_match(
+      glycan_graph,
+      motif_graph,
+      alignment,
+      strict_sub = strict_sub
+    )
+  ) {
+    return(FALSE)
+  }
 
   linkage_match_mode <- resolve_linkage_match_mode(
     glycan_graph,

@@ -82,6 +82,44 @@ whole_alignment_size_can_match <- function(glycan, motif, alignment) {
 }
 
 
+#' Check Whether Core-Alignment Root Residues Can Match
+#'
+#' This is a conservative negative filter. `TRUE` means VF2 is still required;
+#' `FALSE` means the glycan and motif core residues are incompatible.
+#'
+#' @param glycan A glycan graph.
+#' @param motif A motif graph.
+#' @param alignment Alignment mode.
+#' @param strict_sub Whether substituent matching should be strict.
+#'
+#' @return A logical scalar.
+#' @noRd
+core_alignment_root_can_match <- function(
+  glycan,
+  motif,
+  alignment,
+  strict_sub
+) {
+  if (alignment != "core") {
+    return(TRUE)
+  }
+
+  glycan_core <- which(igraph::degree(glycan, mode = "in") == 0)
+  motif_core <- which(igraph::degree(motif, mode = "in") == 0)
+  if (length(glycan_core) != 1 || length(motif_core) != 1) {
+    return(TRUE)
+  }
+
+  match_residue(
+    igraph::vertex_attr(glycan, "mono", index = glycan_core),
+    igraph::vertex_attr(glycan, "sub", index = glycan_core),
+    igraph::vertex_attr(motif, "mono", index = motif_core),
+    igraph::vertex_attr(motif, "sub", index = motif_core),
+    strict_sub = strict_sub
+  )
+}
+
+
 #' Check Whether a Motif Has Fuzzy Built-In Modifications
 #'
 #' @param motif A motif graph.
