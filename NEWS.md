@@ -1,4 +1,8 @@
-# glymotif (development version)
+# glymotif 0.14.2
+
+## Minor improvements and bug fixes
+
+* Performance optimization for motif matching (#28, #29, #30).
 
 # glymotif 0.14.1
 
