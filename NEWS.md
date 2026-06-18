@@ -1,4 +1,8 @@
-# glymotif (development version)
+# glymotif 0.15.0
+
+## New features
+
+* Add low-level motif matching functions `.g_have_motif()`, `.g_count_motif()`, and `.g_match_motif()` that work directly with igraph objects for package developers (#31).
 
 # glymotif 0.14.2
 
