@@ -11,3 +11,4 @@ inst/doc
 /Meta/
 /data-raw/img/
 .worktrees/
+/benchmarks/*.csv
