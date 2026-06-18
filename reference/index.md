@@ -12,6 +12,10 @@
   : Count How Many Times Glycans have the Given Motif(s)
 - [`db_motifs()`](https://glycoverse.github.io/glymotif/reference/db_motifs.md)
   : Get All Motifs from the Database
+- [`.g_have_motif()`](https://glycoverse.github.io/glymotif/reference/dot-g_motif.md)
+  [`.g_count_motif()`](https://glycoverse.github.io/glymotif/reference/dot-g_motif.md)
+  [`.g_match_motif()`](https://glycoverse.github.io/glymotif/reference/dot-g_motif.md)
+  : Low-Level Motif Matching on Graphs
 - [`dynamic_motifs()`](https://glycoverse.github.io/glymotif/reference/dynamic_motifs.md)
   : Dynamic Motifs Specification
 - [`extract_branch_motif()`](https://glycoverse.github.io/glymotif/reference/extract_branch_motif.md)
