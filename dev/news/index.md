@@ -2,6 +2,18 @@
 
 ## glymotif (development version)
 
+## glymotif 0.15.0
+
+### New features
+
+- Add low-level motif matching functions
+  [`.g_have_motif()`](https://glycoverse.github.io/glymotif/dev/reference/dot-g_motif.md),
+  [`.g_count_motif()`](https://glycoverse.github.io/glymotif/dev/reference/dot-g_motif.md),
+  and
+  [`.g_match_motif()`](https://glycoverse.github.io/glymotif/dev/reference/dot-g_motif.md)
+  that work directly with igraph objects for package developers
+  ([\#31](https://github.com/glycoverse/glymotif/issues/31)).
+
 ## glymotif 0.14.2
 
 ### Minor improvements and bug fixes
