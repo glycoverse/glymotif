@@ -220,7 +220,7 @@ so the glycan "Neu5Ac9Ac" can match the motif "Neu5Ac".
 }
 
 \section{Implementation}{
-Under the hood, the function uses \code{\link[igraph:subgraph_isomorphisms]{igraph::graph.get.subisomorphisms.vf2()}}
+Under the hood, the function uses \code{\link[igraph:graph.get.subisomorphisms.vf2]{igraph::graph.get.subisomorphisms.vf2()}}
 to get all possible subgraph isomorphisms between \code{glycan} and \code{motif}.
 \code{color} vertex attributes are added to the graphs to distinguish monosaccharides.
 For all possible matches, the function checks the following:
