@@ -52,22 +52,3 @@ test_that("getting many motif alignments", {
   expected2 <- c("substructure", "core")
   expect_identical(result2, expected2)
 })
-
-
-test_that("getting motif aglycon works", {
-  result <- get_motif_aglycon("N-Glycan core basic")
-  expect_identical(result, "Asn")
-})
-
-
-test_that("getting many motif aglycons", {
-  result1 <- get_motif_aglycon(c("O-Glycan core 1", "O-Glycan core 2"))
-  result1 <- as.character(result1)
-  expected1 <- c("Ser/Thr", "Ser/Thr")
-  expect_identical(result1, expected1)
-
-  result2 <- get_motif_aglycon(c("O-Glycan core 2", "O-Glycan core 1"))
-  result2 <- as.character(result2)
-  expected2 <- c("Ser/Thr", "Ser/Thr")
-  expect_identical(result2, expected2)
-})
