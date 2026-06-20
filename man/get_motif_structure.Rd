@@ -3,14 +3,11 @@
 \name{get_motif_structure}
 \alias{get_motif_structure}
 \alias{get_motif_alignment}
-\alias{get_motif_aglycon}
-\title{Get the Structures, Alignments, or Aglycons of Known Motifs}
+\title{Get the Structures or Alignments of Known Motifs}
 \usage{
 get_motif_structure(name)
 
 get_motif_alignment(name)
-
-get_motif_aglycon(name)
 }
 \arguments{
 \item{name}{A character vector of the motif name.}
@@ -19,7 +16,6 @@ get_motif_aglycon(name)
 \itemize{
 \item \code{get_motif_structure()}: a \code{\link[glyrepr:glycan_structure]{glyrepr::glycan_structure()}}
 \item \code{get_motif_alignment()}: a character vector of motif alignments.
-\item \code{get_motif_aglycon()}: a character vector of motif aglycons.
 }
 
 For all three functions, if \code{name} has length greater than 1,
@@ -27,16 +23,14 @@ the return value is named with the motif names.
 }
 \description{
 Given a character vector of motifs names in GlycoMotif GlyGen Collection,
-these functions return the structures, alignments, or aglycons of the motifs.
+these functions return the structures or alignments of the motifs.
 }
 \examples{
 get_motif_structure("N-Glycan core basic")
 get_motif_alignment("N-Glycan core basic")
-get_motif_aglycon("N-Glycan core basic")
 
 get_motif_structure(c("O-Glycan core 1", "O-Glycan core 2"))
 get_motif_alignment(c("O-Glycan core 1", "O-Glycan core 2"))
-get_motif_aglycon(c("O-Glycan core 1", "O-Glycan core 2"))
 
 }
 \seealso{
