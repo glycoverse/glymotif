@@ -1,8 +1,8 @@
-# Get the Structures, Alignments, or Aglycons of Known Motifs
+# Get the Structures or Alignments of Known Motifs
 
 Given a character vector of motifs names in GlycoMotif GlyGen
-Collection, these functions return the structures, alignments, or
-aglycons of the motifs.
+Collection, these functions return the structures or alignments of the
+motifs.
 
 ## Usage
 
@@ -10,8 +10,6 @@ aglycons of the motifs.
 get_motif_structure(name)
 
 get_motif_alignment(name)
-
-get_motif_aglycon(name)
 ```
 
 ## Arguments
@@ -26,8 +24,6 @@ get_motif_aglycon(name)
   [`glyrepr::glycan_structure()`](https://glycoverse.github.io/glyrepr/reference/glycan_structure.html)
 
 - `get_motif_alignment()`: a character vector of motif alignments.
-
-- `get_motif_aglycon()`: a character vector of motif aglycons.
 
 For all three functions, if `name` has length greater than 1, the return
 value is named with the motif names.
@@ -46,8 +42,6 @@ get_motif_structure("N-Glycan core basic")
 #> # Unique structures: 1
 get_motif_alignment("N-Glycan core basic")
 #> [1] "core"
-get_motif_aglycon("N-Glycan core basic")
-#> [1] "Asn"
 
 get_motif_structure(c("O-Glycan core 1", "O-Glycan core 2"))
 #> <glycan_structure[2]>
@@ -57,7 +51,4 @@ get_motif_structure(c("O-Glycan core 1", "O-Glycan core 2"))
 get_motif_alignment(c("O-Glycan core 1", "O-Glycan core 2"))
 #> O-Glycan core 1 O-Glycan core 2 
 #>          "core"          "core" 
-get_motif_aglycon(c("O-Glycan core 1", "O-Glycan core 2"))
-#> O-Glycan core 1 O-Glycan core 2 
-#>       "Ser/Thr"       "Ser/Thr" 
 ```

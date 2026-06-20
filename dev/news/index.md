@@ -396,9 +396,7 @@ purpose.
   [`get_motif_structure()`](https://glycoverse.github.io/glymotif/dev/reference/get_motif_structure.md),
   similar bugs in
   [`get_motif_alignment()`](https://glycoverse.github.io/glymotif/dev/reference/get_motif_structure.md)
-  and
-  [`get_motif_aglycon()`](https://glycoverse.github.io/glymotif/dev/reference/get_motif_structure.md)
-  are also fixed.
+  and `get_motif_aglycon()` are also fixed.
 
 ## glymotif 0.2.1
 
