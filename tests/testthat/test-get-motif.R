@@ -7,6 +7,20 @@ test_that("db_motifs() creates a db_motifs_spec object", {
 
 test_that("db_motif_info() returns database motif metadata", {
   info <- db_motif_info()
+  expected_sources <- c(
+    GGM = "GlyGen Motifs",
+    CCRC = "CCRC Motifs",
+    GTC = "GlyTouCan Motifs",
+    GE = "GlycoEpitope Epitopes",
+    GD = "Glydin",
+    GDB = "Glydin - BiOligo",
+    GDV = "Glydin - Cermav",
+    GDC = "Glydin - Cummings",
+    GDH = "Glydin - Hayes",
+    GDSB = "Glydin - SugarBind",
+    UCM = "UniCarbKB Motifs",
+    GM = "All Motifs"
+  )
 
   expect_s3_class(info, "tbl_df")
   expect_named(
@@ -20,8 +34,12 @@ test_that("db_motif_info() returns database motif metadata", {
       "glycan_structure"
     )
   )
-  expect_true(all(info$source == "GlyGen"))
-  expect_true(all(info$source_id == "GGM"))
+  expect_setequal(info$source_id, names(expected_sources))
+  purrr::iwalk(expected_sources, function(source, source_id) {
+    collection_info <- info[info$source_id == source_id, ]
+    expect_gt(nrow(collection_info), 0)
+    expect_equal(unique(collection_info$source), source)
+  })
   expect_s3_class(info$glycan_structure, "glyrepr_structure")
   expect_equal(length(info$glycan_structure), nrow(info))
 })

@@ -11,7 +11,8 @@ A \code{db_motifs_spec} object.
 }
 \description{
 This function returns a database motif specification.
-We use GlycoMotif GlyGen Collection (https://glycomotif.glyomics.org/glycomotif/GGM) as the source of the motifs.
+We use GlycoMotif collections (https://glycomotif.glyomics.org/glycomotif/)
+as the source of the motifs.
 This function is useful to be integrated with \code{\link[=have_motifs]{have_motifs()}} and \code{\link[=count_motifs]{count_motifs()}}.
 For example, use \code{have_motifs(glycans, db_motifs())} to check against all motifs.
 }

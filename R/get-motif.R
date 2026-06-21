@@ -1,5 +1,7 @@
 # `glygen_motifs` is a tibble with the following columns:
-# - `accession`: the GlyGen accession number of the motif
+# - `source_id`: the collection identifier of the motif
+# - `source`: the collection name of the motif
+# - `accession`: the accession number of the motif
 # - `name`: the name of the motif
 # - `alignment`: the alignment of the motif
 # - `glycan_structure`: the glycan structure (glyrepr::glycan_structure()) of the motif
@@ -7,7 +9,8 @@
 #' Get All Motifs from the Database
 #'
 #' This function returns a database motif specification.
-#' We use GlycoMotif GlyGen Collection (https://glycomotif.glyomics.org/glycomotif/GGM) as the source of the motifs.
+#' We use GlycoMotif collections (https://glycomotif.glyomics.org/glycomotif/)
+#' as the source of the motifs.
 #' This function is useful to be integrated with [have_motifs()] and [count_motifs()].
 #' For example, use `have_motifs(glycans, db_motifs())` to check against all motifs.
 #'
@@ -31,7 +34,7 @@ print.db_motifs_spec <- function(x, ...) {
   cli::cli_text(
     "This object should be passed to the {.arg motifs} argument of {.fn have_motifs}, {.fn count_motifs}, {.fn match_motifs}, {.fn add_motifs_lgl}, or {.fn add_motifs_int}."
   )
-  cli::cli_text("Configuration: uses all GlyGen GlycoMotif database motifs")
+  cli::cli_text("Configuration: uses all packaged GlycoMotif database motifs")
   invisible(x)
 }
 
@@ -49,8 +52,8 @@ print.db_motifs_spec <- function(x, ...) {
 #' @export
 db_motif_info <- function() {
   tibble::tibble(
-    source = rep("GlyGen", nrow(glygen_motifs)),
-    source_id = rep("GGM", nrow(glygen_motifs)),
+    source = glygen_motifs$source,
+    source_id = glygen_motifs$source_id,
     accession = glygen_motifs$accession,
     name = glygen_motifs$name,
     alignment = glygen_motifs$alignment,
