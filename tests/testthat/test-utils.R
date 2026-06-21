@@ -72,6 +72,29 @@ test_that("prepare_motif_args handles branch_motifs_spec", {
   expect_type(result$match_degree, "list")
 })
 
+test_that("prepare_motif_args handles db_motifs_spec with duplicate structures", {
+  glycans <- glyrepr::as_glycan_structure("Gal(b1-3)GalNAc(a1-")
+  info <- db_motif_info()
+
+  result <- prepare_motif_args(
+    glycans,
+    db_motifs(),
+    alignments = NULL,
+    ignore_linkages = FALSE,
+    match_degree = NULL,
+    single_motif = FALSE,
+    strict_sub = TRUE
+  )
+
+  expect_s3_class(result$motifs, "glyrepr_structure")
+  expect_identical(
+    unname(as.character(result$motifs)),
+    as.character(info$glycan_structure)
+  )
+  expect_identical(result$alignments, info$alignment)
+  expect_gt(sum(duplicated(as.character(result$motifs))), 0)
+})
+
 test_that("prepare_motif_args errors on alignments conflict with spec", {
   glycans <- glyrepr::as_glycan_structure("Gal(b1-4)GlcNAc(b1-")
   spec <- dynamic_motifs()

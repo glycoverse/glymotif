@@ -46,7 +46,9 @@ prepare_motif_args <- function(
     )
   }
 
-  validate_duplicate_motifs(prepared$motifs, call = call)
+  if (!prepared$allow_duplicate_motifs) {
+    validate_duplicate_motifs(prepared$motifs, call = call)
+  }
 
   motif_type <- get_motif_type(prepared$motifs, call = call)
   alignments <- resolve_prepared_alignments(
@@ -90,11 +92,12 @@ prepare_motif_args <- function(
 #'
 #' @param motifs An object passed to the `motifs` argument.
 #'
-#' @return `TRUE` if `motifs` is a dynamic or branch motif specification.
+#' @return `TRUE` if `motifs` is a motif specification.
 #' @noRd
 is_motif_spec <- function(motifs) {
   inherits(motifs, "dynamic_motifs_spec") ||
-    inherits(motifs, "branch_motifs_spec")
+    inherits(motifs, "branch_motifs_spec") ||
+    inherits(motifs, "db_motifs_spec")
 }
 
 #' Resolve Motif Specification Arguments
@@ -128,7 +131,8 @@ prepare_spec_motif_args <- function(
     motifs = motifs,
     alignments = resolved$alignments,
     match_degree = resolved$match_degree,
-    from_spec = TRUE
+    from_spec = TRUE,
+    allow_duplicate_motifs = isTRUE(resolved$allow_duplicate_motifs)
   )
 }
 
@@ -156,7 +160,8 @@ prepare_regular_motif_args <- function(
     motifs = motifs,
     alignments = alignments,
     match_degree = match_degree,
-    from_spec = FALSE
+    from_spec = FALSE,
+    allow_duplicate_motifs = FALSE
   )
 }
 
@@ -690,11 +695,12 @@ prepare_struc_names <- function(x, strucs) {
 # Returns: explicit names if present, known motif names if applicable,
 #          NULL otherwise (IUPAC strings or structure input without names)
 prepare_motif_names <- function(motifs_input) {
-  # Handle motif spec objects (dynamic_motifs_spec, branch_motifs_spec)
+  # Handle motif spec objects
   # These should not use their internal list names as motif names
   if (
     inherits(motifs_input, "dynamic_motifs_spec") ||
-      inherits(motifs_input, "branch_motifs_spec")
+      inherits(motifs_input, "branch_motifs_spec") ||
+      inherits(motifs_input, "db_motifs_spec")
   ) {
     return(NULL)
   }

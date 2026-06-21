@@ -903,10 +903,29 @@ test_that("have_motifs works with branch_motifs()", {
   expect_true(ncol(result) > 0)
 })
 
+test_that("have_motifs works with db_motifs()", {
+  glycans <- glyrepr::as_glycan_structure("Gal(b1-3)GalNAc(a1-")
+  info <- db_motif_info()
+
+  result <- have_motifs(glycans, db_motifs())
+
+  expect_type(result, "logical")
+  expect_equal(dim(result), c(1, nrow(info)))
+  expect_identical(colnames(result), info$name)
+})
+
 test_that("have_motifs errors when alignments specified with dynamic_motifs", {
   glycans <- glyrepr::as_glycan_structure("Gal(b1-4)GlcNAc(b1-")
   expect_error(
     have_motifs(glycans, dynamic_motifs(), alignments = "core"),
+    "Cannot specify.*alignments"
+  )
+})
+
+test_that("have_motifs errors when alignments specified with db_motifs", {
+  glycans <- glyrepr::as_glycan_structure("Gal(b1-4)GlcNAc(b1-")
+  expect_error(
+    have_motifs(glycans, db_motifs(), alignments = "core"),
     "Cannot specify.*alignments"
   )
 })

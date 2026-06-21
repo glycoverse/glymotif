@@ -95,7 +95,7 @@ print.branch_motifs_spec <- function(x, ...) {
 #' and matching parameters.
 #'
 #' @param glycans A `glyrepr_structure` object.
-#' @param spec A `dynamic_motifs_spec` or `branch_motifs_spec` object.
+#' @param spec A motif specification object.
 #' @param alignments User-provided alignments (should be NULL).
 #' @param match_degree User-provided match_degree (should be NULL).
 #' @param strict_sub User-provided strict_sub (should be TRUE).
@@ -113,25 +113,25 @@ resolve_motif_spec <- function(
 ) {
   if (!is.null(alignments)) {
     cli::cli_abort(c(
-      "Cannot specify {.arg alignments} when using {.fn dynamic_motifs} or {.fn branch_motifs}.",
+      "Cannot specify {.arg alignments} when using a motif specification.",
       "i" = "Alignment is controlled automatically by the algorithm."
     ))
   }
   if (!is.null(match_degree)) {
     cli::cli_abort(c(
-      "Cannot specify {.arg match_degree} when using {.fn dynamic_motifs} or {.fn branch_motifs}.",
+      "Cannot specify {.arg match_degree} when using a motif specification.",
       "i" = "Match degree is controlled automatically by the algorithm."
     ))
   }
   if (!strict_sub) {
     cli::cli_abort(c(
-      "Cannot specify {.arg strict_sub} when using {.fn dynamic_motifs} or {.fn branch_motifs}.",
+      "Cannot specify {.arg strict_sub} when using a motif specification.",
       "i" = "Strict substituent matching is controlled automatically by the algorithm."
     ))
   }
   if (ignore_linkages) {
     cli::cli_abort(c(
-      "Cannot specify {.arg ignore_linkages} when using {.fn dynamic_motifs} or {.fn branch_motifs}.",
+      "Cannot specify {.arg ignore_linkages} when using a motif specification.",
       "i" = "Linkage matching is controlled automatically by the algorithm."
     ))
   }
