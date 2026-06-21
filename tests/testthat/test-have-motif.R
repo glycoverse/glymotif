@@ -908,10 +908,17 @@ test_that("have_motifs works with db_motifs()", {
   info <- db_motif_info()
 
   result <- have_motifs(glycans, db_motifs())
+  expected_labels <- info$name
+  missing_labels <- is.na(expected_labels) | expected_labels == ""
+  expected_labels[missing_labels] <- paste0(
+    info$source_id[missing_labels],
+    ".",
+    info$accession[missing_labels]
+  )
 
   expect_type(result, "logical")
   expect_equal(dim(result), c(1, nrow(info)))
-  expect_identical(colnames(result), info$name)
+  expect_identical(colnames(result), expected_labels)
 })
 
 test_that("have_motifs errors when alignments specified with dynamic_motifs", {
