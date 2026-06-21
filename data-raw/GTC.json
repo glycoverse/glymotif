@@ -1,0 +1,319 @@
+{
+  "head": {
+    "vars": [ "accession" , "alignment" , "wurcs" ]
+  } ,
+  "results": {
+    "bindings": [
+      {
+        "accession": { "type": "literal" , "value": "G00052MO" } ,
+        "alignment": { "type": "literal" , "value": "Substructure" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/3,4,3/[a2122h-1b_1-5_2*NCC/3=O][a1221m-1a_1-5][a2112h-1b_1-5]/1-2-3-2/a3-b1_a4-c1_c2-d1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "G00054MO" } ,
+        "alignment": { "type": "literal" , "value": "Substructure" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/4,4,3/[a2122h-1b_1-5_2*NCC/3=O][a1221m-1a_1-5][a2112h-1b_1-5][Aad21122h-2a_2-6_5*NCC/3=O]/1-2-3-4/a3-b1_a4-c1_c3-d2" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "G00031MO" } ,
+        "alignment": { "type": "literal" , "value": "Core" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/2,2,1/[a2112h-1a_1-5_2*NCC/3=O][a2112h-1b_1-5]/1-2/a3-b1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "G00049MO" } ,
+        "alignment": { "type": "literal" , "value": "Substructure" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/3,4,3/[a2122h-1b_1-5][a2112h-1b_1-5][a2122h-1b_1-5_2*NCC/3=O]/1-2-3-2/a4-b1_b3-c1_c3-d1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "G00065MO" } ,
+        "alignment": { "type": "literal" , "value": "Substructure" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/3,3,2/[a2122h-1b_1-5_2*NCC/3=O][a2112h-1b_1-5][Aad21122h-2a_2-6_5*NCC/3=O]/1-2-3/a4-b1_b3-c2" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "G00027MO" } ,
+        "alignment": { "type": "literal" , "value": "Core" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/3,4,3/[a2122h-1b_1-5_2*NCC/3=O][a1122h-1b_1-5][a1122h-1a_1-5]/1-2-3-3/a4-b1_b3-c1_b6-d1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "G00066MO" } ,
+        "alignment": { "type": "literal" , "value": "Substructure" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/3,3,2/[a2112h-1b_1-5][a1221m-1a_1-5][a2112h-1a_1-5_2*NCC/3=O]/1-2-3/a2-b1_a3-c1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "G00068MO" } ,
+        "alignment": { "type": "literal" , "value": "Substructure" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/2,2,1/[a2112h-1b_1-5][a1221m-1a_1-5]/1-2/a2-b1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "G00070MO" } ,
+        "alignment": { "type": "literal" , "value": "Core" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/3,4,3/[u2122h][a2112h-1b_1-5][a2122h-1b_1-5_2*NCC/3=O]/1-2-3-2/a4-b1_b3-c1_c4-d1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "G00058MO" } ,
+        "alignment": { "type": "literal" , "value": "Substructure" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/2,4,3/[a2122h-1b_1-5_2*NCC/3=O][a2112h-1b_1-5]/1-2-1-2/a4-b1_b3-c1_c4-d1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "G00044MO" } ,
+        "alignment": { "type": "literal" , "value": "Core" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/2,2,1/[u2112h_2*NCC/3=O][a2112h-1a_1-5_2*NCC/3=O]/1-2/a6-b1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "G00059MO" } ,
+        "alignment": { "type": "literal" , "value": "Substructure" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/3,3,2/[a2122h-1b_1-5][a2112h-1b_1-5][a2112h-1a_1-5]/1-2-3/a4-b1_b4-c1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "G00053MO" } ,
+        "alignment": { "type": "literal" , "value": "Substructure" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/4,4,3/[a2122h-1b_1-5_2*NCC/3=O][a2112h-1b_1-5][Aad21122h-2a_2-6_5*NCC/3=O][a1221m-1a_1-5]/1-2-3-4/a3-b1_a4-d1_b3-c2" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "G00047MO" } ,
+        "alignment": { "type": "literal" , "value": "Substructure" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/3,3,2/[a2122h-1x_1-5_2*NCC/3=O][a2112h-1b_1-5][a1221m-1a_1-5]/1-2-3/a3-b1_a4-c1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "G00015MO" } ,
+        "alignment": { "type": "literal" , "value": "Core" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/4,4,3/[u2122h][a1122h-1b_1-5][a1122h-1a_1-5][a2122h-1b_1-5_2*NCC/3=O]/1-2-3-4/a4-b1_b3-c1_c2-d1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "G00050MO" } ,
+        "alignment": { "type": "literal" , "value": "Substructure" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/4,5,4/[a2122h-1b_1-5][a2112h-1b_1-5][a2122h-1b_1-5_2*NCC/3=O][a1221m-1a_1-5]/1-2-3-2-4/a4-b1_b3-c1_c3-d1_d2-e1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "G00062MO" } ,
+        "alignment": { "type": "literal" , "value": "Substructure" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/4,5,4/[a2112h-1b_1-5][a2122h-1b_1-5_2*NCC/3=O][Aad21122h-2a_2-6_5*NCC/3=O][a2112h-1b_1-5_2*NCC/3=O]/1-2-1-3-4/a3-b1_b4-c1_c3-d2_c4-e1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "G00051MO" } ,
+        "alignment": { "type": "literal" , "value": "Substructure" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/3,3,2/[a2122h-1b_1-5_2*NCC/3=O][a1221m-1a_1-5][a2112h-1b_1-5]/1-2-3/a3-b1_a4-c1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "G00037MO" } ,
+        "alignment": { "type": "literal" , "value": "Core" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/2,3,2/[a2112h-1a_1-5_2*NCC/3=O][a2122h-1b_1-5_2*NCC/3=O]/1-2-2/a3-b1_a6-c1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "G00028MO" } ,
+        "alignment": { "type": "literal" , "value": "Core" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/4,7,6/[u2122h_2*NCC/3=O][a2122h-1b_1-5_2*NCC/3=O][a1122h-1b_1-5][a1122h-1a_1-5]/1-2-3-4-4-4-4/a4-b1_b4-c1_c3-d1_c6-e1_e3-f1_e6-g1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "G00034MO" } ,
+        "alignment": { "type": "literal" , "value": "Core" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/3,3,2/[u2112h_2*NCC/3=O][a2112h-1b_1-5][a2122h-1b_1-5_2*NCC/3=O]/1-2-3/a3-b1_a6-c1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "G00046MO" } ,
+        "alignment": { "type": "literal" , "value": "Substructure" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/2,2,1/[u2112h][a2112h-1a_1-5]/1-2/a3-b1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "G00018MO" } ,
+        "alignment": { "type": "literal" , "value": "Substructure" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/3,4,3/[u2112h_2*NCC/3=O_4*OSO/3=O/3=O][a2122A-1b_1-5][a2112h-1b_1-5_2*NCC/3=O_4*OSO/3=O/3=O]/1-2-3-2/a3-b1_b4-c1_c3-d1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "G00067MO" } ,
+        "alignment": { "type": "literal" , "value": "Substructure" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/2,3,2/[a2112h-1b_1-5][a1221m-1a_1-5]/1-2-1/a2-b1_a3-c1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "G00013MO" } ,
+        "alignment": { "type": "literal" , "value": "Core" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/2,4,3/[u2122h][a2112h-1b_1-5]/1-2-2-2/a4-b1_b4-c1_c3-d1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "G00040MO" } ,
+        "alignment": { "type": "literal" , "value": "Core" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/2,2,1/[u2112h_2*NCC/3=O][a2112h-1a_1-5_2*NCC/3=O]/1-2/a3-b1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "G00036MO" } ,
+        "alignment": { "type": "literal" , "value": "Core" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/2,2,1/[u2112h_2*NCC/3=O][a2122h-1b_1-5_2*NCC/3=O]/1-2/a3-b1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "G00020MO" } ,
+        "alignment": { "type": "literal" , "value": "Substructure" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/3,4,3/[u2122h_2*NCC/3=O_6*OSO/3=O/3=O][a2112h-1b_1-5][a2122h-1b_1-5_2*NCC/3=O_6*OSO/3=O/3=O]/1-2-3-2/a4-b1_b3-c1_c4-d1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "G00061MO" } ,
+        "alignment": { "type": "literal" , "value": "Substructure" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/4,4,3/[a2122h-1b_1-5][a2112h-1b_1-5][a2112h-1a_1-5][a2112h-1b_1-5_2*NCC/3=O]/1-2-3-4/a4-b1_b4-c1_c3-d1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "G00030MO" } ,
+        "alignment": { "type": "literal" , "value": "Core" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/4,7,6/[u2122h_2*NCC/3=O][a2122h-1b_1-5_2*NCC/3=O][a1122h-1b_1-5][a1122h-1a_1-5]/1-2-3-4-2-4-2/a4-b1_b4-c1_c3-d1_c6-f1_e1-d2|d4_g1-f2|f4" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "G00043MO" } ,
+        "alignment": { "type": "literal" , "value": "Core" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/1,2,1/[a2112h-1a_1-5_2*NCC/3=O]/1-1/a6-b1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "G00033MO" } ,
+        "alignment": { "type": "literal" , "value": "Core" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/3,3,2/[a2112h-1a_1-5_2*NCC/3=O][a2112h-1b_1-5][a2122h-1b_1-5_2*NCC/3=O]/1-2-3/a3-b1_a6-c1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "G00029MO" } ,
+        "alignment": { "type": "literal" , "value": "Core" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/4,7,6/[a2122h-1x_1-5_2*NCC/3=O][a2122h-1b_1-5_2*NCC/3=O][a1122h-1b_1-5][a1122h-1a_1-5]/1-2-3-4-2-4-4/a4-b1_b4-c1_c3-d1_c6-f1_e1-d2|d4_g1-f3|f6" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "G00012MO" } ,
+        "alignment": { "type": "literal" , "value": "Core" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/4,4,3/[u2122h][a2112h-1b_1-5][a2112h-1a_1-5][a2112h-1b_1-5_2*NCC/3=O]/1-2-3-4/a4-b1_b3-c1_c3-d1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "G00069MO" } ,
+        "alignment": { "type": "literal" , "value": "Core" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/3,4,3/[u2122h][a2112h-1b_1-5][a2122h-1b_1-5_2*NCC/3=O]/1-2-3-2/a4-b1_b3-c1_c3-d1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "G00048MO" } ,
+        "alignment": { "type": "literal" , "value": "Substructure" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/3,4,3/[a2122h-1b_1-5_2*NCC/3=O][a2112h-1b_1-5][a1221m-1a_1-5]/1-2-3-3/a3-b1_a4-d1_b2-c1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "G00041MO" } ,
+        "alignment": { "type": "literal" , "value": "Core" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/2,2,1/[a2112h-1a_1-5_2*NCC/3=O][a2122h-1b_1-5_2*NCC/3=O]/1-2/a6-b1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "G00045MO" } ,
+        "alignment": { "type": "literal" , "value": "Substructure" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/2,4,3/[u2122h_2*N][a1122h-1a_1-5]/1-2-2-2/a4-b1_b6-c1_c2-d1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "G00038MO" } ,
+        "alignment": { "type": "literal" , "value": "Core" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/2,3,2/[u2112h_2*NCC/3=O][a2122h-1b_1-5_2*NCC/3=O]/1-2-2/a3-b1_a6-c1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "G00035MO" } ,
+        "alignment": { "type": "literal" , "value": "Core" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/2,2,1/[a2112h-1a_1-5_2*NCC/3=O][a2122h-1b_1-5_2*NCC/3=O]/1-2/a3-b1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "G00042MO" } ,
+        "alignment": { "type": "literal" , "value": "Core" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/2,2,1/[u2112h_2*NCC/3=O][a2122h-1b_1-5_2*NCC/3=O]/1-2/a6-b1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "G00019MO" } ,
+        "alignment": { "type": "literal" , "value": "Substructure" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/3,4,3/[u2112h_2*NCC/3=O_4*OSO/3=O/3=O][a1212A-1b_1-5][a2112h-1b_1-5_2*NCC/3=O_4*OSO/3=O/3=O]/1-2-3-2/a3-b1_b4-c1_c3-d1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "G00026MO" } ,
+        "alignment": { "type": "literal" , "value": "Core" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/4,5,4/[u2122h_2*NCC/3=O][a2122h-1b_1-5_2*NCC/3=O][a1122h-1b_1-5][a1122h-1a_1-5]/1-2-3-4-4/a4-b1_b4-c1_c3-d1_c6-e1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "G00064MO" } ,
+        "alignment": { "type": "literal" , "value": "Substructure" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/5,5,4/[a2122h-1b_1-5][a2112h-1b_1-5][a2112h-1a_1-5][a2112h-1b_1-5_2*NCC/3=O][a2122h-1a_1-5_2*NCC/3=O]/1-2-3-4-5/a4-b1_b4-c1_c3-d1_d3-e1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "G00056MO" } ,
+        "alignment": { "type": "literal" , "value": "Substructure" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/2,2,1/[a2122h-1b_1-5_2*NCC/3=O][a2112h-1b_1-5]/1-2/a3-b1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "G00014MO" } ,
+        "alignment": { "type": "literal" , "value": "Core" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/4,4,3/[u2122h][a1122h-1b_1-5][a2122h-1b_1-5_2*NCC/3=O][a2112h-1b_1-5_2*NCC/3=O]/1-2-3-4/a4-b1_b3-c1_c4-d1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "G00016MO" } ,
+        "alignment": { "type": "literal" , "value": "Core" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/2,2,1/[u2112h][a2112h-1a_1-5]/1-2/a4-b1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "G00057MO" } ,
+        "alignment": { "type": "literal" , "value": "Substructure" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/2,2,1/[a2122h-1b_1-5_2*NCC/3=O][a2112h-1b_1-5_2*NCC/3=O]/1-2/a4-b1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "G00055MO" } ,
+        "alignment": { "type": "literal" , "value": "Substructure" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/2,2,1/[a2122h-1b_1-5_2*NCC/3=O][a2112h-1b_1-5]/1-2/a4-b1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "G00039MO" } ,
+        "alignment": { "type": "literal" , "value": "Core" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/1,2,1/[a2112h-1a_1-5_2*NCC/3=O]/1-1/a3-b1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "G00071MO" } ,
+        "alignment": { "type": "literal" , "value": "Core" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/3,4,3/[u2122h][a2112h-1b_1-5][a2112h-1b_1-5_2*NCC/3=O]/1-2-3-2/a4-b1_b4-c1_c3-d1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "G54161DR" } ,
+        "alignment": { "type": "literal" , "value": "Substructure" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/4,4,3/[u2122h_2*NSO/3=O/3=O_6*OSO/3=O/3=O][a2121A-1a_1-5_2*OSO/3=O/3=O][a2122h-1b_1-5_2*NSO/3=O/3=O_6*OSO/3=O/3=O][a2121A-1a_1-5]/1-2-3-4/a4-b1_b4-c1_c4-d1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "G00024MO" } ,
+        "alignment": { "type": "literal" , "value": "Substructure" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/1,3,2/[a2122h-1b_1-5]/1-1-1/a3-b1_b3-c1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "G00022MO" } ,
+        "alignment": { "type": "literal" , "value": "Substructure" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/5,8,7/[a2122h-1x_1-5_2*N][a2122h-1b_1-5_2*N][Aad1122h-2b_2-6][Aad1122h-2x_2-6][axxxxxh-1x_1-?]/1-2-3-4-5-5-5-5/a6-b1_b6-c2_c?-d2_c?-g?_e?-h?_f?-h?_g?-h?" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "G00060MO" } ,
+        "alignment": { "type": "literal" , "value": "Substructure" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/4,5,4/[a2122h-1b_1-5][a2112h-1b_1-5][a2112h-1b_1-5_2*NCC/3=O][a2112h-1a_1-5]/1-2-3-2-4/a4-b1_b3-c1_c4-d1_d4-e1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "G00032MO" } ,
+        "alignment": { "type": "literal" , "value": "Core" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/2,2,1/[u2112h_2*NCC/3=O][a2112h-1b_1-5]/1-2/a3-b1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "G00021MO" } ,
+        "alignment": { "type": "literal" , "value": "Substructure" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/4,4,3/[u2122h_2*NCC/3=O_6*OSO/3=O/3=O_?*OSO/3=O/3=O][a1212A-1a_1-5_2*OSO/3=O/3=O][a2122h-1b_1-5_2*NCC/3=O_6*OSO/3=O/3=O_?*OSO/3=O/3=O][a1212A-1a_1-5]/1-2-3-4/a4-b1_b4-c1_c4-d1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "G00063MO" } ,
+        "alignment": { "type": "literal" , "value": "Substructure" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/3,5,4/[a2112h-1b_1-5_2*NCC/3=O][a2112h-1b_1-5][Aad21122h-2a_2-6_5*NCC/3=O]/1-2-3-1-3/a3-b1_a6-e2_b3-c2_b4-d1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "G00072MO" } ,
+        "alignment": { "type": "literal" , "value": "Core" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/3,4,3/[u2122h][a2112h-1b_1-5][a2112h-1b_1-5_2*NCC/3=O]/1-2-2-3/a4-b1_b4-c1_c3-d1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "G00017MO" } ,
+        "alignment": { "type": "literal" , "value": "Substructure" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/3,4,3/[u2122h_2*NCC/3=O][a2122A-1b_1-5][a2122h-1b_1-5_2*NCC/3=O]/1-2-3-2/a3-b1_b4-c1_c3-d1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "G00023MO" } ,
+        "alignment": { "type": "literal" , "value": "Substructure" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/3,4,3/[a2122h-1x_1-5_2*NCC/3=O][a2122h-1b_1-5_2*NCC/3=O_3*OCC^RC/4O/3=O][a2122h-1b_1-5_2*NCC/3=O]/1-2-3-2/a4-b1_b4-c1_c4-d1" }
+      } ,
+      {
+        "accession": { "type": "literal" , "value": "G00025MO" } ,
+        "alignment": { "type": "literal" , "value": "Core" } ,
+        "wurcs": { "type": "literal" , "value": "WURCS=2.0/1,4,3/[a2122h-1b_1-5]/1-1-1-1/a4-b1_b4-c1_c4-d1" }
+      }
+    ]
+  }
+}
