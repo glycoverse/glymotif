@@ -35,7 +35,7 @@ including IUPAC-condensed, WURCS, GlycoCT, and others.
 \itemize{
 \item A \code{\link[glyrepr:glycan_structure]{glyrepr::glycan_structure()}} scalar.
 \item A glycan structure string, supported by \code{\link[glyparse:auto_parse]{glyparse::auto_parse()}}.
-\item A known motif name (use \code{\link[=db_motifs]{db_motifs()}} to see all available motifs).
+\item A database motif name (use \code{\link[=db_motif_info]{db_motif_info()}} to see all available motifs).
 }}
 
 \item{alignment}{A character string.
@@ -63,7 +63,7 @@ provided, \code{alignment} and \code{alignments} are silently ignored.}
 \itemize{
 \item A \code{\link[glyrepr:glycan_structure]{glyrepr::glycan_structure()}} vector.
 \item A glycan structure string vector, supported by \code{\link[glyparse:auto_parse]{glyparse::auto_parse()}}.
-\item A character vector of motif names (use \code{\link[=db_motifs]{db_motifs()}} to see all available motifs).
+\item A character vector of database motif names (use \code{\link[=db_motif_info]{db_motif_info()}} to see all available motifs).
 }}
 
 \item{alignments}{A character vector specifying alignment types for each motif.
@@ -98,7 +98,7 @@ Glycan names follow the same rule as \code{have_motif()} and \code{count_motif()
 Motif names have the following rules:
 \enumerate{
 \item If \code{motifs} have names, use the names.
-\item If \code{motifs} don't have names and are known motif names in the database (e.g. "N-glycan core"), use them.
+\item If \code{motifs} don't have names and are database motif names (e.g. "N-glycan core"), use them.
 \item Otherwise, no colnames.
 }
 }
@@ -168,7 +168,7 @@ See \href{https://glycomotif.glyomics.org/glycomotif/Whole-Glycan_Alignment}{who
 for details.
 }
 
-When using known motifs in the GlycoMotif GlyGen Collection,
+When using named motifs in the GlycoMotif GlyGen Collection,
 the best practice is to not provide the \code{alignment} argument,
 and let the function decide the alignment based on the motif name.
 However, it is still possible to override the default alignments.

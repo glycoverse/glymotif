@@ -22,7 +22,7 @@
 #' Motif names have the following rules:
 #'
 #' 1. If `motifs` have names, use the names.
-#' 2. If `motifs` don't have names and are known motif names in the database (e.g. "N-glycan core"), use them.
+#' 2. If `motifs` don't have names and are database motif names (e.g. "N-glycan core"), use them.
 #' 3. Otherwise, no colnames.
 #'
 #' # Monosaccharide type
@@ -83,7 +83,7 @@
 #' See [whole-glycan](https://glycomotif.glyomics.org/glycomotif/Whole-Glycan_Alignment)
 #' for details.
 #'
-#' When using known motifs in the GlycoMotif GlyGen Collection,
+#' When using named motifs in the GlycoMotif GlyGen Collection,
 #' the best practice is to not provide the `alignment` argument,
 #' and let the function decide the alignment based on the motif name.
 #' However, it is still possible to override the default alignments.
@@ -149,11 +149,11 @@
 #' @param motif One of:
 #'   - A [glyrepr::glycan_structure()] scalar.
 #'   - A glycan structure string, supported by [glyparse::auto_parse()].
-#'   - A known motif name (use [db_motifs()] to see all available motifs).
+#'   - A database motif name (use [db_motif_info()] to see all available motifs).
 #' @param motifs One of:
 #'   - A [glyrepr::glycan_structure()] vector.
 #'   - A glycan structure string vector, supported by [glyparse::auto_parse()].
-#'   - A character vector of motif names (use [db_motifs()] to see all available motifs).
+#'   - A character vector of database motif names (use [db_motif_info()] to see all available motifs).
 #' @param alignment A character string.
 #'   Possible values are "substructure", "core", "terminal", and "whole".
 #'   If not provided, the value will be decided based on the `motif` argument.

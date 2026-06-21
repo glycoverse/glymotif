@@ -51,7 +51,7 @@ test_that("unkown motif name used as input", {
   motif <- "unknown motif name"
   expect_error(
     have_motif(glycan, motif),
-    "Some motifs are neither valid glycan structures nor known motif names"
+    "Some motifs are neither valid glycan structures nor database motif names"
   )
 })
 
@@ -584,7 +584,7 @@ test_that("have_motifs raises error for duplicate motifs (character)", {
   )
 })
 
-test_that("have_motifs raises error for duplicate motifs (known motif names)", {
+test_that("have_motifs raises error for duplicate motifs (database motif names)", {
   glycan <- glyrepr::o_glycan_core_2()
   glycans <- c(glycan)
   motifs <- c("O-Glycan core 1", "O-Glycan core 1")
@@ -843,12 +843,12 @@ test_that("have_motif returns no names when input has no names", {
   expect_null(names(result))
 })
 
-# ========== Known Motif Names as Column Names ==========
-test_that("have_motifs uses known motif names as colnames when motifs unnamed", {
+# ========== Database Motif Names as Column Names ==========
+test_that("have_motifs uses database motif names as colnames when motifs unnamed", {
   glycans <- c(glyrepr::o_glycan_core_1(), glyrepr::o_glycan_core_2())
   names(glycans) <- c("core1", "core2")
 
-  # Use known motif names without explicit names
+  # Use database motif names without explicit names
   motifs <- c("O-Glycan core 1", "O-Glycan core 2")
 
   result <- have_motifs(glycans, motifs)
@@ -856,11 +856,11 @@ test_that("have_motifs uses known motif names as colnames when motifs unnamed", 
   expect_equal(colnames(result), c("O-Glycan core 1", "O-Glycan core 2"))
 })
 
-test_that("have_motifs preserves explicit motif names over known names", {
+test_that("have_motifs preserves explicit motif names over database names", {
   glycans <- c(glyrepr::o_glycan_core_1(), glyrepr::o_glycan_core_2())
   names(glycans) <- c("core1", "core2")
 
-  # Use known motif names WITH explicit names
+  # Use database motif names WITH explicit names
   motifs <- c(m1 = "O-Glycan core 1", m2 = "O-Glycan core 2")
 
   result <- have_motifs(glycans, motifs)

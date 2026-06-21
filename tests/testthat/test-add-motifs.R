@@ -150,7 +150,7 @@ test_that("add_motifs_lgl uses IUPAC strings for unnamed IUPAC string motifs", {
   structures <- c(glyrepr::o_glycan_core_1(), glyrepr::o_glycan_core_2())
   exp$var_info$glycan_structure <- structures
 
-  # Use unnamed IUPAC string motifs (not known motif names)
+  # Use unnamed IUPAC string motifs (not database motif names)
   motifs <- c("Gal(b1-3)GalNAc(a1-", "Gal(b1-3)[GlcNAc(b1-6)]GalNAc(a1-")
   suppressWarnings(
     exp <- add_motifs_lgl(exp, motifs, alignments = c("whole", "whole"))
@@ -214,12 +214,12 @@ test_that("add_motifs_lgl for data frame uses explicit names when provided", {
   expect_identical(df[, c("motif_a", "motif_b")], expected)
 })
 
-test_that("add_motifs_int uses motif names for unnamed known motif names", {
+test_that("add_motifs_int uses motif names for unnamed database motif names", {
   exp <- create_test_exp(c("S1", "S2"), c("V1", "V2"))
   structures <- c(glyrepr::o_glycan_core_1(), glyrepr::o_glycan_core_2())
   exp$var_info$glycan_structure <- structures
 
-  # Use unnamed known motif names
+  # Use unnamed database motif names
   motifs <- c("O-Glycan core 1", "O-Glycan core 2")
   suppressWarnings(
     exp <- add_motifs_int(exp, motifs, alignments = c("whole", "whole"))
