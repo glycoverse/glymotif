@@ -75,6 +75,7 @@ test_that("prepare_motif_args handles branch_motifs_spec", {
 test_that("prepare_motif_args handles db_motifs_spec with duplicate structures", {
   glycans <- glyrepr::as_glycan_structure("Gal(b1-3)GalNAc(a1-")
   info <- db_motif_info()
+  info <- info[info$source_id == "GGM", ]
 
   result <- prepare_motif_args(
     glycans,

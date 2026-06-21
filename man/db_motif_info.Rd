@@ -11,6 +11,10 @@ A tibble.
 }
 \description{
 Returns metadata for all motifs available in the package.
+You can use \code{dplyr::distinct(db_motif_info(), source_id, source)} to get
+all available sources.
+}
+\details{
 It contains the following columns:
 \itemize{
 \item \code{source_id}: the collection identifier of the motif

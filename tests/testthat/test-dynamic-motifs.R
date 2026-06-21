@@ -102,6 +102,7 @@ test_that("resolve_motif_spec extracts motifs for db_motifs", {
     match_degree = NULL
   )
   info <- db_motif_info()
+  info <- info[info$source_id == "GGM", ]
 
   expect_type(result, "list")
   expect_named(
