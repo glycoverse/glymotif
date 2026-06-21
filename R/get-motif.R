@@ -42,9 +42,15 @@ print.db_motifs_spec <- function(x, ...) {
 #' Get Database Motif Information
 #'
 #' Returns metadata for all motifs available in the package.
+#' It contains the following columns:
+#' - `source_id`: the collection identifier of the motif
+#' - `source`: the collection name of the motif
+#' - `accession`: the accession number of the motif
+#' - `name`: the name of the motif
+#' - `alignment`: the alignment of the motif
+#' - `glycan_structure`: the glycan structure (glyrepr::glycan_structure()) of the motif
 #'
-#' @return A tibble with `source`, `source_id`, `accession`, `name`,
-#'   `alignment`, and `glycan_structure` columns.
+#' @return A tibble.
 #'
 #' @examples
 #' db_motif_info()
