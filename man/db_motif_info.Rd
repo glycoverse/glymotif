@@ -7,11 +7,19 @@
 db_motif_info()
 }
 \value{
-A tibble with \code{source}, \code{source_id}, \code{accession}, \code{name},
-\code{alignment}, and \code{glycan_structure} columns.
+A tibble.
 }
 \description{
 Returns metadata for all motifs available in the package.
+It contains the following columns:
+\itemize{
+\item \code{source_id}: the collection identifier of the motif
+\item \code{source}: the collection name of the motif
+\item \code{accession}: the accession number of the motif
+\item \code{name}: the name of the motif
+\item \code{alignment}: the alignment of the motif
+\item \code{glycan_structure}: the glycan structure (glyrepr::glycan_structure()) of the motif
+}
 }
 \examples{
 db_motif_info()
