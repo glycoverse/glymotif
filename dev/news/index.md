@@ -49,7 +49,7 @@
   have time delay due anymore
   ([\#25](https://github.com/glycoverse/glymotif/issues/25)).
 - Fix an error about return value type in the documentation of
-  [`get_motif_structure()`](https://glycoverse.github.io/glymotif/dev/reference/get_motif_structure.md).
+  `get_motif_structure()`.
 
 ## glymotif 0.13.1
 
@@ -381,11 +381,9 @@ purpose.
 
 ### Bug fixes
 
-- Fix a bug in
-  [`get_motif_structure()`](https://glycoverse.github.io/glymotif/dev/reference/get_motif_structure.md),
-  where the order of the results was not consistent with the order of
-  the input motifs. This caused unexpected results in a wide range of
-  functions including
+- Fix a bug in `get_motif_structure()`, where the order of the results
+  was not consistent with the order of the input motifs. This caused
+  unexpected results in a wide range of functions including
   [`have_motifs()`](https://glycoverse.github.io/glymotif/dev/reference/have_motif.md),
   [`count_motifs()`](https://glycoverse.github.io/glymotif/dev/reference/count_motif.md),
   and the new
@@ -393,10 +391,8 @@ purpose.
   and
   [`add_motifs_int()`](https://glycoverse.github.io/glymotif/dev/reference/add_motifs_int.md)
   functions, when using motif names as input. Alone with
-  [`get_motif_structure()`](https://glycoverse.github.io/glymotif/dev/reference/get_motif_structure.md),
-  similar bugs in
-  [`get_motif_alignment()`](https://glycoverse.github.io/glymotif/dev/reference/get_motif_structure.md)
-  and `get_motif_aglycon()` are also fixed.
+  `get_motif_structure()`, similar bugs in `get_motif_alignment()` and
+  `get_motif_aglycon()` are also fixed.
 
 ## glymotif 0.2.1
 

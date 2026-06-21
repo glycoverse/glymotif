@@ -78,8 +78,8 @@ match_motifs(
   - A glycan structure string, supported by
     [`glyparse::auto_parse()`](https://glycoverse.github.io/glyparse/reference/auto_parse.html).
 
-  - A known motif name (use
-    [`db_motifs()`](https://glycoverse.github.io/glymotif/dev/reference/db_motifs.md)
+  - A database motif name (use
+    [`db_motif_info()`](https://glycoverse.github.io/glymotif/dev/reference/db_motif_info.md)
     to see all available motifs).
 
 - alignment:
@@ -127,8 +127,8 @@ match_motifs(
   - A glycan structure string vector, supported by
     [`glyparse::auto_parse()`](https://glycoverse.github.io/glyparse/reference/auto_parse.html).
 
-  - A character vector of motif names (use
-    [`db_motifs()`](https://glycoverse.github.io/glymotif/dev/reference/db_motifs.md)
+  - A character vector of database motif names (use
+    [`db_motif_info()`](https://glycoverse.github.io/glymotif/dev/reference/db_motif_info.md)
     to see all available motifs).
 
 - alignments:

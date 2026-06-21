@@ -1,38 +1,21 @@
-# Get All Motifs from the Database
+# Get Database Motif Information
 
-This function returns a database motif specification. We use GlycoMotif
-GlyGen Collection (https://glycomotif.glyomics.org/glycomotif/GGM) as
-the source of the motifs. This function is useful to be integrated with
-[`have_motifs()`](https://glycoverse.github.io/glymotif/dev/reference/have_motif.md)
-and
-[`count_motifs()`](https://glycoverse.github.io/glymotif/dev/reference/count_motif.md).
-For example, use `have_motifs(glycans, db_motifs())` to check against
-all motifs.
+Returns metadata for all motifs available in the package.
 
 ## Usage
 
 ``` r
-db_motifs()
+db_motif_info()
 ```
 
 ## Value
 
-A `db_motifs_spec` object.
-
-## Details
-
-Use
-[`db_motif_info()`](https://glycoverse.github.io/glymotif/dev/reference/db_motif_info.md)
-to inspect the motifs included in the database.
+A tibble with `source`, `source_id`, `accession`, `name`, `alignment`,
+and `glycan_structure` columns.
 
 ## Examples
 
 ``` r
-db_motifs()
-#> <<db_motifs_spec>>
-#> This object should be passed to the `motifs` argument of `have_motifs()`,
-#> `count_motifs()`, `match_motifs()`, `add_motifs_lgl()`, or `add_motifs_int()`.
-#> Configuration: uses all GlyGen GlycoMotif database motifs
 db_motif_info()
 #> # A tibble: 183 × 6
 #>    source source_id accession name                    alignment glycan_structure
