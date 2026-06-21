@@ -250,9 +250,9 @@ You're trading specificity for coverage.
 
 ## Database Motif Detection
 
-Previously, we mentioned that you can use motif names in the GlyGen GlycoMotif database (https://glycomotif.glyomics.org/glycomotif/GGM).
-A common task is to match your glycans against all motifs in the database.
-You can use `db_motifs()` for the `motifs` argument for this purpose:
+Previously, we mentioned that you can use motif names in the GlycoMotif database (https://glycomotif.glyomics.org/glycomotif/).
+A common task is to match your glycans against a packaged motif collection.
+By default, `db_motifs()` uses the GlyGen Motifs collection (`source_id = "GGM"`) for backward compatibility:
 
 ```{r}
 res <- have_motifs(glycans, db_motifs())
@@ -267,10 +267,16 @@ This also means that you cannot set arguments like `alignments` when using `db_m
 try(have_motifs(glycans, db_motifs(), alignments = "substructure"))
 ```
 
-You can use `db_motif_info()` to browse all built-in motifs.
+You can use `source_id` to select another motif collection.
+Use `db_motif_info()` to browse all built-in motifs,
+and `dplyr::distinct(db_motif_info(), source_id, source)` to list all available sources.
 
 ```{r}
 db_motif_info()
+```
+
+```{r}
+dplyr::distinct(db_motif_info(), source_id, source)
 ```
 
 ## Dynamic Motif Detection
