@@ -7,15 +7,19 @@
 db_motifs()
 }
 \value{
-A character vector of motif names.
+A \code{db_motifs_spec} object.
 }
 \description{
-This function returns the names of all motifs available in the package.
+This function returns a database motif specification.
 We use GlycoMotif GlyGen Collection (https://glycomotif.glyomics.org/glycomotif/GGM) as the source of the motifs.
 This function is useful to be integrated with \code{\link[=have_motifs]{have_motifs()}} and \code{\link[=count_motifs]{count_motifs()}}.
 For example, use \code{have_motifs(glycans, db_motifs())} to check against all motifs.
 }
+\details{
+Use \code{\link[=db_motif_info]{db_motif_info()}} to inspect the motifs included in the database.
+}
 \examples{
-db_motifs()[1:5]
+db_motifs()
+db_motif_info()
 
 }
