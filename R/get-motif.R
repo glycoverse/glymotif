@@ -22,11 +22,13 @@
 #'
 #' @param source_id A character vector of motif collection identifiers to use.
 #'   Defaults to `"GGM"` for backward compatibility.
+#'   Use `dplyr::distinct(db_motif_info(), source_id, source)` to get all available sources.
+#'   You can use more than one motif collections like `c("GGM", "CCRC")`.
+#'   To use all available motifs, use the `"GM"` collection directly.
 #' @return A `db_motifs_spec` object.
 #'
 #' @examples
 #' db_motifs()
-#' db_motif_info()
 #'
 #' @export
 db_motifs <- function(source_id = "GGM") {

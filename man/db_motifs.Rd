@@ -8,7 +8,10 @@ db_motifs(source_id = "GGM")
 }
 \arguments{
 \item{source_id}{A character vector of motif collection identifiers to use.
-Defaults to \code{"GGM"} for backward compatibility.}
+Defaults to \code{"GGM"} for backward compatibility.
+Use \code{dplyr::distinct(db_motif_info(), source_id, source)} to get all available sources.
+You can use more than one motif collections like \code{c("GGM", "CCRC")}.
+To use all available motifs, use the \code{"GM"} collection directly.}
 }
 \value{
 A \code{db_motifs_spec} object.
@@ -29,6 +32,5 @@ all available sources.
 }
 \examples{
 db_motifs()
-db_motif_info()
 
 }
