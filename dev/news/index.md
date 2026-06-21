@@ -2,6 +2,37 @@
 
 ## glymotif (development version)
 
+### Breaking changes
+
+- [`db_motifs()`](https://glycoverse.github.io/glymotif/dev/reference/db_motifs.md)
+  no longer returns a character vector of motif names. It now returns a
+  `db_motifs_spec` object that should be passed directly to the `motifs`
+  argument of
+  [`have_motifs()`](https://glycoverse.github.io/glymotif/dev/reference/have_motif.md),
+  [`count_motifs()`](https://glycoverse.github.io/glymotif/dev/reference/count_motif.md),
+  [`match_motifs()`](https://glycoverse.github.io/glymotif/dev/reference/match_motif.md),
+  [`add_motifs_lgl()`](https://glycoverse.github.io/glymotif/dev/reference/add_motifs_int.md),
+  and
+  [`add_motifs_int()`](https://glycoverse.github.io/glymotif/dev/reference/add_motifs_int.md).
+  Specifying `alignments`, `ignore_linkages`, `strict_sub`, or
+  `match_degree` is no longer valid.
+  ([\#35](https://github.com/glycoverse/glymotif/issues/35))
+- `get_motif_structure()`, `get_motif_alignment()`,
+  `get_motif_aglycon()`, and `is_known_motif()` are removed from the
+  public API. Use
+  [`db_motif_info()`](https://glycoverse.github.io/glymotif/dev/reference/db_motif_info.md)
+  to inspect database motifs instead.
+  ([\#35](https://github.com/glycoverse/glymotif/issues/35),
+  [\#32](https://github.com/glycoverse/glymotif/issues/32))
+
+### New features
+
+- Add
+  [`db_motif_info()`](https://glycoverse.github.io/glymotif/dev/reference/db_motif_info.md)
+  to return a tibble of all built-in database motifs, including their
+  names, structures, and alignments.
+  ([\#35](https://github.com/glycoverse/glymotif/issues/35))
+
 ## glymotif 0.15.0
 
 ### New features
