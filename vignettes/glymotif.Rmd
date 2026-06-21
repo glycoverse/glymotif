@@ -144,11 +144,7 @@ unname(have_motifs(glycans, motifs))  # Removing names for cleaner display
 ```
 
 **Tip:** You don't need to memorize complex IUPAC strings.
-Use predefined motif names instead:
-
-```{r}
-db_motifs()[1:10]
-```
+Use predefined motif names in the GlyGen GlycoMotif database (https://glycomotif.glyomics.org/glycomotif/GGM) instead:
 
 ```{r}
 have_motif(glycans, "Type 2 LN2")
@@ -161,11 +157,8 @@ See the "Handling Structural Ambiguity" section below for more details.
 ## Motif Matching Rules
 
 Motif recognition has a few important details.
-You might think: 
-"It's just pattern matching, 
-right?"
-Well, 
-not quite.
+You might think: "It's just pattern matching, right?"
+Well, not quite.
 
 Real-world glycan data is often incomplete or heterogeneous:
 
@@ -214,8 +207,7 @@ structural possibilities alone aren't sufficient evidence.
 
 ### Working Around Ambiguity
 
-If you're getting unexpected `FALSE` results with `have_motif()`
-(especially when using built-in motifs with ambiguous glycans),
+If you're getting unexpected `FALSE` results with `have_motif()`,
 the first thing you should do is to check the structure level of the glycan and the motif.
 You can use `glyrepr::get_structure_level()` to help you with this task.
 
@@ -223,6 +215,18 @@ You can use `glyrepr::get_structure_level()` to help you with this task.
 # get_structure_level() expects a glycan structure vector
 get_structure_level(as_glycan_structure(c("Gal(??-?)GalNAc(??-", "Gal(a1-6)GalNAc(a1-")))
 ```
+
+There are four structure levels:
+
+- "intact": All monosaccharides are concrete (e.g. "Man", "GlcNAc"), and no linkage or anomer contains "?".
+- "partial": All monosaccharides are concrete (e.g. "Man", "GlcNAc"), at least one linkage or anomer contains "?", and at least one linkage or anomer has a non-"?" annotation.
+- "topological": All monosaccharides are concrete (e.g. "Man", "GlcNAc"), and all linkages and anomers are completely unknown ("??-?"/"??").
+- "basic": All monosaccharides are generic (e.g. "Hex", "HexNAc").
+
+And "intact" > "partial" > "topological" > "basic".
+
+Therefore, if you try to match a "topological" glycan against a "intact" motif,
+you will get all negative results.
 
 here are two strategies:
 
@@ -243,6 +247,31 @@ have_motif("Hex(a1-6)HexNAc(a1-", motif)
 **Important:** When using these workarounds,
 interpret your results with appropriate caution.
 You're trading specificity for coverage.
+
+## Database Motif Detection
+
+Previously, we mentioned that you can use motif names in the GlyGen GlycoMotif database (https://glycomotif.glyomics.org/glycomotif/GGM).
+A common task is to match your glycans against all motifs in the database.
+You can use `db_motifs()` for the `motifs` argument for this purpose:
+
+```{r}
+res <- have_motifs(glycans, db_motifs())
+colnames(res)[1:5]
+```
+
+Motifs in the built-in database have various alignments,
+which are automatically configured when using `db_motifs()` for `motifs`.
+This also means that you cannot set arguments like `alignments` when using `db_motifs()`.
+
+```{r}
+try(have_motifs(glycans, db_motifs(), alignments = "substructure"))
+```
+
+You can use `db_motif_info()` to browse all built-in motifs.
+
+```{r}
+db_motif_info()
+```
 
 ## Dynamic Motif Detection
 
@@ -334,5 +363,6 @@ This work builds on ideas and groundwork from several excellent projects:
 
 - [glycowork](https://github.com/BojarLab/glycowork): A comprehensive Python toolkit for glycan analysis
 - [GlyCompare](https://github.com/LewisLabUCSD/GlyCompare): Advanced glycan comparison algorithms
+- [StrucGAP](https://github.com/Sun-GlycoLab/StrucGAP): A comprehensive Python platform for glycoproteomics analysis
 
 `glymotif` is one contribution to this growing ecosystem of computational glycobiology tools.
