@@ -1,7 +1,20 @@
 test_that("db_motifs() creates a db_motifs_spec object", {
   spec <- db_motifs()
   expect_s3_class(spec, "db_motifs_spec")
+  expect_identical(spec$source_id, "GGM")
   expect_snapshot(db_motifs())
+})
+
+
+test_that("db_motifs() validates source IDs", {
+  spec <- db_motifs(source_id = c("GGM", "CCRC"))
+
+  expect_s3_class(spec, "db_motifs_spec")
+  expect_identical(spec$source_id, c("GGM", "CCRC"))
+  expect_error(
+    db_motifs(source_id = "UNKNOWN"),
+    "Unknown motif source"
+  )
 })
 
 

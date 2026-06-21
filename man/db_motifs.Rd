@@ -4,7 +4,11 @@
 \alias{db_motifs}
 \title{Get All Motifs from the Database}
 \usage{
-db_motifs()
+db_motifs(source_id = "GGM")
+}
+\arguments{
+\item{source_id}{A character vector of motif collection identifiers to use.
+Defaults to \code{"GGM"} for backward compatibility.}
 }
 \value{
 A \code{db_motifs_spec} object.
@@ -14,10 +18,14 @@ This function returns a database motif specification.
 We use GlycoMotif collections (https://glycomotif.glyomics.org/glycomotif/)
 as the source of the motifs.
 This function is useful to be integrated with \code{\link[=have_motifs]{have_motifs()}} and \code{\link[=count_motifs]{count_motifs()}}.
-For example, use \code{have_motifs(glycans, db_motifs())} to check against all motifs.
+For example, use \code{have_motifs(glycans, db_motifs())} to check against the
+default GlyGen motif collection, or pass \code{source_id} to use another
+collection.
 }
 \details{
 Use \code{\link[=db_motif_info]{db_motif_info()}} to inspect the motifs included in the database.
+You can use \code{dplyr::distinct(db_motif_info(), source_id, source)} to get
+all available sources.
 }
 \examples{
 db_motifs()

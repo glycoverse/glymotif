@@ -12,10 +12,16 @@
 #' We use GlycoMotif collections (https://glycomotif.glyomics.org/glycomotif/)
 #' as the source of the motifs.
 #' This function is useful to be integrated with [have_motifs()] and [count_motifs()].
-#' For example, use `have_motifs(glycans, db_motifs())` to check against all motifs.
+#' For example, use `have_motifs(glycans, db_motifs())` to check against the
+#' default GlyGen motif collection, or pass `source_id` to use another
+#' collection.
 #'
 #' Use [db_motif_info()] to inspect the motifs included in the database.
+#' You can use `dplyr::distinct(db_motif_info(), source_id, source)` to get
+#' all available sources.
 #'
+#' @param source_id A character vector of motif collection identifiers to use.
+#'   Defaults to `"GGM"` for backward compatibility.
 #' @return A `db_motifs_spec` object.
 #'
 #' @examples
@@ -23,8 +29,9 @@
 #' db_motif_info()
 #'
 #' @export
-db_motifs <- function() {
-  structure(list(), class = "db_motifs_spec")
+db_motifs <- function(source_id = "GGM") {
+  validate_db_motif_source_id(source_id)
+  structure(list(source_id = source_id), class = "db_motifs_spec")
 }
 
 
@@ -34,7 +41,9 @@ print.db_motifs_spec <- function(x, ...) {
   cli::cli_text(
     "This object should be passed to the {.arg motifs} argument of {.fn have_motifs}, {.fn count_motifs}, {.fn match_motifs}, {.fn add_motifs_lgl}, or {.fn add_motifs_int}."
   )
-  cli::cli_text("Configuration: uses all packaged GlycoMotif database motifs")
+  cli::cli_text(
+    "Configuration: uses GlycoMotif database source ID{?s}: {.val {x$source_id}}"
+  )
   invisible(x)
 }
 
@@ -42,6 +51,9 @@ print.db_motifs_spec <- function(x, ...) {
 #' Get Database Motif Information
 #'
 #' Returns metadata for all motifs available in the package.
+#' You can use `dplyr::distinct(db_motif_info(), source_id, source)` to get
+#' all available sources.
+#'
 #' It contains the following columns:
 #' - `source_id`: the collection identifier of the motif
 #' - `source`: the collection name of the motif
@@ -78,6 +90,7 @@ resolve_motif_spec.db_motifs_spec <- function(
   ignore_linkages = FALSE
 ) {
   info <- db_motif_info()
+  info <- info[info$source_id %in% spec$source_id, ]
   motifs <- info$glycan_structure
   names(motifs) <- db_motif_labels(info)
 
@@ -87,6 +100,25 @@ resolve_motif_spec.db_motifs_spec <- function(
     match_degree = NULL,
     allow_duplicate_motifs = TRUE
   )
+}
+
+
+#' Validate Database Motif Source IDs
+#'
+#' @param source_id A character vector of motif collection identifiers.
+#' @return `NULL`, invisibly.
+#' @noRd
+validate_db_motif_source_id <- function(source_id) {
+  checkmate::assert_character(source_id, any.missing = FALSE, min.len = 1)
+  available_source_ids <- unique(db_motif_info()$source_id)
+  unknown_source_ids <- setdiff(source_id, available_source_ids)
+  if (length(unknown_source_ids) > 0) {
+    cli::cli_abort(c(
+      "Unknown motif source{?s}: {.val {unknown_source_ids}}.",
+      "i" = "Use {.code dplyr::distinct(db_motif_info(), source_id, source)} to inspect available sources."
+    ))
+  }
+  invisible(NULL)
 }
 
 

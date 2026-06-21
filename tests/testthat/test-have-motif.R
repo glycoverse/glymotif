@@ -906,18 +906,38 @@ test_that("have_motifs works with branch_motifs()", {
 test_that("have_motifs works with db_motifs()", {
   glycans <- glyrepr::as_glycan_structure("Gal(b1-3)GalNAc(a1-")
   info <- db_motif_info()
+  ggm_info <- info[info$source_id == "GGM", ]
 
   result <- have_motifs(glycans, db_motifs())
-  expected_labels <- info$name
+  expected_labels <- ggm_info$name
   missing_labels <- is.na(expected_labels) | expected_labels == ""
   expected_labels[missing_labels] <- paste0(
-    info$source_id[missing_labels],
+    ggm_info$source_id[missing_labels],
     ".",
-    info$accession[missing_labels]
+    ggm_info$accession[missing_labels]
   )
 
   expect_type(result, "logical")
-  expect_equal(dim(result), c(1, nrow(info)))
+  expect_equal(dim(result), c(1, nrow(ggm_info)))
+  expect_identical(colnames(result), expected_labels)
+})
+
+test_that("have_motifs works with selected db_motifs() source IDs", {
+  glycans <- glyrepr::as_glycan_structure("Gal(b1-3)GalNAc(a1-")
+  info <- db_motif_info()
+  source_info <- info[info$source_id == "CCRC", ]
+
+  result <- have_motifs(glycans, db_motifs(source_id = "CCRC"))
+  expected_labels <- source_info$name
+  missing_labels <- is.na(expected_labels) | expected_labels == ""
+  expected_labels[missing_labels] <- paste0(
+    source_info$source_id[missing_labels],
+    ".",
+    source_info$accession[missing_labels]
+  )
+
+  expect_type(result, "logical")
+  expect_equal(dim(result), c(1, nrow(source_info)))
   expect_identical(colnames(result), expected_labels)
 })
 
