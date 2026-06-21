@@ -76,7 +76,7 @@ add_motifs_lgl(
 \itemize{
 \item A \code{\link[glyrepr:glycan_structure]{glyrepr::glycan_structure()}} vector.
 \item A glycan structure string vector, supported by \code{\link[glyparse:auto_parse]{glyparse::auto_parse()}}.
-\item A character vector of motif names (use \code{\link[=db_motifs]{db_motifs()}} to see all available motifs).
+\item A character vector of database motif names (use \code{\link[=db_motif_info]{db_motif_info()}} to see all available motifs).
 }}
 
 \item{alignments}{A character vector specifying alignment types for each motif.
@@ -115,7 +115,7 @@ The naming rule for the new columns follows these priorities:
 \enumerate{
 \item If \code{motifs} is a named vector (character or \code{glyrepr::glycan_structure()}),
 the names are used directly as column names.
-\item If \code{motifs} is unnamed and contains known motif names (e.g., "N-Glycan core"),
+\item If \code{motifs} is unnamed and contains database motif names (e.g., "N-Glycan core"),
 the motif names are used as column names.
 \item If \code{motifs} is unnamed and contains \code{glyrepr::glycan_structure()} objects
 or IUPAC-condensed structure strings, the IUPAC-condensed strings are used

@@ -10,7 +10,7 @@
 #' The naming rule for the new columns follows these priorities:
 #' 1. If `motifs` is a named vector (character or `glyrepr::glycan_structure()`),
 #'    the names are used directly as column names.
-#' 2. If `motifs` is unnamed and contains known motif names (e.g., "N-Glycan core"),
+#' 2. If `motifs` is unnamed and contains database motif names (e.g., "N-Glycan core"),
 #'    the motif names are used as column names.
 #' 3. If `motifs` is unnamed and contains `glyrepr::glycan_structure()` objects
 #'    or IUPAC-condensed structure strings, the IUPAC-condensed strings are used
@@ -239,7 +239,7 @@ add_motifs_lgl.data.frame <- function(
 # Helper function to get column names for motif annotations
 # Follows the rules:
 # 1. If motifs is a named vector, use the names
-# 2. If motifs is unnamed and a vector of known motif names, use the motif names
+# 2. If motifs is unnamed and a vector of database motif names, use the motif names
 # 3. If motifs is unnamed and a glyrepr_structure or character vector of structure strings, use IUPAC strings
 .get_motif_colnames <- function(motifs) {
   motif_names <- prepare_motif_names(motifs)

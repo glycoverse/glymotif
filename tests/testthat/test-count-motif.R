@@ -263,12 +263,12 @@ test_that("count_motifs validates match_degree list", {
   )
 })
 
-# ========== Known Motif Names as Column Names ==========
-test_that("count_motifs uses known motif names as colnames when motifs unnamed", {
+# ========== Database Motif Names as Column Names ==========
+test_that("count_motifs uses database motif names as colnames when motifs unnamed", {
   glycans <- c(glyrepr::o_glycan_core_1(), glyrepr::o_glycan_core_2())
   names(glycans) <- c("core1", "core2")
 
-  # Use known motif names without explicit names
+  # Use database motif names without explicit names
   motifs <- c("O-Glycan core 1", "O-Glycan core 2")
 
   result <- count_motifs(glycans, motifs)
@@ -276,11 +276,11 @@ test_that("count_motifs uses known motif names as colnames when motifs unnamed",
   expect_equal(colnames(result), c("O-Glycan core 1", "O-Glycan core 2"))
 })
 
-test_that("count_motifs preserves explicit motif names over known names", {
+test_that("count_motifs preserves explicit motif names over database names", {
   glycans <- c(glyrepr::o_glycan_core_1(), glyrepr::o_glycan_core_2())
   names(glycans) <- c("core1", "core2")
 
-  # Use known motif names WITH explicit names
+  # Use database motif names WITH explicit names
   motifs <- c(m1 = "O-Glycan core 1", m2 = "O-Glycan core 2")
 
   result <- count_motifs(glycans, motifs)

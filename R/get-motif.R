@@ -99,55 +99,42 @@ db_motif_labels <- function(info) {
 }
 
 
-#' Check if a Motif is Known
+#' Check if Names are Database Motif Names
 #'
-#' This function checks if motifs are known motifs in GlycoMotif GlyGen Collection.
+#' Internal predicate for character inputs that refer to named database motifs.
 #'
 #' @param name A character vector of the motif name.
 #' @return A logical vector.
-#' @examples
-#' is_known_motif(c("N-Glycan core basic", "O-Glycan core 1", "unknown"))
-#' @export
-is_known_motif <- function(name) {
+#' @noRd
+is_db_motif_name <- function(name) {
   checkmate::assert_character(name)
-  name %in% glygen_motifs$name
+  name %in% db_motif_info()$name
 }
 
 
-#' Get the Structures or Alignments of Known Motifs
+#' Get Database Motif Structures or Alignments by Name
 #'
-#' Given a character vector of motifs names in GlycoMotif GlyGen Collection,
-#' these functions return the structures or alignments of the motifs.
+#' Internal helpers for resolving legacy character motif-name inputs.
 #'
 #' @param name A character vector of the motif name.
-#' @returns
-#'   - `get_motif_structure()`: a [glyrepr::glycan_structure()]
-#'   - `get_motif_alignment()`: a character vector of motif alignments.
-#'
-#' For all three functions, if `name` has length greater than 1,
-#' the return value is named with the motif names.
-#'
-#' @examples
-#' get_motif_structure("N-Glycan core basic")
-#' get_motif_alignment("N-Glycan core basic")
-#'
-#' get_motif_structure(c("O-Glycan core 1", "O-Glycan core 2"))
-#' get_motif_alignment(c("O-Glycan core 1", "O-Glycan core 2"))
-#'
-#' @seealso [db_motifs()], [is_known_motif()]
-#'
-#' @export
-get_motif_structure <- function(name) {
-  check_names(name)
-  glygen_motifs$glycan_structure[match(name, glygen_motifs$name)]
+#' @return A [glyrepr::glycan_structure()] vector.
+#' @noRd
+db_motif_structure_by_name <- function(name) {
+  check_db_motif_names(name)
+  info <- db_motif_info()
+  info$glycan_structure[match(name, info$name)]
 }
 
 
-#' @rdname get_motif_structure
-#' @export
-get_motif_alignment <- function(name) {
-  check_names(name)
-  res <- glygen_motifs$alignment[match(name, glygen_motifs$name)]
+#' Get Database Motif Alignments by Name
+#'
+#' @param name A character vector of the motif name.
+#' @return A character vector of motif alignments.
+#' @noRd
+db_motif_alignment_by_name <- function(name) {
+  check_db_motif_names(name)
+  info <- db_motif_info()
+  res <- info$alignment[match(name, info$name)]
   if (length(res) > 1) {
     res <- rlang::set_names(res, name)
   }
@@ -155,10 +142,16 @@ get_motif_alignment <- function(name) {
 }
 
 
-check_names <- function(name) {
+#' Check Database Motif Names
+#'
+#' @param name A character vector of the motif name.
+#' @return `NULL`, invisibly.
+#' @noRd
+check_db_motif_names <- function(name) {
   checkmate::assert_character(name)
-  if (!all(name %in% glygen_motifs$name)) {
-    unknown_names <- name[!name %in% glygen_motifs$name]
+  if (!all(is_db_motif_name(name))) {
+    unknown_names <- name[!is_db_motif_name(name)]
     cli::cli_abort("Unknown motif: {.val {unknown_names}}.")
   }
+  invisible(NULL)
 }

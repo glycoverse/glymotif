@@ -5,7 +5,7 @@
 #' arguments for public motif-matching entry points.
 #'
 #' @param glycans A glycan structure vector or parseable character vector.
-#' @param motifs Motifs, known motif names, or a motif specification object.
+#' @param motifs Motifs, database motif names, or a motif specification object.
 #' @param alignments Optional alignment values.
 #' @param ignore_linkages Whether linkage matching should be ignored.
 #' @param match_degree Optional degree-matching mask.
@@ -397,21 +397,21 @@ valid_ignore_linkages_arg <- function(x) {
 motifs_type_err_msg <- paste(
   "`motifs` must be either a `glyrepr_structure` object,",
   "a character vector of IUPAC-condensed structure strings,",
-  "or a character vector of known motif names."
+  "or a character vector of database motif names."
 )
 
 # ----- Decide motif type -----
-# Decide if the `motifs` argument is known motifs,
+# Decide if the `motifs` argument is database motif names,
 # an IUPAC-condensed structure character vector, or a 'glyrepr_structure' object.
 get_motif_type <- function(motifs, call = rlang::caller_env()) {
-  # If it is neither a glycan graph or a known motif, it is assumed to
+  # If it is neither a glycan graph or a database motif name, it is assumed to
   # be an IUPAC-condensed structure string.
   # This assumption may not be correct, for it is possible that a wrong
   # motif name is passed in.
   if (glyrepr::is_glycan_structure(motifs)) {
     return("structure")
   } else if (is.character(motifs)) {
-    known_motif_idx <- is_known_motif(motifs)
+    known_motif_idx <- is_db_motif_name(motifs)
     if (all(known_motif_idx)) {
       return("known")
     } else if (any(known_motif_idx)) {
@@ -428,7 +428,7 @@ get_motif_type <- function(motifs, call = rlang::caller_env()) {
 # ----- Decide alignment type -----
 decide_alignments <- function(motifs, motif_type, alignments) {
   # Decide which alignment type to use.
-  # 1. If the motif is a known motif name: use the alignment type in the database unless provided.
+  # 1. If the motif is a database motif name: use the alignment type in the database unless provided.
   # 2. If the motif is an IUPAC string or a 'glyrepr_structure' object: use "substructure" unless provided.
   # In the first case, if the user-provided alignment is different from that in the database,
   # issue a warning.
@@ -439,7 +439,7 @@ decide_alignments <- function(motifs, motif_type, alignments) {
       alignments <- "substructure"
     }
   } else if (motif_type == "known") {
-    db_alignments <- get_motif_alignment(motifs)
+    db_alignments <- db_motif_alignment_by_name(motifs)
     if (!is.null(alignments)) {
       inconsistent <- alignments != db_alignments
       if (any(inconsistent)) {
@@ -521,13 +521,13 @@ ensure_motifs_are_structures <- function(
     paste(
       "`motif` must be either a 'glyrepr_structure' object with length 1,",
       "a glycan structure character scalar,",
-      "or a known motif name."
+      "or a database motif name."
     )
   } else {
     paste0(
       "`motifs` must be a 'glyrepr_structure' object,",
       "a character vector of glycan structure strings,",
-      "or a character vector of known motif names."
+      "or a character vector of database motif names."
     )
   }
 
@@ -547,15 +547,15 @@ ensure_motifs_are_structures <- function(
     return(motifs)
   }
 
-  # Case 3: `motifs` is a vector of known motif names
+  # Case 3: `motifs` is a vector of database motif names
   if (motif_type == "known") {
     tryCatch(
-      return(get_motif_structure(motifs)),
+      return(db_motif_structure_by_name(motifs)),
       error = function(cnd) {
         cli::cli_abort(
           c(
             base_err_msg,
-            "i" = "Use {.fn available_motifs} to see all valid motif names."
+            "i" = "Use {.fn db_motif_info} to see all valid motif names."
           ),
           call = call,
           parent = cnd
@@ -572,8 +572,8 @@ ensure_motifs_are_structures <- function(
         cli::cli_abort(
           c(
             base_err_msg,
-            "x" = "Some motifs are neither valid glycan structures nor known motif names.",
-            "i" = "Use {.fn available_motifs} to see all valid motif names."
+            "x" = "Some motifs are neither valid glycan structures nor database motif names.",
+            "i" = "Use {.fn db_motif_info} to see all valid motif names."
           ),
           call = call,
           parent = cnd
@@ -692,7 +692,7 @@ prepare_struc_names <- function(x, strucs) {
 }
 
 # Helper to determine motif names for matrix columns
-# Returns: explicit names if present, known motif names if applicable,
+# Returns: explicit names if present, database motif names if applicable,
 #          NULL otherwise (IUPAC strings or structure input without names)
 prepare_motif_names <- function(motifs_input) {
   # Handle motif spec objects
@@ -710,8 +710,8 @@ prepare_motif_names <- function(motifs_input) {
     return(names(motifs_input))
   }
 
-  # If motifs_input is a character vector of known motif names, use those
-  if (is.character(motifs_input) && all(is_known_motif(motifs_input))) {
+  # If motifs_input is a character vector of database motif names, use those
+  if (is.character(motifs_input) && all(is_db_motif_name(motifs_input))) {
     return(motifs_input)
   }
 
