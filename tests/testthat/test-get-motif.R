@@ -3,6 +3,29 @@ test_that("get all motifs", {
 })
 
 
+test_that("db_motifs returns glycan structures with database metadata", {
+  motifs <- db_motifs()
+
+  expect_true(glyrepr::is_glycan_structure(motifs))
+  expect_s3_class(motifs, "glymotif_db_motifs")
+  expect_equal(length(attr(motifs, "alignment")), length(motifs))
+  expect_equal(length(attr(motifs, "name")), length(motifs))
+  expect_true("O-Glycan core 1" %in% attr(motifs, "name"))
+})
+
+
+test_that("db motif metadata is preserved when subsetting", {
+  motifs <- db_motifs()
+  idx <- match("O-Glycan core 1", attr(motifs, "name"))
+
+  motif <- motifs[idx]
+
+  expect_s3_class(motif, "glymotif_db_motifs")
+  expect_identical(attr(motif, "alignment"), "core")
+  expect_identical(attr(motif, "name"), "O-Glycan core 1")
+})
+
+
 test_that("check if motif is known", {
   expect_true(is_known_motif("N-Glycan core basic"))
   expect_false(is_known_motif("bad motif"))

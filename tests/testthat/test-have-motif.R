@@ -77,6 +77,56 @@ test_that("warning when user-provided alignment is different from database", {
 })
 
 
+test_that("db_motifs structures use database alignment metadata", {
+  glycan <- glyparse::parse_iupac_condensed("GlcNAc(b1-6)Gal(b1-3)GalNAc(a1-")
+  motifs <- db_motifs()
+  motif <- motifs[match("O-Glycan core 1", attr(motifs, "name"))]
+
+  expect_warning(
+    result <- have_motif(glycan, motif, alignment = "terminal"),
+    "The provided alignment type.*is different from.*the motif's alignment type"
+  )
+  expect_false(result)
+})
+
+
+test_that("db_motifs structures use database names as colnames", {
+  glycans <- c(glyrepr::o_glycan_core_1(), glyrepr::o_glycan_core_2())
+  motifs <- db_motifs()
+  motifs <- motifs[match(
+    c("O-Glycan core 1", "O-Glycan core 2"),
+    attr(motifs, "name")
+  )]
+
+  result <- have_motifs(glycans, motifs)
+
+  expect_equal(colnames(result), c("O-Glycan core 1", "O-Glycan core 2"))
+})
+
+
+test_that("duplicate database motif structures are allowed", {
+  glycan <- glyrepr::o_glycan_core_1()
+  motifs <- db_motifs()
+  dup_idx <- which(duplicated(as.character(motifs)))[1]
+  first_idx <- match(as.character(motifs)[dup_idx], as.character(motifs))
+  motifs <- motifs[c(first_idx, dup_idx)]
+
+  expect_no_error(have_motifs(glycan, motifs))
+})
+
+
+test_that("named user-provided structures do not use database alignment metadata", {
+  glycan <- glyparse::parse_iupac_condensed("GlcNAc(b1-6)Gal(b1-3)GalNAc(a1-")
+  motif <- get_motif_structure("O-Glycan core 1")
+  names(motif) <- "O-Glycan core 1"
+
+  expect_no_warning(
+    result <- have_motif(glycan, motif, alignment = "terminal")
+  )
+  expect_false(result)
+})
+
+
 # ========== Monosaccharide Types ==========
 test_that("concrete glycan and generic motif", {
   glycan <- glyrepr::o_glycan_core_2()

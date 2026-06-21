@@ -210,6 +210,9 @@ name_resolved_motifs <- function(motifs) {
 #' @return `NULL`, invisibly.
 #' @noRd
 validate_duplicate_motifs <- function(motifs, call = rlang::caller_env()) {
+  if (is_db_motifs(motifs)) {
+    return(invisible(NULL))
+  }
   if (!has_duplicate_motifs(motifs)) {
     return(invisible(NULL))
   }
@@ -403,7 +406,9 @@ get_motif_type <- function(motifs, call = rlang::caller_env()) {
   # be an IUPAC-condensed structure string.
   # This assumption may not be correct, for it is possible that a wrong
   # motif name is passed in.
-  if (glyrepr::is_glycan_structure(motifs)) {
+  if (is_db_motifs(motifs)) {
+    return("db_structure")
+  } else if (glyrepr::is_glycan_structure(motifs)) {
     return("structure")
   } else if (is.character(motifs)) {
     known_motif_idx <- is_known_motif(motifs)
@@ -433,27 +438,55 @@ decide_alignments <- function(motifs, motif_type, alignments) {
     if (is.null(alignments)) {
       alignments <- "substructure"
     }
-  } else if (motif_type == "known") {
-    db_alignments <- get_motif_alignment(motifs)
-    if (!is.null(alignments)) {
-      inconsistent <- alignments != db_alignments
-      if (any(inconsistent)) {
-        warn_msg <- paste(
-          "The provided alignment type {.val {alignments[inconsistent]}} is different from",
-          "the motif's alignment type {.val {db_alignments[inconsistent]}} in database",
-          "for motif {.val {motifs[inconsistent]}}."
-        )
-        cli::cli_warn(warn_msg, class = "warning_custom_alignment")
-      }
-    } else {
-      alignments <- db_alignments
-    }
+  } else if (motif_type %in% c("known", "db_structure")) {
+    alignments <- decide_database_alignments(motifs, motif_type, alignments)
   } else {
     if (is.null(alignments)) {
       alignments <- "substructure"
     }
   }
   vctrs::vec_recycle(alignments, length(motifs))
+}
+
+decide_database_alignments <- function(motifs, motif_type, alignments) {
+  db_alignments <- get_database_motif_alignments(motifs, motif_type)
+  if (is.null(alignments)) {
+    return(db_alignments)
+  }
+
+  alignment_labels <- vctrs::vec_recycle(alignments, length(db_alignments))
+  inconsistent <- alignment_labels != db_alignments
+  if (any(inconsistent)) {
+    motif_names <- get_database_motif_names(motifs, motif_type)
+    warn_msg <- paste(
+      "The provided alignment type {.val {alignment_labels[inconsistent]}} is different from",
+      "the motif's alignment type {.val {db_alignments[inconsistent]}} in database",
+      "for motif {.val {motif_names[inconsistent]}}."
+    )
+    cli::cli_warn(warn_msg, class = "warning_custom_alignment")
+  }
+
+  alignments
+}
+
+get_database_motif_alignments <- function(motifs, motif_type) {
+  if (motif_type == "known") {
+    return(get_motif_alignment(motifs))
+  }
+  if (motif_type == "db_structure") {
+    return(db_motif_alignments(motifs))
+  }
+  cli::cli_abort("Internal error: unsupported database motif type.")
+}
+
+get_database_motif_names <- function(motifs, motif_type) {
+  if (motif_type == "known") {
+    return(motifs)
+  }
+  if (motif_type == "db_structure") {
+    return(db_motif_names(motifs))
+  }
+  cli::cli_abort("Internal error: unsupported database motif type.")
 }
 
 # ----- Make sure glycans and motifs are structures -----
@@ -538,7 +571,7 @@ ensure_motifs_are_structures <- function(
   }
 
   # Case 2: `motifs` is already a `glyrepr_structure` object
-  if (motif_type == "structure") {
+  if (motif_type %in% c("structure", "db_structure")) {
     return(motifs)
   }
 
@@ -702,6 +735,12 @@ prepare_motif_names <- function(motifs_input) {
   # If motifs_input has explicit names, use them
   if (!is.null(names(motifs_input))) {
     return(names(motifs_input))
+  }
+
+  # db_motifs() intentionally stores database labels in metadata instead of
+  # vector names, so matching outputs can still use labels as column names.
+  if (is_db_motifs(motifs_input)) {
+    return(db_motif_names(motifs_input))
   }
 
   # If motifs_input is a character vector of known motif names, use those

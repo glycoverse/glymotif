@@ -7,13 +7,18 @@
 db_motifs()
 }
 \value{
-A character vector of motif names.
+A \code{\link[glyrepr:glycan_structure]{glyrepr::glycan_structure()}} vector.
 }
 \description{
-This function returns the names of all motifs available in the package.
+This function returns all motifs available in the package as a glycan
+structure vector.
 We use GlycoMotif GlyGen Collection (https://glycomotif.glyomics.org/glycomotif/GGM) as the source of the motifs.
 This function is useful to be integrated with \code{\link[=have_motifs]{have_motifs()}} and \code{\link[=count_motifs]{count_motifs()}}.
 For example, use \code{have_motifs(glycans, db_motifs())} to check against all motifs.
+}
+\details{
+The returned vector carries database \code{alignment} and \code{name} metadata so
+motif-matching functions can use GlycoMotif alignment rules directly.
 }
 \examples{
 db_motifs()[1:5]
