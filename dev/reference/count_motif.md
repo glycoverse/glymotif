@@ -237,5 +237,12 @@ count_motif("Man(?1-", "Hex(?1-") # Returns 1
 
 # Generic glycan vs concrete motif: doesn't match
 count_motif("Hex(?1-", "Man(?1-") # Returns 0
+#> Warning: Matching lower-level `glycans` against higher-level `motifs` usually returns no
+#> matches.
+#> ℹ `glycans` have "basic" structure level, while `motifs` have "partial"
+#>   structure level.
+#> ℹ Use motifs at the same structure level as the glycans, or reduce motif
+#>   structure levels before matching.
+#> ℹ See `?get_structure_level` for details.
 #> [1] 0
 ```

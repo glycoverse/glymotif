@@ -198,10 +198,24 @@ against.**
 
 # Ambiguous linkages won't match specific ones
 have_motif("Gal(??-?)GalNAc(??-", "Gal(a1-6)GalNAc(a1-")
+#> Warning: Matching lower-level `glycans` against higher-level `motifs` usually returns no
+#> matches.
+#> ℹ `glycans` have "topological" structure level, while `motifs` have "intact"
+#>   structure level.
+#> ℹ Use motifs at the same structure level as the glycans, or reduce motif
+#>   structure levels before matching.
+#> ℹ See `?get_structure_level` for details.
 #> [1] FALSE
 
 # Generic monosaccharides won't match specific ones
 have_motif("Hex(a1-6)HexNAc(a1-", "Gal(a1-6)GalNAc(a1-")
+#> Warning: Matching lower-level `glycans` against higher-level `motifs` usually returns no
+#> matches.
+#> ℹ `glycans` have "basic" structure level, while `motifs` have "intact"
+#>   structure level.
+#> ℹ Use motifs at the same structure level as the glycans, or reduce motif
+#>   structure levels before matching.
+#> ℹ See `?get_structure_level` for details.
 #> [1] FALSE
 ```
 
@@ -249,6 +263,13 @@ here are two strategies:
 ``` r
 
 have_motif("Gal(??-?)GalNAc(??-", "Gal(a1-6)GalNAc(a1-", ignore_linkages = TRUE)
+#> Warning: Matching lower-level `glycans` against higher-level `motifs` usually returns no
+#> matches.
+#> ℹ `glycans` have "topological" structure level, while `motifs` have "intact"
+#>   structure level.
+#> ℹ Use motifs at the same structure level as the glycans, or reduce motif
+#>   structure levels before matching.
+#> ℹ See `?get_structure_level` for details.
 #> [1] TRUE
 ```
 

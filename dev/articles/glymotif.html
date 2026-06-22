@@ -248,10 +248,24 @@ being matched against.</strong></p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Ambiguous linkages won't match specific ones</span></span>
 <span><span class="fu"><a href="../reference/have_motif.html">have_motif</a></span><span class="op">(</span><span class="st">"Gal(??-?)GalNAc(??-"</span>, <span class="st">"Gal(a1-6)GalNAc(a1-"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Warning: Matching lower-level `glycans` against higher-level `motifs` usually returns no</span></span>
+<span><span class="co">#&gt; matches.</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> `glycans` have <span style="color: #0000BB;">"topological"</span> structure level, while `motifs` have <span style="color: #0000BB;">"intact"</span></span></span>
+<span><span class="co">#&gt;   structure level.</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Use motifs at the same structure level as the glycans, or reduce motif</span></span>
+<span><span class="co">#&gt;   structure levels before matching.</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> See `?get_structure_level` for details.</span></span>
 <span><span class="co">#&gt; [1] FALSE</span></span>
 <span></span>
 <span><span class="co"># Generic monosaccharides won't match specific ones</span></span>
 <span><span class="fu"><a href="../reference/have_motif.html">have_motif</a></span><span class="op">(</span><span class="st">"Hex(a1-6)HexNAc(a1-"</span>, <span class="st">"Gal(a1-6)GalNAc(a1-"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Warning: Matching lower-level `glycans` against higher-level `motifs` usually returns no</span></span>
+<span><span class="co">#&gt; matches.</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> `glycans` have <span style="color: #0000BB;">"basic"</span> structure level, while `motifs` have <span style="color: #0000BB;">"intact"</span></span></span>
+<span><span class="co">#&gt;   structure level.</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Use motifs at the same structure level as the glycans, or reduce motif</span></span>
+<span><span class="co">#&gt;   structure levels before matching.</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> See `?get_structure_level` for details.</span></span>
 <span><span class="co">#&gt; [1] FALSE</span></span></code></pre></div>
 <p>This behavior is <strong>intentional</strong>, not a bug. True motif
 identification requires confidence: structural possibilities alone
@@ -290,6 +304,13 @@ anomer has a non-“?” annotation.</li>
 unreliable:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/have_motif.html">have_motif</a></span><span class="op">(</span><span class="st">"Gal(??-?)GalNAc(??-"</span>, <span class="st">"Gal(a1-6)GalNAc(a1-"</span>, ignore_linkages <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Warning: Matching lower-level `glycans` against higher-level `motifs` usually returns no</span></span>
+<span><span class="co">#&gt; matches.</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> `glycans` have <span style="color: #0000BB;">"topological"</span> structure level, while `motifs` have <span style="color: #0000BB;">"intact"</span></span></span>
+<span><span class="co">#&gt;   structure level.</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Use motifs at the same structure level as the glycans, or reduce motif</span></span>
+<span><span class="co">#&gt;   structure levels before matching.</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> See `?get_structure_level` for details.</span></span>
 <span><span class="co">#&gt; [1] TRUE</span></span></code></pre></div>
 <p><strong>2. Convert motifs to generic forms</strong> to match the
 generic monosaccharides of your data:</p>

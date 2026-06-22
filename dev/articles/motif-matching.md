@@ -250,6 +250,13 @@ have_motif("Gal(a1-", "Gal(a1-")
 have_motif("Gal(a1-", "Hex(a1-")
 #> [1] TRUE
 have_motif("Hex(a1-", "Gal(a1-")
+#> Warning: Matching lower-level `glycans` against higher-level `motifs` usually returns no
+#> matches.
+#> ℹ `glycans` have "basic" structure level, while `motifs` have "intact"
+#>   structure level.
+#> ℹ Use motifs at the same structure level as the glycans, or reduce motif
+#>   structure levels before matching.
+#> ℹ See `?get_structure_level` for details.
 #> [1] FALSE
 have_motif("Hex(a1-", "Hex(a1-")
 #> [1] TRUE
