@@ -76,6 +76,20 @@ good_df[good_df$source_id == "GGM" & good_df$accession == "000106", "name"] <-
 
 glygen_motifs <- good_df |>
   mutate(glycan_structure = fill_anomer_pos(.data$glycan_structure)) |>
+  mutate(
+    structure_iupac = as.character(.data$glycan_structure),
+    name = if_else(
+      .data$source_id == "GGM",
+      .data$name,
+      paste0(.data$structure_iupac, "#", .data$alignment)
+    )
+  ) |>
+  distinct(
+    .data$source_id,
+    .data$structure_iupac,
+    .data$alignment,
+    .keep_all = TRUE
+  ) |>
   select(all_of(c(
     "source_id",
     "source",
