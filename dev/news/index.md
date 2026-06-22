@@ -32,6 +32,9 @@
   to return a tibble of all built-in database motifs, including their
   names, structures, and alignments.
   ([\#35](https://github.com/glycoverse/glymotif/issues/35))
+- Expand the built-in motif database to include additional GlycoMotif
+  collections. Now there are 904 unique motifs.
+  ([\#36](https://github.com/glycoverse/glymotif/issues/36))
 
 ## glymotif 0.15.0
 
