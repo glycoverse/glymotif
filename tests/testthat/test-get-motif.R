@@ -56,3 +56,32 @@ test_that("db_motif_info() returns database motif metadata", {
   expect_s3_class(info$glycan_structure, "glyrepr_structure")
   expect_equal(length(info$glycan_structure), nrow(info))
 })
+
+
+test_that("non-GGM motifs use IUPAC and alignment as names", {
+  info <- db_motif_info()
+  non_ggm_info <- info[info$source_id != "GGM", ]
+
+  expect_false(any(is.na(non_ggm_info$name)))
+  expect_identical(
+    non_ggm_info$name,
+    paste0(
+      as.character(non_ggm_info$glycan_structure),
+      "#",
+      non_ggm_info$alignment
+    )
+  )
+})
+
+
+test_that("database motifs are unique within source by structure and alignment", {
+  info <- db_motif_info()
+  motif_keys <- paste(
+    info$source_id,
+    as.character(info$glycan_structure),
+    info$alignment,
+    sep = "\r"
+  )
+
+  expect_false(any(duplicated(motif_keys)))
+})
