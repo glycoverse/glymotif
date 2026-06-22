@@ -89,7 +89,34 @@ test_that("concrete glycan and generic motif", {
 test_that("generic glycan and concrete motif", {
   glycan <- glyrepr::o_glycan_core_2(mono_type = "generic")
   motif <- glyparse::parse_iupac_condensed("Gal(b1-3)GalNAc(?1-")
-  expect_false(have_motif(glycan, motif))
+  expect_warning(
+    expect_false(have_motif(glycan, motif)),
+    class = "warning_mismatched_structure_level"
+  )
+})
+
+test_that("mismatched structure levels warn before returning no matches", {
+  intact <- glyrepr::as_glycan_structure("Gal(b1-3)GalNAc(a1-")
+  partial <- glyrepr::as_glycan_structure("Gal(b1-?)GalNAc(a1-")
+  topological <- glyrepr::reduce_structure_level(intact, "topological")
+  basic <- glyrepr::reduce_structure_level(intact, "basic")
+
+  expect_no_warning(have_motif(intact, topological))
+  expect_no_warning(have_motif(partial, intact))
+
+  expect_warning(
+    expect_false(have_motif(topological, intact)),
+    "See `\\?get_structure_level` for details\\.",
+    class = "warning_mismatched_structure_level"
+  )
+  expect_warning(
+    expect_equal(count_motif(basic, topological), 0L),
+    class = "warning_mismatched_structure_level"
+  )
+  expect_warning(
+    expect_false(have_motifs(topological, c(intact, topological))[[1]]),
+    class = "warning_mismatched_structure_level"
+  )
 })
 
 
@@ -678,9 +705,24 @@ test_that("have_motif: concrete glycan matches generic motif", {
 
 test_that("have_motif: generic glycan does not match concrete motif", {
   # Hex (generic) should not match Man (concrete) - names don't match
-  expect_false(have_motif("Hex(?1-", "Man(?1-"))
-  expect_false(have_motif("Hex(?1-", "Gal(?1-"))
-  expect_false(have_motif("Hex(?1-", "Glc(?1-"))
+  expect_warning(
+    expect_false(
+      have_motif("Hex(?1-", "Man(?1-")
+    ),
+    class = "warning_mismatched_structure_level"
+  )
+  expect_warning(
+    expect_false(
+      have_motif("Hex(?1-", "Gal(?1-")
+    ),
+    class = "warning_mismatched_structure_level"
+  )
+  expect_warning(
+    expect_false(
+      have_motif("Hex(?1-", "Glc(?1-")
+    ),
+    class = "warning_mismatched_structure_level"
+  )
 })
 
 test_that("have_motif: same type matches", {
@@ -702,7 +744,10 @@ test_that("have_motif: complex structures with type conversion", {
   # Reverse should not match
   generic_glycan <- "Hex(b1-3)HexNAc(?1-"
   concrete_motif <- "Gal(b1-3)GalNAc(?1-"
-  expect_false(have_motif(generic_glycan, concrete_motif))
+  expect_warning(
+    expect_false(have_motif(generic_glycan, concrete_motif)),
+    class = "warning_mismatched_structure_level"
+  )
 })
 
 test_that("have_motif: vectorized glycans with single motif", {
