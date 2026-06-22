@@ -3,7 +3,8 @@
 ## Breaking changes
 
 * `db_motifs()` no longer returns a character vector of motif names. It now returns a `db_motifs_spec` object that should be passed directly to the `motifs` argument of `have_motifs()`, `count_motifs()`, `match_motifs()`, `add_motifs_lgl()`, and `add_motifs_int()`. Specifying `alignments`, `ignore_linkages`, `strict_sub`, or `match_degree` is no longer valid. (#35)
-* `get_motif_structure()`, `get_motif_alignment()`, `get_motif_aglycon()`, and `is_known_motif()` are removed from the public API. Use `db_motif_info()` to inspect database motifs instead. (#35, #32)
+* `get_motif_structure()`, `get_motif_alignment()`, and `is_known_motif()` are deprecated. Use `db_motif_info()` to inspect database motifs instead. (#35)
+* `get_motif_aglycon()` are removed. (#32)
 
 ## New features
 

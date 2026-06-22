@@ -85,3 +85,36 @@ test_that("database motifs are unique within source by structure and alignment",
 
   expect_false(any(duplicated(motif_keys)))
 })
+
+
+test_that("deprecated motif database helpers delegate to db_motif_info()", {
+  info <- db_motif_info()
+  names_to_check <- info$name[seq_len(2)]
+
+  expect_warning(
+    known <- is_known_motif(c(names_to_check[1], "unknown")),
+    class = "lifecycle_warning_deprecated"
+  )
+  expect_identical(known, c(TRUE, FALSE))
+
+  expect_warning(
+    structures <- get_motif_structure(names_to_check),
+    class = "lifecycle_warning_deprecated"
+  )
+  expect_identical(
+    structures,
+    info$glycan_structure[match(names_to_check, info$name)]
+  )
+
+  expect_warning(
+    alignments <- get_motif_alignment(names_to_check),
+    class = "lifecycle_warning_deprecated"
+  )
+  expect_identical(
+    alignments,
+    rlang::set_names(
+      info$alignment[match(names_to_check, info$name)],
+      names_to_check
+    )
+  )
+})

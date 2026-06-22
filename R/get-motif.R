@@ -142,6 +142,73 @@ db_motif_labels <- function(info) {
 }
 
 
+#' Check if a Motif is Known
+#'
+#' @description
+#' `r lifecycle::badge("deprecated")`
+#'
+#' `is_known_motif()` was deprecated in glymotif 0.16.0. Use
+#' [db_motif_info()] to inspect database motifs instead.
+#'
+#' @param name A character vector of motif names.
+#' @return A logical vector.
+#' @examples
+#' is_known_motif(c("N-Glycan core basic", "O-Glycan core 1", "unknown"))
+#' @export
+is_known_motif <- function(name) {
+  lifecycle::deprecate_warn("0.16.0", "is_known_motif()", "db_motif_info()")
+  checkmate::assert_character(name)
+  name %in% db_motif_info()$name
+}
+
+
+#' Get the Structures or Alignments of Known Motifs
+#'
+#' @description
+#' `r lifecycle::badge("deprecated")`
+#'
+#' `get_motif_structure()` and `get_motif_alignment()` were deprecated in
+#' glymotif 0.16.0. Use [db_motif_info()] to inspect database motifs instead.
+#'
+#' @param name A character vector of motif names.
+#' @returns
+#' - `get_motif_structure()`: a [glyrepr::glycan_structure()] vector.
+#' - `get_motif_alignment()`: a character vector of motif alignments.
+#'
+#' For `get_motif_alignment()`, if `name` has length greater than 1, the return
+#' value is named with the motif names.
+#'
+#' @examples
+#' get_motif_structure("N-Glycan core basic")
+#' get_motif_alignment("N-Glycan core basic")
+#'
+#' get_motif_structure(c("O-Glycan core 1", "O-Glycan core 2"))
+#' get_motif_alignment(c("O-Glycan core 1", "O-Glycan core 2"))
+#'
+#' @seealso [db_motif_info()]
+#' @export
+get_motif_structure <- function(name) {
+  lifecycle::deprecate_warn(
+    "0.16.0",
+    "get_motif_structure()",
+    "db_motif_info()"
+  )
+  db_motif_structure_by_name(name)
+}
+
+
+#' @rdname get_motif_structure
+#' @export
+get_motif_alignment <- function(name) {
+  lifecycle::deprecate_warn(
+    "0.16.0",
+    "get_motif_alignment()",
+    "db_motif_info()"
+  )
+  db_motif_alignment_by_name(name)
+}
+
+
 #' Check if Names are Database Motif Names
 #'
 #' Internal predicate for character inputs that refer to named database motifs.
