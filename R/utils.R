@@ -76,6 +76,7 @@ prepare_motif_args <- function(
     single_motif,
     call = call
   )
+  warn_mismatched_structure_levels(glycans, motifs)
 
   new_prepared_motif_args(
     glycans = glycans,
@@ -86,6 +87,54 @@ prepare_motif_args <- function(
     match_degree = match_degree,
     single_motif = single_motif
   )
+}
+
+#' Warn About Mismatched Structure Levels
+#'
+#' Informs users when lower-information `glycans` are matched against
+#' higher-information `motifs`, a common mistake that usually returns no matches.
+#'
+#' @param glycans A normalized glycan structure vector.
+#' @param motifs A normalized motif structure vector.
+#'
+#' @return `NULL`, invisibly.
+#' @noRd
+warn_mismatched_structure_levels <- function(glycans, motifs) {
+  glycan_level <- suppressWarnings(glyrepr::get_structure_level(glycans))
+  motif_level <- suppressWarnings(glyrepr::get_structure_level(motifs))
+
+  if (
+    glycan_level == "topological" &&
+      motif_level %in% c("intact", "partial")
+  ) {
+    warn_structure_level_mismatch(glycan_level, motif_level)
+  }
+
+  if (glycan_level == "basic" && motif_level != "basic") {
+    warn_structure_level_mismatch(glycan_level, motif_level)
+  }
+
+  invisible(NULL)
+}
+
+#' Emit Structure-Level Mismatch Warning
+#'
+#' @param glycan_level The aggregate structure level of `glycans`.
+#' @param motif_level The aggregate structure level of `motifs`.
+#'
+#' @return `NULL`, invisibly.
+#' @noRd
+warn_structure_level_mismatch <- function(glycan_level, motif_level) {
+  cli::cli_warn(
+    c(
+      "Matching lower-level {.arg glycans} against higher-level {.arg motifs} usually returns no matches.",
+      "i" = "{.arg glycans} have {.val {glycan_level}} structure level, while {.arg motifs} have {.val {motif_level}} structure level.",
+      "i" = "Use motifs at the same structure level as the glycans, or reduce motif structure levels before matching.",
+      "i" = "See {.code ?get_structure_level} for details."
+    ),
+    class = "warning_mismatched_structure_level"
+  )
+  invisible(NULL)
 }
 
 #' Test if an Object is a Motif Specification
