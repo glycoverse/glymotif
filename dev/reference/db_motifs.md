@@ -1,19 +1,31 @@
 # Get All Motifs from the Database
 
 This function returns a database motif specification. We use GlycoMotif
-GlyGen Collection (https://glycomotif.glyomics.org/glycomotif/GGM) as
-the source of the motifs. This function is useful to be integrated with
+collections (https://glycomotif.glyomics.org/glycomotif/) as the source
+of the motifs. This function is useful to be integrated with
 [`have_motifs()`](https://glycoverse.github.io/glymotif/dev/reference/have_motif.md)
 and
 [`count_motifs()`](https://glycoverse.github.io/glymotif/dev/reference/count_motif.md).
 For example, use `have_motifs(glycans, db_motifs())` to check against
-all motifs.
+the default GlyGen motif collection, or pass `source_id` to use another
+collection.
 
 ## Usage
 
 ``` r
-db_motifs()
+db_motifs(source_id = "GGM")
 ```
+
+## Arguments
+
+- source_id:
+
+  A character vector of motif collection identifiers to use. Defaults to
+  `"GGM"` for backward compatibility. Use
+  `dplyr::distinct(db_motif_info(), source_id, source)` to get all
+  available sources. You can use more than one motif collections like
+  `c("GGM", "CCRC")`. To use all available motifs, use the `"GM"`
+  collection directly.
 
 ## Value
 
@@ -23,7 +35,9 @@ A `db_motifs_spec` object.
 
 Use
 [`db_motif_info()`](https://glycoverse.github.io/glymotif/dev/reference/db_motif_info.md)
-to inspect the motifs included in the database.
+to inspect the motifs included in the database. You can use
+`dplyr::distinct(db_motif_info(), source_id, source)` to get all
+available sources.
 
 ## Examples
 
@@ -32,20 +46,5 @@ db_motifs()
 #> <<db_motifs_spec>>
 #> This object should be passed to the `motifs` argument of `have_motifs()`,
 #> `count_motifs()`, `match_motifs()`, `add_motifs_lgl()`, or `add_motifs_int()`.
-#> Configuration: uses all GlyGen GlycoMotif database motifs
-db_motif_info()
-#> # A tibble: 183 × 6
-#>    source source_id accession name                    alignment glycan_structure
-#>    <chr>  <chr>     <chr>     <chr>                   <chr>     <struct>        
-#>  1 GlyGen GGM       000045    Blood group H (type 2)… substruc… Fuc(a1-2)Gal(b1…
-#>  2 GlyGen GGM       000004    i antigen               substruc… Gal(b1-4)GlcNAc…
-#>  3 GlyGen GGM       000016    LacdiNAc                substruc… GalNAc(b1-4)Glc…
-#>  4 GlyGen GGM       000109    GT2                     whole     Neu5Ac(a2-8)Neu…
-#>  5 GlyGen GGM       000046    Blood group B (type 1)… substruc… Fuc(a1-2)[Gal(a…
-#>  6 GlyGen GGM       000075    LcGg4                   whole     GlcNAc(b1-3)[Ga…
-#>  7 GlyGen GGM       000081    Sialosyl paragloboside  whole     Neu5Ac(a2-3)Gal…
-#>  8 GlyGen GGM       000022    Sialyl Lewis x          terminal  Neu5Ac(a2-3)Gal…
-#>  9 GlyGen GGM       000011    A antigen (type 3)      whole     Fuc(a1-2)[GalNA…
-#> 10 GlyGen GGM       000006    Type 1 LN2              substruc… Gal(b1-3)GlcNAc…
-#> # ℹ 173 more rows
+#> Configuration: uses GlycoMotif database source ID: "GGM"
 ```

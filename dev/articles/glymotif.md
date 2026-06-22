@@ -268,12 +268,13 @@ appropriate caution. You’re trading specificity for coverage.
 
 ## Database Motif Detection
 
-Previously, we mentioned that you can use motif names in the GlyGen
-GlycoMotif database (<https://glycomotif.glyomics.org/glycomotif/GGM>).
-A common task is to match your glycans against all motifs in the
-database. You can use
+Previously, we mentioned that you can use motif names in the GlycoMotif
+database (<https://glycomotif.glyomics.org/glycomotif/>). A common task
+is to match your glycans against a packaged motif collection. By
+default,
 [`db_motifs()`](https://glycoverse.github.io/glymotif/dev/reference/db_motifs.md)
-for the `motifs` argument for this purpose:
+uses the GlyGen Motifs collection (`source_id = "GGM"`) for backward
+compatibility:
 
 ``` r
 
@@ -299,27 +300,49 @@ try(have_motifs(glycans, db_motifs(), alignments = "substructure"))
 #> ℹ Alignment is controlled automatically by the algorithm.
 ```
 
-You can use
+You can use `source_id` to select another motif collection. Use
 [`db_motif_info()`](https://glycoverse.github.io/glymotif/dev/reference/db_motif_info.md)
-to browse all built-in motifs.
+to browse all built-in motifs, and
+`dplyr::distinct(db_motif_info(), source_id, source)` to list all
+available sources.
 
 ``` r
 
 db_motif_info()
-#> # A tibble: 183 × 6
-#>    source source_id accession name                    alignment glycan_structure
-#>    <chr>  <chr>     <chr>     <chr>                   <chr>     <struct>        
-#>  1 GlyGen GGM       000045    Blood group H (type 2)… substruc… Fuc(a1-2)Gal(b1…
-#>  2 GlyGen GGM       000004    i antigen               substruc… Gal(b1-4)GlcNAc…
-#>  3 GlyGen GGM       000016    LacdiNAc                substruc… GalNAc(b1-4)Glc…
-#>  4 GlyGen GGM       000109    GT2                     whole     Neu5Ac(a2-8)Neu…
-#>  5 GlyGen GGM       000046    Blood group B (type 1)… substruc… Fuc(a1-2)[Gal(a…
-#>  6 GlyGen GGM       000075    LcGg4                   whole     GlcNAc(b1-3)[Ga…
-#>  7 GlyGen GGM       000081    Sialosyl paragloboside  whole     Neu5Ac(a2-3)Gal…
-#>  8 GlyGen GGM       000022    Sialyl Lewis x          terminal  Neu5Ac(a2-3)Gal…
-#>  9 GlyGen GGM       000011    A antigen (type 3)      whole     Fuc(a1-2)[GalNA…
-#> 10 GlyGen GGM       000006    Type 1 LN2              substruc… Gal(b1-3)GlcNAc…
-#> # ℹ 173 more rows
+#> # A tibble: 2,826 × 6
+#>    source      source_id accession name               alignment glycan_structure
+#>    <chr>       <chr>     <chr>     <chr>              <chr>     <struct>        
+#>  1 CCRC Motifs CCRC      000019    Fuc(a1-2)Gal(b1-4… substruc… Fuc(a1-2)Gal(b1…
+#>  2 CCRC Motifs CCRC      000075    GlcNAc(b1-3)[GalN… core      GlcNAc(b1-3)[Ga…
+#>  3 CCRC Motifs CCRC      000014    Neu5Ac(a2-3)Gal(b… core      Neu5Ac(a2-3)Gal…
+#>  4 CCRC Motifs CCRC      000022    Neu5Ac(a2-3)Gal(b… substruc… Neu5Ac(a2-3)Gal…
+#>  5 CCRC Motifs CCRC      000078    Fuc(a1-2)Gal(b1-3… core      Fuc(a1-2)Gal(b1…
+#>  6 CCRC Motifs CCRC      000099    Gal(b1-3)GalNAc(b… core      Gal(b1-3)GalNAc…
+#>  7 CCRC Motifs CCRC      000053    Neu5Ac(a2-3)Gal(b… core      Neu5Ac(a2-3)Gal…
+#>  8 CCRC Motifs CCRC      000046    Fuc(a1-2)[Gal(a1-… substruc… Fuc(a1-2)[Gal(a…
+#>  9 CCRC Motifs CCRC      000033    Neu5Ac(a2-3)Gal(b… substruc… Neu5Ac(a2-3)Gal…
+#> 10 CCRC Motifs CCRC      000109    Neu5Ac(a2-8)Neu5A… core      Neu5Ac(a2-8)Neu…
+#> # ℹ 2,816 more rows
+```
+
+``` r
+
+dplyr::distinct(db_motif_info(), source_id, source)
+#> # A tibble: 12 × 2
+#>    source_id source               
+#>    <chr>     <chr>                
+#>  1 CCRC      CCRC Motifs          
+#>  2 GD        Glydin               
+#>  3 GDB       Glydin - BiOligo     
+#>  4 GDC       Glydin - Cummings    
+#>  5 GDH       Glydin - Hayes       
+#>  6 GDSB      Glydin - SugarBind   
+#>  7 GDV       Glydin - Cermav      
+#>  8 GE        GlycoEpitope Epitopes
+#>  9 GGM       GlyGen Motifs        
+#> 10 GM        All Motifs           
+#> 11 GTC       GlyTouCan Motifs     
+#> 12 UCM       UniCarbKB Motifs
 ```
 
 ## Dynamic Motif Detection

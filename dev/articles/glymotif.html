@@ -306,11 +306,11 @@ coverage.</p>
 <div class="section level2">
 <h2 id="database-motif-detection">Database Motif Detection<a class="anchor" aria-label="anchor" href="#database-motif-detection"></a>
 </h2>
-<p>Previously, we mentioned that you can use motif names in the GlyGen
-GlycoMotif database (<a href="https://glycomotif.glyomics.org/glycomotif/GGM" class="external-link uri">https://glycomotif.glyomics.org/glycomotif/GGM</a>). A
-common task is to match your glycans against all motifs in the database.
-You can use <code><a href="../reference/db_motifs.html">db_motifs()</a></code> for the <code>motifs</code>
-argument for this purpose:</p>
+<p>Previously, we mentioned that you can use motif names in the
+GlycoMotif database (<a href="https://glycomotif.glyomics.org/glycomotif/" class="external-link uri">https://glycomotif.glyomics.org/glycomotif/</a>). A common
+task is to match your glycans against a packaged motif collection. By
+default, <code><a href="../reference/db_motifs.html">db_motifs()</a></code> uses the GlyGen Motifs collection
+(<code>source_id = "GGM"</code>) for backward compatibility:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/have_motif.html">have_motifs</a></span><span class="op">(</span><span class="va">glycans</span>, <span class="fu"><a href="../reference/db_motifs.html">db_motifs</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span></span>
@@ -326,24 +326,44 @@ automatically configured when using <code><a href="../reference/db_motifs.html">
 <span><span class="co">#&gt; Error in resolve_motif_spec(glycans, motifs, alignments, match_degree,  : </span></span>
 <span><span class="co">#&gt;   Cannot specify `alignments` when using a motif specification.</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Alignment is controlled automatically by the algorithm.</span></span></code></pre></div>
-<p>You can use <code><a href="../reference/db_motif_info.html">db_motif_info()</a></code> to browse all built-in
-motifs.</p>
+<p>You can use <code>source_id</code> to select another motif
+collection. Use <code><a href="../reference/db_motif_info.html">db_motif_info()</a></code> to browse all built-in
+motifs, and
+<code>dplyr::distinct(db_motif_info(), source_id, source)</code> to list
+all available sources.</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/db_motif_info.html">db_motif_info</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 183 × 6</span></span></span>
-<span><span class="co">#&gt;    source source_id accession name                    alignment glycan_structure</span></span>
-<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;struct&gt;</span>        </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> GlyGen GGM       000045    Blood group H (type 2)… substruc… <span style="color: #FF0000;">Fuc</span>(<span style="color: #B2B2B2;">a1-2</span>)<span style="color: #FFD700;">Gal</span>(<span style="color: #B2B2B2;">b1</span>…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> GlyGen GGM       000004    i antigen               substruc… <span style="color: #FFD700;">Gal</span>(<span style="color: #B2B2B2;">b1-4</span>)<span style="color: #0087D7;">GlcNAc</span>…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> GlyGen GGM       000016    LacdiNAc                substruc… <span style="color: #FFD700;">GalNAc</span>(<span style="color: #B2B2B2;">b1-4</span>)<span style="color: #0087D7;">Glc</span>…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> GlyGen GGM       000109    GT2                     whole     <span style="color: #AF5FAF;">Neu5Ac</span>(<span style="color: #B2B2B2;">a2-8</span>)<span style="color: #AF5FAF;">Neu</span>…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> GlyGen GGM       000046    Blood group B (type 1)… substruc… <span style="color: #FF0000;">Fuc</span>(<span style="color: #B2B2B2;">a1-2</span>)[<span style="color: #FFD700;">Gal</span>(<span style="color: #B2B2B2;">a</span>…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> GlyGen GGM       000075    LcGg4                   whole     <span style="color: #0087D7;">GlcNAc</span>(<span style="color: #B2B2B2;">b1-3</span>)[<span style="color: #FFD700;">Ga</span>…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> GlyGen GGM       000081    Sialosyl paragloboside  whole     <span style="color: #AF5FAF;">Neu5Ac</span>(<span style="color: #B2B2B2;">a2-3</span>)<span style="color: #FFD700;">Gal</span>…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> GlyGen GGM       000022    Sialyl Lewis x          terminal  <span style="color: #AF5FAF;">Neu5Ac</span>(<span style="color: #B2B2B2;">a2-3</span>)<span style="color: #FFD700;">Gal</span>…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> GlyGen GGM       000011    A antigen (type 3)      whole     <span style="color: #FF0000;">Fuc</span>(<span style="color: #B2B2B2;">a1-2</span>)[<span style="color: #FFD700;">GalNA</span>…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> GlyGen GGM       000006    Type 1 LN2              substruc… <span style="color: #FFD700;">Gal</span>(<span style="color: #B2B2B2;">b1-3</span>)<span style="color: #0087D7;">GlcNAc</span>…</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 173 more rows</span></span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 2,826 × 6</span></span></span>
+<span><span class="co">#&gt;    source      source_id accession name               alignment glycan_structure</span></span>
+<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;struct&gt;</span>        </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> CCRC Motifs CCRC      000019    Fuc(a1-2)Gal(b1-4… substruc… <span style="color: #FF0000;">Fuc</span>(<span style="color: #B2B2B2;">a1-2</span>)<span style="color: #FFD700;">Gal</span>(<span style="color: #B2B2B2;">b1</span>…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> CCRC Motifs CCRC      000075    GlcNAc(b1-3)[GalN… core      <span style="color: #0087D7;">GlcNAc</span>(<span style="color: #B2B2B2;">b1-3</span>)[<span style="color: #FFD700;">Ga</span>…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> CCRC Motifs CCRC      000014    Neu5Ac(a2-3)Gal(b… core      <span style="color: #AF5FAF;">Neu5Ac</span>(<span style="color: #B2B2B2;">a2-3</span>)<span style="color: #FFD700;">Gal</span>…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> CCRC Motifs CCRC      000022    Neu5Ac(a2-3)Gal(b… substruc… <span style="color: #AF5FAF;">Neu5Ac</span>(<span style="color: #B2B2B2;">a2-3</span>)<span style="color: #FFD700;">Gal</span>…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> CCRC Motifs CCRC      000078    Fuc(a1-2)Gal(b1-3… core      <span style="color: #FF0000;">Fuc</span>(<span style="color: #B2B2B2;">a1-2</span>)<span style="color: #FFD700;">Gal</span>(<span style="color: #B2B2B2;">b1</span>…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> CCRC Motifs CCRC      000099    Gal(b1-3)GalNAc(b… core      <span style="color: #FFD700;">Gal</span>(<span style="color: #B2B2B2;">b1-3</span>)<span style="color: #FFD700;">GalNAc</span>…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> CCRC Motifs CCRC      000053    Neu5Ac(a2-3)Gal(b… core      <span style="color: #AF5FAF;">Neu5Ac</span>(<span style="color: #B2B2B2;">a2-3</span>)<span style="color: #FFD700;">Gal</span>…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> CCRC Motifs CCRC      000046    Fuc(a1-2)[Gal(a1-… substruc… <span style="color: #FF0000;">Fuc</span>(<span style="color: #B2B2B2;">a1-2</span>)[<span style="color: #FFD700;">Gal</span>(<span style="color: #B2B2B2;">a</span>…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> CCRC Motifs CCRC      000033    Neu5Ac(a2-3)Gal(b… substruc… <span style="color: #AF5FAF;">Neu5Ac</span>(<span style="color: #B2B2B2;">a2-3</span>)<span style="color: #FFD700;">Gal</span>…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> CCRC Motifs CCRC      000109    Neu5Ac(a2-8)Neu5A… core      <span style="color: #AF5FAF;">Neu5Ac</span>(<span style="color: #B2B2B2;">a2-8</span>)<span style="color: #AF5FAF;">Neu</span>…</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 2,816 more rows</span></span></span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/distinct.html" class="external-link">distinct</a></span><span class="op">(</span><span class="fu"><a href="../reference/db_motif_info.html">db_motif_info</a></span><span class="op">(</span><span class="op">)</span>, <span class="va">source_id</span>, <span class="va">source</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 12 × 2</span></span></span>
+<span><span class="co">#&gt;    source_id source               </span></span>
+<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> CCRC      CCRC Motifs          </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> GD        Glydin               </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> GDB       Glydin - BiOligo     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> GDC       Glydin - Cummings    </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> GDH       Glydin - Hayes       </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> GDSB      Glydin - SugarBind   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> GDV       Glydin - Cermav      </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> GE        GlycoEpitope Epitopes</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> GGM       GlyGen Motifs        </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> GM        All Motifs           </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">11</span> GTC       GlyTouCan Motifs     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">12</span> UCM       UniCarbKB Motifs</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="dynamic-motif-detection">Dynamic Motif Detection<a class="anchor" aria-label="anchor" href="#dynamic-motif-detection"></a>
@@ -360,7 +380,7 @@ here?”.</p>
 </h3>
 <p><code><a href="../reference/extract_motif.html">extract_motif()</a></code> allows you to detect all motifs appears
 in a set of glycans. Take a simple O-glycan for example:</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/extract_motif.html">extract_motif</a></span><span class="op">(</span><span class="st">"Gal(b1-3)[GlcNAc(b1-6)]GalNAc(a1-"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; &lt;glycan_structure[6]&gt;</span></span>
 <span><span class="co">#&gt; [1] <span style="color: #FFD700;">Gal</span>(<span style="color: #B2B2B2;">b1-</span></span></span>
@@ -372,7 +392,7 @@ in a set of glycans. Take a simple O-glycan for example:</p>
 <span><span class="co">#&gt; # Unique structures: 6</span></span></code></pre></div>
 <p>This function works vectorizedly, and only a unique set of motifs
 will be returned.</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/extract_motif.html">extract_motif</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
 <span>  <span class="st">"Gal(b1-3)[GlcNAc(b1-6)]GalNAc(a1-"</span>,</span>
 <span>  <span class="st">"Gal(b1-3)GalNAc(a1-"</span></span>
@@ -390,7 +410,7 @@ glycan can be very large. Therefore, <code><a href="../reference/extract_motif.h
 <code>max_size</code> parameter restricting the size of motifs to be
 extracted. By default, <code>max_size = 3</code>, this restricts the
 motifs to be extracted to those with at most 3 monosaccharides.</p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/extract_motif.html">extract_motif</a></span><span class="op">(</span><span class="st">"Glc(a1-2)Glc(a1-2)Glc(a1-2)Glc(a1-"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; &lt;glycan_structure[3]&gt;</span></span>
 <span><span class="co">#&gt; [1] <span style="color: #0087D7;">Glc</span>(<span style="color: #B2B2B2;">a1-</span></span></span>
@@ -399,7 +419,7 @@ motifs to be extracted to those with at most 3 monosaccharides.</p>
 <span><span class="co">#&gt; # Unique structures: 3</span></span></code></pre></div>
 <p>You can increase the <code>max_size</code> to extract larger
 motifs.</p>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/extract_motif.html">extract_motif</a></span><span class="op">(</span><span class="st">"Glc(a1-2)Glc(a1-2)Glc(a1-2)Glc(a1-"</span>, max_size <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></span>
 <span><span class="co">#&gt; &lt;glycan_structure[4]&gt;</span></span>
 <span><span class="co">#&gt; [1] <span style="color: #0087D7;">Glc</span>(<span style="color: #B2B2B2;">a1-</span></span></span>
@@ -421,7 +441,7 @@ N-glycan is very restricted by the biosynthesis rules. The only
 diversity comes from the antennae. Therefore, we provide
 <code><a href="../reference/extract_branch_motif.html">extract_branch_motif()</a></code> to extract only the branching
 motifs.</p>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">glycans</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
 <span>  <span class="st">"Neu5Ac(a2-3)Gal(b1-4)GlcNAc(b1-2)Man(a1-3)[Gal(b1-4)GlcNAc(b1-2)Man(a1-6)]Man(b1-4)GlcNAc(a1-4)GlcNAc(b1-"</span>,</span>
 <span>  <span class="st">"Neu5Ac(a2-3)Gal(b1-4)GlcNAc(b1-2)Man(a1-3)[Neu5Ac(a2-6)Gal(b1-4)GlcNAc(b1-2)Man(a1-6)]Man(b1-4)GlcNAc(a1-4)GlcNAc(b1-"</span>,</span>
@@ -450,7 +470,7 @@ the <code><a href="../reference/branch_motifs.html">branch_motifs()</a></code> h
 argument of supported functions instead. They are just empty sentinel
 objects to inform the passed functions to perform dynamic motif
 matching.</p>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/count_motif.html">count_motifs</a></span><span class="op">(</span><span class="va">glycans</span>, <span class="fu"><a href="../reference/branch_motifs.html">branch_motifs</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt;                                                                                                                       Neu5Ac(a2-3)Gal(b1-4)GlcNAc(b1-</span></span>
 <span><span class="co">#&gt; Neu5Ac(a2-3)Gal(b1-4)GlcNAc(b1-2)Man(a1-3)[Gal(b1-4)GlcNAc(b1-2)Man(a1-6)]Man(b1-4)GlcNAc(a1-4)GlcNAc(b1-                                           1</span></span>
