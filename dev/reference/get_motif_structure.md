@@ -1,8 +1,11 @@
 # Get the Structures or Alignments of Known Motifs
 
-Given a character vector of motifs names in GlycoMotif GlyGen
-Collection, these functions return the structures or alignments of the
-motifs.
+**\[deprecated\]**
+
+`get_motif_structure()` and `get_motif_alignment()` were deprecated in
+glymotif 0.16.0. Use
+[`db_motif_info()`](https://glycoverse.github.io/glymotif/dev/reference/db_motif_info.md)
+to inspect database motifs instead.
 
 ## Usage
 
@@ -16,31 +19,35 @@ get_motif_alignment(name)
 
 - name:
 
-  A character vector of the motif name.
+  A character vector of motif names.
 
 ## Value
 
 - `get_motif_structure()`: a
   [`glyrepr::glycan_structure()`](https://glycoverse.github.io/glyrepr/reference/glycan_structure.html)
+  vector.
 
 - `get_motif_alignment()`: a character vector of motif alignments.
 
-For all three functions, if `name` has length greater than 1, the return
-value is named with the motif names.
+For `get_motif_alignment()`, if `name` has length greater than 1, the
+return value is named with the motif names.
 
 ## See also
 
-[`db_motifs()`](https://glycoverse.github.io/glymotif/dev/reference/db_motifs.md),
-[`is_known_motif()`](https://glycoverse.github.io/glymotif/dev/reference/is_known_motif.md)
+[`db_motif_info()`](https://glycoverse.github.io/glymotif/dev/reference/db_motif_info.md)
 
 ## Examples
 
 ``` r
 get_motif_structure("N-Glycan core basic")
+#> Warning: `get_motif_structure()` was deprecated in glymotif 0.16.0.
+#> ℹ Please use `db_motif_info()` instead.
 #> <glycan_structure[1]>
 #> [1] Man(a1-3)[Man(a1-6)]Man(b1-4)GlcNAc(b1-4)GlcNAc(?1-
 #> # Unique structures: 1
 get_motif_alignment("N-Glycan core basic")
+#> Warning: `get_motif_alignment()` was deprecated in glymotif 0.16.0.
+#> ℹ Please use `db_motif_info()` instead.
 #> [1] "core"
 
 get_motif_structure(c("O-Glycan core 1", "O-Glycan core 2"))

@@ -17,13 +17,16 @@
   Specifying `alignments`, `ignore_linkages`, `strict_sub`, or
   `match_degree` is no longer valid.
   ([\#35](https://github.com/glycoverse/glymotif/issues/35))
-- `get_motif_structure()`, `get_motif_alignment()`,
-  `get_motif_aglycon()`, and `is_known_motif()` are removed from the
-  public API. Use
+- [`get_motif_structure()`](https://glycoverse.github.io/glymotif/dev/reference/get_motif_structure.md),
+  [`get_motif_alignment()`](https://glycoverse.github.io/glymotif/dev/reference/get_motif_structure.md),
+  and
+  [`is_known_motif()`](https://glycoverse.github.io/glymotif/dev/reference/is_known_motif.md)
+  are deprecated. Use
   [`db_motif_info()`](https://glycoverse.github.io/glymotif/dev/reference/db_motif_info.md)
   to inspect database motifs instead.
-  ([\#35](https://github.com/glycoverse/glymotif/issues/35),
-  [\#32](https://github.com/glycoverse/glymotif/issues/32))
+  ([\#35](https://github.com/glycoverse/glymotif/issues/35))
+- `get_motif_aglycon()` are removed.
+  ([\#32](https://github.com/glycoverse/glymotif/issues/32))
 
 ### New features
 
@@ -83,7 +86,7 @@
   have time delay due anymore
   ([\#25](https://github.com/glycoverse/glymotif/issues/25)).
 - Fix an error about return value type in the documentation of
-  `get_motif_structure()`.
+  [`get_motif_structure()`](https://glycoverse.github.io/glymotif/dev/reference/get_motif_structure.md).
 
 ## glymotif 0.13.1
 
@@ -415,9 +418,11 @@ purpose.
 
 ### Bug fixes
 
-- Fix a bug in `get_motif_structure()`, where the order of the results
-  was not consistent with the order of the input motifs. This caused
-  unexpected results in a wide range of functions including
+- Fix a bug in
+  [`get_motif_structure()`](https://glycoverse.github.io/glymotif/dev/reference/get_motif_structure.md),
+  where the order of the results was not consistent with the order of
+  the input motifs. This caused unexpected results in a wide range of
+  functions including
   [`have_motifs()`](https://glycoverse.github.io/glymotif/dev/reference/have_motif.md),
   [`count_motifs()`](https://glycoverse.github.io/glymotif/dev/reference/count_motif.md),
   and the new
@@ -425,8 +430,10 @@ purpose.
   and
   [`add_motifs_int()`](https://glycoverse.github.io/glymotif/dev/reference/add_motifs_int.md)
   functions, when using motif names as input. Alone with
-  `get_motif_structure()`, similar bugs in `get_motif_alignment()` and
-  `get_motif_aglycon()` are also fixed.
+  [`get_motif_structure()`](https://glycoverse.github.io/glymotif/dev/reference/get_motif_structure.md),
+  similar bugs in
+  [`get_motif_alignment()`](https://glycoverse.github.io/glymotif/dev/reference/get_motif_structure.md)
+  and `get_motif_aglycon()` are also fixed.
 
 ## glymotif 0.2.1
 
