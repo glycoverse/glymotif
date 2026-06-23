@@ -39,6 +39,12 @@
   collections. Now there are 904 unique motifs.
   ([\#36](https://github.com/glycoverse/glymotif/issues/36))
 
+### Minor improvements and bug fixes
+
+- Unknown GGM motif names now trigger an error with suggestions for
+  similar known motif names.
+  ([\#39](https://github.com/glycoverse/glymotif/issues/39))
+
 ## glymotif 0.15.0
 
 ### New features

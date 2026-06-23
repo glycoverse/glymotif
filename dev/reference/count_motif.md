@@ -57,8 +57,8 @@ count_motifs(
     [`glyparse::auto_parse()`](https://glycoverse.github.io/glyparse/reference/auto_parse.html).
 
   - A GGM database motif name (use
-    [`db_motif_info()`](https://glycoverse.github.io/glymotif/dev/reference/db_motif_info.md)
-    to see all available motifs).
+    `db_motif_info() |> dplyr::filter(source_id == "GGM")` to inspect
+    resolvable motif names).
 
 - alignment:
 
@@ -107,8 +107,8 @@ count_motifs(
     [`glyparse::auto_parse()`](https://glycoverse.github.io/glyparse/reference/auto_parse.html).
 
   - A character vector of GGM database motif names (use
-    [`db_motif_info()`](https://glycoverse.github.io/glymotif/dev/reference/db_motif_info.md)
-    to see all available motifs).
+    `db_motif_info() |> dplyr::filter(source_id == "GGM")` to inspect
+    resolvable motif names).
 
 - alignments:
 
