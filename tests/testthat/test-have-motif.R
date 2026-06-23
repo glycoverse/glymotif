@@ -89,6 +89,21 @@ test_that("unknown motif name error suggests similar GGM motif names", {
 })
 
 
+test_that("unknown motif name error does not include parser parent details", {
+  err <- rlang::catch_cnd(
+    have_motif("Gal(a1-", "N-Glycan core bisected"),
+    classes = "error"
+  )
+
+  expect_match(
+    conditionMessage(err),
+    'Did you mean "N-glycan core, bisected"\\?'
+  )
+  expect_false(grepl("Caused by error", conditionMessage(err), fixed = TRUE))
+  expect_false(grepl("Can't parse", conditionMessage(err), fixed = TRUE))
+})
+
+
 test_that("GGM motif name resolution remains case-sensitive", {
   glycan <- glyrepr::as_glycan_structure("Gal(b1-4)GlcNAc(?1-")
 

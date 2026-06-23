@@ -632,8 +632,7 @@ ensure_motifs_are_structures <- function(
             format_db_motif_name_suggestions(motifs),
             db_motif_name_info_guidance()
           ),
-          call = call,
-          parent = cnd
+          call = call
         )
       }
     )
