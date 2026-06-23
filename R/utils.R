@@ -465,7 +465,14 @@ get_motif_type <- function(motifs, call = rlang::caller_env()) {
       return("known")
     } else if (any(known_motif_idx)) {
       unknown_motifs <- motifs[!known_motif_idx]
-      cli::cli_abort("Unknown motif: {.val {unknown_motifs}}.", call = call)
+      cli::cli_abort(
+        c(
+          "Unknown motif{?s}: {.val {unknown_motifs}}.",
+          format_db_motif_name_suggestions(unknown_motifs),
+          db_motif_name_info_guidance()
+        ),
+        call = call
+      )
     } else {
       return("iupac")
     }
@@ -604,7 +611,7 @@ ensure_motifs_are_structures <- function(
         cli::cli_abort(
           c(
             base_err_msg,
-            "i" = "Use {.fn db_motif_info} to see all valid GGM motif names."
+            db_motif_name_info_guidance()
           ),
           call = call,
           parent = cnd
@@ -622,7 +629,8 @@ ensure_motifs_are_structures <- function(
           c(
             base_err_msg,
             "x" = "Some motifs are neither valid glycan structures nor GGM database motif names.",
-            "i" = "Use {.fn db_motif_info} to see all valid GGM motif names."
+            format_db_motif_name_suggestions(motifs),
+            db_motif_name_info_guidance()
           ),
           call = call,
           parent = cnd

@@ -153,11 +153,14 @@
 #' @param motif One of:
 #'   - A [glyrepr::glycan_structure()] scalar.
 #'   - A glycan structure string, supported by [glyparse::auto_parse()].
-#'   - A GGM database motif name (use [db_motif_info()] to see all available motifs).
+#'   - A GGM database motif name (use `db_motif_info() |> dplyr::filter(source_id == "GGM")`
+#'     to inspect resolvable motif names).
 #' @param motifs One of:
 #'   - A [glyrepr::glycan_structure()] vector.
 #'   - A glycan structure string vector, supported by [glyparse::auto_parse()].
-#'   - A character vector of GGM database motif names (use [db_motif_info()] to see all available motifs).
+#'   - A character vector of GGM database motif names
+#'     (use `db_motif_info() |> dplyr::filter(source_id == "GGM")`
+#'     to inspect resolvable motif names).
 #' @param alignment A character string.
 #'   Possible values are "substructure", "core", "terminal", and "whole".
 #'   If not provided, the value will be decided based on the `motif` argument.

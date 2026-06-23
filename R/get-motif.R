@@ -222,6 +222,86 @@ is_db_motif_name <- function(name) {
 }
 
 
+#' Suggest Similar Database Motif Names
+#'
+#' Finds close GGM motif names for diagnostics without changing exact,
+#' case-sensitive motif-name resolution.
+#'
+#' @param name A character vector of unresolved motif names.
+#' @param max_distance The maximum edit distance to consider.
+#'
+#' @return A named list of character vectors.
+#' @noRd
+suggest_db_motif_names <- function(name, max_distance = NULL) {
+  checkmate::assert_character(name)
+  candidates <- unique(db_motif_name_info()$name)
+  candidates <- candidates[!is.na(candidates) & candidates != ""]
+
+  purrr::map(
+    name,
+    function(one_name) {
+      distances <- utils::adist(one_name, candidates, ignore.case = FALSE)
+      distances <- as.integer(distances[1, ])
+      threshold <- if (is.null(max_distance)) {
+        max(2L, floor(nchar(one_name) * 0.25))
+      } else {
+        max_distance
+      }
+      best_distance <- min(distances)
+
+      if (best_distance > threshold) {
+        return(character())
+      }
+
+      candidates[distances == best_distance]
+    }
+  ) |>
+    rlang::set_names(name)
+}
+
+
+#' Format Similar Database Motif Name Suggestions
+#'
+#' @param name A character vector of unresolved motif names.
+#'
+#' @return A named character vector of cli message bullets.
+#' @noRd
+format_db_motif_name_suggestions <- function(name) {
+  suggestions <- suggest_db_motif_names(name)
+  suggestions <- suggestions[purrr::map_lgl(suggestions, ~ length(.x) > 0)]
+
+  if (length(suggestions) == 0) {
+    return(character())
+  }
+
+  formatted <- purrr::imap_chr(
+    suggestions,
+    function(suggestion, input) {
+      suggestion_text <- paste0('"', suggestion, '"', collapse = ", ")
+
+      if (length(suggestions) == 1 && length(suggestion) == 1) {
+        return(paste0("Did you mean ", suggestion_text, "?"))
+      }
+
+      paste0("For \"", input, "\", did you mean ", suggestion_text, "?")
+    }
+  )
+
+  rlang::set_names(formatted, rep("i", length(formatted)))
+}
+
+
+#' Guidance for Inspecting Resolvable Database Motif Names
+#'
+#' @return A named character vector of cli message bullets.
+#' @noRd
+db_motif_name_info_guidance <- function() {
+  c(
+    "i" = 'Use `db_motif_info() |> dplyr::filter(source_id == "GGM")` to inspect valid GGM motif names.'
+  )
+}
+
+
 #' Get Database Motif Rows Resolvable by Name
 #'
 #' Only GGM motif names are accepted for legacy character name lookup through
@@ -276,7 +356,11 @@ check_db_motif_names <- function(name) {
   checkmate::assert_character(name)
   if (!all(is_db_motif_name(name))) {
     unknown_names <- name[!is_db_motif_name(name)]
-    cli::cli_abort("Unknown motif: {.val {unknown_names}}.")
+    cli::cli_abort(c(
+      "Unknown motif{?s}: {.val {unknown_names}}.",
+      format_db_motif_name_suggestions(unknown_names),
+      db_motif_name_info_guidance()
+    ))
   }
   invisible(NULL)
 }

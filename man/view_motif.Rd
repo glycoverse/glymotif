@@ -25,7 +25,8 @@ are accepted, including IUPAC-condensed, WURCS, GlycoCT, and others.
 \itemize{
 \item A \code{\link[glyrepr:glycan_structure]{glyrepr::glycan_structure()}} scalar.
 \item A glycan structure string, supported by \code{\link[glyparse:auto_parse]{glyparse::auto_parse()}}.
-\item A GGM database motif name (use \code{\link[=db_motif_info]{db_motif_info()}} to see all available motifs).
+\item A GGM database motif name (use \code{db_motif_info() |> dplyr::filter(source_id == "GGM")}
+to inspect resolvable motif names).
 }}
 
 \item{alignment}{A character string.
