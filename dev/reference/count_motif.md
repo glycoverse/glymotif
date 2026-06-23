@@ -56,7 +56,7 @@ count_motifs(
   - A glycan structure string, supported by
     [`glyparse::auto_parse()`](https://glycoverse.github.io/glyparse/reference/auto_parse.html).
 
-  - A database motif name (use
+  - A GGM database motif name (use
     [`db_motif_info()`](https://glycoverse.github.io/glymotif/dev/reference/db_motif_info.md)
     to see all available motifs).
 
@@ -64,7 +64,7 @@ count_motifs(
 
   A character string. Possible values are "substructure", "core",
   "terminal", and "whole". If not provided, the value will be decided
-  based on the `motif` argument. If `motif` is a motif name, the
+  based on the `motif` argument. If `motif` is a GGM motif name, the
   alignment in the database will be used. Otherwise, "substructure" will
   be used.
 
@@ -106,7 +106,7 @@ count_motifs(
   - A glycan structure string vector, supported by
     [`glyparse::auto_parse()`](https://glycoverse.github.io/glyparse/reference/auto_parse.html).
 
-  - A character vector of database motif names (use
+  - A character vector of GGM database motif names (use
     [`db_motif_info()`](https://glycoverse.github.io/glymotif/dev/reference/db_motif_info.md)
     to see all available motifs).
 
@@ -189,7 +189,7 @@ Motif names have the following rules:
 
 1.  If `motifs` have names, use the names.
 
-2.  If `motifs` don't have names and are database motif names (e.g.
+2.  If `motifs` don't have names and are GGM database motif names (e.g.
     "N-glycan core"), use them.
 
 3.  Otherwise, no colnames.

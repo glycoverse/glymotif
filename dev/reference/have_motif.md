@@ -57,7 +57,7 @@ have_motifs(
   - A glycan structure string, supported by
     [`glyparse::auto_parse()`](https://glycoverse.github.io/glyparse/reference/auto_parse.html).
 
-  - A database motif name (use
+  - A GGM database motif name (use
     [`db_motif_info()`](https://glycoverse.github.io/glymotif/dev/reference/db_motif_info.md)
     to see all available motifs).
 
@@ -65,7 +65,7 @@ have_motifs(
 
   A character string. Possible values are "substructure", "core",
   "terminal", and "whole". If not provided, the value will be decided
-  based on the `motif` argument. If `motif` is a motif name, the
+  based on the `motif` argument. If `motif` is a GGM motif name, the
   alignment in the database will be used. Otherwise, "substructure" will
   be used.
 
@@ -107,7 +107,7 @@ have_motifs(
   - A glycan structure string vector, supported by
     [`glyparse::auto_parse()`](https://glycoverse.github.io/glyparse/reference/auto_parse.html).
 
-  - A character vector of database motif names (use
+  - A character vector of GGM database motif names (use
     [`db_motif_info()`](https://glycoverse.github.io/glymotif/dev/reference/db_motif_info.md)
     to see all available motifs).
 
@@ -144,7 +144,7 @@ Motif names have the following rules:
 
 1.  If `motifs` have names, use the names.
 
-2.  If `motifs` don't have names and are database motif names (e.g.
+2.  If `motifs` don't have names and are GGM database motif names (e.g.
     "N-glycan core"), use them.
 
 3.  Otherwise, no colnames.
@@ -227,13 +227,19 @@ a motif can be classified into four alignment types:
   [whole-glycan](https://glycomotif.glyomics.org/glycomotif/Whole-Glycan_Alignment)
   for details.
 
-When using named motifs in the GlycoMotif GlyGen Collection, the best
-practice is to not provide the `alignment` argument, and let the
+When using named motifs in the GlycoMotif GlyGen Collection (GGM), the
+best practice is to not provide the `alignment` argument, and let the
 function decide the alignment based on the motif name. However, it is
 still possible to override the default alignments. In this case, the
 user-provided alignments will be used, but a warning will be issued.
-When `match_degree` is provided, `alignment` and `alignments` are
-ignored without warning.
+Only GGM motif names are accepted as character name inputs through the
+`motif` and `motifs` arguments. To use motifs from other database
+collections, pass
+[`db_motifs()`](https://glycoverse.github.io/glymotif/dev/reference/db_motifs.md)
+with the desired `source_id` or pass structures from
+[`db_motif_info()`](https://glycoverse.github.io/glymotif/dev/reference/db_motif_info.md)
+explicitly. When `match_degree` is provided, `alignment` and
+`alignments` are ignored without warning.
 
 ## Degree matching
 
