@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">glymotif</a>
 
-    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">0.15.0.9000</small>
+    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">0.16.0.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -39,8 +39,11 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="development version" id="glymotif-development-version">glymotif (development version)<a class="anchor" aria-label="anchor" href="#glymotif-development-version"></a></h2>
+</div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.16.0" id="glymotif-0160">glymotif 0.16.0<a class="anchor" aria-label="anchor" href="#glymotif-0160"></a></h2>
 <div class="section level3">
-<h3 id="breaking-changes-development-version">Breaking changes<a class="anchor" aria-label="anchor" href="#breaking-changes-development-version"></a></h3>
+<h3 id="breaking-changes-0-16-0">Breaking changes<a class="anchor" aria-label="anchor" href="#breaking-changes-0-16-0"></a></h3>
 <ul><li>
 <code><a href="../reference/db_motifs.html">db_motifs()</a></code> no longer returns a character vector of motif names. It now returns a <code>db_motifs_spec</code> object that should be passed directly to the <code>motifs</code> argument of <code><a href="../reference/have_motif.html">have_motifs()</a></code>, <code><a href="../reference/count_motif.html">count_motifs()</a></code>, <code><a href="../reference/match_motif.html">match_motifs()</a></code>, <code><a href="../reference/add_motifs_int.html">add_motifs_lgl()</a></code>, and <code><a href="../reference/add_motifs_int.html">add_motifs_int()</a></code>. Specifying <code>alignments</code>, <code>ignore_linkages</code>, <code>strict_sub</code>, or <code>match_degree</code> is no longer valid. (<a href="https://github.com/glycoverse/glymotif/issues/35" class="external-link">#35</a>)</li>
 <li>
@@ -49,13 +52,14 @@
 <code>get_motif_aglycon()</code> are removed. (<a href="https://github.com/glycoverse/glymotif/issues/32" class="external-link">#32</a>)</li>
 </ul></div>
 <div class="section level3">
-<h3 id="new-features-development-version">New features<a class="anchor" aria-label="anchor" href="#new-features-development-version"></a></h3>
+<h3 id="new-features-0-16-0">New features<a class="anchor" aria-label="anchor" href="#new-features-0-16-0"></a></h3>
 <ul><li>Add <code><a href="../reference/db_motif_info.html">db_motif_info()</a></code> to return a tibble of all built-in database motifs, including their names, structures, and alignments. (<a href="https://github.com/glycoverse/glymotif/issues/35" class="external-link">#35</a>)</li>
 <li>Expand the built-in motif database to include additional GlycoMotif collections. Now there are 904 unique motifs. (<a href="https://github.com/glycoverse/glymotif/issues/36" class="external-link">#36</a>)</li>
 </ul></div>
 <div class="section level3">
-<h3 id="minor-improvements-and-bug-fixes-development-version">Minor improvements and bug fixes<a class="anchor" aria-label="anchor" href="#minor-improvements-and-bug-fixes-development-version"></a></h3>
-<ul><li>Unknown GGM motif names now trigger an error with suggestions for similar known motif names. (<a href="https://github.com/glycoverse/glymotif/issues/39" class="external-link">#39</a>)</li>
+<h3 id="minor-improvements-and-bug-fixes-0-16-0">Minor improvements and bug fixes<a class="anchor" aria-label="anchor" href="#minor-improvements-and-bug-fixes-0-16-0"></a></h3>
+<ul><li>Warn on mismatched motif structure levels in matching. (<a href="https://github.com/glycoverse/glymotif/issues/38" class="external-link">#38</a>)</li>
+<li>Unknown GGM motif names now trigger an error with suggestions for similar known motif names. (<a href="https://github.com/glycoverse/glymotif/issues/39" class="external-link">#39</a>)</li>
 </ul></div>
 </div>
     <div class="section level2">

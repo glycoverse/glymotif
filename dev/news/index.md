@@ -2,6 +2,8 @@
 
 ## glymotif (development version)
 
+## glymotif 0.16.0
+
 ### Breaking changes
 
 - [`db_motifs()`](https://glycoverse.github.io/glymotif/dev/reference/db_motifs.md)
@@ -41,6 +43,8 @@
 
 ### Minor improvements and bug fixes
 
+- Warn on mismatched motif structure levels in matching.
+  ([\#38](https://github.com/glycoverse/glymotif/issues/38))
 - Unknown GGM motif names now trigger an error with suggestions for
   similar known motif names.
   ([\#39](https://github.com/glycoverse/glymotif/issues/39))
