@@ -1,7 +1,10 @@
 # Check if a Motif is Known
 
-This function checks if motifs are known motifs in GlycoMotif GlyGen
-Collection.
+**\[deprecated\]**
+
+`is_known_motif()` was deprecated in glymotif 0.16.0. Use
+[`db_motif_info()`](https://glycoverse.github.io/glymotif/reference/db_motif_info.md)
+to inspect database motifs instead.
 
 ## Usage
 
@@ -13,7 +16,7 @@ is_known_motif(name)
 
 - name:
 
-  A character vector of the motif name.
+  A character vector of motif names.
 
 ## Value
 
@@ -23,5 +26,7 @@ A logical vector.
 
 ``` r
 is_known_motif(c("N-Glycan core basic", "O-Glycan core 1", "unknown"))
+#> Warning: `is_known_motif()` was deprecated in glymotif 0.16.0.
+#> ℹ Please use `db_motif_info()` instead.
 #> [1]  TRUE  TRUE FALSE
 ```

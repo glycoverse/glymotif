@@ -141,17 +141,8 @@ unname(have_motifs(glycans, motifs))  # Removing names for cleaner display
 ```
 
 **Tip:** You don’t need to memorize complex IUPAC strings. Use
-predefined motif names instead:
-
-``` r
-
-db_motifs()[1:10]
-#>  [1] "Blood group H (type 2) - Lewis y" "i antigen"                       
-#>  [3] "LacdiNAc"                         "GT2"                             
-#>  [5] "Blood group B (type 1) - Lewis b" "LcGg4"                           
-#>  [7] "Sialosyl paragloboside"           "Sialyl Lewis x"                  
-#>  [9] "A antigen (type 3)"               "Type 1 LN2"
-```
+predefined motif names in the GlyGen GlycoMotif database
+(<https://glycomotif.glyomics.org/glycomotif/GGM>) instead:
 
 ``` r
 
@@ -207,10 +198,24 @@ against.**
 
 # Ambiguous linkages won't match specific ones
 have_motif("Gal(??-?)GalNAc(??-", "Gal(a1-6)GalNAc(a1-")
+#> Warning: Matching lower-level `glycans` against higher-level `motifs` usually returns no
+#> matches.
+#> ℹ `glycans` have "topological" structure level, while `motifs` have "intact"
+#>   structure level.
+#> ℹ Use motifs at the same structure level as the glycans, or reduce motif
+#>   structure levels before matching.
+#> ℹ See `?get_structure_level` for details.
 #> [1] FALSE
 
 # Generic monosaccharides won't match specific ones
 have_motif("Hex(a1-6)HexNAc(a1-", "Gal(a1-6)GalNAc(a1-")
+#> Warning: Matching lower-level `glycans` against higher-level `motifs` usually returns no
+#> matches.
+#> ℹ `glycans` have "basic" structure level, while `motifs` have "intact"
+#>   structure level.
+#> ℹ Use motifs at the same structure level as the glycans, or reduce motif
+#>   structure levels before matching.
+#> ℹ See `?get_structure_level` for details.
 #> [1] FALSE
 ```
 
@@ -221,10 +226,9 @@ evidence.
 ### Working Around Ambiguity
 
 If you’re getting unexpected `FALSE` results with
-[`have_motif()`](https://glycoverse.github.io/glymotif/reference/have_motif.md)
-(especially when using built-in motifs with ambiguous glycans), the
-first thing you should do is to check the structure level of the glycan
-and the motif. You can use
+[`have_motif()`](https://glycoverse.github.io/glymotif/reference/have_motif.md),
+the first thing you should do is to check the structure level of the
+glycan and the motif. You can use
 [`glyrepr::get_structure_level()`](https://glycoverse.github.io/glyrepr/reference/get_structure_level.html)
 to help you with this task.
 
@@ -235,6 +239,23 @@ get_structure_level(as_glycan_structure(c("Gal(??-?)GalNAc(??-", "Gal(a1-6)GalNA
 #> [1] "partial"
 ```
 
+There are four structure levels:
+
+- “intact”: All monosaccharides are concrete (e.g. “Man”, “GlcNAc”), and
+  no linkage or anomer contains “?”.
+- “partial”: All monosaccharides are concrete (e.g. “Man”, “GlcNAc”), at
+  least one linkage or anomer contains “?”, and at least one linkage or
+  anomer has a non-“?” annotation.
+- “topological”: All monosaccharides are concrete (e.g. “Man”,
+  “GlcNAc”), and all linkages and anomers are completely unknown
+  (“??-?”/“??”).
+- “basic”: All monosaccharides are generic (e.g. “Hex”, “HexNAc”).
+
+And “intact” \> “partial” \> “topological” \> “basic”.
+
+Therefore, if you try to match a “topological” glycan against a “intact”
+motif, you will get all negative results.
+
 here are two strategies:
 
 **1. Ignore linkage information** when linkages are unreliable:
@@ -242,6 +263,13 @@ here are two strategies:
 ``` r
 
 have_motif("Gal(??-?)GalNAc(??-", "Gal(a1-6)GalNAc(a1-", ignore_linkages = TRUE)
+#> Warning: Matching lower-level `glycans` against higher-level `motifs` usually returns no
+#> matches.
+#> ℹ `glycans` have "topological" structure level, while `motifs` have "intact"
+#>   structure level.
+#> ℹ Use motifs at the same structure level as the glycans, or reduce motif
+#>   structure levels before matching.
+#> ℹ See `?get_structure_level` for details.
 #> [1] TRUE
 ```
 
@@ -258,6 +286,85 @@ have_motif("Hex(a1-6)HexNAc(a1-", motif)
 
 **Important:** When using these workarounds, interpret your results with
 appropriate caution. You’re trading specificity for coverage.
+
+## Database Motif Detection
+
+Previously, we mentioned that you can use motif names in the GlycoMotif
+database (<https://glycomotif.glyomics.org/glycomotif/>). A common task
+is to match your glycans against a packaged motif collection. By
+default,
+[`db_motifs()`](https://glycoverse.github.io/glymotif/reference/db_motifs.md)
+uses the GlyGen Motifs collection (`source_id = "GGM"`) for backward
+compatibility:
+
+``` r
+
+res <- have_motifs(glycans, db_motifs())
+colnames(res)[1:5]
+#> [1] "Blood group H (type 2) - Lewis y" "i antigen"                       
+#> [3] "LacdiNAc"                         "GT2"                             
+#> [5] "Blood group B (type 1) - Lewis b"
+```
+
+Motifs in the built-in database have various alignments, which are
+automatically configured when using
+[`db_motifs()`](https://glycoverse.github.io/glymotif/reference/db_motifs.md)
+for `motifs`. This also means that you cannot set arguments like
+`alignments` when using
+[`db_motifs()`](https://glycoverse.github.io/glymotif/reference/db_motifs.md).
+
+``` r
+
+try(have_motifs(glycans, db_motifs(), alignments = "substructure"))
+#> Error in resolve_motif_spec(glycans, motifs, alignments, match_degree,  : 
+#>   Cannot specify `alignments` when using a motif specification.
+#> ℹ Alignment is controlled automatically by the algorithm.
+```
+
+You can use `source_id` to select another motif collection. Use
+[`db_motif_info()`](https://glycoverse.github.io/glymotif/reference/db_motif_info.md)
+to browse all built-in motifs, and
+`dplyr::distinct(db_motif_info(), source_id, source)` to list all
+available sources.
+
+``` r
+
+db_motif_info()
+#> # A tibble: 2,826 × 6
+#>    source      source_id accession name               alignment glycan_structure
+#>    <chr>       <chr>     <chr>     <chr>              <chr>     <struct>        
+#>  1 CCRC Motifs CCRC      000019    Fuc(a1-2)Gal(b1-4… substruc… Fuc(a1-2)Gal(b1…
+#>  2 CCRC Motifs CCRC      000075    GlcNAc(b1-3)[GalN… core      GlcNAc(b1-3)[Ga…
+#>  3 CCRC Motifs CCRC      000014    Neu5Ac(a2-3)Gal(b… core      Neu5Ac(a2-3)Gal…
+#>  4 CCRC Motifs CCRC      000022    Neu5Ac(a2-3)Gal(b… substruc… Neu5Ac(a2-3)Gal…
+#>  5 CCRC Motifs CCRC      000078    Fuc(a1-2)Gal(b1-3… core      Fuc(a1-2)Gal(b1…
+#>  6 CCRC Motifs CCRC      000099    Gal(b1-3)GalNAc(b… core      Gal(b1-3)GalNAc…
+#>  7 CCRC Motifs CCRC      000053    Neu5Ac(a2-3)Gal(b… core      Neu5Ac(a2-3)Gal…
+#>  8 CCRC Motifs CCRC      000046    Fuc(a1-2)[Gal(a1-… substruc… Fuc(a1-2)[Gal(a…
+#>  9 CCRC Motifs CCRC      000033    Neu5Ac(a2-3)Gal(b… substruc… Neu5Ac(a2-3)Gal…
+#> 10 CCRC Motifs CCRC      000109    Neu5Ac(a2-8)Neu5A… core      Neu5Ac(a2-8)Neu…
+#> # ℹ 2,816 more rows
+```
+
+``` r
+
+dplyr::distinct(db_motif_info(), source_id, source)
+#> # A tibble: 12 × 2
+#>    source_id source               
+#>    <chr>     <chr>                
+#>  1 CCRC      CCRC Motifs          
+#>  2 GD        Glydin               
+#>  3 GDB       Glydin - BiOligo     
+#>  4 GDC       Glydin - Cummings    
+#>  5 GDH       Glydin - Hayes       
+#>  6 GDSB      Glydin - SugarBind   
+#>  7 GDV       Glydin - Cermav      
+#>  8 GE        GlycoEpitope Epitopes
+#>  9 GGM       GlyGen Motifs        
+#> 10 GM        All Motifs           
+#> 11 GTC       GlyTouCan Motifs     
+#> 12 UCM       UniCarbKB Motifs
+```
 
 ## Dynamic Motif Detection
 
@@ -435,6 +542,8 @@ projects:
   Python toolkit for glycan analysis
 - [GlyCompare](https://github.com/LewisLabUCSD/GlyCompare): Advanced
   glycan comparison algorithms
+- [StrucGAP](https://github.com/Sun-GlycoLab/StrucGAP): A comprehensive
+  Python platform for glycoproteomics analysis
 
 `glymotif` is one contribution to this growing ecosystem of
 computational glycobiology tools.

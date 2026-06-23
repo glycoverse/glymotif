@@ -21,7 +21,7 @@ Monosaccharides, linkages, and substituents are all considered."><meta property=
 
     <a class="navbar-brand me-2" href="../index.html">glymotif</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.15.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.16.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -48,7 +48,7 @@ Monosaccharides, linkages, and substituents are all considered."><meta property=
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Check if the Glycans have the Given Motif(s)</h1>
-      <small class="dont-index">Source: <a href="https://github.com/glycoverse/glymotif/blob/v0.15.0/R/have-motif.R" class="external-link"><code>R/have-motif.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/glycoverse/glymotif/blob/main/R/have-motif.R" class="external-link"><code>R/have-motif.R</code></a></small>
       <div class="d-none name"><code>have_motif.Rd</code></div>
     </div>
 
@@ -95,7 +95,8 @@ including IUPAC-condensed, WURCS, GlycoCT, and others.</p></li>
 <dt id="arg-motif">motif<a class="anchor" aria-label="anchor" href="#arg-motif"></a></dt>
 <dd><p>One of:</p><ul><li><p>A <code><a href="https://glycoverse.github.io/glyrepr/reference/glycan_structure.html" class="external-link">glyrepr::glycan_structure()</a></code> scalar.</p></li>
 <li><p>A glycan structure string, supported by <code><a href="https://glycoverse.github.io/glyparse/reference/auto_parse.html" class="external-link">glyparse::auto_parse()</a></code>.</p></li>
-<li><p>A known motif name (use <code><a href="db_motifs.html">db_motifs()</a></code> to see all available motifs).</p></li>
+<li><p>A GGM database motif name (use <code>db_motif_info() |&gt; dplyr::filter(source_id == "GGM")</code>
+to inspect resolvable motif names).</p></li>
 </ul></dd>
 
 
@@ -103,7 +104,7 @@ including IUPAC-condensed, WURCS, GlycoCT, and others.</p></li>
 <dd><p>A character string.
 Possible values are "substructure", "core", "terminal", and "whole".
 If not provided, the value will be decided based on the <code>motif</code> argument.
-If <code>motif</code> is a motif name, the alignment in the database will be used.
+If <code>motif</code> is a GGM motif name, the alignment in the database will be used.
 Otherwise, "substructure" will be used.</p></dd>
 
 
@@ -131,7 +132,9 @@ provided, <code>alignment</code> and <code>alignments</code> are silently ignore
 <dt id="arg-motifs">motifs<a class="anchor" aria-label="anchor" href="#arg-motifs"></a></dt>
 <dd><p>One of:</p><ul><li><p>A <code><a href="https://glycoverse.github.io/glyrepr/reference/glycan_structure.html" class="external-link">glyrepr::glycan_structure()</a></code> vector.</p></li>
 <li><p>A glycan structure string vector, supported by <code><a href="https://glycoverse.github.io/glyparse/reference/auto_parse.html" class="external-link">glyparse::auto_parse()</a></code>.</p></li>
-<li><p>A character vector of motif names (use <code><a href="db_motifs.html">db_motifs()</a></code> to see all available motifs).</p></li>
+<li><p>A character vector of GGM database motif names
+(use <code>db_motif_info() |&gt; dplyr::filter(source_id == "GGM")</code>
+to inspect resolvable motif names).</p></li>
 </ul></dd>
 
 
@@ -154,7 +157,7 @@ Row names contain glycan identifiers and column names contain motif identifiers.
 The row names are the glycan names, and the column names are the motif names.</p>
 <p>Glycan names follow the same rule as <code>have_motif()</code> and <code><a href="count_motif.html">count_motif()</a></code>.</p>
 <p>Motif names have the following rules:</p><ol><li><p>If <code>motifs</code> have names, use the names.</p></li>
-<li><p>If <code>motifs</code> don't have names and are known motif names in the database (e.g. "N-glycan core"), use them.</p></li>
+<li><p>If <code>motifs</code> don't have names and are GGM database motif names (e.g. "N-glycan core"), use them.</p></li>
 <li><p>Otherwise, no colnames.</p></li>
 </ol></div>
     <div class="section level2">
@@ -207,12 +210,16 @@ for details.</p></li>
 <li><p>"whole": The motif must align with the entire glycan.
 See <a href="https://glycomotif.glyomics.org/glycomotif/Whole-Glycan_Alignment" class="external-link">whole-glycan</a>
 for details.</p></li>
-</ul><p>When using known motifs in the GlycoMotif GlyGen Collection,
+</ul><p>When using named motifs in the GlycoMotif GlyGen Collection (GGM),
 the best practice is to not provide the <code>alignment</code> argument,
 and let the function decide the alignment based on the motif name.
 However, it is still possible to override the default alignments.
 In this case, the user-provided alignments will be used,
 but a warning will be issued.
+Only GGM motif names are accepted as character name inputs through the
+<code>motif</code> and <code>motifs</code> arguments. To use motifs from other database
+collections, pass <code><a href="db_motifs.html">db_motifs()</a></code> with the desired <code>source_id</code> or pass
+structures from <code><a href="db_motif_info.html">db_motif_info()</a></code> explicitly.
 When <code>match_degree</code> is provided, <code>alignment</code> and <code>alignments</code> are ignored
 without warning.</p>
     </div>

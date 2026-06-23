@@ -39,15 +39,15 @@ view_motif(
   - A glycan structure string, supported by
     [`glyparse::auto_parse()`](https://glycoverse.github.io/glyparse/reference/auto_parse.html).
 
-  - A known motif name (use
-    [`db_motifs()`](https://glycoverse.github.io/glymotif/reference/db_motifs.md)
-    to see all available motifs).
+  - A GGM database motif name (use
+    `db_motif_info() |> dplyr::filter(source_id == "GGM")` to inspect
+    resolvable motif names).
 
 - alignment:
 
   A character string. Possible values are "substructure", "core",
   "terminal", and "whole". If not provided, the value will be decided
-  based on the `motif` argument. If `motif` is a motif name, the
+  based on the `motif` argument. If `motif` is a GGM motif name, the
   alignment in the database will be used. Otherwise, "substructure" will
   be used.
 

@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">glymotif</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.15.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.16.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -34,7 +34,7 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>View motif matches on a glycan</h1>
-      <small class="dont-index">Source: <a href="https://github.com/glycoverse/glymotif/blob/v0.15.0/R/view-motifs.R" class="external-link"><code>R/view-motifs.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/glycoverse/glymotif/blob/main/R/view-motifs.R" class="external-link"><code>R/view-motifs.R</code></a></small>
       <div class="d-none name"><code>view_motif.Rd</code></div>
     </div>
 
@@ -68,7 +68,8 @@ are accepted, including IUPAC-condensed, WURCS, GlycoCT, and others.</p></li>
 <dt id="arg-motif">motif<a class="anchor" aria-label="anchor" href="#arg-motif"></a></dt>
 <dd><p>One of:</p><ul><li><p>A <code><a href="https://glycoverse.github.io/glyrepr/reference/glycan_structure.html" class="external-link">glyrepr::glycan_structure()</a></code> scalar.</p></li>
 <li><p>A glycan structure string, supported by <code><a href="https://glycoverse.github.io/glyparse/reference/auto_parse.html" class="external-link">glyparse::auto_parse()</a></code>.</p></li>
-<li><p>A known motif name (use <code><a href="db_motifs.html">db_motifs()</a></code> to see all available motifs).</p></li>
+<li><p>A GGM database motif name (use <code>db_motif_info() |&gt; dplyr::filter(source_id == "GGM")</code>
+to inspect resolvable motif names).</p></li>
 </ul></dd>
 
 
@@ -76,7 +77,7 @@ are accepted, including IUPAC-condensed, WURCS, GlycoCT, and others.</p></li>
 <dd><p>A character string.
 Possible values are "substructure", "core", "terminal", and "whole".
 If not provided, the value will be decided based on the <code>motif</code> argument.
-If <code>motif</code> is a motif name, the alignment in the database will be used.
+If <code>motif</code> is a GGM motif name, the alignment in the database will be used.
 Otherwise, "substructure" will be used.</p></dd>
 
 

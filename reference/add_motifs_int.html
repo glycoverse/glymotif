@@ -13,7 +13,7 @@ add_motifs_lgl() adds boolean annotations (whether the motif is present)."><meta
 
     <a class="navbar-brand me-2" href="../index.html">glymotif</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.15.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.16.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -40,7 +40,7 @@ add_motifs_lgl() adds boolean annotations (whether the motif is present)."><meta
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Add Motif Annotations</h1>
-      <small class="dont-index">Source: <a href="https://github.com/glycoverse/glymotif/blob/v0.15.0/R/add-motifs.R" class="external-link"><code>R/add-motifs.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/glycoverse/glymotif/blob/main/R/add-motifs.R" class="external-link"><code>R/add-motifs.R</code></a></small>
       <div class="d-none name"><code>add_motifs_int.Rd</code></div>
     </div>
 
@@ -129,7 +129,9 @@ of a <code><a href="https://glycoverse.github.io/glyexp/reference/experiment.htm
 <dt id="arg-motifs">motifs<a class="anchor" aria-label="anchor" href="#arg-motifs"></a></dt>
 <dd><p>One of:</p><ul><li><p>A <code><a href="https://glycoverse.github.io/glyrepr/reference/glycan_structure.html" class="external-link">glyrepr::glycan_structure()</a></code> vector.</p></li>
 <li><p>A glycan structure string vector, supported by <code><a href="https://glycoverse.github.io/glyparse/reference/auto_parse.html" class="external-link">glyparse::auto_parse()</a></code>.</p></li>
-<li><p>A character vector of motif names (use <code><a href="db_motifs.html">db_motifs()</a></code> to see all available motifs).</p></li>
+<li><p>A character vector of GGM database motif names
+(use <code>db_motif_info() |&gt; dplyr::filter(source_id == "GGM")</code>
+to inspect resolvable motif names).</p></li>
 </ul></dd>
 
 
@@ -174,7 +176,7 @@ provided, <code>alignment</code> and <code>alignments</code> are silently ignore
 
 <p>The naming rule for the new columns follows these priorities:</p><ol><li><p>If <code>motifs</code> is a named vector (character or <code><a href="https://glycoverse.github.io/glyrepr/reference/glycan_structure.html" class="external-link">glyrepr::glycan_structure()</a></code>),
 the names are used directly as column names.</p></li>
-<li><p>If <code>motifs</code> is unnamed and contains known motif names (e.g., "N-Glycan core"),
+<li><p>If <code>motifs</code> is unnamed and contains GGM database motif names (e.g., "N-Glycan core"),
 the motif names are used as column names.</p></li>
 <li><p>If <code>motifs</code> is unnamed and contains <code><a href="https://glycoverse.github.io/glyrepr/reference/glycan_structure.html" class="external-link">glyrepr::glycan_structure()</a></code> objects
 or IUPAC-condensed structure strings, the IUPAC-condensed strings are used

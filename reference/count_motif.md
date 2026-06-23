@@ -56,15 +56,15 @@ count_motifs(
   - A glycan structure string, supported by
     [`glyparse::auto_parse()`](https://glycoverse.github.io/glyparse/reference/auto_parse.html).
 
-  - A known motif name (use
-    [`db_motifs()`](https://glycoverse.github.io/glymotif/reference/db_motifs.md)
-    to see all available motifs).
+  - A GGM database motif name (use
+    `db_motif_info() |> dplyr::filter(source_id == "GGM")` to inspect
+    resolvable motif names).
 
 - alignment:
 
   A character string. Possible values are "substructure", "core",
   "terminal", and "whole". If not provided, the value will be decided
-  based on the `motif` argument. If `motif` is a motif name, the
+  based on the `motif` argument. If `motif` is a GGM motif name, the
   alignment in the database will be used. Otherwise, "substructure" will
   be used.
 
@@ -106,9 +106,9 @@ count_motifs(
   - A glycan structure string vector, supported by
     [`glyparse::auto_parse()`](https://glycoverse.github.io/glyparse/reference/auto_parse.html).
 
-  - A character vector of motif names (use
-    [`db_motifs()`](https://glycoverse.github.io/glymotif/reference/db_motifs.md)
-    to see all available motifs).
+  - A character vector of GGM database motif names (use
+    `db_motif_info() |> dplyr::filter(source_id == "GGM")` to inspect
+    resolvable motif names).
 
 - alignments:
 
@@ -189,8 +189,8 @@ Motif names have the following rules:
 
 1.  If `motifs` have names, use the names.
 
-2.  If `motifs` don't have names and are known motif names in the
-    database (e.g. "N-glycan core"), use them.
+2.  If `motifs` don't have names and are GGM database motif names (e.g.
+    "N-glycan core"), use them.
 
 3.  Otherwise, no colnames.
 
@@ -237,5 +237,12 @@ count_motif("Man(?1-", "Hex(?1-") # Returns 1
 
 # Generic glycan vs concrete motif: doesn't match
 count_motif("Hex(?1-", "Man(?1-") # Returns 0
+#> Warning: Matching lower-level `glycans` against higher-level `motifs` usually returns no
+#> matches.
+#> ℹ `glycans` have "basic" structure level, while `motifs` have "partial"
+#>   structure level.
+#> ℹ Use motifs at the same structure level as the glycans, or reduce motif
+#>   structure levels before matching.
+#> ℹ See `?get_structure_level` for details.
 #> [1] 0
 ```

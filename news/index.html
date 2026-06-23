@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">glymotif</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.15.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.16.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -34,9 +34,31 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Changelog</h1>
-      <small>Source: <a href="https://github.com/glycoverse/glymotif/blob/v0.15.0/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
+      <small>Source: <a href="https://github.com/glycoverse/glymotif/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.16.0" id="glymotif-0160">glymotif 0.16.0<a class="anchor" aria-label="anchor" href="#glymotif-0160"></a></h2>
+<div class="section level3">
+<h3 id="breaking-changes-0-16-0">Breaking changes<a class="anchor" aria-label="anchor" href="#breaking-changes-0-16-0"></a></h3>
+<ul><li>
+<code><a href="../reference/db_motifs.html">db_motifs()</a></code> no longer returns a character vector of motif names. It now returns a <code>db_motifs_spec</code> object that should be passed directly to the <code>motifs</code> argument of <code><a href="../reference/have_motif.html">have_motifs()</a></code>, <code><a href="../reference/count_motif.html">count_motifs()</a></code>, <code><a href="../reference/match_motif.html">match_motifs()</a></code>, <code><a href="../reference/add_motifs_int.html">add_motifs_lgl()</a></code>, and <code><a href="../reference/add_motifs_int.html">add_motifs_int()</a></code>. Specifying <code>alignments</code>, <code>ignore_linkages</code>, <code>strict_sub</code>, or <code>match_degree</code> is no longer valid. (<a href="https://github.com/glycoverse/glymotif/issues/35" class="external-link">#35</a>)</li>
+<li>
+<code><a href="../reference/get_motif_structure.html">get_motif_structure()</a></code>, <code><a href="../reference/get_motif_structure.html">get_motif_alignment()</a></code>, and <code><a href="../reference/is_known_motif.html">is_known_motif()</a></code> are deprecated. Use <code><a href="../reference/db_motif_info.html">db_motif_info()</a></code> to inspect database motifs instead. (<a href="https://github.com/glycoverse/glymotif/issues/35" class="external-link">#35</a>)</li>
+<li>
+<code>get_motif_aglycon()</code> are removed. (<a href="https://github.com/glycoverse/glymotif/issues/32" class="external-link">#32</a>)</li>
+</ul></div>
+<div class="section level3">
+<h3 id="new-features-0-16-0">New features<a class="anchor" aria-label="anchor" href="#new-features-0-16-0"></a></h3>
+<ul><li>Add <code><a href="../reference/db_motif_info.html">db_motif_info()</a></code> to return a tibble of all built-in database motifs, including their names, structures, and alignments. (<a href="https://github.com/glycoverse/glymotif/issues/35" class="external-link">#35</a>)</li>
+<li>Expand the built-in motif database to include additional GlycoMotif collections. Now there are 904 unique motifs. (<a href="https://github.com/glycoverse/glymotif/issues/36" class="external-link">#36</a>)</li>
+</ul></div>
+<div class="section level3">
+<h3 id="minor-improvements-and-bug-fixes-0-16-0">Minor improvements and bug fixes<a class="anchor" aria-label="anchor" href="#minor-improvements-and-bug-fixes-0-16-0"></a></h3>
+<ul><li>Warn on mismatched motif structure levels in matching. (<a href="https://github.com/glycoverse/glymotif/issues/38" class="external-link">#38</a>)</li>
+<li>Unknown GGM motif names now trigger an error with suggestions for similar known motif names. (<a href="https://github.com/glycoverse/glymotif/issues/39" class="external-link">#39</a>)</li>
+</ul></div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.15.0" id="glymotif-0150">glymotif 0.15.0<a class="anchor" aria-label="anchor" href="#glymotif-0150"></a></h2>
 <div class="section level3">
@@ -317,7 +339,7 @@
 </ul></div>
 <div class="section level3">
 <h3 id="bug-fixes-0-3-0">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-3-0"></a></h3>
-<ul><li>Fix a bug in <code><a href="../reference/get_motif_structure.html">get_motif_structure()</a></code>, where the order of the results was not consistent with the order of the input motifs. This caused unexpected results in a wide range of functions including <code><a href="../reference/have_motif.html">have_motifs()</a></code>, <code><a href="../reference/count_motif.html">count_motifs()</a></code>, and the new <code><a href="../reference/add_motifs_int.html">add_motifs_lgl()</a></code> and <code><a href="../reference/add_motifs_int.html">add_motifs_int()</a></code> functions, when using motif names as input. Alone with <code><a href="../reference/get_motif_structure.html">get_motif_structure()</a></code>, similar bugs in <code><a href="../reference/get_motif_structure.html">get_motif_alignment()</a></code> and <code><a href="../reference/get_motif_structure.html">get_motif_aglycon()</a></code> are also fixed.</li>
+<ul><li>Fix a bug in <code><a href="../reference/get_motif_structure.html">get_motif_structure()</a></code>, where the order of the results was not consistent with the order of the input motifs. This caused unexpected results in a wide range of functions including <code><a href="../reference/have_motif.html">have_motifs()</a></code>, <code><a href="../reference/count_motif.html">count_motifs()</a></code>, and the new <code><a href="../reference/add_motifs_int.html">add_motifs_lgl()</a></code> and <code><a href="../reference/add_motifs_int.html">add_motifs_int()</a></code> functions, when using motif names as input. Alone with <code><a href="../reference/get_motif_structure.html">get_motif_structure()</a></code>, similar bugs in <code><a href="../reference/get_motif_structure.html">get_motif_alignment()</a></code> and <code>get_motif_aglycon()</code> are also fixed.</li>
 </ul></div>
 </div>
     <div class="section level2">

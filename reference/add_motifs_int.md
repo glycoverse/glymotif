@@ -93,9 +93,9 @@ add_motifs_lgl(
   - A glycan structure string vector, supported by
     [`glyparse::auto_parse()`](https://glycoverse.github.io/glyparse/reference/auto_parse.html).
 
-  - A character vector of motif names (use
-    [`db_motifs()`](https://glycoverse.github.io/glymotif/reference/db_motifs.md)
-    to see all available motifs).
+  - A character vector of GGM database motif names (use
+    `db_motif_info() |> dplyr::filter(source_id == "GGM")` to inspect
+    resolvable motif names).
 
 - alignments:
 
@@ -150,7 +150,7 @@ The naming rule for the new columns follows these priorities:
     [`glyrepr::glycan_structure()`](https://glycoverse.github.io/glyrepr/reference/glycan_structure.html)),
     the names are used directly as column names.
 
-2.  If `motifs` is unnamed and contains known motif names (e.g.,
+2.  If `motifs` is unnamed and contains GGM database motif names (e.g.,
     "N-Glycan core"), the motif names are used as column names.
 
 3.  If `motifs` is unnamed and contains

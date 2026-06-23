@@ -1,5 +1,52 @@
 # Changelog
 
+## glymotif 0.16.0
+
+### Breaking changes
+
+- [`db_motifs()`](https://glycoverse.github.io/glymotif/reference/db_motifs.md)
+  no longer returns a character vector of motif names. It now returns a
+  `db_motifs_spec` object that should be passed directly to the `motifs`
+  argument of
+  [`have_motifs()`](https://glycoverse.github.io/glymotif/reference/have_motif.md),
+  [`count_motifs()`](https://glycoverse.github.io/glymotif/reference/count_motif.md),
+  [`match_motifs()`](https://glycoverse.github.io/glymotif/reference/match_motif.md),
+  [`add_motifs_lgl()`](https://glycoverse.github.io/glymotif/reference/add_motifs_int.md),
+  and
+  [`add_motifs_int()`](https://glycoverse.github.io/glymotif/reference/add_motifs_int.md).
+  Specifying `alignments`, `ignore_linkages`, `strict_sub`, or
+  `match_degree` is no longer valid.
+  ([\#35](https://github.com/glycoverse/glymotif/issues/35))
+- [`get_motif_structure()`](https://glycoverse.github.io/glymotif/reference/get_motif_structure.md),
+  [`get_motif_alignment()`](https://glycoverse.github.io/glymotif/reference/get_motif_structure.md),
+  and
+  [`is_known_motif()`](https://glycoverse.github.io/glymotif/reference/is_known_motif.md)
+  are deprecated. Use
+  [`db_motif_info()`](https://glycoverse.github.io/glymotif/reference/db_motif_info.md)
+  to inspect database motifs instead.
+  ([\#35](https://github.com/glycoverse/glymotif/issues/35))
+- `get_motif_aglycon()` are removed.
+  ([\#32](https://github.com/glycoverse/glymotif/issues/32))
+
+### New features
+
+- Add
+  [`db_motif_info()`](https://glycoverse.github.io/glymotif/reference/db_motif_info.md)
+  to return a tibble of all built-in database motifs, including their
+  names, structures, and alignments.
+  ([\#35](https://github.com/glycoverse/glymotif/issues/35))
+- Expand the built-in motif database to include additional GlycoMotif
+  collections. Now there are 904 unique motifs.
+  ([\#36](https://github.com/glycoverse/glymotif/issues/36))
+
+### Minor improvements and bug fixes
+
+- Warn on mismatched motif structure levels in matching.
+  ([\#38](https://github.com/glycoverse/glymotif/issues/38))
+- Unknown GGM motif names now trigger an error with suggestions for
+  similar known motif names.
+  ([\#39](https://github.com/glycoverse/glymotif/issues/39))
+
 ## glymotif 0.15.0
 
 ### New features
@@ -394,9 +441,7 @@ purpose.
   [`get_motif_structure()`](https://glycoverse.github.io/glymotif/reference/get_motif_structure.md),
   similar bugs in
   [`get_motif_alignment()`](https://glycoverse.github.io/glymotif/reference/get_motif_structure.md)
-  and
-  [`get_motif_aglycon()`](https://glycoverse.github.io/glymotif/reference/get_motif_structure.md)
-  are also fixed.
+  and `get_motif_aglycon()` are also fixed.
 
 ## glymotif 0.2.1
 

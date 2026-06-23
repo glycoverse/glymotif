@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">glymotif</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.15.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.16.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -60,7 +60,7 @@
       <img src="../logo.png" class="logo" alt=""><h1>The Science Behind Motif Matching</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/glycoverse/glymotif/blob/v0.15.0/vignettes/motif-matching.Rmd" class="external-link"><code>vignettes/motif-matching.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/glycoverse/glymotif/blob/main/vignettes/motif-matching.Rmd" class="external-link"><code>vignettes/motif-matching.Rmd</code></a></small>
       <div class="d-none name"><code>motif-matching.Rmd</code></div>
     </div>
 
@@ -283,6 +283,13 @@ motifs</li>
 <span><span class="fu"><a href="../reference/have_motif.html">have_motif</a></span><span class="op">(</span><span class="st">"Gal(a1-"</span>, <span class="st">"Hex(a1-"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] TRUE</span></span>
 <span><span class="fu"><a href="../reference/have_motif.html">have_motif</a></span><span class="op">(</span><span class="st">"Hex(a1-"</span>, <span class="st">"Gal(a1-"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Warning: Matching lower-level `glycans` against higher-level `motifs` usually returns no</span></span>
+<span><span class="co">#&gt; matches.</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> `glycans` have <span style="color: #0000BB;">"basic"</span> structure level, while `motifs` have <span style="color: #0000BB;">"intact"</span></span></span>
+<span><span class="co">#&gt;   structure level.</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Use motifs at the same structure level as the glycans, or reduce motif</span></span>
+<span><span class="co">#&gt;   structure levels before matching.</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> See `?get_structure_level` for details.</span></span>
 <span><span class="co">#&gt; [1] FALSE</span></span>
 <span><span class="fu"><a href="../reference/have_motif.html">have_motif</a></span><span class="op">(</span><span class="st">"Hex(a1-"</span>, <span class="st">"Hex(a1-"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] TRUE</span></span></code></pre></div>
