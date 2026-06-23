@@ -67,6 +67,55 @@ test_that("unkown motif name used as input", {
 })
 
 
+test_that("unknown motif name error points to GGM motif info filter", {
+  glycan <- glyrepr::o_glycan_core_2()
+  motif <- "unknown motif name"
+  err <- rlang::catch_cnd(have_motif(glycan, motif), classes = "error")
+
+  expect_true(grepl(
+    'Use `db_motif_info() |> dplyr::filter(source_id == "GGM")` to inspect valid GGM motif names.',
+    conditionMessage(err),
+    fixed = TRUE
+  ))
+})
+
+
+test_that("unknown motif name error suggests similar GGM motif names", {
+  glycan <- glyrepr::o_glycan_core_2()
+  motif <- "O-glycan core 1"
+  err <- rlang::catch_cnd(have_motif(glycan, motif), classes = "error")
+
+  expect_match(conditionMessage(err), 'Did you mean "O-Glycan core 1"\\?')
+})
+
+
+test_that("unknown motif name error does not include parser parent details", {
+  err <- rlang::catch_cnd(
+    have_motif("Gal(a1-", "N-Glycan core bisected"),
+    classes = "error"
+  )
+
+  expect_match(
+    conditionMessage(err),
+    'Did you mean "N-glycan core, bisected"\\?'
+  )
+  expect_false(grepl("Caused by error", conditionMessage(err), fixed = TRUE))
+  expect_false(grepl("Can't parse", conditionMessage(err), fixed = TRUE))
+})
+
+
+test_that("GGM motif name resolution remains case-sensitive", {
+  glycan <- glyrepr::as_glycan_structure("Gal(b1-4)GlcNAc(?1-")
+
+  expect_no_error(have_motif(glycan, "i antigen"))
+  expect_no_error(have_motif(glycan, "I antigen"))
+  expect_error(
+    have_motif(glycan, "I Antigen"),
+    'Did you mean "I antigen"\\?'
+  )
+})
+
+
 test_that("bad glycan structure", {
   glycan <- "bad structure"
   motif <- glyparse::parse_iupac_condensed("Gal(b1-3)GalNAc(b1-")

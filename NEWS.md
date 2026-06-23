@@ -11,6 +11,10 @@
 * Add `db_motif_info()` to return a tibble of all built-in database motifs, including their names, structures, and alignments. (#35)
 * Expand the built-in motif database to include additional GlycoMotif collections. Now there are 904 unique motifs. (#36)
 
+## Minor improvements and bug fixes
+
+* Unknown GGM motif names now trigger an error with suggestions for similar known motif names. (#39)
+
 # glymotif 0.15.0
 
 ## New features

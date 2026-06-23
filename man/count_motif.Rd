@@ -35,7 +35,8 @@ including IUPAC-condensed, WURCS, GlycoCT, and others.
 \itemize{
 \item A \code{\link[glyrepr:glycan_structure]{glyrepr::glycan_structure()}} scalar.
 \item A glycan structure string, supported by \code{\link[glyparse:auto_parse]{glyparse::auto_parse()}}.
-\item A GGM database motif name (use \code{\link[=db_motif_info]{db_motif_info()}} to see all available motifs).
+\item A GGM database motif name (use \code{db_motif_info() |> dplyr::filter(source_id == "GGM")}
+to inspect resolvable motif names).
 }}
 
 \item{alignment}{A character string.
@@ -63,7 +64,9 @@ provided, \code{alignment} and \code{alignments} are silently ignored.}
 \itemize{
 \item A \code{\link[glyrepr:glycan_structure]{glyrepr::glycan_structure()}} vector.
 \item A glycan structure string vector, supported by \code{\link[glyparse:auto_parse]{glyparse::auto_parse()}}.
-\item A character vector of GGM database motif names (use \code{\link[=db_motif_info]{db_motif_info()}} to see all available motifs).
+\item A character vector of GGM database motif names
+(use \code{db_motif_info() |> dplyr::filter(source_id == "GGM")}
+to inspect resolvable motif names).
 }}
 
 \item{alignments}{A character vector specifying alignment types for each motif.
