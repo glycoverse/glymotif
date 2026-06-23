@@ -13,6 +13,7 @@
 
 ## Minor improvements and bug fixes
 
+* Warn on mismatched motif structure levels in matching. (#38)
 * Unknown GGM motif names now trigger an error with suggestions for similar known motif names. (#39)
 
 # glymotif 0.15.0
