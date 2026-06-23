@@ -89,6 +89,7 @@ test_that("database motifs are unique within source by structure and alignment",
 
 test_that("deprecated motif database helpers delegate to db_motif_info()", {
   info <- db_motif_info()
+  info <- info[info$source_id == "GGM", ]
   names_to_check <- info$name[seq_len(2)]
 
   expect_warning(

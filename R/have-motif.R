@@ -22,7 +22,7 @@
 #' Motif names have the following rules:
 #'
 #' 1. If `motifs` have names, use the names.
-#' 2. If `motifs` don't have names and are database motif names (e.g. "N-glycan core"), use them.
+#' 2. If `motifs` don't have names and are GGM database motif names (e.g. "N-glycan core"), use them.
 #' 3. Otherwise, no colnames.
 #'
 #' # Monosaccharide type
@@ -83,12 +83,16 @@
 #' See [whole-glycan](https://glycomotif.glyomics.org/glycomotif/Whole-Glycan_Alignment)
 #' for details.
 #'
-#' When using named motifs in the GlycoMotif GlyGen Collection,
+#' When using named motifs in the GlycoMotif GlyGen Collection (GGM),
 #' the best practice is to not provide the `alignment` argument,
 #' and let the function decide the alignment based on the motif name.
 #' However, it is still possible to override the default alignments.
 #' In this case, the user-provided alignments will be used,
 #' but a warning will be issued.
+#' Only GGM motif names are accepted as character name inputs through the
+#' `motif` and `motifs` arguments. To use motifs from other database
+#' collections, pass [db_motifs()] with the desired `source_id` or pass
+#' structures from [db_motif_info()] explicitly.
 #' When `match_degree` is provided, `alignment` and `alignments` are ignored
 #' without warning.
 #'
@@ -149,15 +153,15 @@
 #' @param motif One of:
 #'   - A [glyrepr::glycan_structure()] scalar.
 #'   - A glycan structure string, supported by [glyparse::auto_parse()].
-#'   - A database motif name (use [db_motif_info()] to see all available motifs).
+#'   - A GGM database motif name (use [db_motif_info()] to see all available motifs).
 #' @param motifs One of:
 #'   - A [glyrepr::glycan_structure()] vector.
 #'   - A glycan structure string vector, supported by [glyparse::auto_parse()].
-#'   - A character vector of database motif names (use [db_motif_info()] to see all available motifs).
+#'   - A character vector of GGM database motif names (use [db_motif_info()] to see all available motifs).
 #' @param alignment A character string.
 #'   Possible values are "substructure", "core", "terminal", and "whole".
 #'   If not provided, the value will be decided based on the `motif` argument.
-#'   If `motif` is a motif name, the alignment in the database will be used.
+#'   If `motif` is a GGM motif name, the alignment in the database will be used.
 #'   Otherwise, "substructure" will be used.
 #' @param alignments A character vector specifying alignment types for each motif.
 #'   Can be a single value (applied to all motifs) or a vector of the same length as motifs.

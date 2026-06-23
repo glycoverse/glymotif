@@ -35,13 +35,13 @@ including IUPAC-condensed, WURCS, GlycoCT, and others.
 \itemize{
 \item A \code{\link[glyrepr:glycan_structure]{glyrepr::glycan_structure()}} scalar.
 \item A glycan structure string, supported by \code{\link[glyparse:auto_parse]{glyparse::auto_parse()}}.
-\item A database motif name (use \code{\link[=db_motif_info]{db_motif_info()}} to see all available motifs).
+\item A GGM database motif name (use \code{\link[=db_motif_info]{db_motif_info()}} to see all available motifs).
 }}
 
 \item{alignment}{A character string.
 Possible values are "substructure", "core", "terminal", and "whole".
 If not provided, the value will be decided based on the \code{motif} argument.
-If \code{motif} is a motif name, the alignment in the database will be used.
+If \code{motif} is a GGM motif name, the alignment in the database will be used.
 Otherwise, "substructure" will be used.}
 
 \item{ignore_linkages}{A logical value. If \code{TRUE}, linkages will be ignored in the comparison.
@@ -63,7 +63,7 @@ provided, \code{alignment} and \code{alignments} are silently ignored.}
 \itemize{
 \item A \code{\link[glyrepr:glycan_structure]{glyrepr::glycan_structure()}} vector.
 \item A glycan structure string vector, supported by \code{\link[glyparse:auto_parse]{glyparse::auto_parse()}}.
-\item A character vector of database motif names (use \code{\link[=db_motif_info]{db_motif_info()}} to see all available motifs).
+\item A character vector of GGM database motif names (use \code{\link[=db_motif_info]{db_motif_info()}} to see all available motifs).
 }}
 
 \item{alignments}{A character vector specifying alignment types for each motif.
@@ -98,7 +98,7 @@ Glycan names follow the same rule as \code{have_motif()} and \code{count_motif()
 Motif names have the following rules:
 \enumerate{
 \item If \code{motifs} have names, use the names.
-\item If \code{motifs} don't have names and are database motif names (e.g. "N-glycan core"), use them.
+\item If \code{motifs} don't have names and are GGM database motif names (e.g. "N-glycan core"), use them.
 \item Otherwise, no colnames.
 }
 }
@@ -168,12 +168,16 @@ See \href{https://glycomotif.glyomics.org/glycomotif/Whole-Glycan_Alignment}{who
 for details.
 }
 
-When using named motifs in the GlycoMotif GlyGen Collection,
+When using named motifs in the GlycoMotif GlyGen Collection (GGM),
 the best practice is to not provide the \code{alignment} argument,
 and let the function decide the alignment based on the motif name.
 However, it is still possible to override the default alignments.
 In this case, the user-provided alignments will be used,
 but a warning will be issued.
+Only GGM motif names are accepted as character name inputs through the
+\code{motif} and \code{motifs} arguments. To use motifs from other database
+collections, pass \code{\link[=db_motifs]{db_motifs()}} with the desired \code{source_id} or pass
+structures from \code{\link[=db_motif_info]{db_motif_info()}} explicitly.
 When \code{match_degree} is provided, \code{alignment} and \code{alignments} are ignored
 without warning.
 }

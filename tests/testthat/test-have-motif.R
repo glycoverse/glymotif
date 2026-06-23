@@ -46,12 +46,23 @@ test_that("motif name used as input", {
 })
 
 
+test_that("non-GGM motif names are not resolved as motif inputs", {
+  info <- db_motif_info()
+  non_ggm_info <- info[info$source_id != "GGM", ][1, ]
+
+  expect_error(
+    have_motif(non_ggm_info$glycan_structure, non_ggm_info$name),
+    "Some motifs are neither valid glycan structures nor GGM database motif names"
+  )
+})
+
+
 test_that("unkown motif name used as input", {
   glycan <- glyrepr::o_glycan_core_2()
   motif <- "unknown motif name"
   expect_error(
     have_motif(glycan, motif),
-    "Some motifs are neither valid glycan structures nor database motif names"
+    "Some motifs are neither valid glycan structures nor GGM database motif names"
   )
 })
 

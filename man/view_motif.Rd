@@ -25,13 +25,13 @@ are accepted, including IUPAC-condensed, WURCS, GlycoCT, and others.
 \itemize{
 \item A \code{\link[glyrepr:glycan_structure]{glyrepr::glycan_structure()}} scalar.
 \item A glycan structure string, supported by \code{\link[glyparse:auto_parse]{glyparse::auto_parse()}}.
-\item A database motif name (use \code{\link[=db_motif_info]{db_motif_info()}} to see all available motifs).
+\item A GGM database motif name (use \code{\link[=db_motif_info]{db_motif_info()}} to see all available motifs).
 }}
 
 \item{alignment}{A character string.
 Possible values are "substructure", "core", "terminal", and "whole".
 If not provided, the value will be decided based on the \code{motif} argument.
-If \code{motif} is a motif name, the alignment in the database will be used.
+If \code{motif} is a GGM motif name, the alignment in the database will be used.
 Otherwise, "substructure" will be used.}
 
 \item{ignore_linkages}{A logical value. If \code{TRUE}, linkages will be ignored in the comparison.

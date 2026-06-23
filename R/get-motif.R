@@ -158,7 +158,7 @@ db_motif_labels <- function(info) {
 is_known_motif <- function(name) {
   lifecycle::deprecate_warn("0.16.0", "is_known_motif()", "db_motif_info()")
   checkmate::assert_character(name)
-  name %in% db_motif_info()$name
+  name %in% db_motif_name_info()$name
 }
 
 
@@ -209,16 +209,31 @@ get_motif_alignment <- function(name) {
 }
 
 
-#' Check if Names are Database Motif Names
+#' Check if Names are Resolvable Database Motif Names
 #'
-#' Internal predicate for character inputs that refer to named database motifs.
+#' Internal predicate for character inputs that refer to named GGM database motifs.
 #'
 #' @param name A character vector of the motif name.
 #' @return A logical vector.
 #' @noRd
 is_db_motif_name <- function(name) {
   checkmate::assert_character(name)
-  name %in% db_motif_info()$name
+  name %in% db_motif_name_info()$name
+}
+
+
+#' Get Database Motif Rows Resolvable by Name
+#'
+#' Only GGM motif names are accepted for legacy character name lookup through
+#' the `motif` and `motifs` arguments. Non-GGM collections are available
+#' through [db_motifs()] or [db_motif_info()], but their `name` values are
+#' labels rather than character inputs for motif resolution.
+#'
+#' @return A tibble with GGM motif metadata.
+#' @noRd
+db_motif_name_info <- function() {
+  info <- db_motif_info()
+  info[info$source_id == "GGM", ]
 }
 
 
@@ -231,7 +246,7 @@ is_db_motif_name <- function(name) {
 #' @noRd
 db_motif_structure_by_name <- function(name) {
   check_db_motif_names(name)
-  info <- db_motif_info()
+  info <- db_motif_name_info()
   info$glycan_structure[match(name, info$name)]
 }
 
@@ -243,7 +258,7 @@ db_motif_structure_by_name <- function(name) {
 #' @noRd
 db_motif_alignment_by_name <- function(name) {
   check_db_motif_names(name)
-  info <- db_motif_info()
+  info <- db_motif_name_info()
   res <- info$alignment[match(name, info$name)]
   if (length(res) > 1) {
     res <- rlang::set_names(res, name)
