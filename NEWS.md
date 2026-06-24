@@ -1,4 +1,8 @@
-# glymotif (development version)
+# glymotif 0.16.1
+
+## Minor improvements and bug fixes
+
+* Handle empty glycans in motif matching. (75c74e6)
 
 # glymotif 0.16.0
 
