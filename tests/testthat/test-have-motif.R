@@ -39,6 +39,17 @@ test_that("auto_parse supports multiple glycan structure formats", {
 })
 
 
+test_that("empty glycans return empty results", {
+  glycans <- glyrepr::glycan_structure()
+
+  expect_identical(have_motif(glycans, "Gal(a1-"), logical())
+
+  result <- have_motifs(glycans, "Gal(a1-")
+  expect_identical(dim(result), c(0L, 1L))
+  expect_type(result, "logical")
+})
+
+
 test_that("motif name used as input", {
   glycan <- glyrepr::o_glycan_core_2()
   motif <- "O-Glycan core 1"

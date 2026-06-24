@@ -104,13 +104,15 @@ warn_mismatched_structure_levels <- function(glycans, motifs) {
   motif_level <- suppressWarnings(glyrepr::get_structure_level(motifs))
 
   if (
-    glycan_level == "topological" &&
-      motif_level %in% c("intact", "partial")
+    isTRUE(
+      glycan_level == "topological" &&
+        motif_level %in% c("intact", "partial")
+    )
   ) {
     warn_structure_level_mismatch(glycan_level, motif_level)
   }
 
-  if (glycan_level == "basic" && motif_level != "basic") {
+  if (isTRUE(glycan_level == "basic" && motif_level != "basic")) {
     warn_structure_level_mismatch(glycan_level, motif_level)
   }
 
