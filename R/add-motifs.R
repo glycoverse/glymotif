@@ -4,7 +4,7 @@
 #' `r lifecycle::badge("deprecated")`
 #'
 #' `add_motifs_int()` and `add_motifs_lgl()` were deprecated in glymotif
-#' 0.16.2. For data frames, use [dplyr::mutate()] with [tibble::as_tibble()]
+#' 0.17.0. For data frames, use [dplyr::mutate()] with [tibble::as_tibble()]
 #' and [count_motifs()] or [have_motifs()]. For [glyexp::experiment()]
 #' objects, use [glyexp::mutate_var()] with the same tibble expression.
 #'
@@ -64,7 +64,7 @@ add_motifs_int <- function(
   ...
 ) {
   lifecycle::deprecate_warn(
-    "0.16.2",
+    "0.17.0",
     "add_motifs_int()",
     details = c(
       "For data frames, use `dplyr::mutate(as_tibble(count_motifs(glycan_structure, motifs)))`.",
@@ -86,7 +86,7 @@ add_motifs_lgl <- function(
   ...
 ) {
   lifecycle::deprecate_warn(
-    "0.16.2",
+    "0.17.0",
     "add_motifs_lgl()",
     details = c(
       "For data frames, use `dplyr::mutate(as_tibble(have_motifs(glycan_structure, motifs)))`.",

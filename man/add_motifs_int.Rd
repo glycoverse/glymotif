@@ -108,7 +108,7 @@ An \code{\link[glyexp:experiment]{glyexp::experiment()}} object with motif annot
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
 
 \code{add_motifs_int()} and \code{add_motifs_lgl()} were deprecated in glymotif
-0.16.2. For data frames, use \code{\link[dplyr:mutate]{dplyr::mutate()}} with \code{\link[tibble:as_tibble]{tibble::as_tibble()}}
+0.17.0. For data frames, use \code{\link[dplyr:mutate]{dplyr::mutate()}} with \code{\link[tibble:as_tibble]{tibble::as_tibble()}}
 and \code{\link[=count_motifs]{count_motifs()}} or \code{\link[=have_motifs]{have_motifs()}}. For \code{\link[glyexp:experiment]{glyexp::experiment()}}
 objects, use \code{\link[glyexp:mutate_obs]{glyexp::mutate_var()}} with the same tibble expression.
 }
