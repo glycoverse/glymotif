@@ -1,9 +1,12 @@
 #' Add Motif Annotations
 #'
-#' This function adds motif annotations to the variable information
-#' of a [glyexp::experiment()] or a tibble with a structure column.
-#' `add_motifs_int()` adds integer annotations (how many motifs are present).
-#' `add_motifs_lgl()` adds boolean annotations (whether the motif is present).
+#' @description
+#' `r lifecycle::badge("deprecated")`
+#'
+#' `add_motifs_int()` and `add_motifs_lgl()` were deprecated in glymotif
+#' 0.17.0. For data frames, use [dplyr::mutate()] with [tibble::as_tibble()]
+#' and [count_motifs()] or [have_motifs()]. For [glyexp::experiment()]
+#' objects, use [glyexp::mutate_var()] with the same tibble expression.
 #'
 #' @section About Names:
 #'
@@ -23,44 +26,6 @@
 #' motifs. The functions here always provide column names since they are designed
 #' for adding motif annotations to data frames.
 #'
-#' @section Why do we need these functions:
-#'
-#' Adding one motif annotation to a [glyexp::experiment()] is easy:
-#'
-#' ```r
-#' exp |>
-#'   mutate_var(has_hex = have_motif(glycan_structure, "Hex"))
-#' ```
-#'
-#' However, adding multiple motifs is not as straightforward.
-#' You can still use `mutate_var()` to add multiple motifs like this:
-#'
-#' ```r
-#' exp |>
-#'   mutate_var(
-#'     n_hex = count_motif(glycan_structure, "Hex"),
-#'     n_dhex = count_motif(glycan_structure, "dHex"),
-#'     n_hexnac = count_motif(glycan_structure, "HexNAc"),
-#'   )
-#' ```
-#'
-#' This method has two problems:
-#'
-#' 1. it has a lot of boilerplate code (a lot of typing)
-#' 2. it is not very efficient, as each call to `count_motif`
-#'    performs validation and conversion on `glycan_structure`,
-#'    which is a time-consuming process.
-#'
-#' Therefore, we think it would be better to have a function that
-#' adds multiple motif annotations in a single call, in a more intuitive way.
-#' That's why we provide these two functions.
-#'
-#' Under the hood, they use a more straightforward approach for [glyexp::experiment()] objects:
-#'
-#' 1. get the motif annotation matrix using `count_motifs()` or `have_motifs()`
-#' 2. convert the matrix to a tibble
-#' 3. use `dplyr::bind_cols()` to add the tibble to the variable information
-#'
 #' @param x A [glyexp::experiment()] object, or a tibble with a structure column.
 #' @param ... Additional arguments passed to the method.
 #' @inheritParams have_motifs
@@ -69,22 +34,22 @@
 #'
 #' @examples
 #' library(glyexp)
+#' library(dplyr)
+#' library(tibble)
 #'
 #' exp <- real_experiment2
+#' motifs <- c(
+#'   lacnac = "Gal(??-?)GlcNAc(??-",
+#'   sia_lacnac = "Neu5Ac(??-?)Gal(??-?)GlcNAc(??-"
+#' )
 #'
 #' exp |>
-#'   add_motifs_lgl(c(
-#'     lacnac = "Gal(??-?)GlcNAc(??-",
-#'     sia_lacnac = "Neu5Ac(??-?)Gal(??-?)GlcNAc(??-"
-#'   )) |>
+#'   mutate_var(as_tibble(have_motifs(glycan_structure, motifs))) |>
 #'   get_var_info()
 #'
-#' exp |>
-#'   add_motifs_int(c(
-#'     lacnac = "Gal(??-?)GlcNAc(??-",
-#'     sia_lacnac = "Neu5Ac(??-?)Gal(??-?)GlcNAc(??-"
-#'   )) |>
-#'   get_var_info()
+#' df <- get_var_info(exp)
+#' df |>
+#'   mutate(as_tibble(count_motifs(glycan_structure, motifs)))
 #'
 #' @seealso [glymotif::have_motifs()], [glymotif::count_motifs()], [glyexp::experiment()]
 #'
@@ -98,6 +63,14 @@ add_motifs_int <- function(
   match_degree = NULL,
   ...
 ) {
+  lifecycle::deprecate_warn(
+    "0.17.0",
+    "add_motifs_int()",
+    details = c(
+      "For data frames, use `dplyr::mutate(as_tibble(count_motifs(glycan_structure, motifs)))`.",
+      "For glyexp experiments, use `glyexp::mutate_var(as_tibble(count_motifs(glycan_structure, motifs)))`."
+    )
+  )
   UseMethod("add_motifs_int")
 }
 
@@ -112,6 +85,14 @@ add_motifs_lgl <- function(
   match_degree = NULL,
   ...
 ) {
+  lifecycle::deprecate_warn(
+    "0.17.0",
+    "add_motifs_lgl()",
+    details = c(
+      "For data frames, use `dplyr::mutate(as_tibble(have_motifs(glycan_structure, motifs)))`.",
+      "For glyexp experiments, use `glyexp::mutate_var(as_tibble(have_motifs(glycan_structure, motifs)))`."
+    )
+  )
   UseMethod("add_motifs_lgl")
 }
 
