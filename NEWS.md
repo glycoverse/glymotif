@@ -1,6 +1,6 @@
 # glymotif (development version)
 
-* `add_motifs_lgl()` and `add_motifs_int()` are deprecated. Use `dplyr::mutate()` or `glyexp::mutate_var()` with `tibble::as_tibble(have_motifs(...))` or `tibble::as_tibble(count_motifs(...))` instead.
+* `add_motifs_lgl()` and `add_motifs_int()` are deprecated. Use `dplyr::mutate()` or `glyexp::mutate_var()` with `tibble::as_tibble(have_motifs(...))` or `tibble::as_tibble(count_motifs(...))` instead. (#44)
 
 # glymotif 0.16.1
 
