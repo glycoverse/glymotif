@@ -105,10 +105,12 @@ provided, \code{alignment} and \code{alignments} are silently ignored.}
 An \code{\link[glyexp:experiment]{glyexp::experiment()}} object with motif annotations added to the variable information.
 }
 \description{
-This function adds motif annotations to the variable information
-of a \code{\link[glyexp:experiment]{glyexp::experiment()}} or a tibble with a structure column.
-\code{add_motifs_int()} adds integer annotations (how many motifs are present).
-\code{add_motifs_lgl()} adds boolean annotations (whether the motif is present).
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
+
+\code{add_motifs_int()} and \code{add_motifs_lgl()} were deprecated in glymotif
+0.16.2. For data frames, use \code{\link[dplyr:mutate]{dplyr::mutate()}} with \code{\link[tibble:as_tibble]{tibble::as_tibble()}}
+and \code{\link[=count_motifs]{count_motifs()}} or \code{\link[=have_motifs]{have_motifs()}}. For \code{\link[glyexp:experiment]{glyexp::experiment()}}
+objects, use \code{\link[glyexp:mutate_obs]{glyexp::mutate_var()}} with the same tibble expression.
 }
 \section{About Names}{
 
@@ -132,64 +134,24 @@ motifs. The functions here always provide column names since they are designed
 for adding motif annotations to data frames.
 }
 
-\section{Why do we need these functions}{
-
-
-Adding one motif annotation to a \code{\link[glyexp:experiment]{glyexp::experiment()}} is easy:
-
-\if{html}{\out{<div class="sourceCode r">}}\preformatted{exp |>
-  mutate_var(has_hex = have_motif(glycan_structure, "Hex"))
-}\if{html}{\out{</div>}}
-
-However, adding multiple motifs is not as straightforward.
-You can still use \code{mutate_var()} to add multiple motifs like this:
-
-\if{html}{\out{<div class="sourceCode r">}}\preformatted{exp |>
-  mutate_var(
-    n_hex = count_motif(glycan_structure, "Hex"),
-    n_dhex = count_motif(glycan_structure, "dHex"),
-    n_hexnac = count_motif(glycan_structure, "HexNAc"),
-  )
-}\if{html}{\out{</div>}}
-
-This method has two problems:
-\enumerate{
-\item it has a lot of boilerplate code (a lot of typing)
-\item it is not very efficient, as each call to \code{count_motif}
-performs validation and conversion on \code{glycan_structure},
-which is a time-consuming process.
-}
-
-Therefore, we think it would be better to have a function that
-adds multiple motif annotations in a single call, in a more intuitive way.
-That's why we provide these two functions.
-
-Under the hood, they use a more straightforward approach for \code{\link[glyexp:experiment]{glyexp::experiment()}} objects:
-\enumerate{
-\item get the motif annotation matrix using \code{count_motifs()} or \code{have_motifs()}
-\item convert the matrix to a tibble
-\item use \code{dplyr::bind_cols()} to add the tibble to the variable information
-}
-}
-
 \examples{
 library(glyexp)
+library(dplyr)
+library(tibble)
 
 exp <- real_experiment2
+motifs <- c(
+  lacnac = "Gal(??-?)GlcNAc(??-",
+  sia_lacnac = "Neu5Ac(??-?)Gal(??-?)GlcNAc(??-"
+)
 
 exp |>
-  add_motifs_lgl(c(
-    lacnac = "Gal(??-?)GlcNAc(??-",
-    sia_lacnac = "Neu5Ac(??-?)Gal(??-?)GlcNAc(??-"
-  )) |>
+  mutate_var(as_tibble(have_motifs(glycan_structure, motifs))) |>
   get_var_info()
 
-exp |>
-  add_motifs_int(c(
-    lacnac = "Gal(??-?)GlcNAc(??-",
-    sia_lacnac = "Neu5Ac(??-?)Gal(??-?)GlcNAc(??-"
-  )) |>
-  get_var_info()
+df <- get_var_info(exp)
+df |>
+  mutate(as_tibble(count_motifs(glycan_structure, motifs)))
 
 }
 \seealso{

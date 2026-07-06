@@ -44,6 +44,48 @@ test_that("add_motifs_lgl works", {
   )
 })
 
+test_that("add_motifs_lgl is deprecated but still adds logical annotations", {
+  df <- tibble::tibble(
+    glycan_structure = c(glyrepr::o_glycan_core_1(), glyrepr::o_glycan_core_2())
+  )
+  motifs <- c(
+    core1 = "Gal(b1-3)GalNAc(a1-",
+    core2 = "Gal(b1-3)[GlcNAc(b1-6)]GalNAc(a1-"
+  )
+
+  lifecycle::expect_deprecated(
+    result <- add_motifs_lgl(df, motifs, alignments = c("whole", "whole")),
+    "add_motifs_lgl"
+  )
+
+  expected <- tibble::tibble(
+    core1 = c(TRUE, FALSE),
+    core2 = c(FALSE, TRUE)
+  )
+  expect_identical(result[, c("core1", "core2")], expected)
+})
+
+test_that("add_motifs_int is deprecated but still adds integer annotations", {
+  df <- tibble::tibble(
+    glycan_structure = c(glyrepr::o_glycan_core_1(), glyrepr::o_glycan_core_2())
+  )
+  motifs <- c(
+    core1 = "Gal(b1-3)GalNAc(a1-",
+    core2 = "Gal(b1-3)[GlcNAc(b1-6)]GalNAc(a1-"
+  )
+
+  lifecycle::expect_deprecated(
+    result <- add_motifs_int(df, motifs, alignments = c("whole", "whole")),
+    "add_motifs_int"
+  )
+
+  expected <- tibble::tibble(
+    core1 = c(1L, 0L),
+    core2 = c(0L, 1L)
+  )
+  expect_identical(result[, c("core1", "core2")], expected)
+})
+
 test_that("add_motifs_int works with named motif names", {
   # Create an experiment
   exp <- create_test_exp(c("S1", "S2"), c("V1", "V2"))
@@ -291,7 +333,7 @@ test_that("add_motifs_int raises error for duplicate motifs", {
   motifs <- c("O-Glycan core 1", "O-Glycan core 1")
 
   expect_error(
-    add_motifs_int(exp, motifs),
+    suppressWarnings(add_motifs_int(exp, motifs)),
     "cannot have duplications"
   )
 })
@@ -304,7 +346,7 @@ test_that("add_motifs_lgl raises error for duplicate motifs", {
   motifs <- c("O-Glycan core 1", "O-Glycan core 1")
 
   expect_error(
-    add_motifs_lgl(exp, motifs),
+    suppressWarnings(add_motifs_lgl(exp, motifs)),
     "cannot have duplications"
   )
 })
@@ -341,7 +383,9 @@ test_that("add_motifs_lgl works with dynamic_motifs() on data frame", {
     ))
   )
 
-  result <- add_motifs_lgl(df, dynamic_motifs(max_size = 2))
+  suppressWarnings(
+    result <- add_motifs_lgl(df, dynamic_motifs(max_size = 2))
+  )
 
   expect_s3_class(result, "data.frame")
   expect_true(ncol(result) > ncol(df))
@@ -355,7 +399,9 @@ test_that("add_motifs_int works with branch_motifs() on data frame", {
     )
   )
 
-  result <- add_motifs_int(df, branch_motifs())
+  suppressWarnings(
+    result <- add_motifs_int(df, branch_motifs())
+  )
 
   expect_s3_class(result, "data.frame")
   expect_true(ncol(result) > ncol(df))
