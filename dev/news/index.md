@@ -2,6 +2,17 @@
 
 ## glymotif (development version)
 
+- [`add_motifs_lgl()`](https://glycoverse.github.io/glymotif/dev/reference/add_motifs_int.md)
+  and
+  [`add_motifs_int()`](https://glycoverse.github.io/glymotif/dev/reference/add_motifs_int.md)
+  are deprecated. Use
+  [`dplyr::mutate()`](https://dplyr.tidyverse.org/reference/mutate.html)
+  or
+  [`glyexp::mutate_var()`](https://glycoverse.github.io/glyexp/reference/mutate_obs.html)
+  with `tibble::as_tibble(have_motifs(...))` or
+  `tibble::as_tibble(count_motifs(...))` instead.
+  ([\#44](https://github.com/glycoverse/glymotif/issues/44))
+
 ## glymotif 0.16.1
 
 ### Minor improvements and bug fixes
