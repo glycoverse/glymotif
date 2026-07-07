@@ -147,6 +147,31 @@ test_that("warning when user-provided alignment is different from database", {
   expect_false(result)
 })
 
+test_that("optional have_motif arguments must be named", {
+  glycan <- glyrepr::o_glycan_core_1()
+  motif <- "Gal(b1-3)GalNAc(a1-"
+
+  expect_error(
+    have_motif(glycan, motif, "whole"),
+    "must be empty"
+  )
+  expect_true(have_motif(glycan, motif, alignment = "whole"))
+})
+
+test_that("optional have_motifs arguments must be named", {
+  glycan <- glyrepr::o_glycan_core_1()
+  motifs <- c("Gal(b1-3)GalNAc(a1-", "Gal(b1-")
+
+  expect_error(
+    have_motifs(glycan, motifs, "whole"),
+    "must be empty"
+  )
+
+  result <- have_motifs(glycan, motifs, alignments = "whole")
+  expect_true(is.matrix(result))
+  expect_equal(ncol(result), 2L)
+})
+
 
 # ========== Monosaccharide Types ==========
 test_that("concrete glycan and generic motif", {

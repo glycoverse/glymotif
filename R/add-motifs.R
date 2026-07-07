@@ -158,10 +158,10 @@ add_motifs_lgl.glyexp_experiment <- function(
   motif_anno <- motif_anno_fn(
     exp$var_info$glycan_structure,
     motifs,
-    alignments,
-    ignore_linkages,
-    strict_sub,
-    match_degree
+    alignments = alignments,
+    ignore_linkages = ignore_linkages,
+    strict_sub = strict_sub,
+    match_degree = match_degree
   )
   # have_motifs/count_motifs set colnames for motif specs, but may return NULL for regular motifs
   # We always need colnames for add_motifs, so generate them if missing
@@ -247,10 +247,10 @@ add_motifs_lgl.data.frame <- function(
   motif_anno <- motif_anno_fn(
     df$glycan_structure,
     motifs,
-    alignments,
-    ignore_linkages,
-    strict_sub,
-    match_degree
+    alignments = alignments,
+    ignore_linkages = ignore_linkages,
+    strict_sub = strict_sub,
+    match_degree = match_degree
   )
   # have_motifs/count_motifs set colnames for motif specs, but may return NULL for regular motifs
   # We always need colnames for add_motifs, so generate them if missing

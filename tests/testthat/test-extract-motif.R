@@ -56,6 +56,16 @@ test_that("extract_motif's max_size works", {
   expect_setequal(as.character(result), as.character(expected))
 })
 
+test_that("optional extract_motif arguments must be named", {
+  glycan <- "Gal(b1-3)GalNAc(a1-"
+
+  expect_error(
+    extract_motif(glycan, 2),
+    "must be empty"
+  )
+  expect_no_error(extract_motif(glycan, max_size = 2))
+})
+
 test_that("extract_branch_motif works for intact glycan structures", {
   glycan <- "Neu5Ac(a2-3)Gal(b1-4)GlcNAc(b1-2)Man(a1-3)[Gal(b1-4)GlcNAc(b1-2)Man(a1-6)]Man(b1-4)GlcNAc(a1-4)GlcNAc(b1-"
   res <- extract_branch_motif(glycan)
@@ -125,6 +135,16 @@ test_that("extract_branch_motif works for glycans with complex branching pattern
 test_that("extract_branch_motif rejects glycans other than N-glycans", {
   glycan <- "Gal(b1-3)GalNAc(a1-"
   expect_error(extract_branch_motif(glycan), "must be N-glycans")
+})
+
+test_that("optional extract_branch_motif arguments must be named", {
+  glycan <- glyrepr::n_glycan_core()
+
+  expect_error(
+    extract_branch_motif(glycan, TRUE),
+    "must be empty"
+  )
+  expect_no_error(extract_branch_motif(glycan, including_core = TRUE))
 })
 
 test_that("extract_branch_motif with including_core works for topological glycans", {

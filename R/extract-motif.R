@@ -22,6 +22,8 @@
 #' @param glycans One of:
 #'   - A [glyrepr::glycan_structure()] vector.
 #'   - A glycan structure string vector. All formats supported by [glyparse::auto_parse()] are accepted.
+#' @param ... These dots must be empty and are used only to force optional
+#'   arguments to be supplied by name.
 #' @param including_core A logical scalar. If `TRUE`, the N-glycan core structure
 #'   (`Man(??-?)Man(??-?)GlcNAc(??-?)GlcNAc(??-` or `Hex(??-?)Hex(??-?)HexNAc(??-?)HexNAc(??-`)
 #'   is appended to each branch motif. Default is `FALSE`.
@@ -44,7 +46,9 @@
 #' extract_branch_motif(glycans)
 #'
 #' @export
-extract_branch_motif <- function(glycans, including_core = FALSE) {
+extract_branch_motif <- function(glycans, ..., including_core = FALSE) {
+  rlang::check_dots_empty()
+
   checkmate::assert_flag(including_core)
   # 1. Handle input types and deduplicate
   glycans <- ensure_glycans_are_structures(glycans)
@@ -164,6 +168,8 @@ extract_branch_motif <- function(glycans, including_core = FALSE) {
 #' @param glycans One of:
 #'   - A [glyrepr::glycan_structure()] vector.
 #'   - A glycan structure string vector. All formats supported by [glyparse::auto_parse()] are accepted.
+#' @param ... These dots must be empty and are used only to force optional
+#'   arguments to be supplied by name.
 #' @param max_size The maximum number of monosaccharides in the extracted motifs. Default is 3.
 #'   Note that setting this value very large can be computationally expensive.
 #'   Try the default value first, and increase it progressively if needed.
@@ -176,7 +182,9 @@ extract_branch_motif <- function(glycans, including_core = FALSE) {
 #'
 #' @importFrom igraph V E induced_subgraph incident edge_attr neighbors
 #' @export
-extract_motif <- function(glycans, max_size = 3) {
+extract_motif <- function(glycans, ..., max_size = 3) {
+  rlang::check_dots_empty()
+
   glycans <- ensure_glycans_are_structures(glycans)
   glycans <- unique(glycans)
   structure_graphs <- glyrepr::get_structure_graphs(glycans, return_list = TRUE)

@@ -178,6 +178,8 @@
 #'   - A character vector of GGM database motif names
 #'     (use `db_motif_info() |> dplyr::filter(source_id == "GGM")`
 #'     to inspect resolvable motif names).
+#' @param ... These dots must be empty and are used only to force optional
+#'   arguments to be supplied by name.
 #' @param alignment A character string.
 #'   Possible values are "substructure", "core", "terminal", and "whole".
 #'   If not provided, the value will be decided based on the `motif` argument.
@@ -301,12 +303,15 @@
 have_motif <- function(
   glycans,
   motif,
+  ...,
   alignment = NULL,
   ignore_linkages = FALSE,
   strict_sub = TRUE,
   match_degree = NULL,
   mode = c("strict", "lenient")
 ) {
+  rlang::check_dots_empty()
+
   # Store input names before processing
   glycan_names <- names(glycans)
 
@@ -335,12 +340,15 @@ have_motif <- function(
 have_motifs <- function(
   glycans,
   motifs,
+  ...,
   alignments = NULL,
   ignore_linkages = FALSE,
   strict_sub = TRUE,
   match_degree = NULL,
   mode = c("strict", "lenient")
 ) {
+  rlang::check_dots_empty()
+
   params <- prepare_motif_args(
     glycans = glycans,
     motifs = motifs,

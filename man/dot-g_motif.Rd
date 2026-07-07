@@ -10,6 +10,7 @@
 .g_have_motif(
   glycan_graph,
   motif_graph,
+  ...,
   alignment = "substructure",
   ignore_linkages = FALSE,
   strict_sub = TRUE,
@@ -20,6 +21,7 @@
 .g_count_motif(
   glycan_graph,
   motif_graph,
+  ...,
   alignment = "substructure",
   ignore_linkages = FALSE,
   strict_sub = TRUE,
@@ -30,6 +32,7 @@
 .g_match_motif(
   glycan_graph,
   motif_graph,
+  ...,
   alignment = "substructure",
   ignore_linkages = FALSE,
   strict_sub = TRUE,
@@ -41,6 +44,9 @@
 \item{glycan_graph}{An igraph glycan graph.}
 
 \item{motif_graph}{An igraph motif graph.}
+
+\item{...}{These dots must be empty and are used only to force optional
+arguments to be supplied by name.}
 
 \item{alignment}{A character scalar: \code{"substructure"}, \code{"core"},
 \code{"terminal"}, or \code{"whole"}.}

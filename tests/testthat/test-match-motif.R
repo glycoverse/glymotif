@@ -39,6 +39,19 @@ test_that("match_motif works", {
   expect_match_motif_equal(result, list(list(c(1, 2, 3))))
 })
 
+test_that("optional match_motif arguments must be named", {
+  glycan <- glyrepr::o_glycan_core_1()
+  motif <- glyparse::parse_iupac_condensed("Gal(b1-3)GalNAc(a1-")
+
+  expect_error(
+    match_motif(glycan, motif, "whole"),
+    "must be empty"
+  )
+
+  result <- match_motif(glycan, motif, alignment = "whole")
+  expect_match_motif_equal(result, list(list(c(1, 2))))
+})
+
 test_that("match_motif rejects non-glyrepr_structure objects", {
   glycan <- glyrepr::n_glycan_core()
   motif <- "Man(a1-3)[Man(a1-6)]Man(b1-"
@@ -78,6 +91,23 @@ test_that("match_motifs works", {
     list(list(c(1, 3, 4, 5), c(2, 3, 4, 5)))
   )
   expect_match_motifs_equal(result, expected)
+})
+
+test_that("optional match_motifs arguments must be named", {
+  glycan <- glyrepr::o_glycan_core_1()
+  motifs <- glyparse::parse_iupac_condensed(c(
+    "Gal(b1-3)GalNAc(a1-",
+    "Gal(b1-"
+  ))
+
+  expect_error(
+    match_motifs(glycan, motifs, "whole"),
+    "must be empty"
+  )
+
+  result <- match_motifs(glycan, motifs, alignments = "whole")
+  expect_type(result, "list")
+  expect_length(result, 2L)
 })
 
 test_that("match_motifs accepts character vectors and parses them", {

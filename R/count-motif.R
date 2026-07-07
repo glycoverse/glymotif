@@ -88,12 +88,15 @@
 count_motif <- function(
   glycans,
   motif,
+  ...,
   alignment = NULL,
   ignore_linkages = FALSE,
   strict_sub = TRUE,
   match_degree = NULL,
   mode = c("strict", "lenient")
 ) {
+  rlang::check_dots_empty()
+
   # Store input names before processing
   glycan_names <- names(glycans)
 
@@ -122,12 +125,15 @@ count_motif <- function(
 count_motifs <- function(
   glycans,
   motifs,
+  ...,
   alignments = NULL,
   ignore_linkages = FALSE,
   strict_sub = TRUE,
   match_degree = NULL,
   mode = c("strict", "lenient")
 ) {
+  rlang::check_dots_empty()
+
   params <- prepare_motif_args(
     glycans = glycans,
     motifs = motifs,

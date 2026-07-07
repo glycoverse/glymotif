@@ -7,6 +7,7 @@
 view_motif(
   glycan,
   motif,
+  ...,
   alignment = NULL,
   ignore_linkages = FALSE,
   strict_sub = TRUE,
@@ -28,6 +29,9 @@ are accepted, including IUPAC-condensed, WURCS, GlycoCT, and others.
 \item A GGM database motif name (use \code{db_motif_info() |> dplyr::filter(source_id == "GGM")}
 to inspect resolvable motif names).
 }}
+
+\item{...}{These dots must be empty and are used only to force optional
+arguments to be supplied by name.}
 
 \item{alignment}{A character string.
 Possible values are "substructure", "core", "terminal", and "whole".
