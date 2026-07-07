@@ -11,6 +11,7 @@
 #' @param match_degree Optional degree-matching mask.
 #' @param single_motif Whether the caller expects exactly one motif.
 #' @param strict_sub Whether substituent matching should be strict.
+#' @param mode Matching mode.
 #' @param call The call environment used for errors.
 #'
 #' @return A normalized argument list for single- or multiple-motif internals.
@@ -23,8 +24,11 @@ prepare_motif_args <- function(
   match_degree = NULL,
   single_motif = FALSE,
   strict_sub = TRUE,
+  mode = "strict",
   call = rlang::caller_env()
 ) {
+  mode <- rlang::arg_match(mode, c("strict", "lenient"))
+
   prepared <- if (is_motif_spec(motifs)) {
     prepare_spec_motif_args(
       glycans,
@@ -76,7 +80,9 @@ prepare_motif_args <- function(
     single_motif,
     call = call
   )
-  warn_mismatched_structure_levels(glycans, motifs)
+  if (mode == "strict") {
+    warn_mismatched_structure_levels(glycans, motifs)
+  }
 
   new_prepared_motif_args(
     glycans = glycans,
@@ -85,6 +91,7 @@ prepare_motif_args <- function(
     ignore_linkages = ignore_linkages,
     strict_sub = strict_sub,
     match_degree = match_degree,
+    mode = mode,
     single_motif = single_motif
   )
 }
@@ -294,27 +301,29 @@ new_prepared_motif_args <- function(
   ignore_linkages,
   strict_sub,
   match_degree,
+  mode,
   single_motif
 ) {
   common_args <- list(
     glycans = glycans,
     ignore_linkages = ignore_linkages,
     strict_sub = strict_sub,
-    match_degree = match_degree
+    match_degree = match_degree,
+    mode = mode
   )
 
   if (single_motif) {
     return(c(
       common_args["glycans"],
       list(motif = motifs, alignment = alignments),
-      common_args[c("ignore_linkages", "strict_sub", "match_degree")]
+      common_args[c("ignore_linkages", "strict_sub", "match_degree", "mode")]
     ))
   }
 
   c(
     common_args["glycans"],
     list(motifs = motifs, alignments = alignments),
-    common_args[c("ignore_linkages", "strict_sub", "match_degree")]
+    common_args[c("ignore_linkages", "strict_sub", "match_degree", "mode")]
   )
 }
 
@@ -663,6 +672,7 @@ apply_single_motif_to_glycans <- function(
   ignore_linkages,
   strict_sub,
   match_degree,
+  mode,
   single_glycan_func,
   smap_func
 ) {
@@ -695,7 +705,8 @@ apply_single_motif_to_glycans <- function(
     alignment,
     ignore_linkages,
     strict_sub,
-    match_degree
+    match_degree,
+    mode
   )
 }
 
@@ -786,7 +797,8 @@ apply_motifs_to_glycans <- function(
   glycan_names,
   motif_names,
   strict_sub,
-  match_degree
+  match_degree,
+  mode
 ) {
   # Generic function to apply multiple motifs to multiple glycans
   # single_motif_func should be either have_motif_ or count_motif_
@@ -812,7 +824,8 @@ apply_motifs_to_glycans <- function(
       alignment = alignments[[.y]],
       ignore_linkages = ignore_linkages,
       strict_sub = strict_sub,
-      match_degree = match_degree_list[[.y]]
+      match_degree = match_degree_list[[.y]],
+      mode = mode
     )
   )
 

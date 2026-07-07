@@ -13,7 +13,8 @@
   alignment = "substructure",
   ignore_linkages = FALSE,
   strict_sub = TRUE,
-  match_degree = NULL
+  match_degree = NULL,
+  mode = c("strict", "lenient")
 )
 
 .g_count_motif(
@@ -22,7 +23,8 @@
   alignment = "substructure",
   ignore_linkages = FALSE,
   strict_sub = TRUE,
-  match_degree = NULL
+  match_degree = NULL,
+  mode = c("strict", "lenient")
 )
 
 .g_match_motif(
@@ -31,7 +33,8 @@
   alignment = "substructure",
   ignore_linkages = FALSE,
   strict_sub = TRUE,
-  match_degree = NULL
+  match_degree = NULL,
+  mode = c("strict", "lenient")
 )
 }
 \arguments{
@@ -50,6 +53,10 @@ strictly.}
 \item{match_degree}{A logical vector indicating which motif nodes must match
 the glycan's in- and out-degree exactly. A scalar is recycled to the
 number of motif nodes.}
+
+\item{mode}{Matching mode. \code{"strict"} preserves the default behavior;
+\code{"lenient"} treats glycan-side unknowns as compatible with more specific
+motif fields.}
 }
 \value{
 \itemize{
@@ -66,7 +73,7 @@ objects from \code{\link[glyrepr:get_structure_graphs]{glyrepr::get_structure_gr
 \details{
 These functions do no validation, parsing, naming, or monosaccharide-type
 conversion. Callers must provide valid, already-compatible graph objects.
-In particular, when matching a generic motif graph, callers must pass a
+In strict mode, when matching a generic motif graph, callers must pass a
 glycan graph whose \code{mono} vertex attributes have already been converted to
 the compatible generic representation.
 

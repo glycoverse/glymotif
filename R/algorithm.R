@@ -1,4 +1,8 @@
-colorize_graphs <- function(glycan, motif) {
+colorize_graphs <- function(glycan, motif, mode = "strict") {
+  if (mode == "lenient") {
+    return(list(glycan_colors = NULL, motif_colors = NULL))
+  }
+
   # Prepare VF2 color vectors from the "mono" vertex attributes without
   # mutating the input graphs.
   glycan_monos <- igraph::V(glycan)$mono
@@ -98,7 +102,8 @@ core_alignment_root_can_match <- function(
   glycan,
   motif,
   alignment,
-  strict_sub
+  strict_sub,
+  mode = "strict"
 ) {
   if (alignment != "core") {
     return(TRUE)
@@ -112,7 +117,8 @@ core_alignment_root_can_match <- function(
     igraph::vertex_attr(glycan, "sub", index = glycan_core),
     igraph::vertex_attr(motif, "mono", index = motif_core),
     igraph::vertex_attr(motif, "sub", index = motif_core),
-    strict_sub = strict_sub
+    strict_sub = strict_sub,
+    mode = mode
   )
 }
 
@@ -363,6 +369,7 @@ is_valid_result <- function(
   ignore_linkages,
   strict_sub = TRUE,
   match_degree = NULL,
+  mode = "strict",
   context = NULL
 ) {
   # Optimized early exit using most selective checks first
@@ -390,7 +397,8 @@ is_valid_result <- function(
       glycan,
       motif,
       context = context,
-      strict_sub = strict_sub
+      strict_sub = strict_sub,
+      mode = mode
     )
   ) {
     return(FALSE)
@@ -411,10 +419,10 @@ is_valid_result <- function(
   # Only check linkages and anomer if linkages are not ignored
   # These are the most expensive checks, so do them last
   if (!ignore_linkages) {
-    if (!linkage_check(r, glycan, motif, context = context)) {
+    if (!linkage_check(r, glycan, motif, context = context, mode = mode)) {
       return(FALSE)
     }
-    if (!anomer_check(r, glycan, motif, context = context)) {
+    if (!anomer_check(r, glycan, motif, context = context, mode = mode)) {
       return(FALSE)
     }
   }
@@ -438,6 +446,7 @@ residue_check <- function(
   glycan = NULL,
   motif = NULL,
   strict_sub,
+  mode = "strict",
   context = NULL
 ) {
   if (!is.null(context)) {
@@ -458,7 +467,8 @@ residue_check <- function(
       glycan_subs[[i]],
       motif_monos[[i]],
       motif_subs[[i]],
-      strict_sub
+      strict_sub,
+      mode
     )
   })
 }
@@ -481,7 +491,8 @@ residue_check <- function(
 resolve_linkage_match_mode <- function(
   glycan,
   motif_has_linkages,
-  ignore_linkages
+  ignore_linkages,
+  mode = "strict"
 ) {
   # Unlinked motifs are linkage-agnostic: once mono/sub/alignment checks pass,
   # wildcard linkage checks cannot reject additional candidates.
@@ -491,7 +502,7 @@ resolve_linkage_match_mode <- function(
 
   # A linked motif cannot match an unlinked glycan. Returning "none" lets callers
   # bypass VF2 entirely and return the empty result for their output type.
-  if (!graph_has_linkages(glycan)) {
+  if (mode == "strict" && !graph_has_linkages(glycan)) {
     return("none")
   }
 
@@ -597,7 +608,7 @@ degree_check <- function(
 }
 
 
-match_sub <- function(glycan_sub, motif_sub, strict_sub) {
+match_sub <- function(glycan_sub, motif_sub, strict_sub, mode = "strict") {
   # Handle unstrict matching:
   if (!strict_sub && motif_sub == "") {
     return(TRUE)
@@ -622,14 +633,14 @@ match_sub <- function(glycan_sub, motif_sub, strict_sub) {
   # Check if all motif substituents are matched
   motif_matched <- purrr::map_lgl(motif_subs, function(m_sub) {
     any(purrr::map_lgl(glycan_subs, function(g_sub) {
-      match_single_sub(g_sub, m_sub)
+      match_single_sub(g_sub, m_sub, mode = mode)
     }))
   })
 
   # Check if all glycan substituents are matched (unless motif has wildcards)
   glycan_matched <- purrr::map_lgl(glycan_subs, function(g_sub) {
     any(purrr::map_lgl(motif_subs, function(m_sub) {
-      match_single_sub(g_sub, m_sub)
+      match_single_sub(g_sub, m_sub, mode = mode)
     }))
   })
 
@@ -652,11 +663,12 @@ match_residue <- function(
   glycan_sub,
   motif_mono,
   motif_sub,
-  strict_sub
+  strict_sub,
+  mode = "strict"
 ) {
   if (
-    glycan_mono == motif_mono &&
-      match_sub(glycan_sub, motif_sub, strict_sub)
+    match_mono(glycan_mono, motif_mono, mode) &&
+      match_sub(glycan_sub, motif_sub, strict_sub, mode)
   ) {
     return(TRUE)
   }
@@ -666,11 +678,42 @@ match_residue <- function(
   }
 
   built_in <- decompose_builtin_modification(glycan_mono)
-  if (is.null(built_in) || built_in$mono != motif_mono) {
+  if (is.null(built_in) || !match_mono(built_in$mono, motif_mono, mode)) {
     return(FALSE)
   }
 
-  match_sub(combine_subs(built_in$sub, glycan_sub), motif_sub, strict_sub)
+  match_sub(combine_subs(built_in$sub, glycan_sub), motif_sub, strict_sub, mode)
+}
+
+#' Match a Glycan Monosaccharide to a Motif Monosaccharide
+#'
+#' @param glycan_mono Glycan monosaccharide name.
+#' @param motif_mono Motif monosaccharide name.
+#' @param mode Matching mode.
+#'
+#' @return A logical scalar.
+#' @noRd
+match_mono <- function(glycan_mono, motif_mono, mode = "strict") {
+  if (glycan_mono == motif_mono) {
+    return(TRUE)
+  }
+
+  if (mode != "lenient") {
+    return(FALSE)
+  }
+
+  glycan_type <- glyrepr::get_mono_type(glycan_mono)
+  motif_type <- glyrepr::get_mono_type(motif_mono)
+
+  if (glycan_type == "generic" && motif_type == "concrete") {
+    return(glycan_mono == glyrepr::convert_to_generic(motif_mono))
+  }
+
+  if (glycan_type == "concrete" && motif_type == "generic") {
+    return(glyrepr::convert_to_generic(glycan_mono) == motif_mono)
+  }
+
+  FALSE
 }
 
 
@@ -739,7 +782,7 @@ combine_subs <- function(implicit_sub, explicit_sub) {
 }
 
 # Helper function to match a single substituent (handles obscure linkages)
-match_single_sub <- function(glycan_sub, motif_sub) {
+match_single_sub <- function(glycan_sub, motif_sub, mode = "strict") {
   # Extract position and substituent parts
   # Format: "3Me", "6S", "?Me", "?S", etc.
 
@@ -751,7 +794,9 @@ match_single_sub <- function(glycan_sub, motif_sub) {
   glycan_rest <- stringr::str_sub(glycan_sub, 2)
 
   pos_match <- function(motif_pos, glycan_pos) {
-    motif_pos == "?" || motif_pos == glycan_pos
+    motif_pos == "?" ||
+      (mode == "lenient" && glycan_pos == "?") ||
+      motif_pos == glycan_pos
   }
   sub_match <- function(motif_rest, glycan_rest) {
     motif_rest == glycan_rest
@@ -761,7 +806,13 @@ match_single_sub <- function(glycan_sub, motif_sub) {
 }
 
 
-linkage_check <- function(r, glycan = NULL, motif = NULL, context = NULL) {
+linkage_check <- function(
+  r,
+  glycan = NULL,
+  motif = NULL,
+  context = NULL,
+  mode = "strict"
+) {
   if (is.null(context)) {
     edges <- get_corresponding_edges(r, glycan, motif)
     glycan_linkages <- edges$glycan$linkage
@@ -779,7 +830,9 @@ linkage_check <- function(r, glycan = NULL, motif = NULL, context = NULL) {
     motif_linkages <- context$motif_linkages
   }
   for (i in seq_along(glycan_linkages)) {
-    if (!match_linkage(glycan_linkages[[i]], motif_linkages[[i]])) {
+    if (
+      !match_linkage(glycan_linkages[[i]], motif_linkages[[i]], mode = mode)
+    ) {
       return(FALSE)
     }
   }
@@ -807,19 +860,35 @@ get_corresponding_edges <- function(r, glycan, motif) {
 }
 
 
-match_linkage <- function(glycan_linkage, motif_linkage) {
+match_linkage <- function(glycan_linkage, motif_linkage, mode = "strict") {
   gl <- parse_linkage(glycan_linkage)
   ml <- parse_linkage(motif_linkage)
 
   anomer_ok <- function(gl, ml) {
-    ml[["anomer"]] == "?" || ml[["anomer"]] == gl[["anomer"]]
+    ml[["anomer"]] == "?" ||
+      (mode == "lenient" && gl[["anomer"]] == "?") ||
+      ml[["anomer"]] == gl[["anomer"]]
   }
   pos1_ok <- function(gl, ml) {
-    ml[["pos1"]] == "?" || ml[["pos1"]] == gl[["pos1"]]
+    ml[["pos1"]] == "?" ||
+      (mode == "lenient" && gl[["pos1"]] == "?") ||
+      ml[["pos1"]] == gl[["pos1"]]
   }
   pos2_ok <- function(gl, ml) {
-    ml[["pos2"]] == "?" ||
-      all(parse_pos2(gl[["pos2"]]) %in% parse_pos2(ml[["pos2"]]))
+    glycan_pos2 <- parse_pos2(gl[["pos2"]])
+    motif_pos2 <- parse_pos2(ml[["pos2"]])
+
+    if (any(motif_pos2 == "?")) {
+      return(TRUE)
+    }
+    if (mode == "lenient" && any(glycan_pos2 == "?")) {
+      return(TRUE)
+    }
+    if (mode == "lenient") {
+      return(any(glycan_pos2 %in% motif_pos2))
+    }
+
+    all(glycan_pos2 %in% motif_pos2)
   }
 
   anomer_ok(gl, ml) && pos1_ok(gl, ml) && pos2_ok(gl, ml)
@@ -844,7 +913,13 @@ parse_pos2 <- function(pos2) {
 }
 
 
-anomer_check <- function(r, glycan = NULL, motif = NULL, context = NULL) {
+anomer_check <- function(
+  r,
+  glycan = NULL,
+  motif = NULL,
+  context = NULL,
+  mode = "strict"
+) {
   if (is.null(context)) {
     glycan_core <- core_node(glycan)
     motif_core <- core_node(motif)
@@ -852,30 +927,30 @@ anomer_check <- function(r, glycan = NULL, motif = NULL, context = NULL) {
 
     if (matched_g_node == glycan_core) {
       # This means two cores are matched.
-      match_anomer(glycan$anomer, motif$anomer)
+      match_anomer(glycan$anomer, motif$anomer, mode = mode)
     } else {
       # The motif anomer should match a linkage in the glycan.
       linkage <- igraph::incident(glycan, matched_g_node, mode = "in")$linkage
       linkage_anomer <- stringr::str_split_1(linkage, "-")[[1]]
-      match_anomer(linkage_anomer, motif$anomer)
+      match_anomer(linkage_anomer, motif$anomer, mode = mode)
     }
   } else {
     matched_g_node <- r[[context$motif_core]]
 
     if (matched_g_node == context$glycan_core) {
       # This means two cores are matched.
-      match_anomer(context$glycan_anomer, context$motif_anomer)
+      match_anomer(context$glycan_anomer, context$motif_anomer, mode = mode)
     } else {
       # The motif anomer should match a linkage in the glycan.
       linkage <- context$glycan_incoming_linkages[[matched_g_node]]
       linkage_anomer <- stringr::str_split_1(linkage, "-")[[1]]
-      match_anomer(linkage_anomer, context$motif_anomer)
+      match_anomer(linkage_anomer, context$motif_anomer, mode = mode)
     }
   }
 }
 
 
-match_anomer <- function(glycan_anomer, motif_anomer) {
+match_anomer <- function(glycan_anomer, motif_anomer, mode = "strict") {
   # Check if the anomer of the glycan and motif are matched.
   # - "??" in motif will match any anomer and position in glycan.
   # - "?1" in motif will match any anomer at position 1 in glycan.
@@ -885,10 +960,14 @@ match_anomer <- function(glycan_anomer, motif_anomer) {
   ma <- parse_anomer(motif_anomer)
 
   anomer_ok <- function(ga, ma) {
-    ma[["anomer"]] == "?" || ma[["anomer"]] == ga[["anomer"]]
+    ma[["anomer"]] == "?" ||
+      (mode == "lenient" && ga[["anomer"]] == "?") ||
+      ma[["anomer"]] == ga[["anomer"]]
   }
   position_ok <- function(ga, ma) {
-    ma[["pos"]] == "?" || ma[["pos"]] == ga[["pos"]]
+    ma[["pos"]] == "?" ||
+      (mode == "lenient" && ga[["pos"]] == "?") ||
+      ma[["pos"]] == ga[["pos"]]
   }
 
   anomer_ok(ga, ma) && position_ok(ga, ma)
