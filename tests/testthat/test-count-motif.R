@@ -4,6 +4,17 @@ test_that("count motifs in glycan", {
   expect_equal(count_motif(glycan, motif), 2L)
 })
 
+test_that("optional count_motif arguments must be named", {
+  glycan <- glyrepr::o_glycan_core_1()
+  motif <- "Gal(b1-3)GalNAc(a1-"
+
+  expect_error(
+    count_motif(glycan, motif, "whole"),
+    "must be empty"
+  )
+  expect_equal(count_motif(glycan, motif, alignment = "whole"), 1L)
+})
+
 
 test_that("count_motif supports multiple glycan structure formats", {
   # Test IUPAC-condensed format
@@ -60,6 +71,20 @@ test_that("count_motifs works with multiple motifs", {
   expect_equal(as.integer(result[1, 2]), 2L) # Gal(b1-
   expect_equal(as.integer(result[2, 1]), 1L) # Gal(b1-3)GalNAc(b1-
   expect_equal(as.integer(result[2, 2]), 1L) # Gal(b1-
+})
+
+test_that("optional count_motifs arguments must be named", {
+  glycan <- glyrepr::o_glycan_core_1()
+  motifs <- c("Gal(b1-3)GalNAc(a1-", "Gal(b1-")
+
+  expect_error(
+    count_motifs(glycan, motifs, "whole"),
+    "must be empty"
+  )
+
+  result <- count_motifs(glycan, motifs, alignments = "whole")
+  expect_true(is.matrix(result))
+  expect_equal(ncol(result), 2L)
 })
 
 

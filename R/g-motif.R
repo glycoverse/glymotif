@@ -7,6 +7,8 @@
 #'
 #' @param glycan_graph An igraph glycan graph.
 #' @param motif_graph An igraph motif graph.
+#' @param ... These dots must be empty and are used only to force optional
+#'   arguments to be supplied by name.
 #' @param alignment A character scalar: `"substructure"`, `"core"`,
 #'   `"terminal"`, or `"whole"`.
 #' @param ignore_linkages A logical scalar. If `TRUE`, linkages are ignored.
@@ -43,12 +45,15 @@ NULL
 .g_have_motif <- function(
   glycan_graph,
   motif_graph,
+  ...,
   alignment = "substructure",
   ignore_linkages = FALSE,
   strict_sub = TRUE,
   match_degree = NULL,
   mode = c("strict", "lenient")
 ) {
+  rlang::check_dots_empty()
+
   apply_single_motif_to_graph(
     glycan_graph = glycan_graph,
     motif_graph = motif_graph,
@@ -66,12 +71,15 @@ NULL
 .g_count_motif <- function(
   glycan_graph,
   motif_graph,
+  ...,
   alignment = "substructure",
   ignore_linkages = FALSE,
   strict_sub = TRUE,
   match_degree = NULL,
   mode = c("strict", "lenient")
 ) {
+  rlang::check_dots_empty()
+
   apply_single_motif_to_graph(
     glycan_graph = glycan_graph,
     motif_graph = motif_graph,
@@ -89,12 +97,15 @@ NULL
 .g_match_motif <- function(
   glycan_graph,
   motif_graph,
+  ...,
   alignment = "substructure",
   ignore_linkages = FALSE,
   strict_sub = TRUE,
   match_degree = NULL,
   mode = c("strict", "lenient")
 ) {
+  rlang::check_dots_empty()
+
   apply_single_motif_to_graph(
     glycan_graph = glycan_graph,
     motif_graph = motif_graph,

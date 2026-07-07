@@ -4,7 +4,7 @@
 \alias{extract_motif}
 \title{Extract All Substructures (Motifs)}
 \usage{
-extract_motif(glycans, max_size = 3)
+extract_motif(glycans, ..., max_size = 3)
 }
 \arguments{
 \item{glycans}{One of:
@@ -12,6 +12,9 @@ extract_motif(glycans, max_size = 3)
 \item A \code{\link[glyrepr:glycan_structure]{glyrepr::glycan_structure()}} vector.
 \item A glycan structure string vector. All formats supported by \code{\link[glyparse:auto_parse]{glyparse::auto_parse()}} are accepted.
 }}
+
+\item{...}{These dots must be empty and are used only to force optional
+arguments to be supplied by name.}
 
 \item{max_size}{The maximum number of monosaccharides in the extracted motifs. Default is 3.
 Note that setting this value very large can be computationally expensive.

@@ -18,6 +18,20 @@ test_that("view_motif accepts structure strings", {
   expect_s3_class(result, "ggplot")
 })
 
+test_that("optional view_motif arguments must be named", {
+  glycan <- glyrepr::o_glycan_core_1()
+  motif <- glyparse::parse_iupac_condensed("Gal(b1-3)GalNAc(a1-")
+
+  expect_error(
+    view_motif(glycan, motif, "whole"),
+    "must be empty"
+  )
+
+  result <- suppressMessages(view_motif(glycan, motif, alignment = "whole"))
+  expect_s3_class(result, "glydraw_cartoon")
+  expect_s3_class(result, "ggplot")
+})
+
 test_that("view_motif returns an unhighlighted plot when no match is found", {
   glycan <- glyrepr::n_glycan_core()
   motif <- glyparse::parse_iupac_condensed("Gal(b1-3)GalNAc(a1-")

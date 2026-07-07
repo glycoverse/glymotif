@@ -89,12 +89,15 @@
 match_motif <- function(
   glycans,
   motif,
+  ...,
   alignment = NULL,
   ignore_linkages = FALSE,
   strict_sub = TRUE,
   match_degree = NULL,
   mode = c("strict", "lenient")
 ) {
+  rlang::check_dots_empty()
+
   # Store input names before processing
   glycan_names <- names(glycans)
 
@@ -125,12 +128,15 @@ match_motif <- function(
 match_motifs <- function(
   glycans,
   motifs,
+  ...,
   alignments = NULL,
   ignore_linkages = FALSE,
   strict_sub = TRUE,
   match_degree = NULL,
   mode = c("strict", "lenient")
 ) {
+  rlang::check_dots_empty()
+
   # Validate glycans first (must be glycan_structure)
   .assert_glycan_structure(glycans, "glycans")
 

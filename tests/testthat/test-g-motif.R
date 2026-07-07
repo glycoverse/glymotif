@@ -40,6 +40,36 @@ test_that(".g_* motif functions support matching options", {
   )
 })
 
+test_that("optional .g_* motif arguments must be named", {
+  glycan <- glyrepr::as_glycan_structure("Gal(b1-3)GalNAc(a1-")
+  motif <- glyrepr::as_glycan_structure("Gal(b1-3)GalNAc(a1-")
+  glycan_graph <- glyrepr::get_structure_graphs(glycan)
+  motif_graph <- glyrepr::get_structure_graphs(motif)
+
+  expect_error(
+    .g_have_motif(glycan_graph, motif_graph, "whole"),
+    "must be empty"
+  )
+  expect_error(
+    .g_count_motif(glycan_graph, motif_graph, "whole"),
+    "must be empty"
+  )
+  expect_error(
+    .g_match_motif(glycan_graph, motif_graph, "whole"),
+    "must be empty"
+  )
+
+  expect_true(.g_have_motif(glycan_graph, motif_graph, alignment = "whole"))
+  expect_identical(
+    .g_count_motif(glycan_graph, motif_graph, alignment = "whole"),
+    1L
+  )
+  expect_equal(
+    .g_match_motif(glycan_graph, motif_graph, alignment = "whole"),
+    list(c(1L, 2L))
+  )
+})
+
 test_that(".g_* motif functions keep mono-type compatibility as caller contract", {
   glycan <- glyrepr::as_glycan_structure("Man(?1-")
   generic_motif <- glyrepr::as_glycan_structure("Hex(?1-")

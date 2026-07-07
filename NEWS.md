@@ -2,6 +2,7 @@
 
 * `add_motifs_lgl()` and `add_motifs_int()` are deprecated. Use `dplyr::mutate()` or `glyexp::mutate_var()` with `tibble::as_tibble(have_motifs(...))` or `tibble::as_tibble(count_motifs(...))` instead. (#44)
 * Add `mode = "lenient"` to motif matching functions so lower-information glycans can match more specific motifs while concrete mismatches still fail. (#45)
+* Require optional arguments after the required inputs to be supplied by name in motif matching, graph matching, extraction, and viewing helpers. (#48)
 
 # glymotif 0.16.1
 

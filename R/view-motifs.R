@@ -32,11 +32,14 @@
 view_motif <- function(
   glycan,
   motif,
+  ...,
   alignment = NULL,
   ignore_linkages = FALSE,
   strict_sub = TRUE,
   match_degree = NULL
 ) {
+  rlang::check_dots_empty()
+
   if (length(glycan) != 1) {
     cli::cli_abort(c(
       "Only one glycan can be visualized at a time.",
@@ -62,7 +65,7 @@ view_motif <- function(
   match_res <- match_motif(
     params$glycans,
     params$motif,
-    params$alignment,
+    alignment = params$alignment,
     ignore_linkages = params$ignore_linkages,
     strict_sub = params$strict_sub,
     match_degree = params$match_degree
