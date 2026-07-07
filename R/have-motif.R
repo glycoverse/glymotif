@@ -72,12 +72,14 @@
 #'
 #' `mode = "strict"` is the default and preserves the standard rule that
 #' glycans cannot be more obscure than motifs. For example,
-#' "Gal(?1-?)GalNAc(?1-" does not match "Gal(b1-3)GalNAc(a1-".
+#' glycan "Gal(?1-?)GalNAc(?1-" does not match motif "Gal(b1-3)GalNAc(a1-".
 #'
 #' `mode = "lenient"` treats obscure glycan-side monosaccharides, linkages,
 #' substituent positions, and reducing-end anomers as compatible with more
-#' specific motif fields. Concrete mismatches still fail: for example,
-#' "Gal(?1-6)GalNAc(a1-" does not match "Gal(b1-3)GalNAc(a1-".
+#' specific motif fields. In the lenient mode,
+#' glycan "Gal(?1-?)GalNAc(?1-" matches motif "Gal(b1-3)GalNAc(a1-".
+#' Concrete mismatches still fail: for example,
+#' glycan "Gal(?1-6)GalNAc(a1-" does not match motif "Gal(b1-3)GalNAc(a1-".
 #'
 #' # Alignment
 #'
