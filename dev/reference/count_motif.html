@@ -61,6 +61,7 @@ the <code>glycans</code> have the <code>motif</code>(s).</p><ul><li><p><code>cou
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">count_motif</span><span class="op">(</span></span>
 <span>  <span class="va">glycans</span>,</span>
 <span>  <span class="va">motif</span>,</span>
+<span>  <span class="va">...</span>,</span>
 <span>  alignment <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  ignore_linkages <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  strict_sub <span class="op">=</span> <span class="cn">TRUE</span>,</span>
@@ -71,6 +72,7 @@ the <code>glycans</code> have the <code>motif</code>(s).</p><ul><li><p><code>cou
 <span><span class="fu">count_motifs</span><span class="op">(</span></span>
 <span>  <span class="va">glycans</span>,</span>
 <span>  <span class="va">motifs</span>,</span>
+<span>  <span class="va">...</span>,</span>
 <span>  alignments <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  ignore_linkages <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  strict_sub <span class="op">=</span> <span class="cn">TRUE</span>,</span>
@@ -96,6 +98,11 @@ including IUPAC-condensed, WURCS, GlycoCT, and others.</p></li>
 <li><p>A GGM database motif name (use <code>db_motif_info() |&gt; dplyr::filter(source_id == "GGM")</code>
 to inspect resolvable motif names).</p></li>
 </ul></dd>
+
+
+<dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
+<dd><p>These dots must be empty and are used only to force optional
+arguments to be supplied by name.</p></dd>
 
 
 <dt id="arg-alignment">alignment<a class="anchor" aria-label="anchor" href="#arg-alignment"></a></dt>

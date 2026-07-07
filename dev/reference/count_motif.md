@@ -15,6 +15,7 @@ times the `glycans` have the `motif`(s).
 count_motif(
   glycans,
   motif,
+  ...,
   alignment = NULL,
   ignore_linkages = FALSE,
   strict_sub = TRUE,
@@ -25,6 +26,7 @@ count_motif(
 count_motifs(
   glycans,
   motifs,
+  ...,
   alignments = NULL,
   ignore_linkages = FALSE,
   strict_sub = TRUE,
@@ -61,6 +63,11 @@ count_motifs(
   - A GGM database motif name (use
     `db_motif_info() |> dplyr::filter(source_id == "GGM")` to inspect
     resolvable motif names).
+
+- ...:
+
+  These dots must be empty and are used only to force optional arguments
+  to be supplied by name.
 
 - alignment:
 

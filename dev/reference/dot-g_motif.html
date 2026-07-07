@@ -52,6 +52,7 @@ objects from <code><a href="https://glycoverse.github.io/glyrepr/reference/get_s
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">.g_have_motif</span><span class="op">(</span></span>
 <span>  <span class="va">glycan_graph</span>,</span>
 <span>  <span class="va">motif_graph</span>,</span>
+<span>  <span class="va">...</span>,</span>
 <span>  alignment <span class="op">=</span> <span class="st">"substructure"</span>,</span>
 <span>  ignore_linkages <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  strict_sub <span class="op">=</span> <span class="cn">TRUE</span>,</span>
@@ -62,6 +63,7 @@ objects from <code><a href="https://glycoverse.github.io/glyrepr/reference/get_s
 <span><span class="fu">.g_count_motif</span><span class="op">(</span></span>
 <span>  <span class="va">glycan_graph</span>,</span>
 <span>  <span class="va">motif_graph</span>,</span>
+<span>  <span class="va">...</span>,</span>
 <span>  alignment <span class="op">=</span> <span class="st">"substructure"</span>,</span>
 <span>  ignore_linkages <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  strict_sub <span class="op">=</span> <span class="cn">TRUE</span>,</span>
@@ -72,6 +74,7 @@ objects from <code><a href="https://glycoverse.github.io/glyrepr/reference/get_s
 <span><span class="fu">.g_match_motif</span><span class="op">(</span></span>
 <span>  <span class="va">glycan_graph</span>,</span>
 <span>  <span class="va">motif_graph</span>,</span>
+<span>  <span class="va">...</span>,</span>
 <span>  alignment <span class="op">=</span> <span class="st">"substructure"</span>,</span>
 <span>  ignore_linkages <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  strict_sub <span class="op">=</span> <span class="cn">TRUE</span>,</span>
@@ -90,6 +93,11 @@ objects from <code><a href="https://glycoverse.github.io/glyrepr/reference/get_s
 
 <dt id="arg-motif-graph">motif_graph<a class="anchor" aria-label="anchor" href="#arg-motif-graph"></a></dt>
 <dd><p>An igraph motif graph.</p></dd>
+
+
+<dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
+<dd><p>These dots must be empty and are used only to force optional
+arguments to be supplied by name.</p></dd>
 
 
 <dt id="arg-alignment">alignment<a class="anchor" aria-label="anchor" href="#arg-alignment"></a></dt>

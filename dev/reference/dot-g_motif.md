@@ -14,6 +14,7 @@ for package code that already has compatible igraph objects from
 .g_have_motif(
   glycan_graph,
   motif_graph,
+  ...,
   alignment = "substructure",
   ignore_linkages = FALSE,
   strict_sub = TRUE,
@@ -24,6 +25,7 @@ for package code that already has compatible igraph objects from
 .g_count_motif(
   glycan_graph,
   motif_graph,
+  ...,
   alignment = "substructure",
   ignore_linkages = FALSE,
   strict_sub = TRUE,
@@ -34,6 +36,7 @@ for package code that already has compatible igraph objects from
 .g_match_motif(
   glycan_graph,
   motif_graph,
+  ...,
   alignment = "substructure",
   ignore_linkages = FALSE,
   strict_sub = TRUE,
@@ -51,6 +54,11 @@ for package code that already has compatible igraph objects from
 - motif_graph:
 
   An igraph motif graph.
+
+- ...:
+
+  These dots must be empty and are used only to force optional arguments
+  to be supplied by name.
 
 - alignment:
 

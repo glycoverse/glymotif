@@ -24,7 +24,7 @@ motifs should be matched.
 ## Usage
 
 ``` r
-extract_branch_motif(glycans, including_core = FALSE)
+extract_branch_motif(glycans, ..., including_core = FALSE)
 ```
 
 ## Arguments
@@ -40,6 +40,11 @@ extract_branch_motif(glycans, including_core = FALSE)
   - A glycan structure string vector. All formats supported by
     [`glyparse::auto_parse()`](https://glycoverse.github.io/glyparse/reference/auto_parse.html)
     are accepted.
+
+- ...:
+
+  These dots must be empty and are used only to force optional arguments
+  to be supplied by name.
 
 - including_core:
 

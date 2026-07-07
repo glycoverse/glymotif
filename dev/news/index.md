@@ -16,6 +16,9 @@
   lower-information glycans can match more specific motifs while
   concrete mismatches still fail.
   ([\#45](https://github.com/glycoverse/glymotif/issues/45))
+- Require optional arguments after the required inputs to be supplied by
+  name in motif matching, graph matching, extraction, and viewing
+  helpers. ([\#48](https://github.com/glycoverse/glymotif/issues/48))
 
 ## glymotif 0.16.1
 
