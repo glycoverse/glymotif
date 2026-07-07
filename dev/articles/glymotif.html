@@ -353,7 +353,7 @@ motifs, and
 all available sources.</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/db_motif_info.html">db_motif_info</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 2,826 × 6</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 2,843 × 6</span></span></span>
 <span><span class="co">#&gt;    source      source_id accession name               alignment glycan_structure</span></span>
 <span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;struct&gt;</span>        </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> CCRC Motifs CCRC      000019    Fuc(a1-2)Gal(b1-4… substruc… <span style="color: #FF0000;">Fuc</span>(<span style="color: #B2B2B2;">a1-2</span>)<span style="color: #FFD700;">Gal</span>(<span style="color: #B2B2B2;">b1</span>…</span></span>
@@ -366,7 +366,7 @@ all available sources.</p>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> CCRC Motifs CCRC      000046    Fuc(a1-2)[Gal(a1-… substruc… <span style="color: #FF0000;">Fuc</span>(<span style="color: #B2B2B2;">a1-2</span>)[<span style="color: #FFD700;">Gal</span>(<span style="color: #B2B2B2;">a</span>…</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> CCRC Motifs CCRC      000033    Neu5Ac(a2-3)Gal(b… substruc… <span style="color: #AF5FAF;">Neu5Ac</span>(<span style="color: #B2B2B2;">a2-3</span>)<span style="color: #FFD700;">Gal</span>…</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> CCRC Motifs CCRC      000109    Neu5Ac(a2-8)Neu5A… core      <span style="color: #AF5FAF;">Neu5Ac</span>(<span style="color: #B2B2B2;">a2-8</span>)<span style="color: #AF5FAF;">Neu</span>…</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 2,816 more rows</span></span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 2,833 more rows</span></span></span></code></pre></div>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/distinct.html" class="external-link">distinct</a></span><span class="op">(</span><span class="fu"><a href="../reference/db_motif_info.html">db_motif_info</a></span><span class="op">(</span><span class="op">)</span>, <span class="va">source_id</span>, <span class="va">source</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 12 × 2</span></span></span>
