@@ -2,6 +2,21 @@
 
 ## glymotif (development version)
 
+### Breaking changes
+
+- Require optional arguments after the required inputs to be supplied by
+  name in motif matching, graph matching, extraction, and viewing
+  helpers. ([\#48](https://github.com/glycoverse/glymotif/issues/48))
+
+### New features
+
+- Add `mode = "lenient"` to motif matching functions so
+  lower-information glycans can match more specific motifs while
+  concrete mismatches still fail.
+  ([\#45](https://github.com/glycoverse/glymotif/issues/45))
+
+### Minor improvements and bug fixes
+
 - [`add_motifs_lgl()`](https://glycoverse.github.io/glymotif/dev/reference/add_motifs_int.md)
   and
   [`add_motifs_int()`](https://glycoverse.github.io/glymotif/dev/reference/add_motifs_int.md)
@@ -12,13 +27,6 @@
   with `tibble::as_tibble(have_motifs(...))` or
   `tibble::as_tibble(count_motifs(...))` instead.
   ([\#44](https://github.com/glycoverse/glymotif/issues/44))
-- Add `mode = "lenient"` to motif matching functions so
-  lower-information glycans can match more specific motifs while
-  concrete mismatches still fail.
-  ([\#45](https://github.com/glycoverse/glymotif/issues/45))
-- Require optional arguments after the required inputs to be supplied by
-  name in motif matching, graph matching, extraction, and viewing
-  helpers. ([\#48](https://github.com/glycoverse/glymotif/issues/48))
 
 ## glymotif 0.16.1
 

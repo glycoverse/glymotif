@@ -38,11 +38,20 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="development version" id="glymotif-development-version">glymotif (development version)<a class="anchor" aria-label="anchor" href="#glymotif-development-version"></a></h2>
+<div class="section level3">
+<h3 id="breaking-changes-development-version">Breaking changes<a class="anchor" aria-label="anchor" href="#breaking-changes-development-version"></a></h3>
+<ul><li>Require optional arguments after the required inputs to be supplied by name in motif matching, graph matching, extraction, and viewing helpers. (<a href="https://github.com/glycoverse/glymotif/issues/48" class="external-link">#48</a>)</li>
+</ul></div>
+<div class="section level3">
+<h3 id="new-features-development-version">New features<a class="anchor" aria-label="anchor" href="#new-features-development-version"></a></h3>
+<ul><li>Add <code>mode = "lenient"</code> to motif matching functions so lower-information glycans can match more specific motifs while concrete mismatches still fail. (<a href="https://github.com/glycoverse/glymotif/issues/45" class="external-link">#45</a>)</li>
+</ul></div>
+<div class="section level3">
+<h3 id="minor-improvements-and-bug-fixes-development-version">Minor improvements and bug fixes<a class="anchor" aria-label="anchor" href="#minor-improvements-and-bug-fixes-development-version"></a></h3>
 <ul><li>
 <code><a href="../reference/add_motifs_int.html">add_motifs_lgl()</a></code> and <code><a href="../reference/add_motifs_int.html">add_motifs_int()</a></code> are deprecated. Use <code><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">dplyr::mutate()</a></code> or <code><a href="https://glycoverse.github.io/glyexp/reference/mutate_obs.html" class="external-link">glyexp::mutate_var()</a></code> with <code>tibble::as_tibble(have_motifs(...))</code> or <code>tibble::as_tibble(count_motifs(...))</code> instead. (<a href="https://github.com/glycoverse/glymotif/issues/44" class="external-link">#44</a>)</li>
-<li>Add <code>mode = "lenient"</code> to motif matching functions so lower-information glycans can match more specific motifs while concrete mismatches still fail. (<a href="https://github.com/glycoverse/glymotif/issues/45" class="external-link">#45</a>)</li>
-<li>Require optional arguments after the required inputs to be supplied by name in motif matching, graph matching, extraction, and viewing helpers. (<a href="https://github.com/glycoverse/glymotif/issues/48" class="external-link">#48</a>)</li>
 </ul></div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.16.1" id="glymotif-0161">glymotif 0.16.1<a class="anchor" aria-label="anchor" href="#glymotif-0161"></a></h2>
 <div class="section level3">
