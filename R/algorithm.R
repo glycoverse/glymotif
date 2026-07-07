@@ -627,24 +627,50 @@ match_sub <- function(glycan_sub, motif_sub, strict_sub, mode = "strict") {
   glycan_subs <- glycan_subs[glycan_subs != ""]
   motif_subs <- motif_subs[motif_subs != ""]
 
-  # For strict matching: every motif substituent must match a glycan substituent
-  # and every glycan substituent must be matched by some motif substituent
+  has_one_to_one_sub_match(glycan_subs, motif_subs, mode = mode)
+}
 
-  # Check if all motif substituents are matched
-  motif_matched <- purrr::map_lgl(motif_subs, function(m_sub) {
-    any(purrr::map_lgl(glycan_subs, function(g_sub) {
+#' Check Whether Substituents Have a One-to-One Assignment
+#'
+#' @param glycan_subs Glycan substituent tokens.
+#' @param motif_subs Motif substituent tokens.
+#' @param mode Matching mode.
+#'
+#' @return A logical scalar.
+#' @noRd
+has_one_to_one_sub_match <- function(glycan_subs, motif_subs, mode = "strict") {
+  if (length(glycan_subs) != length(motif_subs)) {
+    return(FALSE)
+  }
+
+  if (length(glycan_subs) == 0L) {
+    return(TRUE)
+  }
+
+  candidates <- purrr::map(glycan_subs, function(g_sub) {
+    which(purrr::map_lgl(motif_subs, function(m_sub) {
       match_single_sub(g_sub, m_sub, mode = mode)
     }))
   })
 
-  # Check if all glycan substituents are matched (unless motif has wildcards)
-  glycan_matched <- purrr::map_lgl(glycan_subs, function(g_sub) {
-    any(purrr::map_lgl(motif_subs, function(m_sub) {
-      match_single_sub(g_sub, m_sub, mode = mode)
-    }))
-  })
+  if (any(lengths(candidates) == 0L)) {
+    return(FALSE)
+  }
 
-  all(motif_matched) && all(glycan_matched)
+  candidates <- candidates[order(lengths(candidates))]
+
+  assign_next_sub <- function(i, used) {
+    if (i > length(candidates)) {
+      return(TRUE)
+    }
+
+    available <- setdiff(candidates[[i]], used)
+    any(purrr::map_lgl(available, function(j) {
+      assign_next_sub(i + 1L, c(used, j))
+    }))
+  }
+
+  assign_next_sub(1L, integer())
 }
 
 

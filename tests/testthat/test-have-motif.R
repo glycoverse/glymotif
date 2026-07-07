@@ -1178,6 +1178,40 @@ test_that("lenient mode ignores obscure substituent linkages", {
   )
 })
 
+test_that("lenient mode matches substituents one-to-one", {
+  repeated_unknown_glycan <- glyparse::parse_iupac_condensed("Glc?Me(?1-")
+  graphs <- attr(repeated_unknown_glycan, "graphs")
+  graphs[[1]] <- igraph::set_vertex_attr(
+    graphs[[1]],
+    "sub",
+    value = "?Me,?Me"
+  )
+  attr(repeated_unknown_glycan, "graphs") <- graphs
+
+  single_unknown_glycan <- glyparse::parse_iupac_condensed("Glc?Me(?1-")
+
+  expect_true(have_motif(
+    single_unknown_glycan,
+    "Glc3Me(?1-",
+    mode = "lenient"
+  ))
+  expect_false(have_motif(
+    single_unknown_glycan,
+    "Glc3Me4Me(?1-",
+    mode = "lenient"
+  ))
+  expect_false(have_motif(
+    repeated_unknown_glycan,
+    "Glc3Me(?1-",
+    mode = "lenient"
+  ))
+  expect_true(have_motif(
+    repeated_unknown_glycan,
+    "Glc3Me4Me(?1-",
+    mode = "lenient"
+  ))
+})
+
 test_that("mode is validated", {
   expect_error(
     have_motif("Gal(?1-", "Gal(a1-", mode = "loose"),
