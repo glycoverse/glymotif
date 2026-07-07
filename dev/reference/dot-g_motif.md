@@ -17,7 +17,8 @@ for package code that already has compatible igraph objects from
   alignment = "substructure",
   ignore_linkages = FALSE,
   strict_sub = TRUE,
-  match_degree = NULL
+  match_degree = NULL,
+  mode = c("strict", "lenient")
 )
 
 .g_count_motif(
@@ -26,7 +27,8 @@ for package code that already has compatible igraph objects from
   alignment = "substructure",
   ignore_linkages = FALSE,
   strict_sub = TRUE,
-  match_degree = NULL
+  match_degree = NULL,
+  mode = c("strict", "lenient")
 )
 
 .g_match_motif(
@@ -35,7 +37,8 @@ for package code that already has compatible igraph objects from
   alignment = "substructure",
   ignore_linkages = FALSE,
   strict_sub = TRUE,
-  match_degree = NULL
+  match_degree = NULL,
+  mode = c("strict", "lenient")
 )
 ```
 
@@ -68,6 +71,12 @@ for package code that already has compatible igraph objects from
   in- and out-degree exactly. A scalar is recycled to the number of
   motif nodes.
 
+- mode:
+
+  Matching mode. `"strict"` preserves the default behavior; `"lenient"`
+  treats glycan-side unknowns as compatible with more specific motif
+  fields.
+
 ## Value
 
 - `.g_have_motif()` returns a logical scalar.
@@ -80,9 +89,9 @@ for package code that already has compatible igraph objects from
 
 These functions do no validation, parsing, naming, or
 monosaccharide-type conversion. Callers must provide valid,
-already-compatible graph objects. In particular, when matching a generic
-motif graph, callers must pass a glycan graph whose `mono` vertex
-attributes have already been converted to the compatible generic
+already-compatible graph objects. In strict mode, when matching a
+generic motif graph, callers must pass a glycan graph whose `mono`
+vertex attributes have already been converted to the compatible generic
 representation.
 
 These functions never call

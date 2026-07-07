@@ -12,6 +12,10 @@
   with `tibble::as_tibble(have_motifs(...))` or
   `tibble::as_tibble(count_motifs(...))` instead.
   ([\#44](https://github.com/glycoverse/glymotif/issues/44))
+- Add `mode = "lenient"` to motif matching functions so
+  lower-information glycans can match more specific motifs while
+  concrete mismatches still fail.
+  ([\#45](https://github.com/glycoverse/glymotif/issues/45))
 
 ## glymotif 0.16.1
 

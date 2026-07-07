@@ -40,7 +40,8 @@ match_motif(
   alignment = NULL,
   ignore_linkages = FALSE,
   strict_sub = TRUE,
-  match_degree = NULL
+  match_degree = NULL,
+  mode = c("strict", "lenient")
 )
 
 match_motifs(
@@ -49,7 +50,8 @@ match_motifs(
   alignments = NULL,
   ignore_linkages = FALSE,
   strict_sub = TRUE,
-  match_degree = NULL
+  match_degree = NULL,
+  mode = c("strict", "lenient")
 )
 ```
 
@@ -115,6 +117,13 @@ match_motifs(
   length equal to `motifs`; each element follows the same length rules.
   When `match_degree` is provided, `alignment` and `alignments` are
   silently ignored.
+
+- mode:
+
+  Matching mode. `"strict"` preserves the default behavior where glycans
+  cannot be more obscure than motifs. `"lenient"` treats glycan-side
+  obscure fields as compatible with more specific motif fields while
+  still rejecting concrete mismatches.
 
 - motifs:
 

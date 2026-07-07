@@ -55,7 +55,8 @@ objects from <code><a href="https://glycoverse.github.io/glyrepr/reference/get_s
 <span>  alignment <span class="op">=</span> <span class="st">"substructure"</span>,</span>
 <span>  ignore_linkages <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  strict_sub <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  match_degree <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  match_degree <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  mode <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"strict"</span>, <span class="st">"lenient"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">.g_count_motif</span><span class="op">(</span></span>
@@ -64,7 +65,8 @@ objects from <code><a href="https://glycoverse.github.io/glyrepr/reference/get_s
 <span>  alignment <span class="op">=</span> <span class="st">"substructure"</span>,</span>
 <span>  ignore_linkages <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  strict_sub <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  match_degree <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  match_degree <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  mode <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"strict"</span>, <span class="st">"lenient"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">.g_match_motif</span><span class="op">(</span></span>
@@ -73,7 +75,8 @@ objects from <code><a href="https://glycoverse.github.io/glyrepr/reference/get_s
 <span>  alignment <span class="op">=</span> <span class="st">"substructure"</span>,</span>
 <span>  ignore_linkages <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  strict_sub <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  match_degree <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  match_degree <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  mode <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"strict"</span>, <span class="st">"lenient"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -108,6 +111,12 @@ strictly.</p></dd>
 the glycan's in- and out-degree exactly. A scalar is recycled to the
 number of motif nodes.</p></dd>
 
+
+<dt id="arg-mode">mode<a class="anchor" aria-label="anchor" href="#arg-mode"></a></dt>
+<dd><p>Matching mode. <code>"strict"</code> preserves the default behavior;
+<code>"lenient"</code> treats glycan-side unknowns as compatible with more specific
+motif fields.</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
@@ -120,7 +129,7 @@ number of motif nodes.</p></dd>
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>These functions do no validation, parsing, naming, or monosaccharide-type
 conversion. Callers must provide valid, already-compatible graph objects.
-In particular, when matching a generic motif graph, callers must pass a
+In strict mode, when matching a generic motif graph, callers must pass a
 glycan graph whose <code>mono</code> vertex attributes have already been converted to
 the compatible generic representation.</p>
 <p>These functions never call <code><a href="https://glycoverse.github.io/glyrepr/reference/as_glycan_structure.html" class="external-link">glyrepr::as_glycan_structure()</a></code>.</p>
