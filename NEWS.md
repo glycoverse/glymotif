@@ -1,18 +1,22 @@
-# glymotif (development version)
+# glymotif 0.17.0
 
 ## Breaking changes
 
-
-* Require optional arguments after the required inputs to be supplied by name in motif matching, graph matching, extraction, and viewing helpers. (#48)
-
+* Motif matching, graph matching, extraction, and viewing helpers now require
+  optional arguments after the required inputs to be supplied by name; update
+  positional calls to use explicit argument names (#48).
 
 ## New features
 
-* Add `mode = "lenient"` to motif matching functions so lower-information glycans can match more specific motifs while concrete mismatches still fail. (#45)
+* Motif matching functions gain `mode = "lenient"` so lower-information glycans
+  can match more specific motifs while concrete mismatches still fail (#45).
 
 ## Minor improvements and bug fixes
 
-* `add_motifs_lgl()` and `add_motifs_int()` are deprecated. Use `dplyr::mutate()` or `glyexp::mutate_var()` with `tibble::as_tibble(have_motifs(...))` or `tibble::as_tibble(count_motifs(...))` instead. (#44)
+* `add_motifs_lgl()` and `add_motifs_int()` are deprecated. Use
+  `dplyr::mutate()` or `glyexp::mutate_var()` with
+  `tibble::as_tibble(have_motifs(...))` or
+  `tibble::as_tibble(count_motifs(...))` instead (#44).
 
 # glymotif 0.16.1
 
