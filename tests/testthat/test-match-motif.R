@@ -534,3 +534,18 @@ test_that("match_motifs returns trimmed IUPAC strings as outer list names for br
   # Names should end with the branch root linkage pattern
   expect_true(all(grepl("\\([a-z]1-$", names(result))))
 })
+
+# ========== Lenient Mode ==========
+test_that("match_motif supports lenient mode", {
+  glycan <- glyparse::parse_iupac_condensed("Hex(??-?)HexNAc(??-")
+  motif <- glyparse::parse_iupac_condensed("Gal(b1-3)GalNAc(a1-")
+
+  expect_match_motif_equal(
+    suppressWarnings(match_motif(glycan, motif)),
+    list(list())
+  )
+  expect_match_motif_equal(
+    match_motif(glycan, motif, mode = "lenient"),
+    list(list(c(1, 2)))
+  )
+})
