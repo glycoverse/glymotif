@@ -1,8 +1,18 @@
 # glymotif (development version)
 
-* `add_motifs_lgl()` and `add_motifs_int()` are deprecated. Use `dplyr::mutate()` or `glyexp::mutate_var()` with `tibble::as_tibble(have_motifs(...))` or `tibble::as_tibble(count_motifs(...))` instead. (#44)
-* Add `mode = "lenient"` to motif matching functions so lower-information glycans can match more specific motifs while concrete mismatches still fail. (#45)
+## Breaking changes
+
+
 * Require optional arguments after the required inputs to be supplied by name in motif matching, graph matching, extraction, and viewing helpers. (#48)
+
+
+## New features
+
+* Add `mode = "lenient"` to motif matching functions so lower-information glycans can match more specific motifs while concrete mismatches still fail. (#45)
+
+## Minor improvements and bug fixes
+
+* `add_motifs_lgl()` and `add_motifs_int()` are deprecated. Use `dplyr::mutate()` or `glyexp::mutate_var()` with `tibble::as_tibble(have_motifs(...))` or `tibble::as_tibble(count_motifs(...))` instead. (#44)
 
 # glymotif 0.16.1
 
@@ -165,7 +175,6 @@ We introduce the "dynamic motif" feature in this release. Instead of specifying 
 * Update the URL of GlycoMotif in the documentation of `all_motifs()`.
 * Remove old "N-glycans" vignette from README.
 
-
 # glymotif 0.7.0
 
 ## Breaking changes
@@ -259,7 +268,7 @@ We introduce the "dynamic motif" feature in this release. Instead of specifying 
 
 ## Minor improvements
 
-* Update the documentation to reflect the naming rules of the return values 
+* Update the documentation to reflect the naming rules of the return values
   of `have_motif()`, `have_motifs()`, `count_motif()`, and `count_motifs()`.
 
 # glymotif 0.3.0
@@ -272,7 +281,7 @@ We introduce the "dynamic motif" feature in this release. Instead of specifying 
 
 ## Minor improvements
 
-* Remove the `parallel` argument from `add_glycan_descriptions()`, `add_struct_descriptions()`, and `add_comp_descriptions()`. 
+* Remove the `parallel` argument from `add_glycan_descriptions()`, `add_struct_descriptions()`, and `add_comp_descriptions()`.
   We found it not very useful on a regular basis.
 * Update the vignette to reflect the new functions above.
 
@@ -294,12 +303,11 @@ We introduce the "dynamic motif" feature in this release. Instead of specifying 
   support multiple substituents in the motif,
   to align with the updates in `glyrepr` v0.5.0.
 
-
 # glymotif 0.2.0
 
 ## Bug fixes
 
-* Fixed monosaccharide type matching logic in `have_motif()`, `have_motifs()`, 
+* Fixed monosaccharide type matching logic in `have_motif()`, `have_motifs()`,
   `count_motif()`, and `count_motifs()`.
   - Generic glycans can no longer cause errors when compared with concrete motifs
   - Concrete glycans now properly match generic motifs (converted to generic first)
@@ -308,6 +316,6 @@ We introduce the "dynamic motif" feature in this release. Instead of specifying 
 
 ## Breaking changes
 
-* Note: While technically backward compatible in API, the behavior change in 
+* Note: While technically backward compatible in API, the behavior change in
   monosaccharide type matching may affect code that depended on the previous
   (incorrect) error-throwing or wrong-result behavior.
