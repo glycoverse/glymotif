@@ -28,8 +28,8 @@ value is named with the motif names.
 glymotif 0.16.0. Use \code{\link[=db_motif_info]{db_motif_info()}} to inspect database motifs instead.
 }
 \examples{
-get_motif_structure("N-Glycan core basic")
-get_motif_alignment("N-Glycan core basic")
+get_motif_structure("LacdiNAc")
+get_motif_alignment("LacdiNAc")
 
 get_motif_structure(c("O-Glycan core 1", "O-Glycan core 2"))
 get_motif_alignment(c("O-Glycan core 1", "O-Glycan core 2"))

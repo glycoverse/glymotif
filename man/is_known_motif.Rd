@@ -19,5 +19,5 @@ A logical vector.
 \code{\link[=db_motif_info]{db_motif_info()}} to inspect database motifs instead.
 }
 \examples{
-is_known_motif(c("N-Glycan core basic", "O-Glycan core 1", "unknown"))
+is_known_motif(c("O-Glycan core 1", "unknown"))
 }

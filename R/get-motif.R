@@ -153,7 +153,7 @@ db_motif_labels <- function(info) {
 #' @param name A character vector of motif names.
 #' @return A logical vector.
 #' @examples
-#' is_known_motif(c("N-Glycan core basic", "O-Glycan core 1", "unknown"))
+#' is_known_motif(c("O-Glycan core 1", "unknown"))
 #' @export
 is_known_motif <- function(name) {
   lifecycle::deprecate_warn("0.16.0", "is_known_motif()", "db_motif_info()")
@@ -179,8 +179,8 @@ is_known_motif <- function(name) {
 #' value is named with the motif names.
 #'
 #' @examples
-#' get_motif_structure("N-Glycan core basic")
-#' get_motif_alignment("N-Glycan core basic")
+#' get_motif_structure("LacdiNAc")
+#' get_motif_alignment("LacdiNAc")
 #'
 #' get_motif_structure(c("O-Glycan core 1", "O-Glycan core 2"))
 #' get_motif_alignment(c("O-Glycan core 1", "O-Glycan core 2"))
