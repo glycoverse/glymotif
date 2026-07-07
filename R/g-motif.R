@@ -15,11 +15,14 @@
 #' @param match_degree A logical vector indicating which motif nodes must match
 #'   the glycan's in- and out-degree exactly. A scalar is recycled to the
 #'   number of motif nodes.
+#' @param mode Matching mode. `"strict"` preserves the default behavior;
+#'   `"lenient"` treats glycan-side unknowns as compatible with more specific
+#'   motif fields.
 #'
 #' @details
 #' These functions do no validation, parsing, naming, or monosaccharide-type
 #' conversion. Callers must provide valid, already-compatible graph objects.
-#' In particular, when matching a generic motif graph, callers must pass a
+#' In strict mode, when matching a generic motif graph, callers must pass a
 #' glycan graph whose `mono` vertex attributes have already been converted to
 #' the compatible generic representation.
 #'
@@ -43,7 +46,8 @@ NULL
   alignment = "substructure",
   ignore_linkages = FALSE,
   strict_sub = TRUE,
-  match_degree = NULL
+  match_degree = NULL,
+  mode = c("strict", "lenient")
 ) {
   apply_single_motif_to_graph(
     glycan_graph = glycan_graph,
@@ -52,6 +56,7 @@ NULL
     ignore_linkages = ignore_linkages,
     strict_sub = strict_sub,
     match_degree = match_degree,
+    mode = mode,
     single_glycan_func = .have_motif_single
   )
 }
@@ -64,7 +69,8 @@ NULL
   alignment = "substructure",
   ignore_linkages = FALSE,
   strict_sub = TRUE,
-  match_degree = NULL
+  match_degree = NULL,
+  mode = c("strict", "lenient")
 ) {
   apply_single_motif_to_graph(
     glycan_graph = glycan_graph,
@@ -73,6 +79,7 @@ NULL
     ignore_linkages = ignore_linkages,
     strict_sub = strict_sub,
     match_degree = match_degree,
+    mode = mode,
     single_glycan_func = .count_motif_single
   )
 }
@@ -85,7 +92,8 @@ NULL
   alignment = "substructure",
   ignore_linkages = FALSE,
   strict_sub = TRUE,
-  match_degree = NULL
+  match_degree = NULL,
+  mode = c("strict", "lenient")
 ) {
   apply_single_motif_to_graph(
     glycan_graph = glycan_graph,
@@ -94,6 +102,7 @@ NULL
     ignore_linkages = ignore_linkages,
     strict_sub = strict_sub,
     match_degree = match_degree,
+    mode = mode,
     single_glycan_func = .match_motif_single
   )
 }
@@ -106,6 +115,7 @@ NULL
 #' @param ignore_linkages A logical scalar.
 #' @param strict_sub A logical scalar.
 #' @param match_degree A logical vector or `NULL`.
+#' @param mode Matching mode.
 #' @param single_glycan_func A graph-level motif matching function.
 #'
 #' @return The result from `single_glycan_func`.
@@ -117,8 +127,10 @@ apply_single_motif_to_graph <- function(
   ignore_linkages,
   strict_sub,
   match_degree,
+  mode,
   single_glycan_func
 ) {
+  mode <- rlang::arg_match(mode, c("strict", "lenient"))
   motif_has_linkages <- graph_has_linkages(motif_graph)
   motif_composition_profile <- new_motif_composition_profile(motif_graph)
   match_degree <- normalize_graph_match_degree(match_degree, motif_graph)
@@ -131,7 +143,8 @@ apply_single_motif_to_graph <- function(
     alignment = alignment,
     ignore_linkages = ignore_linkages,
     strict_sub = strict_sub,
-    match_degree = match_degree
+    match_degree = match_degree,
+    mode = mode
   )
 }
 

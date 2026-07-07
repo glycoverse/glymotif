@@ -11,7 +11,8 @@ count_motif(
   alignment = NULL,
   ignore_linkages = FALSE,
   strict_sub = TRUE,
-  match_degree = NULL
+  match_degree = NULL,
+  mode = c("strict", "lenient")
 )
 
 count_motifs(
@@ -20,7 +21,8 @@ count_motifs(
   alignments = NULL,
   ignore_linkages = FALSE,
   strict_sub = TRUE,
-  match_degree = NULL
+  match_degree = NULL,
+  mode = c("strict", "lenient")
 )
 }
 \arguments{
@@ -59,6 +61,11 @@ motif nodes (length 1 is recycled). For \code{have_motifs()}, \code{count_motifs
 \code{match_motifs()}, this must be a list of logical vectors with length equal to
 \code{motifs}; each element follows the same length rules. When \code{match_degree} is
 provided, \code{alignment} and \code{alignments} are silently ignored.}
+
+\item{mode}{Matching mode. \code{"strict"} preserves the default behavior where
+glycans cannot be more obscure than motifs. \code{"lenient"} treats glycan-side
+obscure fields as compatible with more specific motif fields while still
+rejecting concrete mismatches.}
 
 \item{motifs}{One of:
 \itemize{

@@ -1124,3 +1124,97 @@ test_that("have_motifs returns trimmed IUPAC strings as colnames for branch_moti
   # Column names should end with the branch root linkage pattern (e.g., "GlcNAc(b1-")
   expect_true(all(grepl("\\([a-z]1-$", colnames(result))))
 })
+
+# ========== Lenient Mode ==========
+test_that("lenient mode ignores obscure linkages", {
+  glycans <- c(
+    "Gal(b1-?)GalNAc(a1-",
+    "Gal(?1-3)GalNAc(a1-",
+    "Gal(b?-3)GalNAc(a1-",
+    "Gal(b1-3/6)GalNAc(a1-",
+    "Gal(??-?)GalNAc(a1-",
+    "Gal(?1-6)GalNAc(a1-",
+    "Gal(b1-4/6)GalNAc(a1-"
+  )
+  motif <- "Gal(b1-3)GalNAc(a1-"
+  result <- have_motif(glycans, motif, mode = "lenient")
+  expected <- c(TRUE, TRUE, TRUE, TRUE, TRUE, FALSE, FALSE)
+  expect_identical(result, expected)
+})
+
+test_that("lenient mode ignores obscure reducing end anomers", {
+  glycans <- c(
+    "Gal(b1-3)GalNAc(?1-",
+    "Gal(b1-3)GalNAc(a?-",
+    "Gal(b1-3)GalNAc(b?-"
+  )
+  motif <- "Gal(b1-3)GalNAc(a1-"
+  result <- have_motif(glycans, motif, mode = "lenient")
+  expected <- c(TRUE, TRUE, FALSE)
+  expect_identical(result, expected)
+})
+
+test_that("lenient mode matches generic to concrete monosaccharides", {
+  glycans <- c("Hex(??-?)HexNAc(??-", "HexNAc(??-?)HexNAc(??-")
+  motif <- "Gal(??-?)GalNAc(??-"
+  result <- have_motif(glycans, motif, mode = "lenient")
+  expected <- c(TRUE, FALSE)
+  expect_identical(result, expected)
+})
+
+test_that("lenient mode ignores obscure substituent linkages", {
+  glycans <- c(
+    "Glc?Me6S(?1-",
+    "Glc3Me?S(?1-",
+    "Glc4Me6S(?1-",
+    "Glc3Me4S(?1-"
+  )
+  motif <- "Glc3Me6S(?1-"
+
+  expect_false(have_motif(glycans[[1]], motif))
+  expect_identical(
+    have_motif(glycans, motif, mode = "lenient"),
+    c(TRUE, TRUE, FALSE, FALSE)
+  )
+})
+
+test_that("lenient mode matches substituents one-to-one", {
+  repeated_unknown_glycan <- glyparse::parse_iupac_condensed("Glc?Me(?1-")
+  graphs <- attr(repeated_unknown_glycan, "graphs")
+  graphs[[1]] <- igraph::set_vertex_attr(
+    graphs[[1]],
+    "sub",
+    value = "?Me,?Me"
+  )
+  attr(repeated_unknown_glycan, "graphs") <- graphs
+
+  single_unknown_glycan <- glyparse::parse_iupac_condensed("Glc?Me(?1-")
+
+  expect_true(have_motif(
+    single_unknown_glycan,
+    "Glc3Me(?1-",
+    mode = "lenient"
+  ))
+  expect_false(have_motif(
+    single_unknown_glycan,
+    "Glc3Me4Me(?1-",
+    mode = "lenient"
+  ))
+  expect_false(have_motif(
+    repeated_unknown_glycan,
+    "Glc3Me(?1-",
+    mode = "lenient"
+  ))
+  expect_true(have_motif(
+    repeated_unknown_glycan,
+    "Glc3Me4Me(?1-",
+    mode = "lenient"
+  ))
+})
+
+test_that("mode is validated", {
+  expect_error(
+    have_motif("Gal(?1-", "Gal(a1-", mode = "loose"),
+    "`mode` must be"
+  )
+})

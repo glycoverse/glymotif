@@ -91,7 +91,8 @@ count_motif <- function(
   alignment = NULL,
   ignore_linkages = FALSE,
   strict_sub = TRUE,
-  match_degree = NULL
+  match_degree = NULL,
+  mode = c("strict", "lenient")
 ) {
   # Store input names before processing
   glycan_names <- names(glycans)
@@ -103,7 +104,8 @@ count_motif <- function(
     ignore_linkages = ignore_linkages,
     match_degree = match_degree,
     single_motif = TRUE,
-    strict_sub = strict_sub
+    strict_sub = strict_sub,
+    mode = mode
   )
   result <- rlang::exec("count_motif_", !!!params)
 
@@ -123,7 +125,8 @@ count_motifs <- function(
   alignments = NULL,
   ignore_linkages = FALSE,
   strict_sub = TRUE,
-  match_degree = NULL
+  match_degree = NULL,
+  mode = c("strict", "lenient")
 ) {
   params <- prepare_motif_args(
     glycans = glycans,
@@ -132,7 +135,8 @@ count_motifs <- function(
     ignore_linkages = ignore_linkages,
     match_degree = match_degree,
     single_motif = FALSE,
-    strict_sub = strict_sub
+    strict_sub = strict_sub,
+    mode = mode
   )
   glycan_names <- prepare_struc_names(glycans, params$glycans)
   # Use names from resolved motifs if available (e.g., from dynamic_motifs/branch_motifs)
@@ -168,7 +172,8 @@ count_motif_ <- function(
   alignment,
   ignore_linkages = FALSE,
   strict_sub = TRUE,
-  match_degree = NULL
+  match_degree = NULL,
+  mode = "strict"
 ) {
   # This function is a simpler version of `count_motif()`.
   # It performs the logic directly without argument validations and conversions.
@@ -180,6 +185,7 @@ count_motif_ <- function(
     ignore_linkages = ignore_linkages,
     strict_sub = strict_sub,
     match_degree = match_degree,
+    mode = mode,
     single_glycan_func = .count_motif_single,
     smap_func = glyrepr::smap_int
   )
@@ -193,7 +199,8 @@ count_motif_ <- function(
   alignment,
   ignore_linkages = FALSE,
   strict_sub = TRUE,
-  match_degree = NULL
+  match_degree = NULL,
+  mode = "strict"
 ) {
   # This function is the logic part of `count_motif()`.
   if (!whole_alignment_size_can_match(glycan_graph, motif_graph, alignment)) {
@@ -204,7 +211,8 @@ count_motif_ <- function(
       glycan_graph,
       motif_graph,
       alignment,
-      strict_sub = strict_sub
+      strict_sub = strict_sub,
+      mode = mode
     )
   ) {
     return(0L)
@@ -213,7 +221,8 @@ count_motif_ <- function(
   linkage_match_mode <- resolve_linkage_match_mode(
     glycan_graph,
     motif_has_linkages,
-    ignore_linkages
+    ignore_linkages,
+    mode = mode
   )
 
   # "none" is an early no-match result: the motif requires linkage information,
@@ -222,11 +231,14 @@ count_motif_ <- function(
     return(0L)
   }
 
-  if (!composition_can_match(glycan_graph, motif_composition_profile)) {
+  if (
+    mode == "strict" &&
+      !composition_can_match(glycan_graph, motif_composition_profile)
+  ) {
     return(0L)
   }
 
-  c_graphs <- colorize_graphs(glycan_graph, motif_graph)
+  c_graphs <- colorize_graphs(glycan_graph, motif_graph, mode = mode)
   res <- perform_vf2(
     glycan_graph,
     motif_graph,
@@ -255,7 +267,8 @@ count_motif_ <- function(
     # expensive linkage/anomer checks inside is_valid_result().
     ignore_linkages = linkage_match_mode == "ignore",
     strict_sub = strict_sub,
-    match_degree = match_degree
+    match_degree = match_degree,
+    mode = mode
   )
   valid_res <- res[valid_mask]
   length(unique_vf2_res(valid_res))
@@ -280,7 +293,8 @@ count_motifs_ <- function(
   motif_names,
   ignore_linkages = FALSE,
   strict_sub = TRUE,
-  match_degree = NULL
+  match_degree = NULL,
+  mode = "strict"
 ) {
   apply_motifs_to_glycans(
     glycans,
@@ -291,6 +305,7 @@ count_motifs_ <- function(
     glycan_names,
     motif_names,
     strict_sub,
-    match_degree
+    match_degree,
+    mode
   )
 }

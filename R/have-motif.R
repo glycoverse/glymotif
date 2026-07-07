@@ -42,6 +42,10 @@
 #' - `Man` (concrete glycan) vs `Man` (concrete motif) → TRUE (exact match)
 #' - `Hex` (generic glycan) vs `Hex` (generic motif) → TRUE (exact match)
 #'
+#' With `mode = "lenient"`, generic glycan residues can match compatible
+#' concrete motif residues. For example, `Hex` can match a `Gal` motif residue,
+#' but `HexNAc` still cannot match `Gal`.
+#'
 #' # Linkages
 #'
 #' Obscure linkages (e.g. "??-?") are allowed in the `motif` graph
@@ -63,6 +67,19 @@
 #' The half linkage in the motif will be matched to any linkage in the glycan,
 #' or the half linkage of the glycan.
 #' e.g. Glycan "GlcNAc(b1-4)Gal(a1-" will have both "GlcNAc(b1-" and "Gal(a1-" motifs.
+#'
+#' # Matching mode
+#'
+#' `mode = "strict"` is the default and preserves the standard rule that
+#' glycans cannot be more obscure than motifs. For example,
+#' glycan "Gal(?1-?)GalNAc(?1-" does not match motif "Gal(b1-3)GalNAc(a1-".
+#'
+#' `mode = "lenient"` treats obscure glycan-side monosaccharides, linkages,
+#' substituent positions, and reducing-end anomers as compatible with more
+#' specific motif fields. In the lenient mode,
+#' glycan "Gal(?1-?)GalNAc(?1-" matches motif "Gal(b1-3)GalNAc(a1-".
+#' Concrete mismatches still fail: for example,
+#' glycan "Gal(?1-6)GalNAc(a1-" does not match motif "Gal(b1-3)GalNAc(a1-".
 #'
 #' # Alignment
 #'
@@ -180,6 +197,10 @@
 #' @param strict_sub A logical value. If `TRUE` (default), substituents will be matched in strict mode,
 #'   which means if the glycan has a substituent in some residue,
 #'   the motif must have the same substituent to be matched.
+#' @param mode Matching mode. `"strict"` preserves the default behavior where
+#'   glycans cannot be more obscure than motifs. `"lenient"` treats glycan-side
+#'   obscure fields as compatible with more specific motif fields while still
+#'   rejecting concrete mismatches.
 #'
 #' @returns
 #' - `have_motif()`: A logical vector indicating if each `glycan` has the `motif`.
@@ -283,7 +304,8 @@ have_motif <- function(
   alignment = NULL,
   ignore_linkages = FALSE,
   strict_sub = TRUE,
-  match_degree = NULL
+  match_degree = NULL,
+  mode = c("strict", "lenient")
 ) {
   # Store input names before processing
   glycan_names <- names(glycans)
@@ -295,7 +317,8 @@ have_motif <- function(
     ignore_linkages = ignore_linkages,
     match_degree = match_degree,
     single_motif = TRUE,
-    strict_sub = strict_sub
+    strict_sub = strict_sub,
+    mode = mode
   )
   result <- rlang::exec("have_motif_", !!!params)
 
@@ -315,7 +338,8 @@ have_motifs <- function(
   alignments = NULL,
   ignore_linkages = FALSE,
   strict_sub = TRUE,
-  match_degree = NULL
+  match_degree = NULL,
+  mode = c("strict", "lenient")
 ) {
   params <- prepare_motif_args(
     glycans = glycans,
@@ -324,7 +348,8 @@ have_motifs <- function(
     ignore_linkages = ignore_linkages,
     match_degree = match_degree,
     single_motif = FALSE,
-    strict_sub = strict_sub
+    strict_sub = strict_sub,
+    mode = mode
   )
   glycan_names <- prepare_struc_names(glycans, params$glycans)
   # Use names from resolved motifs if available (e.g., from dynamic_motifs/branch_motifs)
@@ -359,7 +384,8 @@ have_motif_ <- function(
   alignment,
   ignore_linkages = FALSE,
   strict_sub = TRUE,
-  match_degree = NULL
+  match_degree = NULL,
+  mode = "strict"
 ) {
   # This function is a simpler version of `have_motif()`.
   # It performs the logic directly without argument validations and conversions.
@@ -371,6 +397,7 @@ have_motif_ <- function(
     ignore_linkages = ignore_linkages,
     strict_sub = strict_sub,
     match_degree = match_degree,
+    mode = mode,
     single_glycan_func = .have_motif_single,
     smap_func = glyrepr::smap_lgl
   )
@@ -384,7 +411,8 @@ have_motif_ <- function(
   alignment,
   ignore_linkages = FALSE,
   strict_sub = TRUE,
-  match_degree = NULL
+  match_degree = NULL,
+  mode = "strict"
 ) {
   # Optimized version with early termination
   # Check if any match is valid, returning immediately on first valid match
@@ -396,7 +424,8 @@ have_motif_ <- function(
       glycan_graph,
       motif_graph,
       alignment,
-      strict_sub = strict_sub
+      strict_sub = strict_sub,
+      mode = mode
     )
   ) {
     return(FALSE)
@@ -405,7 +434,8 @@ have_motif_ <- function(
   linkage_match_mode <- resolve_linkage_match_mode(
     glycan_graph,
     motif_has_linkages,
-    ignore_linkages
+    ignore_linkages,
+    mode = mode
   )
 
   # "none" is an early no-match result: the motif requires linkage information,
@@ -414,11 +444,14 @@ have_motif_ <- function(
     return(FALSE)
   }
 
-  if (!composition_can_match(glycan_graph, motif_composition_profile)) {
+  if (
+    mode == "strict" &&
+      !composition_can_match(glycan_graph, motif_composition_profile)
+  ) {
     return(FALSE)
   }
 
-  c_graphs <- colorize_graphs(glycan_graph, motif_graph)
+  c_graphs <- colorize_graphs(glycan_graph, motif_graph, mode = mode)
   res <- perform_vf2(
     glycan_graph,
     motif_graph,
@@ -456,7 +489,8 @@ have_motif_ <- function(
     # expensive linkage/anomer checks inside is_valid_result().
     ignore_linkages = linkage_match_mode == "ignore",
     strict_sub = strict_sub,
-    match_degree = match_degree
+    match_degree = match_degree,
+    mode = mode
   )
 }
 
@@ -480,7 +514,8 @@ have_motifs_ <- function(
   motif_names,
   ignore_linkages = FALSE,
   strict_sub = TRUE,
-  match_degree = NULL
+  match_degree = NULL,
+  mode = "strict"
 ) {
   apply_motifs_to_glycans(
     glycans,
@@ -491,6 +526,7 @@ have_motifs_ <- function(
     glycan_names,
     motif_names,
     strict_sub,
-    match_degree
+    match_degree,
+    mode
   )
 }

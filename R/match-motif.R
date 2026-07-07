@@ -92,7 +92,8 @@ match_motif <- function(
   alignment = NULL,
   ignore_linkages = FALSE,
   strict_sub = TRUE,
-  match_degree = NULL
+  match_degree = NULL,
+  mode = c("strict", "lenient")
 ) {
   # Store input names before processing
   glycan_names <- names(glycans)
@@ -106,7 +107,8 @@ match_motif <- function(
     ignore_linkages = ignore_linkages,
     match_degree = match_degree,
     single_motif = TRUE,
-    strict_sub = strict_sub
+    strict_sub = strict_sub,
+    mode = mode
   )
   result <- rlang::exec("match_motif_", !!!params)
 
@@ -126,7 +128,8 @@ match_motifs <- function(
   alignments = NULL,
   ignore_linkages = FALSE,
   strict_sub = TRUE,
-  match_degree = NULL
+  match_degree = NULL,
+  mode = c("strict", "lenient")
 ) {
   # Validate glycans first (must be glycan_structure)
   .assert_glycan_structure(glycans, "glycans")
@@ -142,7 +145,8 @@ match_motifs <- function(
     ignore_linkages = ignore_linkages,
     match_degree = match_degree,
     single_motif = FALSE,
-    strict_sub = strict_sub
+    strict_sub = strict_sub,
+    mode = mode
   )
 
   # Validate resolved motifs (must be glycan_structure, not raw strings)
@@ -204,7 +208,8 @@ match_motif_ <- function(
   alignment,
   ignore_linkages = FALSE,
   strict_sub = TRUE,
-  match_degree = NULL
+  match_degree = NULL,
+  mode = "strict"
 ) {
   apply_single_motif_to_glycans(
     glycans = glycans,
@@ -213,6 +218,7 @@ match_motif_ <- function(
     ignore_linkages = ignore_linkages,
     strict_sub = strict_sub,
     match_degree = match_degree,
+    mode = mode,
     single_glycan_func = .match_motif_single,
     smap_func = glyrepr::smap
   )
@@ -236,7 +242,8 @@ match_motifs_ <- function(
   motif_names,
   ignore_linkages = FALSE,
   strict_sub = TRUE,
-  match_degree = NULL
+  match_degree = NULL,
+  mode = "strict"
 ) {
   match_degree_list <- if (is.null(match_degree)) {
     rep(list(NULL), length(motifs))
@@ -253,7 +260,8 @@ match_motifs_ <- function(
       alignment = alignments[[.y]],
       ignore_linkages = ignore_linkages,
       strict_sub = strict_sub,
-      match_degree = match_degree_list[[.y]]
+      match_degree = match_degree_list[[.y]],
+      mode = mode
     )
   )
 
@@ -284,7 +292,8 @@ match_motifs_ <- function(
   alignment,
   ignore_linkages = FALSE,
   strict_sub = TRUE,
-  match_degree = NULL
+  match_degree = NULL,
+  mode = "strict"
 ) {
   if (!whole_alignment_size_can_match(glycan_graph, motif_graph, alignment)) {
     return(list())
@@ -294,7 +303,8 @@ match_motifs_ <- function(
       glycan_graph,
       motif_graph,
       alignment,
-      strict_sub = strict_sub
+      strict_sub = strict_sub,
+      mode = mode
     )
   ) {
     return(list())
@@ -303,7 +313,8 @@ match_motifs_ <- function(
   linkage_match_mode <- resolve_linkage_match_mode(
     glycan_graph,
     motif_has_linkages,
-    ignore_linkages
+    ignore_linkages,
+    mode = mode
   )
 
   # "none" is an early no-match result: the motif requires linkage information,
@@ -312,11 +323,14 @@ match_motifs_ <- function(
     return(list())
   }
 
-  if (!composition_can_match(glycan_graph, motif_composition_profile)) {
+  if (
+    mode == "strict" &&
+      !composition_can_match(glycan_graph, motif_composition_profile)
+  ) {
     return(list())
   }
 
-  c_graphs <- colorize_graphs(glycan_graph, motif_graph)
+  c_graphs <- colorize_graphs(glycan_graph, motif_graph, mode = mode)
   res <- perform_vf2(
     glycan_graph,
     motif_graph,
@@ -345,7 +359,8 @@ match_motifs_ <- function(
     # expensive linkage/anomer checks inside is_valid_result().
     ignore_linkages = linkage_match_mode == "ignore",
     strict_sub = strict_sub,
-    match_degree = match_degree
+    match_degree = match_degree,
+    mode = mode
   )
   valid_res <- res[valid_mask]
   unique_res <- unique_vf2_res(valid_res)

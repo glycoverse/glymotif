@@ -363,3 +363,12 @@ test_that("count_motifs returns trimmed IUPAC strings as colnames for branch_mot
   # Column names should end with the branch root linkage pattern
   expect_true(all(grepl("\\([a-z]1-$", colnames(result))))
 })
+
+# ========== Lenient Mode ==========
+test_that("count_motif supports lenient mode", {
+  glycan <- "Hex(??-?)HexNAc(??-"
+  motif <- "Gal(b1-3)GalNAc(a1-"
+
+  expect_equal(suppressWarnings(count_motif(glycan, motif)), 0L)
+  expect_equal(count_motif(glycan, motif, mode = "lenient"), 1L)
+})

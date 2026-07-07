@@ -11,7 +11,8 @@ have_motif(
   alignment = NULL,
   ignore_linkages = FALSE,
   strict_sub = TRUE,
-  match_degree = NULL
+  match_degree = NULL,
+  mode = c("strict", "lenient")
 )
 
 have_motifs(
@@ -20,7 +21,8 @@ have_motifs(
   alignments = NULL,
   ignore_linkages = FALSE,
   strict_sub = TRUE,
-  match_degree = NULL
+  match_degree = NULL,
+  mode = c("strict", "lenient")
 )
 }
 \arguments{
@@ -59,6 +61,11 @@ motif nodes (length 1 is recycled). For \code{have_motifs()}, \code{count_motifs
 \code{match_motifs()}, this must be a list of logical vectors with length equal to
 \code{motifs}; each element follows the same length rules. When \code{match_degree} is
 provided, \code{alignment} and \code{alignments} are silently ignored.}
+
+\item{mode}{Matching mode. \code{"strict"} preserves the default behavior where
+glycans cannot be more obscure than motifs. \code{"lenient"} treats glycan-side
+obscure fields as compatible with more specific motif fields while still
+rejecting concrete mismatches.}
 
 \item{motifs}{One of:
 \itemize{
@@ -125,6 +132,10 @@ Examples:
 \item \code{Man} (concrete glycan) vs \code{Man} (concrete motif) → TRUE (exact match)
 \item \code{Hex} (generic glycan) vs \code{Hex} (generic motif) → TRUE (exact match)
 }
+
+With \code{mode = "lenient"}, generic glycan residues can match compatible
+concrete motif residues. For example, \code{Hex} can match a \code{Gal} motif residue,
+but \code{HexNAc} still cannot match \code{Gal}.
 }
 
 \section{Linkages}{
@@ -149,6 +160,19 @@ e.g. "GlcNAc(b1-".
 The half linkage in the motif will be matched to any linkage in the glycan,
 or the half linkage of the glycan.
 e.g. Glycan "GlcNAc(b1-4)Gal(a1-" will have both "GlcNAc(b1-" and "Gal(a1-" motifs.
+}
+
+\section{Matching mode}{
+\code{mode = "strict"} is the default and preserves the standard rule that
+glycans cannot be more obscure than motifs. For example,
+glycan "Gal(?1-?)GalNAc(?1-" does not match motif "Gal(b1-3)GalNAc(a1-".
+
+\code{mode = "lenient"} treats obscure glycan-side monosaccharides, linkages,
+substituent positions, and reducing-end anomers as compatible with more
+specific motif fields. In the lenient mode,
+glycan "Gal(?1-?)GalNAc(?1-" matches motif "Gal(b1-3)GalNAc(a1-".
+Concrete mismatches still fail: for example,
+glycan "Gal(?1-6)GalNAc(a1-" does not match motif "Gal(b1-3)GalNAc(a1-".
 }
 
 \section{Alignment}{
