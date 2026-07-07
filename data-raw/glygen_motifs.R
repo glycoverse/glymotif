@@ -56,10 +56,16 @@ read_motif_collection <- function(path) {
 df <- list.files("data-raw", pattern = "[.]json$", full.names = TRUE) |>
   keep(~ basename(.x) != "glygen_motifs.json") |>
   map_dfr(read_motif_collection) |>
-  mutate(glycan_structure = parse_wurcs(.data$wurcs, on_failure = "na"))
+  mutate(
+    glycan_structure = map(.data$wurcs, ~ parse_wurcs(.x, on_failure = "na"))
+  )
 
 good_df <- df |>
-  filter(!is.na(.data$glycan_structure))
+  filter(map_lgl(
+    .data$glycan_structure,
+    ~ !is.na(.x) && identical(glyrepr::get_mono_type(.x), "concrete")
+  )) |>
+  mutate(glycan_structure = do.call(c, .data$glycan_structure))
 
 good_df[good_df$source_id == "GGM" & good_df$accession == "001020", "name"] <-
   "O-Fucose Core 1"
