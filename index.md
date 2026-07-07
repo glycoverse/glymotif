@@ -60,9 +60,6 @@ glycoverse](https://github.com/glycoverse/glycoverse#installation).
   [Here](https://glycoverse.github.io/glymotif/articles/glymotif.html)
 - 🔧 Motif matching rules:
   [Here](https://glycoverse.github.io/glymotif/articles/motif-matching.html)
-- 🔬 Working with
-  [`glyexp::experiment()`](https://glycoverse.github.io/glyexp/reference/experiment.html):
-  [Here](https://glycoverse.github.io/glymotif/articles/with-exp.html)
 - 📚 Reference:
   [Here](https://glycoverse.github.io/glymotif/reference/index.html)
 

@@ -16,7 +16,7 @@ motifs should be matched.
 ## Usage
 
 ``` r
-extract_motif(glycans, max_size = 3)
+extract_motif(glycans, ..., max_size = 3)
 ```
 
 ## Arguments
@@ -32,6 +32,11 @@ extract_motif(glycans, max_size = 3)
   - A glycan structure string vector. All formats supported by
     [`glyparse::auto_parse()`](https://glycoverse.github.io/glyparse/reference/auto_parse.html)
     are accepted.
+
+- ...:
+
+  These dots must be empty and are used only to force optional arguments
+  to be supplied by name.
 
 - max_size:
 

@@ -1,10 +1,21 @@
 # Add Motif Annotations
 
-This function adds motif annotations to the variable information of a
+**\[deprecated\]**
+
+`add_motifs_int()` and `add_motifs_lgl()` were deprecated in glymotif
+0.17.0. For data frames, use
+[`dplyr::mutate()`](https://dplyr.tidyverse.org/reference/mutate.html)
+with
+[`tibble::as_tibble()`](https://tibble.tidyverse.org/reference/as_tibble.html)
+and
+[`count_motifs()`](https://glycoverse.github.io/glymotif/reference/count_motif.md)
+or
+[`have_motifs()`](https://glycoverse.github.io/glymotif/reference/have_motif.md).
+For
 [`glyexp::experiment()`](https://glycoverse.github.io/glyexp/reference/experiment.html)
-or a tibble with a structure column. `add_motifs_int()` adds integer
-annotations (how many motifs are present). `add_motifs_lgl()` adds
-boolean annotations (whether the motif is present).
+objects, use
+[`glyexp::mutate_var()`](https://glycoverse.github.io/glyexp/reference/mutate_obs.html)
+with the same tibble expression.
 
 ## Usage
 
@@ -173,54 +184,6 @@ which return matrices with NULL column names for unnamed IUPAC string or
 structure motifs. The functions here always provide column names since
 they are designed for adding motif annotations to data frames.
 
-## Why do we need these functions
-
-Adding one motif annotation to a
-[`glyexp::experiment()`](https://glycoverse.github.io/glyexp/reference/experiment.html)
-is easy:
-
-    exp |>
-      mutate_var(has_hex = have_motif(glycan_structure, "Hex"))
-
-However, adding multiple motifs is not as straightforward. You can still
-use
-[`mutate_var()`](https://glycoverse.github.io/glyexp/reference/mutate_obs.html)
-to add multiple motifs like this:
-
-    exp |>
-      mutate_var(
-        n_hex = count_motif(glycan_structure, "Hex"),
-        n_dhex = count_motif(glycan_structure, "dHex"),
-        n_hexnac = count_motif(glycan_structure, "HexNAc"),
-      )
-
-This method has two problems:
-
-1.  it has a lot of boilerplate code (a lot of typing)
-
-2.  it is not very efficient, as each call to `count_motif` performs
-    validation and conversion on `glycan_structure`, which is a
-    time-consuming process.
-
-Therefore, we think it would be better to have a function that adds
-multiple motif annotations in a single call, in a more intuitive way.
-That's why we provide these two functions.
-
-Under the hood, they use a more straightforward approach for
-[`glyexp::experiment()`](https://glycoverse.github.io/glyexp/reference/experiment.html)
-objects:
-
-1.  get the motif annotation matrix using
-    [`count_motifs()`](https://glycoverse.github.io/glymotif/reference/count_motif.md)
-    or
-    [`have_motifs()`](https://glycoverse.github.io/glymotif/reference/have_motif.md)
-
-2.  convert the matrix to a tibble
-
-3.  use
-    [`dplyr::bind_cols()`](https://dplyr.tidyverse.org/reference/bind_cols.html)
-    to add the tibble to the variable information
-
 ## See also
 
 [`have_motifs()`](https://glycoverse.github.io/glymotif/reference/have_motif.md),
@@ -231,14 +194,25 @@ objects:
 
 ``` r
 library(glyexp)
+library(dplyr)
+#> 
+#> Attaching package: ‘dplyr’
+#> The following objects are masked from ‘package:stats’:
+#> 
+#>     filter, lag
+#> The following objects are masked from ‘package:base’:
+#> 
+#>     intersect, setdiff, setequal, union
+library(tibble)
 
 exp <- real_experiment2
+motifs <- c(
+  lacnac = "Gal(??-?)GlcNAc(??-",
+  sia_lacnac = "Neu5Ac(??-?)Gal(??-?)GlcNAc(??-"
+)
 
 exp |>
-  add_motifs_lgl(c(
-    lacnac = "Gal(??-?)GlcNAc(??-",
-    sia_lacnac = "Neu5Ac(??-?)Gal(??-?)GlcNAc(??-"
-  )) |>
+  mutate_var(as_tibble(have_motifs(glycan_structure, motifs))) |>
   get_var_info()
 #> # A tibble: 67 × 5
 #>    variable                glycan_composition glycan_structure lacnac sia_lacnac
@@ -255,12 +229,9 @@ exp |>
 #> 10 Man(3)Gal(1)GlcNAc(5)F… Man(3)Gal(1)GlcNA… Neu5Ac(?2-?)Gal… TRUE   TRUE      
 #> # ℹ 57 more rows
 
-exp |>
-  add_motifs_int(c(
-    lacnac = "Gal(??-?)GlcNAc(??-",
-    sia_lacnac = "Neu5Ac(??-?)Gal(??-?)GlcNAc(??-"
-  )) |>
-  get_var_info()
+df <- get_var_info(exp)
+df |>
+  mutate(as_tibble(count_motifs(glycan_structure, motifs)))
 #> # A tibble: 67 × 5
 #>    variable                glycan_composition glycan_structure lacnac sia_lacnac
 #>    <glue>                  <comp>             <struct>          <int>      <int>

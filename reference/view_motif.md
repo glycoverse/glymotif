@@ -8,6 +8,7 @@ Visualize where a motif matches a glycan structure.
 view_motif(
   glycan,
   motif,
+  ...,
   alignment = NULL,
   ignore_linkages = FALSE,
   strict_sub = TRUE,
@@ -42,6 +43,11 @@ view_motif(
   - A GGM database motif name (use
     `db_motif_info() |> dplyr::filter(source_id == "GGM")` to inspect
     resolvable motif names).
+
+- ...:
+
+  These dots must be empty and are used only to force optional arguments
+  to be supplied by name.
 
 - alignment:
 

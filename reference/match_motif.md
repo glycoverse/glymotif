@@ -37,19 +37,23 @@ is supported for `glycans` and `motifs`.
 match_motif(
   glycans,
   motif,
+  ...,
   alignment = NULL,
   ignore_linkages = FALSE,
   strict_sub = TRUE,
-  match_degree = NULL
+  match_degree = NULL,
+  mode = c("strict", "lenient")
 )
 
 match_motifs(
   glycans,
   motifs,
+  ...,
   alignments = NULL,
   ignore_linkages = FALSE,
   strict_sub = TRUE,
-  match_degree = NULL
+  match_degree = NULL,
+  mode = c("strict", "lenient")
 )
 ```
 
@@ -81,6 +85,11 @@ match_motifs(
   - A GGM database motif name (use
     `db_motif_info() |> dplyr::filter(source_id == "GGM")` to inspect
     resolvable motif names).
+
+- ...:
+
+  These dots must be empty and are used only to force optional arguments
+  to be supplied by name.
 
 - alignment:
 
@@ -115,6 +124,13 @@ match_motifs(
   length equal to `motifs`; each element follows the same length rules.
   When `match_degree` is provided, `alignment` and `alignments` are
   silently ignored.
+
+- mode:
+
+  Matching mode. `"strict"` preserves the default behavior where glycans
+  cannot be more obscure than motifs. `"lenient"` treats glycan-side
+  obscure fields as compatible with more specific motif fields while
+  still rejecting concrete mismatches.
 
 - motifs:
 

@@ -11,7 +11,7 @@ objects from glyrepr::get_structure_graphs()."><meta property="og:image" content
 
     <a class="navbar-brand me-2" href="../index.html">glymotif</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.16.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.17.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -24,7 +24,6 @@ objects from glyrepr::get_structure_graphs()."><meta property="og:image" content
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/motif-matching.html">The Science Behind Motif Matching</a></li>
-    <li><a class="dropdown-item" href="../articles/with-exp.html">Working with glyexp</a></li>
   </ul></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
@@ -38,7 +37,7 @@ objects from glyrepr::get_structure_graphs()."><meta property="og:image" content
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Low-Level Motif Matching on Graphs</h1>
-      <small class="dont-index">Source: <a href="https://github.com/glycoverse/glymotif/blob/v0.16.1/R/g-motif.R" class="external-link"><code>R/g-motif.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/glycoverse/glymotif/blob/main/R/g-motif.R" class="external-link"><code>R/g-motif.R</code></a></small>
       <div class="d-none name"><code>dot-g_motif.Rd</code></div>
     </div>
 
@@ -53,28 +52,34 @@ objects from <code><a href="https://glycoverse.github.io/glyrepr/reference/get_s
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">.g_have_motif</span><span class="op">(</span></span>
 <span>  <span class="va">glycan_graph</span>,</span>
 <span>  <span class="va">motif_graph</span>,</span>
+<span>  <span class="va">...</span>,</span>
 <span>  alignment <span class="op">=</span> <span class="st">"substructure"</span>,</span>
 <span>  ignore_linkages <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  strict_sub <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  match_degree <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  match_degree <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  mode <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"strict"</span>, <span class="st">"lenient"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">.g_count_motif</span><span class="op">(</span></span>
 <span>  <span class="va">glycan_graph</span>,</span>
 <span>  <span class="va">motif_graph</span>,</span>
+<span>  <span class="va">...</span>,</span>
 <span>  alignment <span class="op">=</span> <span class="st">"substructure"</span>,</span>
 <span>  ignore_linkages <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  strict_sub <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  match_degree <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  match_degree <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  mode <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"strict"</span>, <span class="st">"lenient"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">.g_match_motif</span><span class="op">(</span></span>
 <span>  <span class="va">glycan_graph</span>,</span>
 <span>  <span class="va">motif_graph</span>,</span>
+<span>  <span class="va">...</span>,</span>
 <span>  alignment <span class="op">=</span> <span class="st">"substructure"</span>,</span>
 <span>  ignore_linkages <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  strict_sub <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  match_degree <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  match_degree <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  mode <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"strict"</span>, <span class="st">"lenient"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -88,6 +93,11 @@ objects from <code><a href="https://glycoverse.github.io/glyrepr/reference/get_s
 
 <dt id="arg-motif-graph">motif_graph<a class="anchor" aria-label="anchor" href="#arg-motif-graph"></a></dt>
 <dd><p>An igraph motif graph.</p></dd>
+
+
+<dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
+<dd><p>These dots must be empty and are used only to force optional
+arguments to be supplied by name.</p></dd>
 
 
 <dt id="arg-alignment">alignment<a class="anchor" aria-label="anchor" href="#arg-alignment"></a></dt>
@@ -109,6 +119,12 @@ strictly.</p></dd>
 the glycan's in- and out-degree exactly. A scalar is recycled to the
 number of motif nodes.</p></dd>
 
+
+<dt id="arg-mode">mode<a class="anchor" aria-label="anchor" href="#arg-mode"></a></dt>
+<dd><p>Matching mode. <code>"strict"</code> preserves the default behavior;
+<code>"lenient"</code> treats glycan-side unknowns as compatible with more specific
+motif fields.</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
@@ -121,7 +137,7 @@ number of motif nodes.</p></dd>
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>These functions do no validation, parsing, naming, or monosaccharide-type
 conversion. Callers must provide valid, already-compatible graph objects.
-In particular, when matching a generic motif graph, callers must pass a
+In strict mode, when matching a generic motif graph, callers must pass a
 glycan graph whose <code>mono</code> vertex attributes have already been converted to
 the compatible generic representation.</p>
 <p>These functions never call <code><a href="https://glycoverse.github.io/glyrepr/reference/as_glycan_structure.html" class="external-link">glyrepr::as_glycan_structure()</a></code>.</p>

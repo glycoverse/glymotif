@@ -25,8 +25,8 @@ A logical vector.
 ## Examples
 
 ``` r
-is_known_motif(c("N-Glycan core basic", "O-Glycan core 1", "unknown"))
+is_known_motif(c("O-Glycan core 1", "unknown"))
 #> Warning: `is_known_motif()` was deprecated in glymotif 0.16.0.
 #> ℹ Please use `db_motif_info()` instead.
-#> [1]  TRUE  TRUE FALSE
+#> [1]  TRUE FALSE
 ```

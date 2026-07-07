@@ -60,9 +60,6 @@ glycoverse](https://github.com/glycoverse/glycoverse#installation).
   [Here](https://glycoverse.github.io/glymotif/articles/glymotif.html)
 - 🔧 Motif matching rules:
   [Here](https://glycoverse.github.io/glymotif/articles/motif-matching.html)
-- 🔬 Working with
-  [`glyexp::experiment()`](https://glycoverse.github.io/glyexp/reference/experiment.html):
-  [Here](https://glycoverse.github.io/glymotif/articles/with-exp.html)
 - 📚 Reference:
   [Here](https://glycoverse.github.io/glymotif/reference/index.html)
 
@@ -114,7 +111,7 @@ have_motif(glycan, "O-Glycan core 1")
 
 - [`add_motifs_int()`](https://glycoverse.github.io/glymotif/reference/add_motifs_int.md)
   [`add_motifs_lgl()`](https://glycoverse.github.io/glymotif/reference/add_motifs_int.md)
-  : Add Motif Annotations
+  **\[deprecated\]** : Add Motif Annotations
 - [`branch_motifs()`](https://glycoverse.github.io/glymotif/reference/branch_motifs.md)
   : Branch Motifs Specification
 - [`count_motif()`](https://glycoverse.github.io/glymotif/reference/count_motif.md)
@@ -156,5 +153,3 @@ have_motif(glycan, "O-Glycan core 1")
   glymotif](https://glycoverse.github.io/glymotif/articles/glymotif.md):
 - [The Science Behind Motif
   Matching](https://glycoverse.github.io/glymotif/articles/motif-matching.md):
-- [Working with
-  glyexp](https://glycoverse.github.io/glymotif/articles/with-exp.md):

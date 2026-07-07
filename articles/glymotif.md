@@ -330,7 +330,7 @@ available sources.
 ``` r
 
 db_motif_info()
-#> # A tibble: 2,826 × 6
+#> # A tibble: 2,843 × 6
 #>    source      source_id accession name               alignment glycan_structure
 #>    <chr>       <chr>     <chr>     <chr>              <chr>     <struct>        
 #>  1 CCRC Motifs CCRC      000019    Fuc(a1-2)Gal(b1-4… substruc… Fuc(a1-2)Gal(b1…
@@ -343,7 +343,7 @@ db_motif_info()
 #>  8 CCRC Motifs CCRC      000046    Fuc(a1-2)[Gal(a1-… substruc… Fuc(a1-2)[Gal(a…
 #>  9 CCRC Motifs CCRC      000033    Neu5Ac(a2-3)Gal(b… substruc… Neu5Ac(a2-3)Gal…
 #> 10 CCRC Motifs CCRC      000109    Neu5Ac(a2-8)Neu5A… core      Neu5Ac(a2-8)Neu…
-#> # ℹ 2,816 more rows
+#> # ℹ 2,833 more rows
 ```
 
 ``` r

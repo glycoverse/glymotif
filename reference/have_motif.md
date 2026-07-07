@@ -16,19 +16,23 @@ Monosaccharides, linkages, and substituents are all considered.
 have_motif(
   glycans,
   motif,
+  ...,
   alignment = NULL,
   ignore_linkages = FALSE,
   strict_sub = TRUE,
-  match_degree = NULL
+  match_degree = NULL,
+  mode = c("strict", "lenient")
 )
 
 have_motifs(
   glycans,
   motifs,
+  ...,
   alignments = NULL,
   ignore_linkages = FALSE,
   strict_sub = TRUE,
-  match_degree = NULL
+  match_degree = NULL,
+  mode = c("strict", "lenient")
 )
 ```
 
@@ -60,6 +64,11 @@ have_motifs(
   - A GGM database motif name (use
     `db_motif_info() |> dplyr::filter(source_id == "GGM")` to inspect
     resolvable motif names).
+
+- ...:
+
+  These dots must be empty and are used only to force optional arguments
+  to be supplied by name.
 
 - alignment:
 
@@ -95,6 +104,13 @@ have_motifs(
   this must be a list of logical vectors with length equal to `motifs`;
   each element follows the same length rules. When `match_degree` is
   provided, `alignment` and `alignments` are silently ignored.
+
+- mode:
+
+  Matching mode. `"strict"` preserves the default behavior where glycans
+  cannot be more obscure than motifs. `"lenient"` treats glycan-side
+  obscure fields as compatible with more specific motif fields while
+  still rejecting concrete mismatches.
 
 - motifs:
 
@@ -176,6 +192,10 @@ Examples:
 
 - `Hex` (generic glycan) vs `Hex` (generic motif) → TRUE (exact match)
 
+With `mode = "lenient"`, generic glycan residues can match compatible
+concrete motif residues. For example, `Hex` can match a `Gal` motif
+residue, but `HexNAc` still cannot match `Gal`.
+
 ## Linkages
 
 Obscure linkages (e.g. "??-?") are allowed in the `motif` graph (see
@@ -201,6 +221,19 @@ Both motifs and glycans can have a "half-linkage" at the reducing end,
 e.g. "GlcNAc(b1-". The half linkage in the motif will be matched to any
 linkage in the glycan, or the half linkage of the glycan. e.g. Glycan
 "GlcNAc(b1-4)Gal(a1-" will have both "GlcNAc(b1-" and "Gal(a1-" motifs.
+
+## Matching mode
+
+`mode = "strict"` is the default and preserves the standard rule that
+glycans cannot be more obscure than motifs. For example, glycan
+"Gal(?1-?)GalNAc(?1-" does not match motif "Gal(b1-3)GalNAc(a1-".
+
+`mode = "lenient"` treats obscure glycan-side monosaccharides, linkages,
+substituent positions, and reducing-end anomers as compatible with more
+specific motif fields. In the lenient mode, glycan "Gal(?1-?)GalNAc(?1-"
+matches motif "Gal(b1-3)GalNAc(a1-". Concrete mismatches still fail: for
+example, glycan "Gal(?1-6)GalNAc(a1-" does not match motif
+"Gal(b1-3)GalNAc(a1-".
 
 ## Alignment
 

@@ -39,16 +39,16 @@ return value is named with the motif names.
 ## Examples
 
 ``` r
-get_motif_structure("N-Glycan core basic")
+get_motif_structure("LacdiNAc")
 #> Warning: `get_motif_structure()` was deprecated in glymotif 0.16.0.
 #> ℹ Please use `db_motif_info()` instead.
 #> <glycan_structure[1]>
-#> [1] Man(a1-3)[Man(a1-6)]Man(b1-4)GlcNAc(b1-4)GlcNAc(?1-
+#> [1] GalNAc(b1-4)GlcNAc(?1-
 #> # Unique structures: 1
-get_motif_alignment("N-Glycan core basic")
+get_motif_alignment("LacdiNAc")
 #> Warning: `get_motif_alignment()` was deprecated in glymotif 0.16.0.
 #> ℹ Please use `db_motif_info()` instead.
-#> [1] "core"
+#> [1] "substructure"
 
 get_motif_structure(c("O-Glycan core 1", "O-Glycan core 2"))
 #> <glycan_structure[2]>
