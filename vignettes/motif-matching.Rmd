@@ -315,7 +315,7 @@ motifs <- c(
            "Gal(a1-4)Gal(a1-"            # motif 4: internal fragment
 )
 alignments <- c("substructure", "whole", "core", "terminal")
-mat <- do.call(cbind, purrr::map(alignments, ~ have_motifs_simple(glycan, motifs, alignment = .x)))
+mat <- do.call(cbind, purrr::map(alignments, ~ have_motifs_simple(glycan, motifs, alignments = .x)))
 colnames(mat) <- alignments
 rownames(mat) <- paste0("motif_", 1:4)
 mat
