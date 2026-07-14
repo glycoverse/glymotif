@@ -145,11 +145,20 @@ motifs <- c(
   sia_lacnac = "Neu5Ac(??-?)Gal(??-?)GlcNAc(??-"
 )
 
-exp |>
-  mutate_var(as_tibble(have_motifs(glycan_structure, motifs))) |>
-  get_var_info()
+if (inherits(exp, "glyexp_experiment")) {
+  exp |>
+    mutate_var(as_tibble(have_motifs(glycan_structure, motifs)))
+} else {
+  exp |>
+    mutate_row(as_tibble(have_motifs(glycan_structure, motifs)))
+}
 
-df <- get_var_info(exp)
+df <- tibble(
+  glycan_structure = c(
+    "Gal(b1-4)GlcNAc(b1-",
+    "Neu5Ac(a2-3)Gal(b1-4)GlcNAc(b1-"
+  )
+)
 df |>
   mutate(as_tibble(count_motifs(glycan_structure, motifs)))
 
