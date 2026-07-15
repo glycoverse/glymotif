@@ -211,39 +211,30 @@ motifs <- c(
   sia_lacnac = "Neu5Ac(??-?)Gal(??-?)GlcNAc(??-"
 )
 
-exp |>
-  mutate_var(as_tibble(have_motifs(glycan_structure, motifs))) |>
-  get_var_info()
-#> # A tibble: 67 × 5
-#>    variable                glycan_composition glycan_structure lacnac sia_lacnac
-#>    <glue>                  <comp>             <struct>         <lgl>  <lgl>     
-#>  1 Man(3)GlcNAc(3)         Man(3)GlcNAc(3)    GlcNAc(?1-?)Man… FALSE  FALSE     
-#>  2 Man(3)GlcNAc(7)         Man(3)GlcNAc(7)    GlcNAc(?1-?)[Gl… FALSE  FALSE     
-#>  3 Man(5)GlcNAc(2)         Man(5)GlcNAc(2)    Man(?1-?)[Man(?… FALSE  FALSE     
-#>  4 Man(4)Gal(2)GlcNAc(4)N… Man(4)Gal(2)GlcNA… Neu5Ac(?2-?)Gal… TRUE   TRUE      
-#>  5 Man(3)Gal(1)GlcNAc(3)   Man(3)Gal(1)GlcNA… Gal(?1-?)GlcNAc… TRUE   FALSE     
-#>  6 Man(3)Gal(2)GlcNAc(4)F… Man(3)Gal(2)GlcNA… Gal(?1-?)GlcNAc… TRUE   FALSE     
-#>  7 Man(3)GlcNAc(3)Fuc(1)   Man(3)GlcNAc(3)Fu… GlcNAc(?1-?)Man… FALSE  FALSE     
-#>  8 Man(3)GlcNAc(4)         Man(3)GlcNAc(4)    GlcNAc(?1-?)Man… FALSE  FALSE     
-#>  9 Man(3)Gal(2)GlcNAc(5)N… Man(3)Gal(2)GlcNA… Neu5Ac(?2-?)Gal… TRUE   TRUE      
-#> 10 Man(3)Gal(1)GlcNAc(5)F… Man(3)Gal(1)GlcNA… Neu5Ac(?2-?)Gal… TRUE   TRUE      
-#> # ℹ 57 more rows
+if (inherits(exp, "glyexp_experiment")) {
+  exp |>
+    mutate_var(as_tibble(have_motifs(glycan_structure, motifs)))
+} else {
+  exp |>
+    mutate_row(as_tibble(have_motifs(glycan_structure, motifs)))
+}
+#> 
+#> ── Glycomics Experiment ────────────────────────────────────────────────────────
+#> ℹ Expression matrix: 144 samples, 67 variables
+#> ℹ Sample information fields: group <fct>
+#> ℹ Variable information fields: glycan_composition <comp>, glycan_structure <struct>, lacnac <lgl>, sia_lacnac <lgl>
 
-df <- get_var_info(exp)
+df <- tibble(
+  glycan_structure = c(
+    "Gal(b1-4)GlcNAc(b1-",
+    "Neu5Ac(a2-3)Gal(b1-4)GlcNAc(b1-"
+  )
+)
 df |>
   mutate(as_tibble(count_motifs(glycan_structure, motifs)))
-#> # A tibble: 67 × 5
-#>    variable                glycan_composition glycan_structure lacnac sia_lacnac
-#>    <glue>                  <comp>             <struct>          <int>      <int>
-#>  1 Man(3)GlcNAc(3)         Man(3)GlcNAc(3)    GlcNAc(?1-?)Man…      0          0
-#>  2 Man(3)GlcNAc(7)         Man(3)GlcNAc(7)    GlcNAc(?1-?)[Gl…      0          0
-#>  3 Man(5)GlcNAc(2)         Man(5)GlcNAc(2)    Man(?1-?)[Man(?…      0          0
-#>  4 Man(4)Gal(2)GlcNAc(4)N… Man(4)Gal(2)GlcNA… Neu5Ac(?2-?)Gal…      2          2
-#>  5 Man(3)Gal(1)GlcNAc(3)   Man(3)Gal(1)GlcNA… Gal(?1-?)GlcNAc…      1          0
-#>  6 Man(3)Gal(2)GlcNAc(4)F… Man(3)Gal(2)GlcNA… Gal(?1-?)GlcNAc…      2          0
-#>  7 Man(3)GlcNAc(3)Fuc(1)   Man(3)GlcNAc(3)Fu… GlcNAc(?1-?)Man…      0          0
-#>  8 Man(3)GlcNAc(4)         Man(3)GlcNAc(4)    GlcNAc(?1-?)Man…      0          0
-#>  9 Man(3)Gal(2)GlcNAc(5)N… Man(3)Gal(2)GlcNA… Neu5Ac(?2-?)Gal…      2          1
-#> 10 Man(3)Gal(1)GlcNAc(5)F… Man(3)Gal(1)GlcNA… Neu5Ac(?2-?)Gal…      1          1
-#> # ℹ 57 more rows
+#> # A tibble: 2 × 3
+#>   glycan_structure                lacnac sia_lacnac
+#>   <chr>                            <int>      <int>
+#> 1 Gal(b1-4)GlcNAc(b1-                  1          0
+#> 2 Neu5Ac(a2-3)Gal(b1-4)GlcNAc(b1-      1          1
 ```
