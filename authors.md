@@ -11,12 +11,12 @@ Source:
 [`DESCRIPTION`](https://github.com/glycoverse/glymotif/blob/main/DESCRIPTION)
 
 Fu B (2026). *glymotif: Extract Glycan Motifs from Glycan Structures*. R
-package version 0.17.0, <https://glycoverse.github.io/glymotif/>.
+package version 0.17.1, <https://glycoverse.github.io/glymotif/>.
 
     @Manual{,
       title = {glymotif: Extract Glycan Motifs from Glycan Structures},
       author = {Bin Fu},
       year = {2026},
-      note = {R package version 0.17.0},
+      note = {R package version 0.17.1},
       url = {https://glycoverse.github.io/glymotif/},
     }

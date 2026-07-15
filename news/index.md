@@ -1,5 +1,12 @@
 # Changelog
 
+## glymotif 0.17.1
+
+- Examples for
+  [`add_motifs_int()`](https://glycoverse.github.io/glymotif/reference/add_motifs_int.md)
+  now run with both legacy and current `glyexp` containers and use valid
+  condensed IUPAC glycans.
+
 ## glymotif 0.17.0
 
 ### Breaking changes
