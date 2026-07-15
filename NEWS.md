@@ -1,4 +1,6 @@
-# glymotif (development version)
+# glymotif 0.17.1
+
+* Examples for `add_motifs_int()` now run with both legacy and current `glyexp` containers and use valid condensed IUPAC glycans.
 
 # glymotif 0.17.0
 
