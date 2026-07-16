@@ -2,6 +2,13 @@
 
 ## glymotif (development version)
 
+- Documentation now recommends `GlycomicSE` and `GlycoproteomicSE`
+  containers and the
+  [`mutate_row()`](https://glycoverse.github.io/glyexp/reference/mutate_col.html)
+  replacement for deprecated motif-annotation helpers as part of Stage
+  II of glycoverse/glyexp#15.
+  ([\#49](https://github.com/glycoverse/glymotif/issues/49))
+
 ## glymotif 0.17.1
 
 - Examples for
@@ -32,7 +39,7 @@
   are deprecated. Use
   [`dplyr::mutate()`](https://dplyr.tidyverse.org/reference/mutate.html)
   or
-  [`glyexp::mutate_var()`](https://glycoverse.github.io/glyexp/reference/mutate_obs.html)
+  [`glyexp::mutate_var()`](https://glycoverse.github.io/glyexp/reference/deprecated-dplyr-aliases.html)
   with `tibble::as_tibble(have_motifs(...))` or
   `tibble::as_tibble(count_motifs(...))` instead
   ([\#44](https://github.com/glycoverse/glymotif/issues/44)).

@@ -528,10 +528,8 @@ and
 
 - Want more detail about motif matching rules? See [Motif Matching
   Rules](https://glycoverse.github.io/glymotif/articles/motif-matching.html).
-- Working with
-  [`glyexp::experiment()`](https://glycoverse.github.io/glyexp/reference/experiment.html)?
-  See [Working with
-  glyexp](https://glycoverse.github.io/glymotif/articles/with-exp.html).
+- Working with `GlycomicSE` or `GlycoproteomicSE`? See [Creating a Glyco
+  SummarizedExperiment](https://glycoverse.github.io/glyexp/articles/create-exp.html).
 
 ## Related Projects
 
