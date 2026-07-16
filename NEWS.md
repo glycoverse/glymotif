@@ -1,4 +1,4 @@
-# glymotif (development version)
+# glymotif 0.17.2
 
 * Documentation now recommends `GlycomicSE` and `GlycoproteomicSE` containers and the `mutate_row()` replacement for deprecated motif-annotation helpers as part of Stage II of glycoverse/glyexp#15. (#49)
 
