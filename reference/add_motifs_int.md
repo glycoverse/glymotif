@@ -12,10 +12,13 @@ and
 or
 [`have_motifs()`](https://glycoverse.github.io/glymotif/reference/have_motif.md).
 For
-[`glyexp::experiment()`](https://glycoverse.github.io/glyexp/reference/experiment.html)
+[`glyexp::GlycomicSE()`](https://glycoverse.github.io/glyexp/reference/GlycomicSE.html)
+or
+[`glyexp::GlycoproteomicSE()`](https://glycoverse.github.io/glyexp/reference/GlycoproteomicSE.html)
 objects, use
-[`glyexp::mutate_var()`](https://glycoverse.github.io/glyexp/reference/mutate_obs.html)
-with the same tibble expression.
+[`glyexp::mutate_row()`](https://glycoverse.github.io/glyexp/reference/mutate_col.html)
+with the same tibble expression. The deprecated methods for legacy
+glyexp containers remain available for compatibility.
 
 ## Usage
 
@@ -89,9 +92,7 @@ add_motifs_lgl(
 
 - x:
 
-  A
-  [`glyexp::experiment()`](https://glycoverse.github.io/glyexp/reference/experiment.html)
-  object, or a tibble with a structure column.
+  A legacy glyexp data container or a tibble with a structure column.
 
 - motifs:
 
@@ -149,9 +150,8 @@ add_motifs_lgl(
 
 ## Value
 
-An
-[`glyexp::experiment()`](https://glycoverse.github.io/glyexp/reference/experiment.html)
-object with motif annotations added to the variable information.
+The legacy glyexp data container or data frame supplied in `x`, with
+motif annotations added to its variable information.
 
 ## About Names
 
@@ -188,7 +188,8 @@ they are designed for adding motif annotations to data frames.
 
 [`have_motifs()`](https://glycoverse.github.io/glymotif/reference/have_motif.md),
 [`count_motifs()`](https://glycoverse.github.io/glymotif/reference/count_motif.md),
-[`glyexp::experiment()`](https://glycoverse.github.io/glyexp/reference/experiment.html)
+[`glyexp::GlycomicSE()`](https://glycoverse.github.io/glyexp/reference/GlycomicSE.html),
+[`glyexp::GlycoproteomicSE()`](https://glycoverse.github.io/glyexp/reference/GlycoproteomicSE.html)
 
 ## Examples
 
@@ -205,24 +206,21 @@ library(dplyr)
 #>     intersect, setdiff, setequal, union
 library(tibble)
 
-exp <- real_experiment2
+glyco_se <- real_experiment2
 motifs <- c(
   lacnac = "Gal(??-?)GlcNAc(??-",
   sia_lacnac = "Neu5Ac(??-?)Gal(??-?)GlcNAc(??-"
 )
 
-if (inherits(exp, "glyexp_experiment")) {
-  exp |>
-    mutate_var(as_tibble(have_motifs(glycan_structure, motifs)))
-} else {
-  exp |>
-    mutate_row(as_tibble(have_motifs(glycan_structure, motifs)))
-}
+glyco_se |>
+  mutate_row(as_tibble(count_motifs(glycan_structure, motifs)))
 #> 
-#> ── Glycomics Experiment ────────────────────────────────────────────────────────
-#> ℹ Expression matrix: 144 samples, 67 variables
-#> ℹ Sample information fields: group <fct>
-#> ℹ Variable information fields: glycan_composition <comp>, glycan_structure <struct>, lacnac <lgl>, sia_lacnac <lgl>
+#> ── GlycomicSE ──────────────────────────────────────────────────────────────────
+#> ℹ Abundance assay: 144 samples, 67 variables
+#> ℹ Glycan type: N
+#> ℹ Row data fields: glycan_composition <comp>, glycan_structure <struct>, lacnac <int>, sia_lacnac <int>
+#> ℹ Column data fields: group <fct>
+#> ℹ Metadata fields: exp_type <chr>, glycan_type <chr>
 
 df <- tibble(
   glycan_structure = c(

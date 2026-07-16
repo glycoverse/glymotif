@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">glymotif</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.17.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.17.2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -37,6 +37,10 @@
     </div>
 
     <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.17.2" id="glymotif-0172">glymotif 0.17.2<a class="anchor" aria-label="anchor" href="#glymotif-0172"></a></h2>
+<ul><li>Documentation now recommends <code>GlycomicSE</code> and <code>GlycoproteomicSE</code> containers and the <code><a href="https://glycoverse.github.io/glyexp/reference/mutate_col.html" class="external-link">mutate_row()</a></code> replacement for deprecated motif-annotation helpers as part of Stage II of glycoverse/glyexp#15. (<a href="https://github.com/glycoverse/glymotif/issues/49" class="external-link">#49</a>)</li>
+</ul></div>
+    <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.17.1" id="glymotif-0171">glymotif 0.17.1<a class="anchor" aria-label="anchor" href="#glymotif-0171"></a></h2>
 <ul><li>Examples for <code><a href="../reference/add_motifs_int.html">add_motifs_int()</a></code> now run with both legacy and current <code>glyexp</code> containers and use valid condensed IUPAC glycans.</li>
 </ul></div>
@@ -53,7 +57,7 @@
 <div class="section level3">
 <h3 id="minor-improvements-and-bug-fixes-0-17-0">Minor improvements and bug fixes<a class="anchor" aria-label="anchor" href="#minor-improvements-and-bug-fixes-0-17-0"></a></h3>
 <ul><li>
-<code><a href="../reference/add_motifs_int.html">add_motifs_lgl()</a></code> and <code><a href="../reference/add_motifs_int.html">add_motifs_int()</a></code> are deprecated. Use <code><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">dplyr::mutate()</a></code> or <code><a href="https://glycoverse.github.io/glyexp/reference/mutate_obs.html" class="external-link">glyexp::mutate_var()</a></code> with <code>tibble::as_tibble(have_motifs(...))</code> or <code>tibble::as_tibble(count_motifs(...))</code> instead (<a href="https://github.com/glycoverse/glymotif/issues/44" class="external-link">#44</a>).</li>
+<code><a href="../reference/add_motifs_int.html">add_motifs_lgl()</a></code> and <code><a href="../reference/add_motifs_int.html">add_motifs_int()</a></code> are deprecated. Use <code><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">dplyr::mutate()</a></code> or <code><a href="https://glycoverse.github.io/glyexp/reference/deprecated-dplyr-aliases.html" class="external-link">glyexp::mutate_var()</a></code> with <code>tibble::as_tibble(have_motifs(...))</code> or <code>tibble::as_tibble(count_motifs(...))</code> instead (<a href="https://github.com/glycoverse/glymotif/issues/44" class="external-link">#44</a>).</li>
 </ul></div>
 </div>
     <div class="section level2">
