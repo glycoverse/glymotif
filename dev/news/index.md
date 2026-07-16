@@ -2,6 +2,8 @@
 
 ## glymotif (development version)
 
+## glymotif 0.17.2
+
 - Documentation now recommends `GlycomicSE` and `GlycoproteomicSE`
   containers and the
   [`mutate_row()`](https://glycoverse.github.io/glyexp/reference/mutate_col.html)
