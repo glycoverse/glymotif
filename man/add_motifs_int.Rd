@@ -70,7 +70,7 @@ add_motifs_lgl(
 )
 }
 \arguments{
-\item{x}{A \code{\link[glyexp:experiment]{glyexp::experiment()}} object, or a tibble with a structure column.}
+\item{x}{A legacy glyexp data container or a tibble with a structure column.}
 
 \item{motifs}{One of:
 \itemize{
@@ -102,15 +102,18 @@ provided, \code{alignment} and \code{alignments} are silently ignored.}
 \item{...}{Additional arguments passed to the method.}
 }
 \value{
-An \code{\link[glyexp:experiment]{glyexp::experiment()}} object with motif annotations added to the variable information.
+The legacy glyexp data container or data frame supplied in \code{x}, with
+motif annotations added to its variable information.
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
 
 \code{add_motifs_int()} and \code{add_motifs_lgl()} were deprecated in glymotif
 0.17.0. For data frames, use \code{\link[dplyr:mutate]{dplyr::mutate()}} with \code{\link[tibble:as_tibble]{tibble::as_tibble()}}
-and \code{\link[=count_motifs]{count_motifs()}} or \code{\link[=have_motifs]{have_motifs()}}. For \code{\link[glyexp:experiment]{glyexp::experiment()}}
-objects, use \code{\link[glyexp:mutate_obs]{glyexp::mutate_var()}} with the same tibble expression.
+and \code{\link[=count_motifs]{count_motifs()}} or \code{\link[=have_motifs]{have_motifs()}}. For \code{\link[glyexp:GlycomicSE]{glyexp::GlycomicSE()}} or
+\code{\link[glyexp:GlycoproteomicSE]{glyexp::GlycoproteomicSE()}} objects, use \code{\link[glyexp:mutate_col]{glyexp::mutate_row()}} with the
+same tibble expression. The deprecated methods for legacy glyexp containers
+remain available for compatibility.
 }
 \section{About Names}{
 
@@ -139,19 +142,14 @@ library(glyexp)
 library(dplyr)
 library(tibble)
 
-exp <- real_experiment2
+glyco_se <- real_experiment2
 motifs <- c(
   lacnac = "Gal(??-?)GlcNAc(??-",
   sia_lacnac = "Neu5Ac(??-?)Gal(??-?)GlcNAc(??-"
 )
 
-if (inherits(exp, "glyexp_experiment")) {
-  exp |>
-    mutate_var(as_tibble(have_motifs(glycan_structure, motifs)))
-} else {
-  exp |>
-    mutate_row(as_tibble(have_motifs(glycan_structure, motifs)))
-}
+glyco_se |>
+  mutate_row(as_tibble(count_motifs(glycan_structure, motifs)))
 
 df <- tibble(
   glycan_structure = c(
@@ -164,5 +162,6 @@ df |>
 
 }
 \seealso{
-\code{\link[=have_motifs]{have_motifs()}}, \code{\link[=count_motifs]{count_motifs()}}, \code{\link[glyexp:experiment]{glyexp::experiment()}}
+\code{\link[=have_motifs]{have_motifs()}}, \code{\link[=count_motifs]{count_motifs()}},
+\code{\link[glyexp:GlycomicSE]{glyexp::GlycomicSE()}}, \code{\link[glyexp:GlycoproteomicSE]{glyexp::GlycoproteomicSE()}}
 }

@@ -5,8 +5,10 @@
 #'
 #' `add_motifs_int()` and `add_motifs_lgl()` were deprecated in glymotif
 #' 0.17.0. For data frames, use [dplyr::mutate()] with [tibble::as_tibble()]
-#' and [count_motifs()] or [have_motifs()]. For [glyexp::experiment()]
-#' objects, use [glyexp::mutate_var()] with the same tibble expression.
+#' and [count_motifs()] or [have_motifs()]. For [glyexp::GlycomicSE()] or
+#' [glyexp::GlycoproteomicSE()] objects, use [glyexp::mutate_row()] with the
+#' same tibble expression. The deprecated methods for legacy glyexp containers
+#' remain available for compatibility.
 #'
 #' @section About Names:
 #'
@@ -26,30 +28,26 @@
 #' motifs. The functions here always provide column names since they are designed
 #' for adding motif annotations to data frames.
 #'
-#' @param x A [glyexp::experiment()] object, or a tibble with a structure column.
+#' @param x A legacy glyexp data container or a tibble with a structure column.
 #' @param ... Additional arguments passed to the method.
 #' @inheritParams have_motifs
 #'
-#' @return An [glyexp::experiment()] object with motif annotations added to the variable information.
+#' @return The legacy glyexp data container or data frame supplied in `x`, with
+#'   motif annotations added to its variable information.
 #'
 #' @examples
 #' library(glyexp)
 #' library(dplyr)
 #' library(tibble)
 #'
-#' exp <- real_experiment2
+#' glyco_se <- real_experiment2
 #' motifs <- c(
 #'   lacnac = "Gal(??-?)GlcNAc(??-",
 #'   sia_lacnac = "Neu5Ac(??-?)Gal(??-?)GlcNAc(??-"
 #' )
 #'
-#' if (inherits(exp, "glyexp_experiment")) {
-#'   exp |>
-#'     mutate_var(as_tibble(have_motifs(glycan_structure, motifs)))
-#' } else {
-#'   exp |>
-#'     mutate_row(as_tibble(have_motifs(glycan_structure, motifs)))
-#' }
+#' glyco_se |>
+#'   mutate_row(as_tibble(count_motifs(glycan_structure, motifs)))
 #'
 #' df <- tibble(
 #'   glycan_structure = c(
@@ -60,7 +58,8 @@
 #' df |>
 #'   mutate(as_tibble(count_motifs(glycan_structure, motifs)))
 #'
-#' @seealso [glymotif::have_motifs()], [glymotif::count_motifs()], [glyexp::experiment()]
+#' @seealso [glymotif::have_motifs()], [glymotif::count_motifs()],
+#'   [glyexp::GlycomicSE()], [glyexp::GlycoproteomicSE()]
 #'
 #' @export
 add_motifs_int <- function(
@@ -77,7 +76,7 @@ add_motifs_int <- function(
     "add_motifs_int()",
     details = c(
       "For data frames, use `dplyr::mutate(as_tibble(count_motifs(glycan_structure, motifs)))`.",
-      "For glyexp experiments, use `glyexp::mutate_var(as_tibble(count_motifs(glycan_structure, motifs)))`."
+      "For glyexp containers, use `glyexp::mutate_row(as_tibble(count_motifs(glycan_structure, motifs)))`."
     )
   )
   UseMethod("add_motifs_int")
@@ -99,7 +98,7 @@ add_motifs_lgl <- function(
     "add_motifs_lgl()",
     details = c(
       "For data frames, use `dplyr::mutate(as_tibble(have_motifs(glycan_structure, motifs)))`.",
-      "For glyexp experiments, use `glyexp::mutate_var(as_tibble(have_motifs(glycan_structure, motifs)))`."
+      "For glyexp containers, use `glyexp::mutate_row(as_tibble(have_motifs(glycan_structure, motifs)))`."
     )
   )
   UseMethod("add_motifs_lgl")
