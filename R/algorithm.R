@@ -1,6 +1,24 @@
-colorize_graphs <- function(glycan, motif, mode = "strict") {
+colorize_graphs <- function(
+  glycan,
+  motif,
+  mode = "strict",
+  glycan_batch_profile = NULL,
+  motif_batch_profile = NULL
+) {
   if (mode == "lenient") {
     return(list(glycan_colors = NULL, motif_colors = NULL))
+  }
+
+  if (!is.null(glycan_batch_profile) && !is.null(motif_batch_profile)) {
+    color_type <- if (motif_batch_profile$use_base_keys) {
+      "base_colors"
+    } else {
+      "exact_colors"
+    }
+    return(list(
+      glycan_colors = glycan_batch_profile[[color_type]],
+      motif_colors = motif_batch_profile[[color_type]]
+    ))
   }
 
   # Prepare VF2 color vectors from the "mono" vertex attributes without
@@ -54,7 +72,23 @@ new_motif_composition_profile <- function(motif) {
 #'
 #' @return A logical scalar.
 #' @noRd
-composition_can_match <- function(glycan, motif_profile) {
+composition_can_match <- function(
+  glycan,
+  motif_profile,
+  glycan_batch_profile = NULL,
+  motif_batch_profile = NULL
+) {
+  if (!is.null(glycan_batch_profile) && !is.null(motif_batch_profile)) {
+    count_type <- if (motif_profile$use_base_keys) {
+      "base_counts"
+    } else {
+      "exact_counts"
+    }
+    return(all(
+      glycan_batch_profile[[count_type]] >= motif_batch_profile[[count_type]]
+    ))
+  }
+
   glycan_monos <- igraph::vertex_attr(glycan, "mono")
   if (motif_profile$use_base_keys) {
     glycan_monos <- residue_color_keys(glycan_monos)
@@ -76,9 +110,22 @@ composition_can_match <- function(glycan, motif_profile) {
 #'
 #' @return A logical scalar.
 #' @noRd
-whole_alignment_size_can_match <- function(glycan, motif, alignment) {
+whole_alignment_size_can_match <- function(
+  glycan,
+  motif,
+  alignment,
+  glycan_batch_profile = NULL,
+  motif_batch_profile = NULL
+) {
   if (alignment != "whole") {
     return(TRUE)
+  }
+
+  if (!is.null(glycan_batch_profile) && !is.null(motif_batch_profile)) {
+    return(
+      glycan_batch_profile$vcount == motif_batch_profile$vcount &&
+        glycan_batch_profile$ecount == motif_batch_profile$ecount
+    )
   }
 
   igraph::vcount(glycan) == igraph::vcount(motif) &&
@@ -103,20 +150,35 @@ core_alignment_root_can_match <- function(
   motif,
   alignment,
   strict_sub,
-  mode = "strict"
+  mode = "strict",
+  glycan_batch_profile = NULL,
+  motif_batch_profile = NULL
 ) {
   if (alignment != "core") {
     return(TRUE)
   }
 
-  glycan_core <- core_node(glycan)
-  motif_core <- core_node(motif)
+  if (!is.null(glycan_batch_profile) && !is.null(motif_batch_profile)) {
+    glycan_core <- glycan_batch_profile$core
+    motif_core <- motif_batch_profile$core
+    glycan_mono <- glycan_batch_profile$monos[[glycan_core]]
+    glycan_sub <- glycan_batch_profile$subs[[glycan_core]]
+    motif_mono <- motif_batch_profile$monos[[motif_core]]
+    motif_sub <- motif_batch_profile$subs[[motif_core]]
+  } else {
+    glycan_core <- core_node(glycan)
+    motif_core <- core_node(motif)
+    glycan_mono <- igraph::vertex_attr(glycan, "mono", index = glycan_core)
+    glycan_sub <- igraph::vertex_attr(glycan, "sub", index = glycan_core)
+    motif_mono <- igraph::vertex_attr(motif, "mono", index = motif_core)
+    motif_sub <- igraph::vertex_attr(motif, "sub", index = motif_core)
+  }
 
   match_residue(
-    igraph::vertex_attr(glycan, "mono", index = glycan_core),
-    igraph::vertex_attr(glycan, "sub", index = glycan_core),
-    igraph::vertex_attr(motif, "mono", index = motif_core),
-    igraph::vertex_attr(motif, "sub", index = motif_core),
+    glycan_mono,
+    glycan_sub,
+    motif_mono,
+    motif_sub,
     strict_sub = strict_sub,
     mode = mode
   )
@@ -492,7 +554,8 @@ resolve_linkage_match_mode <- function(
   glycan,
   motif_has_linkages,
   ignore_linkages,
-  mode = "strict"
+  mode = "strict",
+  glycan_batch_profile = NULL
 ) {
   # Unlinked motifs are linkage-agnostic: once mono/sub/alignment checks pass,
   # wildcard linkage checks cannot reject additional candidates.
@@ -502,7 +565,12 @@ resolve_linkage_match_mode <- function(
 
   # A linked motif cannot match an unlinked glycan. Returning "none" lets callers
   # bypass VF2 entirely and return the empty result for their output type.
-  if (mode == "strict" && !graph_has_linkages(glycan)) {
+  glycan_has_linkages <- if (is.null(glycan_batch_profile)) {
+    graph_has_linkages(glycan)
+  } else {
+    glycan_batch_profile$has_linkages
+  }
+  if (mode == "strict" && !glycan_has_linkages) {
     return("none")
   }
 

@@ -420,11 +420,21 @@ have_motif_ <- function(
   ignore_linkages = FALSE,
   strict_sub = TRUE,
   match_degree = NULL,
-  mode = "strict"
+  mode = "strict",
+  glycan_batch_profile = NULL,
+  motif_batch_profile = NULL
 ) {
   # Optimized version with early termination
   # Check if any match is valid, returning immediately on first valid match
-  if (!whole_alignment_size_can_match(glycan_graph, motif_graph, alignment)) {
+  if (
+    !whole_alignment_size_can_match(
+      glycan_graph,
+      motif_graph,
+      alignment,
+      glycan_batch_profile = glycan_batch_profile,
+      motif_batch_profile = motif_batch_profile
+    )
+  ) {
     return(FALSE)
   }
   if (
@@ -433,7 +443,9 @@ have_motif_ <- function(
       motif_graph,
       alignment,
       strict_sub = strict_sub,
-      mode = mode
+      mode = mode,
+      glycan_batch_profile = glycan_batch_profile,
+      motif_batch_profile = motif_batch_profile
     )
   ) {
     return(FALSE)
@@ -443,7 +455,8 @@ have_motif_ <- function(
     glycan_graph,
     motif_has_linkages,
     ignore_linkages,
-    mode = mode
+    mode = mode,
+    glycan_batch_profile = glycan_batch_profile
   )
 
   # "none" is an early no-match result: the motif requires linkage information,
@@ -454,12 +467,23 @@ have_motif_ <- function(
 
   if (
     mode == "strict" &&
-      !composition_can_match(glycan_graph, motif_composition_profile)
+      !composition_can_match(
+        glycan_graph,
+        motif_composition_profile,
+        glycan_batch_profile = glycan_batch_profile,
+        motif_batch_profile = motif_batch_profile
+      )
   ) {
     return(FALSE)
   }
 
-  c_graphs <- colorize_graphs(glycan_graph, motif_graph, mode = mode)
+  c_graphs <- colorize_graphs(
+    glycan_graph,
+    motif_graph,
+    mode = mode,
+    glycan_batch_profile = glycan_batch_profile,
+    motif_batch_profile = motif_batch_profile
+  )
   res <- perform_vf2(
     glycan_graph,
     motif_graph,
@@ -526,15 +550,16 @@ have_motifs_ <- function(
   mode = "strict"
 ) {
   apply_motifs_to_glycans(
-    glycans,
-    motifs,
-    alignments,
-    ignore_linkages,
-    have_motif_,
-    glycan_names,
-    motif_names,
-    strict_sub,
-    match_degree,
-    mode
+    glycans = glycans,
+    motifs = motifs,
+    alignments = alignments,
+    ignore_linkages = ignore_linkages,
+    single_glycan_func = .have_motif_single,
+    glycan_names = glycan_names,
+    motif_names = motif_names,
+    strict_sub = strict_sub,
+    match_degree = match_degree,
+    mode = mode,
+    result_type = "logical"
   )
 }
