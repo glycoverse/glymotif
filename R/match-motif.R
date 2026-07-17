@@ -257,37 +257,19 @@ match_motifs_ <- function(
     match_degree
   }
 
-  results <- purrr::map2(
-    motifs,
-    seq_along(motifs),
-    ~ match_motif_(
-      glycans,
-      .x,
-      alignment = alignments[[.y]],
-      ignore_linkages = ignore_linkages,
-      strict_sub = strict_sub,
-      match_degree = match_degree_list[[.y]],
-      mode = mode
-    )
+  apply_motifs_to_glycans(
+    glycans = glycans,
+    motifs = motifs,
+    alignments = alignments,
+    ignore_linkages = ignore_linkages,
+    single_glycan_func = .match_motif_single,
+    glycan_names = glycan_names,
+    motif_names = motif_names,
+    strict_sub = strict_sub,
+    match_degree = match_degree_list,
+    mode = mode,
+    result_type = "list"
   )
-
-  # Name the outer list (motifs) if motif_names provided
-  if (!is.null(motif_names)) {
-    names(results) <- motif_names
-  }
-
-  # Name the inner lists (glycans) if glycan_names provided
-  if (!is.null(glycan_names)) {
-    results <- purrr::map(
-      results,
-      ~ {
-        names(.x) <- glycan_names
-        .x
-      }
-    )
-  }
-
-  results
 }
 
 .match_motif_single <- function(
@@ -299,9 +281,19 @@ match_motifs_ <- function(
   ignore_linkages = FALSE,
   strict_sub = TRUE,
   match_degree = NULL,
-  mode = "strict"
+  mode = "strict",
+  glycan_batch_profile = NULL,
+  motif_batch_profile = NULL
 ) {
-  if (!whole_alignment_size_can_match(glycan_graph, motif_graph, alignment)) {
+  if (
+    !whole_alignment_size_can_match(
+      glycan_graph,
+      motif_graph,
+      alignment,
+      glycan_batch_profile = glycan_batch_profile,
+      motif_batch_profile = motif_batch_profile
+    )
+  ) {
     return(list())
   }
   if (
@@ -310,7 +302,9 @@ match_motifs_ <- function(
       motif_graph,
       alignment,
       strict_sub = strict_sub,
-      mode = mode
+      mode = mode,
+      glycan_batch_profile = glycan_batch_profile,
+      motif_batch_profile = motif_batch_profile
     )
   ) {
     return(list())
@@ -320,7 +314,8 @@ match_motifs_ <- function(
     glycan_graph,
     motif_has_linkages,
     ignore_linkages,
-    mode = mode
+    mode = mode,
+    glycan_batch_profile = glycan_batch_profile
   )
 
   # "none" is an early no-match result: the motif requires linkage information,
@@ -331,12 +326,23 @@ match_motifs_ <- function(
 
   if (
     mode == "strict" &&
-      !composition_can_match(glycan_graph, motif_composition_profile)
+      !composition_can_match(
+        glycan_graph,
+        motif_composition_profile,
+        glycan_batch_profile = glycan_batch_profile,
+        motif_batch_profile = motif_batch_profile
+      )
   ) {
     return(list())
   }
 
-  c_graphs <- colorize_graphs(glycan_graph, motif_graph, mode = mode)
+  c_graphs <- colorize_graphs(
+    glycan_graph,
+    motif_graph,
+    mode = mode,
+    glycan_batch_profile = glycan_batch_profile,
+    motif_batch_profile = motif_batch_profile
+  )
   res <- perform_vf2(
     glycan_graph,
     motif_graph,

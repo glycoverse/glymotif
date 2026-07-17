@@ -1,5 +1,7 @@
 # glymotif (development version)
 
+* `have_motifs()`, `count_motifs()`, and `match_motifs()` now reuse graph metadata across batch matching, substantially reducing runtime for many-glycan, many-motif analyses.
+
 # glymotif 0.17.2
 
 * Documentation now recommends `GlycomicSE` and `GlycoproteomicSE` containers and the `mutate_row()` replacement for deprecated motif-annotation helpers as part of Stage II of glycoverse/glyexp#15. (#49)

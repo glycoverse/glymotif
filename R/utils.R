@@ -793,15 +793,16 @@ apply_motifs_to_glycans <- function(
   motifs,
   alignments,
   ignore_linkages,
-  single_motif_func,
+  single_glycan_func,
   glycan_names,
   motif_names,
   strict_sub,
   match_degree,
-  mode
+  mode,
+  result_type
 ) {
   # Generic function to apply multiple motifs to multiple glycans
-  # single_motif_func should be either have_motif_ or count_motif_
+  # single_glycan_func is one of the graph-pair motif matching functions.
 
   # Handle empty motifs case
   if (length(motifs) == 0) {
@@ -814,19 +815,22 @@ apply_motifs_to_glycans <- function(
     match_degree
   }
 
-  # Apply each motif to all glycans using purrr
-  motif_results_list <- purrr::map2(
-    motifs,
+  batch <- prepare_match_batch(glycans, motifs)
+  motif_results_list <- lapply(
     seq_along(motifs),
-    ~ single_motif_func(
-      glycans,
-      .x,
-      alignment = alignments[[.y]],
-      ignore_linkages = ignore_linkages,
-      strict_sub = strict_sub,
-      match_degree = match_degree_list[[.y]],
-      mode = mode
-    )
+    function(i) {
+      apply_batch_motif(
+        batch = batch,
+        motif_position = i,
+        alignment = alignments[[i]],
+        ignore_linkages = ignore_linkages,
+        strict_sub = strict_sub,
+        match_degree = match_degree_list[[i]],
+        mode = mode,
+        single_glycan_func = single_glycan_func,
+        result_type = result_type
+      )
+    }
   )
 
   # Set names for the results if provided
@@ -834,8 +838,19 @@ apply_motifs_to_glycans <- function(
     names(motif_results_list) <- motif_names
   }
 
-  # Convert results to matrix format
-  # Each element in motif_results_list should be a vector of results for all glycans
+  if (result_type == "list") {
+    if (!is.null(glycan_names)) {
+      motif_results_list <- purrr::map(
+        motif_results_list,
+        function(result) {
+          names(result) <- glycan_names
+          result
+        }
+      )
+    }
+    return(motif_results_list)
+  }
+
   result_matrix <- do.call(cbind, motif_results_list)
 
   # Set rownames if provided
