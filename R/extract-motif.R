@@ -188,10 +188,11 @@ extract_motif <- function(glycans, ..., max_size = 3) {
   glycans <- ensure_glycans_are_structures(glycans)
   glycans <- unique(glycans)
   structure_graphs <- glyrepr::get_structure_graphs(glycans, return_list = TRUE)
+  seen_motifs <- new.env(hash = TRUE, parent = emptyenv())
 
   extracted_subtrees <- unlist(
     purrr::map(structure_graphs, function(g) {
-      .extract_motifs_from_graph(g, max_size)
+      .extract_motifs_from_graph(g, max_size, seen_motifs)
     }),
     recursive = FALSE
   )
@@ -204,23 +205,129 @@ extract_motif <- function(glycans, ..., max_size = 3) {
   unique(res)
 }
 
-.extract_motifs_from_graph <- function(g, max_size) {
+.extract_motifs_from_graph <- function(g, max_size, seen_motifs) {
   nodes <- as.numeric(igraph::V(g))
+  key_context <- .new_motif_key_context(g)
+
   unlist(
     purrr::map(nodes, function(node) {
-      .extract_motifs_rooted_at(g, node, max_size)
+      .extract_motifs_rooted_at(
+        g,
+        node,
+        max_size,
+        seen_motifs,
+        key_context
+      )
     }),
     recursive = FALSE
   )
 }
 
-.extract_motifs_rooted_at <- function(g, root_id, max_size) {
+.extract_motifs_rooted_at <- function(
+  g,
+  root_id,
+  max_size,
+  seen_motifs,
+  key_context
+) {
   subsets <- .find_connected_subsets(g, root_id, max_size)
-  purrr::map(subsets, function(subset_nodes) {
+  anomer <- .get_node_anomer(g, root_id)
+
+  subtrees <- purrr::map(subsets, function(subset_nodes) {
+    key <- .motif_candidate_key(
+      key_context,
+      root_id,
+      subset_nodes,
+      anomer
+    )
+    if (exists(key, envir = seen_motifs, inherits = FALSE)) {
+      return(NULL)
+    }
+    assign(key, TRUE, envir = seen_motifs)
+
     subtree <- igraph::induced_subgraph(g, subset_nodes)
-    subtree$anomer <- .get_node_anomer(g, root_id)
+    subtree$anomer <- anomer
     subtree
   })
+
+  purrr::compact(subtrees)
+}
+
+.new_motif_key_context <- function(g) {
+  node_count <- igraph::vcount(g)
+  children <- rep(list(integer()), node_count)
+  child_linkages <- rep(list(character()), node_count)
+  edges <- igraph::as_edgelist(g, names = FALSE)
+
+  if (nrow(edges) > 0) {
+    linkages <- igraph::edge_attr(g, "linkage")
+    for (edge_id in seq_len(nrow(edges))) {
+      parent <- edges[edge_id, 1]
+      children[[parent]] <- c(children[[parent]], edges[edge_id, 2])
+      child_linkages[[parent]] <- c(
+        child_linkages[[parent]],
+        linkages[[edge_id]]
+      )
+    }
+  }
+
+  list(
+    mono = igraph::vertex_attr(g, "mono"),
+    sub = igraph::vertex_attr(g, "sub"),
+    children = children,
+    child_linkages = child_linkages
+  )
+}
+
+.motif_candidate_key <- function(context, root_id, subset_nodes, anomer) {
+  selected <- rep(FALSE, length(context$children))
+  selected[subset_nodes] <- TRUE
+
+  encode_node <- NULL
+  encode_node <- function(node_id) {
+    children <- context$children[[node_id]]
+    child_tokens <- character()
+
+    if (length(children) > 0) {
+      included <- selected[children]
+      children <- children[included]
+      linkages <- context$child_linkages[[node_id]][included]
+      child_tokens <- vapply(
+        seq_along(children),
+        function(i) {
+          paste0(
+            "E",
+            .motif_key_field(linkages[[i]]),
+            .motif_key_field(encode_node(children[[i]]))
+          )
+        },
+        character(1)
+      )
+      child_tokens <- sort(child_tokens)
+    }
+
+    paste0(
+      "N",
+      .motif_key_field(context$mono[[node_id]]),
+      .motif_key_field(context$sub[[node_id]]),
+      .motif_key_field(paste0(child_tokens, collapse = ""))
+    )
+  }
+
+  paste0(
+    "R",
+    .motif_key_field(anomer),
+    .motif_key_field(encode_node(root_id))
+  )
+}
+
+.motif_key_field <- function(value) {
+  if (length(value) == 0 || is.na(value)) {
+    return("M")
+  }
+
+  value <- enc2utf8(as.character(value))
+  paste0(nchar(value, type = "bytes"), ":", value)
 }
 
 .get_node_anomer <- function(g, node_id) {
