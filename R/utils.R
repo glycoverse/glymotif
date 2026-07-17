@@ -695,7 +695,10 @@ apply_single_motif_to_glycans <- function(
 
   motif_graph <- glyrepr::get_structure_graphs(motif)
   motif_has_linkages <- glyrepr::has_linkages(motif)[[1]]
-  motif_composition_profile <- new_motif_composition_profile(motif_graph)
+  motif_composition_profile <- new_motif_composition_profile(
+    motif_graph,
+    mode = mode
+  )
   smap_func(
     glycans_to_use,
     single_glycan_func,
@@ -815,7 +818,7 @@ apply_motifs_to_glycans <- function(
     match_degree
   }
 
-  batch <- prepare_match_batch(glycans, motifs)
+  batch <- prepare_match_batch(glycans, motifs, mode = mode)
   motif_results_list <- lapply(
     seq_along(motifs),
     function(i) {

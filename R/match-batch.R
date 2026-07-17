@@ -1,4 +1,4 @@
-prepare_match_batch <- function(glycans, motifs) {
+prepare_match_batch <- function(glycans, motifs, mode = "strict") {
   glycan_index <- index_unique_structures(glycans)
   motif_index <- index_unique_structures(motifs)
 
@@ -24,12 +24,22 @@ prepare_match_batch <- function(glycans, motifs) {
     unlist(motif_monos, use.names = FALSE)
   ))
 
-  motif_use_base_keys <- purrr::map_lgl(
+  motif_key_modes <- purrr::map_chr(
     motif_graphs,
-    has_fuzzy_modification
+    resolve_residue_key_mode,
+    mode = mode
   )
-  base_keys <- if (any(motif_use_base_keys)) {
+  base_keys <- if (any(motif_key_modes == "base")) {
     unique(residue_color_keys(exact_keys))
+  } else {
+    NULL
+  }
+  generic_keys <- if (any(motif_key_modes == "generic")) {
+    generic_key_vectors <- c(
+      purrr::map(glycan_monos, residue_match_keys, key_mode = "generic"),
+      purrr::map(motif_monos, residue_match_keys, key_mode = "generic")
+    )
+    unique(unlist(generic_key_vectors, use.names = FALSE))
   } else {
     NULL
   }
@@ -41,7 +51,8 @@ prepare_match_batch <- function(glycans, motifs) {
       .x,
       .y,
       exact_keys = exact_keys,
-      base_keys = base_keys
+      base_keys = base_keys,
+      generic_keys = generic_keys
     )
   )
   motif_profiles <- purrr::map2(
@@ -52,8 +63,10 @@ prepare_match_batch <- function(glycans, motifs) {
       motif_monos[[.y]],
       exact_keys = exact_keys,
       base_keys = base_keys,
-      use_base_keys = motif_use_base_keys[[.y]],
-      include_composition_profile = TRUE
+      generic_keys = generic_keys,
+      key_mode = motif_key_modes[[.y]],
+      include_composition_profile = TRUE,
+      mode = mode
     )
   )
 
@@ -95,14 +108,21 @@ new_batch_graph_profile <- function(
   monos,
   exact_keys,
   base_keys = NULL,
-  use_base_keys = FALSE,
-  include_composition_profile = FALSE
+  generic_keys = NULL,
+  key_mode = "exact",
+  include_composition_profile = FALSE,
+  mode = "strict"
 ) {
   exact_colors <- match(monos, exact_keys)
   base_colors <- if (is.null(base_keys)) {
     NULL
   } else {
     match(residue_color_keys(monos), base_keys)
+  }
+  generic_colors <- if (is.null(generic_keys)) {
+    NULL
+  } else {
+    match(residue_match_keys(monos, "generic"), generic_keys)
   }
 
   list(
@@ -113,17 +133,23 @@ new_batch_graph_profile <- function(
     ecount = igraph::ecount(graph),
     core = core_node(graph),
     has_linkages = graph_has_linkages(graph),
-    use_base_keys = use_base_keys,
+    key_mode = key_mode,
     exact_colors = exact_colors,
     base_colors = base_colors,
+    generic_colors = generic_colors,
     exact_counts = tabulate(exact_colors, nbins = length(exact_keys)),
     base_counts = if (is.null(base_colors)) {
       NULL
     } else {
       tabulate(base_colors, nbins = length(base_keys))
     },
+    generic_counts = if (is.null(generic_colors)) {
+      NULL
+    } else {
+      tabulate(generic_colors, nbins = length(generic_keys))
+    },
     composition_profile = if (include_composition_profile) {
-      new_motif_composition_profile(graph)
+      new_motif_composition_profile(graph, mode = mode)
     } else {
       NULL
     }

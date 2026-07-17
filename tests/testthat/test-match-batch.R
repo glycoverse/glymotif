@@ -77,3 +77,29 @@ test_that("batch motif functions keep per-motif degree constraints", {
     matrix(c(1L, 0L), nrow = 1)
   )
 })
+
+test_that("batch profiles keep strict fuzzy modification colors", {
+  glycans <- glyparse::parse_iupac_condensed(c(
+    match = "Glc3Me6S(a1-",
+    miss = "Glc4Me3S(a1-"
+  ))
+  motifs <- glyparse::parse_iupac_condensed(c(
+    fuzzy = "Glc?Me6S(a1-",
+    exact = "Glc3Me6S(a1-"
+  ))
+
+  batch <- prepare_match_batch(glycans, motifs)
+
+  expect_identical(
+    unname(purrr::map_chr(batch$motif_profiles, "key_mode")),
+    c("base", "exact")
+  )
+  expect_identical(
+    have_motifs(glycans, motifs),
+    matrix(
+      c(TRUE, FALSE, TRUE, FALSE),
+      nrow = 2,
+      dimnames = list(names(glycans), names(motifs))
+    )
+  )
+})

@@ -143,7 +143,10 @@ apply_single_motif_to_graph <- function(
 ) {
   mode <- rlang::arg_match(mode, c("strict", "lenient"))
   motif_has_linkages <- graph_has_linkages(motif_graph)
-  motif_composition_profile <- new_motif_composition_profile(motif_graph)
+  motif_composition_profile <- new_motif_composition_profile(
+    motif_graph,
+    mode = mode
+  )
   match_degree <- normalize_graph_match_degree(match_degree, motif_graph)
 
   single_glycan_func(

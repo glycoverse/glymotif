@@ -325,13 +325,12 @@ match_motifs_ <- function(
   }
 
   if (
-    mode == "strict" &&
-      !composition_can_match(
-        glycan_graph,
-        motif_composition_profile,
-        glycan_batch_profile = glycan_batch_profile,
-        motif_batch_profile = motif_batch_profile
-      )
+    !composition_can_match(
+      glycan_graph,
+      motif_composition_profile,
+      glycan_batch_profile = glycan_batch_profile,
+      motif_batch_profile = motif_batch_profile
+    )
   ) {
     return(list())
   }
