@@ -1,10 +1,10 @@
 # glymotif (development version)
 
-* `have_motifs()`, `count_motifs()`, and `match_motifs()` now reuse graph metadata across batch matching, substantially reducing runtime for many-glycan, many-motif analyses.
+* `have_motifs()`, `count_motifs()`, and `match_motifs()` now reuse graph metadata across batch matching, substantially reducing runtime for many-glycan, many-motif analyses. (#50)
 
-* `extract_motif()` now discards duplicate candidates before constructing subgraphs, substantially reducing dynamic-motif extraction time.
+* `extract_motif()` now discards duplicate candidates before constructing subgraphs, substantially reducing dynamic-motif extraction time. (#50)
 
-* Lenient motif matching now uses conservative generic-residue filters to avoid unnecessary graph searches while preserving fuzzy-modification matching.
+* Lenient motif matching now uses conservative generic-residue filters to avoid unnecessary graph searches while preserving fuzzy-modification matching. (#50)
 
 # glymotif 0.17.2
 
