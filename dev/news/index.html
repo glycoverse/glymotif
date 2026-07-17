@@ -38,7 +38,10 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="development version" id="glymotif-development-version">glymotif (development version)<a class="anchor" aria-label="anchor" href="#glymotif-development-version"></a></h2>
-</div>
+<ul><li><p><code><a href="../reference/have_motif.html">have_motifs()</a></code>, <code><a href="../reference/count_motif.html">count_motifs()</a></code>, and <code><a href="../reference/match_motif.html">match_motifs()</a></code> now reuse graph metadata across batch matching, substantially reducing runtime for many-glycan, many-motif analyses. (<a href="https://github.com/glycoverse/glymotif/issues/50" class="external-link">#50</a>)</p></li>
+<li><p><code><a href="../reference/extract_motif.html">extract_motif()</a></code> now discards duplicate candidates before constructing subgraphs, substantially reducing dynamic-motif extraction time. (<a href="https://github.com/glycoverse/glymotif/issues/50" class="external-link">#50</a>)</p></li>
+<li><p>Lenient motif matching now uses conservative generic-residue filters to avoid unnecessary graph searches while preserving fuzzy-modification matching. (<a href="https://github.com/glycoverse/glymotif/issues/50" class="external-link">#50</a>)</p></li>
+</ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.17.2" id="glymotif-0172">glymotif 0.17.2<a class="anchor" aria-label="anchor" href="#glymotif-0172"></a></h2>
 <ul><li>Documentation now recommends <code>GlycomicSE</code> and <code>GlycoproteomicSE</code> containers and the <code><a href="https://glycoverse.github.io/glyexp/reference/mutate_col.html" class="external-link">mutate_row()</a></code> replacement for deprecated motif-annotation helpers as part of Stage II of glycoverse/glyexp#15. (<a href="https://github.com/glycoverse/glymotif/issues/49" class="external-link">#49</a>)</li>
