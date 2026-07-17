@@ -45,6 +45,31 @@ test_that("extract_motif works for multiple glycans", {
   expect_setequal(as.character(result), as.character(expected))
 })
 
+test_that("extract_motif preserves distinct residue and linkage details", {
+  glycans <- c(
+    "Gal(a1-3)GlcNAc(a1-",
+    "Gal(b1-3)GlcNAc(a1-",
+    "Gal3S(b1-3)GlcNAc(a1-",
+    "Gal6S(b1-3)GlcNAc(a1-",
+    "Gal(b1-4)GlcNAc(a1-"
+  )
+
+  result <- extract_motif(glycans, max_size = 2)
+
+  expect_length(result, 10)
+})
+
+test_that("extract_motif keeps linkages paired with their branches", {
+  glycans <- c(
+    "Gal(b1-3)[Fuc(a1-2)]GlcNAc(a1-",
+    "Gal(a1-2)[Fuc(b1-3)]GlcNAc(a1-"
+  )
+
+  result <- extract_motif(glycans, max_size = 3)
+
+  expect_length(result, 11)
+})
+
 test_that("extract_motif's max_size works", {
   glycan <- "Glc(a1-3)Glc(a1-3)Glc(a1-3)Glc(a1-"
   result <- extract_motif(glycan, max_size = 3)
