@@ -4,6 +4,8 @@
 
 * `extract_motif()` now discards duplicate candidates before constructing subgraphs, substantially reducing dynamic-motif extraction time.
 
+* Lenient motif matching now uses conservative generic-residue filters to avoid unnecessary graph searches while preserving fuzzy-modification matching.
+
 # glymotif 0.17.2
 
 * Documentation now recommends `GlycomicSE` and `GlycoproteomicSE` containers and the `mutate_row()` replacement for deprecated motif-annotation helpers as part of Stage II of glycoverse/glyexp#15. (#49)

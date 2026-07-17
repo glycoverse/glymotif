@@ -5,19 +5,26 @@ colorize_graphs <- function(
   glycan_batch_profile = NULL,
   motif_batch_profile = NULL
 ) {
-  if (mode == "lenient") {
-    return(list(glycan_colors = NULL, motif_colors = NULL))
-  }
-
   if (!is.null(glycan_batch_profile) && !is.null(motif_batch_profile)) {
-    color_type <- if (motif_batch_profile$use_base_keys) {
-      "base_colors"
-    } else {
-      "exact_colors"
+    key_mode <- motif_batch_profile$key_mode
+    if (key_mode == "none") {
+      return(list(glycan_colors = NULL, motif_colors = NULL))
+    }
+    if (key_mode == "exact") {
+      return(list(
+        glycan_colors = glycan_batch_profile$exact_colors,
+        motif_colors = motif_batch_profile$exact_colors
+      ))
+    }
+    if (key_mode == "base") {
+      return(list(
+        glycan_colors = glycan_batch_profile$base_colors,
+        motif_colors = motif_batch_profile$base_colors
+      ))
     }
     return(list(
-      glycan_colors = glycan_batch_profile[[color_type]],
-      motif_colors = motif_batch_profile[[color_type]]
+      glycan_colors = glycan_batch_profile$generic_colors,
+      motif_colors = motif_batch_profile$generic_colors
     ))
   }
 
@@ -25,10 +32,12 @@ colorize_graphs <- function(
   # mutating the input graphs.
   glycan_monos <- igraph::V(glycan)$mono
   motif_monos <- igraph::V(motif)$mono
-  if (has_fuzzy_modification(motif)) {
-    glycan_monos <- residue_color_keys(glycan_monos)
-    motif_monos <- residue_color_keys(motif_monos)
+  key_mode <- resolve_residue_key_mode(motif, mode)
+  if (key_mode == "none") {
+    return(list(glycan_colors = NULL, motif_colors = NULL))
   }
+  glycan_monos <- residue_match_keys(glycan_monos, key_mode)
+  motif_monos <- residue_match_keys(motif_monos, key_mode)
 
   unique_monos <- unique(c(glycan_monos, motif_monos))
   color_map <- seq_along(unique_monos)
@@ -43,22 +52,30 @@ colorize_graphs <- function(
 #' Create a Motif Composition Profile
 #'
 #' @param motif A motif graph.
+#' @param mode Matching mode.
 #'
 #' @return A list containing residue keys, required counts, and keying mode.
 #' @noRd
-new_motif_composition_profile <- function(motif) {
-  use_base_keys <- has_fuzzy_modification(motif)
-  motif_monos <- igraph::vertex_attr(motif, "mono")
-  if (use_base_keys) {
-    motif_monos <- residue_color_keys(motif_monos)
+new_motif_composition_profile <- function(motif, mode = "strict") {
+  key_mode <- resolve_residue_key_mode(motif, mode)
+  if (key_mode == "none") {
+    return(list(
+      keys = character(),
+      counts = integer(),
+      key_mode = key_mode
+    ))
   }
 
+  motif_monos <- residue_match_keys(
+    igraph::vertex_attr(motif, "mono"),
+    key_mode
+  )
   keys <- unique(motif_monos)
   counts <- tabulate(match(motif_monos, keys), nbins = length(keys))
   list(
     keys = keys,
     counts = counts,
-    use_base_keys = use_base_keys
+    key_mode = key_mode
   )
 }
 
@@ -78,27 +95,79 @@ composition_can_match <- function(
   glycan_batch_profile = NULL,
   motif_batch_profile = NULL
 ) {
+  key_mode <- motif_profile$key_mode
+  if (key_mode == "none") {
+    return(TRUE)
+  }
+
   if (!is.null(glycan_batch_profile) && !is.null(motif_batch_profile)) {
-    count_type <- if (motif_profile$use_base_keys) {
-      "base_counts"
-    } else {
-      "exact_counts"
+    if (key_mode == "exact") {
+      return(all(
+        glycan_batch_profile$exact_counts >= motif_batch_profile$exact_counts
+      ))
+    }
+    if (key_mode == "base") {
+      return(all(
+        glycan_batch_profile$base_counts >= motif_batch_profile$base_counts
+      ))
     }
     return(all(
-      glycan_batch_profile[[count_type]] >= motif_batch_profile[[count_type]]
+      glycan_batch_profile$generic_counts >= motif_batch_profile$generic_counts
     ))
   }
 
-  glycan_monos <- igraph::vertex_attr(glycan, "mono")
-  if (motif_profile$use_base_keys) {
-    glycan_monos <- residue_color_keys(glycan_monos)
-  }
+  glycan_monos <- residue_match_keys(
+    igraph::vertex_attr(glycan, "mono"),
+    key_mode
+  )
 
   glycan_counts <- tabulate(
     match(glycan_monos, motif_profile$keys),
     nbins = length(motif_profile$keys)
   )
   all(glycan_counts >= motif_profile$counts)
+}
+
+
+#' Resolve Residue Keys for Conservative VF2 Pruning
+#'
+#' @param motif A motif graph.
+#' @param mode Matching mode.
+#'
+#' @return One of `"exact"`, `"base"`, `"generic"`, or `"none"`.
+#' @noRd
+resolve_residue_key_mode <- function(motif, mode = "strict") {
+  fuzzy <- has_fuzzy_modification(motif)
+  if (mode == "lenient") {
+    if (fuzzy) {
+      return("none")
+    }
+    return("generic")
+  }
+
+  if (fuzzy) {
+    "base"
+  } else {
+    "exact"
+  }
+}
+
+
+#' Create Residue Keys for Conservative VF2 Pruning
+#'
+#' @param monos A character vector of monosaccharide names from one graph.
+#' @param key_mode The residue keying mode.
+#'
+#' @return A character vector of residue keys.
+#' @noRd
+residue_match_keys <- function(monos, key_mode) {
+  switch(
+    key_mode,
+    exact = monos,
+    base = residue_color_keys(monos),
+    generic = glyrepr::convert_to_generic(monos),
+    none = character()
+  )
 }
 
 
