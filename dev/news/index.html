@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">glymotif</a>
 
-    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">0.17.2.9000</small>
+    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">0.17.3.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -40,11 +40,7 @@
 <h2 class="pkg-version" data-toc-text="development version" id="glymotif-development-version">glymotif (development version)<a class="anchor" aria-label="anchor" href="#glymotif-development-version"></a></h2>
 <ul><li>
 <code><a href="../reference/extract_branch_motif.html">extract_branch_motif()</a></code> now warns, rather than errors, for glycans without the N-glycan core, returning no branch motifs for those inputs. (<a href="https://github.com/glycoverse/glymotif/issues/51" class="external-link">#51</a>)</li>
-<li>
-<code><a href="../reference/have_motif.html">have_motifs()</a></code>, <code><a href="../reference/count_motif.html">count_motifs()</a></code>, and <code><a href="../reference/match_motif.html">match_motifs()</a></code> now reuse graph metadata across batch matching, substantially reducing runtime for many-glycan, many-motif analyses. (<a href="https://github.com/glycoverse/glymotif/issues/50" class="external-link">#50</a>)</li>
-<li>
-<code><a href="../reference/extract_motif.html">extract_motif()</a></code> now discards duplicate candidates before constructing subgraphs, substantially reducing dynamic-motif extraction time. (<a href="https://github.com/glycoverse/glymotif/issues/50" class="external-link">#50</a>)</li>
-<li>Lenient motif matching now uses conservative generic-residue filters to avoid unnecessary graph searches while preserving fuzzy-modification matching. (<a href="https://github.com/glycoverse/glymotif/issues/50" class="external-link">#50</a>)</li>
+<li>Motif matching and extraction now use optimized graph searches and candidate filtering, substantially reducing runtime for batch analyses and dynamic-motif extraction while preserving fuzzy-modification matching. (<a href="https://github.com/glycoverse/glymotif/issues/50" class="external-link">#50</a>)</li>
 </ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.17.2" id="glymotif-0172">glymotif 0.17.2<a class="anchor" aria-label="anchor" href="#glymotif-0172"></a></h2>

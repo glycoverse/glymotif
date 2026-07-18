@@ -6,21 +6,10 @@
   now warns, rather than errors, for glycans without the N-glycan core,
   returning no branch motifs for those inputs.
   ([\#51](https://github.com/glycoverse/glymotif/issues/51))
-- [`have_motifs()`](https://glycoverse.github.io/glymotif/dev/reference/have_motif.md),
-  [`count_motifs()`](https://glycoverse.github.io/glymotif/dev/reference/count_motif.md),
-  and
-  [`match_motifs()`](https://glycoverse.github.io/glymotif/dev/reference/match_motif.md)
-  now reuse graph metadata across batch matching, substantially reducing
-  runtime for many-glycan, many-motif analyses.
-  ([\#50](https://github.com/glycoverse/glymotif/issues/50))
-- [`extract_motif()`](https://glycoverse.github.io/glymotif/dev/reference/extract_motif.md)
-  now discards duplicate candidates before constructing subgraphs,
-  substantially reducing dynamic-motif extraction time.
-  ([\#50](https://github.com/glycoverse/glymotif/issues/50))
-- Lenient motif matching now uses conservative generic-residue filters
-  to avoid unnecessary graph searches while preserving
-  fuzzy-modification matching.
-  ([\#50](https://github.com/glycoverse/glymotif/issues/50))
+- Motif matching and extraction now use optimized graph searches and
+  candidate filtering, substantially reducing runtime for batch analyses
+  and dynamic-motif extraction while preserving fuzzy-modification
+  matching. ([\#50](https://github.com/glycoverse/glymotif/issues/50))
 
 ## glymotif 0.17.2
 
