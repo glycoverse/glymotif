@@ -157,9 +157,10 @@ test_that("extract_branch_motif works for glycans with complex branching pattern
   expect_setequal(as.character(res), as.character(expected))
 })
 
-test_that("extract_branch_motif rejects glycans other than N-glycans", {
-  glycan <- "Gal(b1-3)GalNAc(a1-"
-  expect_error(extract_branch_motif(glycan), "must be N-glycans")
+test_that("extract_branch_motif warns for glycans other than N-glycans", {
+  paucimannose <- "Man(a1-6)Man(b1-4)GlcNAc(b1-4)GlcNAc(b1-"
+  expect_snapshot_warning(extract_branch_motif(paucimannose))
+  expect_length(suppressWarnings(extract_branch_motif(paucimannose)), 0)
 })
 
 test_that("optional extract_branch_motif arguments must be named", {
