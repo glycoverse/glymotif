@@ -1,4 +1,4 @@
-# glymotif 0.17.3
+# glymotif (development version)
 
 * `extract_branch_motif()` now warns, rather than errors, for glycans without the N-glycan core, returning no branch motifs for those inputs. (#51)
 * Motif matching and extraction now use optimized graph searches and candidate filtering, substantially reducing runtime for batch analyses and dynamic-motif extraction while preserving fuzzy-modification matching. (#50)
