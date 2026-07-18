@@ -1,9 +1,7 @@
-# glymotif (development version)
+# glymotif 0.17.3
 
 * `extract_branch_motif()` now warns, rather than errors, for glycans without the N-glycan core, returning no branch motifs for those inputs. (#51)
-* `have_motifs()`, `count_motifs()`, and `match_motifs()` now reuse graph metadata across batch matching, substantially reducing runtime for many-glycan, many-motif analyses. (#50)
-* `extract_motif()` now discards duplicate candidates before constructing subgraphs, substantially reducing dynamic-motif extraction time. (#50)
-* Lenient motif matching now uses conservative generic-residue filters to avoid unnecessary graph searches while preserving fuzzy-modification matching. (#50)
+* Motif matching and extraction now use optimized graph searches and candidate filtering, substantially reducing runtime for batch analyses and dynamic-motif extraction while preserving fuzzy-modification matching. (#50)
 
 # glymotif 0.17.2
 
