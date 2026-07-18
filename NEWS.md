@@ -1,5 +1,8 @@
 # glymotif (development version)
 
+* `extract_branch_motif()` now warns, rather than errors, for glycans without
+  the N-glycan core, returning no branch motifs for those inputs. (#51)
+
 * `have_motifs()`, `count_motifs()`, and `match_motifs()` now reuse graph metadata across batch matching, substantially reducing runtime for many-glycan, many-motif analyses. (#50)
 
 * `extract_motif()` now discards duplicate candidates before constructing subgraphs, substantially reducing dynamic-motif extraction time. (#50)
