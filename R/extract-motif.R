@@ -147,9 +147,9 @@ extract_branch_motif <- function(glycans, ..., including_core = FALSE) {
   )
   have_n_motif <- have_motif(glycans, n_motif, alignment = "core")
   if (!all(have_n_motif)) {
-    cli::cli_abort(c(
-      "{.arg glycans} must be N-glycans.",
-      "x" = "Some of {.arg glycans} do not have the N-glycan core motif."
+    cli::cli_warn(c(
+      "!" = "Some of {.arg glycans} do not have the N-glycan core motif.",
+      "!" = "Those glycans are skipped."
     ))
   }
 }
