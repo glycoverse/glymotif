@@ -2,6 +2,8 @@
 
 ## glymotif (development version)
 
+## glymotif 0.17.3
+
 - [`extract_branch_motif()`](https://glycoverse.github.io/glymotif/dev/reference/extract_branch_motif.md)
   now warns, rather than errors, for glycans without the N-glycan core,
   returning no branch motifs for those inputs.
