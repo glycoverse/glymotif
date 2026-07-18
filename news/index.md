@@ -1,5 +1,16 @@
 # Changelog
 
+## glymotif 0.17.3
+
+- [`extract_branch_motif()`](https://glycoverse.github.io/glymotif/reference/extract_branch_motif.md)
+  now warns, rather than errors, for glycans without the N-glycan core,
+  returning no branch motifs for those inputs.
+  ([\#51](https://github.com/glycoverse/glymotif/issues/51))
+- Motif matching and extraction now use optimized graph searches and
+  candidate filtering, substantially reducing runtime for batch analyses
+  and dynamic-motif extraction while preserving fuzzy-modification
+  matching. ([\#50](https://github.com/glycoverse/glymotif/issues/50))
+
 ## glymotif 0.17.2
 
 - Documentation now recommends `GlycomicSE` and `GlycoproteomicSE`

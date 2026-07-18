@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">glymotif</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.17.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.17.3</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -36,6 +36,12 @@
       <small>Source: <a href="https://github.com/glycoverse/glymotif/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.17.3" id="glymotif-0173">glymotif 0.17.3<a class="anchor" aria-label="anchor" href="#glymotif-0173"></a></h2>
+<ul><li>
+<code><a href="../reference/extract_branch_motif.html">extract_branch_motif()</a></code> now warns, rather than errors, for glycans without the N-glycan core, returning no branch motifs for those inputs. (<a href="https://github.com/glycoverse/glymotif/issues/51" class="external-link">#51</a>)</li>
+<li>Motif matching and extraction now use optimized graph searches and candidate filtering, substantially reducing runtime for batch analyses and dynamic-motif extraction while preserving fuzzy-modification matching. (<a href="https://github.com/glycoverse/glymotif/issues/50" class="external-link">#50</a>)</li>
+</ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.17.2" id="glymotif-0172">glymotif 0.17.2<a class="anchor" aria-label="anchor" href="#glymotif-0172"></a></h2>
 <ul><li>Documentation now recommends <code>GlycomicSE</code> and <code>GlycoproteomicSE</code> containers and the <code><a href="https://glycoverse.github.io/glyexp/reference/mutate_col.html" class="external-link">mutate_row()</a></code> replacement for deprecated motif-annotation helpers as part of Stage II of glycoverse/glyexp#15. (<a href="https://github.com/glycoverse/glymotif/issues/49" class="external-link">#49</a>)</li>
