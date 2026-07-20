@@ -2,6 +2,11 @@
 
 ## glymotif (development version)
 
+- Motif matching and extraction functions now avoid accumulating graph
+  references across repeated calls, preventing progressive slowdowns in
+  long-running R sessions.
+  ([\#52](https://github.com/glycoverse/glymotif/issues/52))
+
 ## glymotif 0.17.3
 
 - [`extract_branch_motif()`](https://glycoverse.github.io/glymotif/dev/reference/extract_branch_motif.md)
