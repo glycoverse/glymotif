@@ -5,18 +5,18 @@ prepare_match_batch <- function(glycans, motifs, mode = "strict") {
   glycan_graphs <- glycan_index$graphs
   motif_graphs <- motif_index$graphs
 
-  if (identical(glyrepr::get_mono_type(motifs), "generic")) {
+  if (identical(structure_mono_type(motifs), "generic")) {
     glycan_graphs <- purrr::map(glycan_graphs, convert_graph_to_generic)
   }
 
   glycan_monos <- purrr::map(
     glycan_graphs,
-    igraph::vertex_attr,
+    graph_vertex_attr,
     name = "mono"
   )
   motif_monos <- purrr::map(
     motif_graphs,
-    igraph::vertex_attr,
+    graph_vertex_attr,
     name = "mono"
   )
   exact_keys <- unique(c(
@@ -95,10 +95,12 @@ index_unique_structures <- function(structures) {
 }
 
 convert_graph_to_generic <- function(graph) {
-  monos <- igraph::vertex_attr(graph, "mono")
+  vertex_ids <- graph_vertex_ids(graph)
+  monos <- graph_vertex_attr(graph, "mono", vertex_ids)
   igraph::set_vertex_attr(
     graph,
     "mono",
+    index = vertex_ids,
     value = glyrepr::convert_to_generic(monos)
   )
 }
@@ -128,7 +130,7 @@ new_batch_graph_profile <- function(
   list(
     graph = graph,
     monos = monos,
-    subs = igraph::vertex_attr(graph, "sub"),
+    subs = graph_vertex_attr(graph, "sub"),
     vcount = igraph::vcount(graph),
     ecount = igraph::ecount(graph),
     core = core_node(graph),

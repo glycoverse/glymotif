@@ -30,8 +30,8 @@ colorize_graphs <- function(
 
   # Prepare VF2 color vectors from the "mono" vertex attributes without
   # mutating the input graphs.
-  glycan_monos <- igraph::V(glycan)$mono
-  motif_monos <- igraph::V(motif)$mono
+  glycan_monos <- graph_vertex_attr(glycan, "mono")
+  motif_monos <- graph_vertex_attr(motif, "mono")
   key_mode <- resolve_residue_key_mode(motif, mode)
   if (key_mode == "none") {
     return(list(glycan_colors = NULL, motif_colors = NULL))
@@ -67,7 +67,7 @@ new_motif_composition_profile <- function(motif, mode = "strict") {
   }
 
   motif_monos <- residue_match_keys(
-    igraph::vertex_attr(motif, "mono"),
+    graph_vertex_attr(motif, "mono"),
     key_mode
   )
   keys <- unique(motif_monos)
@@ -117,7 +117,7 @@ composition_can_match <- function(
   }
 
   glycan_monos <- residue_match_keys(
-    igraph::vertex_attr(glycan, "mono"),
+    graph_vertex_attr(glycan, "mono"),
     key_mode
   )
 
@@ -261,7 +261,7 @@ core_alignment_root_can_match <- function(
 #' @return A logical scalar.
 #' @noRd
 has_fuzzy_modification <- function(motif) {
-  any(purrr::map_lgl(igraph::V(motif)$sub, is_fuzzy_sub))
+  any(purrr::map_lgl(graph_vertex_attr(motif, "sub"), is_fuzzy_sub))
 }
 
 
@@ -294,10 +294,10 @@ new_validation_context <- function(glycan, motif) {
   list(
     glycan = glycan,
     motif = motif,
-    glycan_mono = igraph::vertex_attr(glycan, "mono"),
-    motif_mono = igraph::vertex_attr(motif, "mono"),
-    glycan_sub = igraph::vertex_attr(glycan, "sub"),
-    motif_sub = igraph::vertex_attr(motif, "sub"),
+    glycan_mono = graph_vertex_attr(glycan, "mono"),
+    motif_mono = graph_vertex_attr(motif, "mono"),
+    glycan_sub = graph_vertex_attr(glycan, "sub"),
+    motif_sub = graph_vertex_attr(motif, "sub"),
     glycan_in = NULL,
     glycan_out = NULL,
     motif_in = NULL,
@@ -334,10 +334,10 @@ add_alignment_context <- function(context, alignment) {
     "core" = add_core_context(context),
     "terminal" = {
       context$glycan_terminals <- which(
-        igraph::degree(context$glycan, mode = "out") == 0
+        graph_degree(context$glycan, mode = "out") == 0
       )
       context$motif_terminals <- which(
-        igraph::degree(context$motif, mode = "out") == 0
+        graph_degree(context$motif, mode = "out") == 0
       )
       context
     },
@@ -359,10 +359,10 @@ add_alignment_context <- function(context, alignment) {
 #' @return A validation context with degree vectors.
 #' @noRd
 add_degree_context <- function(context) {
-  context$motif_in <- igraph::degree(context$motif, mode = "in")
-  context$motif_out <- igraph::degree(context$motif, mode = "out")
-  context$glycan_in <- igraph::degree(context$glycan, mode = "in")
-  context$glycan_out <- igraph::degree(context$glycan, mode = "out")
+  context$motif_in <- graph_degree(context$motif, mode = "in")
+  context$motif_out <- graph_degree(context$motif, mode = "out")
+  context$glycan_in <- graph_degree(context$glycan, mode = "in")
+  context$glycan_out <- graph_degree(context$glycan, mode = "out")
   context
 }
 
@@ -376,9 +376,9 @@ add_degree_context <- function(context) {
 add_core_context <- function(context) {
   if (is.null(context$glycan_core)) {
     context$glycan_core <- which(
-      igraph::degree(context$glycan, mode = "in") == 0
+      graph_degree(context$glycan, mode = "in") == 0
     )
-    context$motif_core <- which(igraph::degree(context$motif, mode = "in") == 0)
+    context$motif_core <- which(graph_degree(context$motif, mode = "in") == 0)
   }
   context
 }
@@ -397,7 +397,7 @@ add_linkage_context <- function(context) {
   context$motif_anomer <- igraph::graph_attr(context$motif, "anomer")
 
   glycan_edge_list <- igraph::as_edgelist(context$glycan, names = FALSE)
-  glycan_linkages <- igraph::edge_attr(context$glycan, "linkage")
+  glycan_linkages <- graph_edge_attr(context$glycan, "linkage")
   context$glycan_incoming_linkages <- rep(
     NA_character_,
     igraph::vcount(context$glycan)
@@ -408,7 +408,7 @@ add_linkage_context <- function(context) {
 
   motif_edge_list <- igraph::as_edgelist(context$motif, names = FALSE)
   context$motif_edge_list <- motif_edge_list
-  context$motif_linkages <- igraph::edge_attr(context$motif, "linkage")
+  context$motif_linkages <- graph_edge_attr(context$motif, "linkage")
   if (nrow(motif_edge_list) > 0) {
     context$glycan_edge_linkages <- matrix(
       NA_character_,
@@ -465,16 +465,12 @@ perform_vf2 <- function(
   # e.g. If `res[[1]] = c(2, 3)`,
   # it means the 1st vertex in `motif` matches the 2nd vertex in `glycan`,
   # and the 2nd vertex in `motif` matches the 3rd vertex in `glycan`.
-  if (is.null(glycan_colors) && is.null(motif_colors)) {
-    igraph::graph.get.subisomorphisms.vf2(glycan, motif)
-  } else {
-    igraph::graph.get.subisomorphisms.vf2(
-      glycan,
-      motif,
-      vertex.color1 = glycan_colors,
-      vertex.color2 = motif_colors
-    )
-  }
+  graph_subisomorphisms_vf2(
+    graph = glycan,
+    pattern = motif,
+    graph_colors = glycan_colors,
+    pattern_colors = motif_colors
+  )
 }
 
 
@@ -586,10 +582,10 @@ residue_check <- function(
     glycan_subs <- context$glycan_sub[r]
     motif_subs <- context$motif_sub
   } else {
-    glycan_monos <- igraph::V(glycan)$mono[r]
-    motif_monos <- igraph::V(motif)$mono
-    glycan_subs <- igraph::V(glycan)$sub[r]
-    motif_subs <- igraph::V(motif)$sub
+    glycan_monos <- graph_vertex_attr(glycan, "mono", r)
+    motif_monos <- graph_vertex_attr(motif, "mono")
+    glycan_subs <- graph_vertex_attr(glycan, "sub", r)
+    motif_subs <- graph_vertex_attr(motif, "sub")
   }
 
   purrr::every(seq_along(glycan_monos), function(i) {
@@ -645,18 +641,6 @@ resolve_linkage_match_mode <- function(
 
   "check"
 }
-
-#' Determine Whether a Graph Has Informative Linkages
-#'
-#' @param glycan A glycan graph.
-#'
-#' @return A logical scalar.
-#' @noRd
-graph_has_linkages <- function(glycan) {
-  any(igraph::edge_attr(glycan, "linkage") != "??-?") ||
-    igraph::graph_attr(glycan, "anomer") != "??"
-}
-
 
 alignment_check <- function(
   r,
@@ -731,10 +715,10 @@ degree_check <- function(
     glycan_in <- context$glycan_in
     glycan_out <- context$glycan_out
   } else {
-    motif_in <- igraph::degree(motif, mode = "in")
-    motif_out <- igraph::degree(motif, mode = "out")
-    glycan_in <- igraph::degree(glycan, mode = "in")
-    glycan_out <- igraph::degree(glycan, mode = "out")
+    motif_in <- graph_degree(motif, mode = "in")
+    motif_out <- graph_degree(motif, mode = "out")
+    glycan_in <- graph_degree(glycan, mode = "in")
+    glycan_out <- graph_degree(glycan, mode = "out")
   }
 
   motif_idx <- which(match_degree)
@@ -1017,9 +1001,12 @@ get_corresponding_edges <- function(r, glycan, motif) {
     }
   )
 
-  motif_edges <- igraph::E(motif)
-  glycan_edges <- igraph::E(glycan)[glycan_edge_ids]
-  list(glycan = glycan_edges, motif = motif_edges)
+  list(
+    glycan = list(
+      linkage = graph_edge_attr(glycan, "linkage", glycan_edge_ids)
+    ),
+    motif = list(linkage = graph_edge_attr(motif, "linkage"))
+  )
 }
 
 
@@ -1093,7 +1080,8 @@ anomer_check <- function(
       match_anomer(glycan$anomer, motif$anomer, mode = mode)
     } else {
       # The motif anomer should match a linkage in the glycan.
-      linkage <- igraph::incident(glycan, matched_g_node, mode = "in")$linkage
+      in_edge <- graph_incident_edge_ids(glycan, matched_g_node, mode = "in")
+      linkage <- graph_edge_attr(glycan, "linkage", in_edge)
       linkage_anomer <- stringr::str_split_1(linkage, "-")[[1]]
       match_anomer(linkage_anomer, motif$anomer, mode = mode)
     }
@@ -1146,8 +1134,8 @@ parse_anomer <- function(anomer) {
 
 
 terminal_nodes <- function(glycan) {
-  out_degree <- igraph::degree(glycan, mode = "out")
-  igraph::V(glycan)[out_degree == 0]
+  out_degree <- graph_degree(glycan, mode = "out")
+  which(out_degree == 0)
 }
 
 

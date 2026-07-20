@@ -1,5 +1,7 @@
 # glymotif (development version)
 
+* Motif matching and extraction functions now avoid accumulating graph references across repeated calls, preventing progressive slowdowns in long-running R sessions. (#52)
+
 # glymotif 0.17.3
 
 * `extract_branch_motif()` now warns, rather than errors, for glycans without the N-glycan core, returning no branch motifs for those inputs. (#51)

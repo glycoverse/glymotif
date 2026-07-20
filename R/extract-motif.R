@@ -90,8 +90,11 @@ extract_branch_motif <- function(glycans, ..., including_core = FALSE) {
       branch_root_id <- match_idx[1]
 
       # Extract the subtree rooted at branch_root_id
-      # We use igraph::subcomponent with mode = "out" to get all descendants
-      subtree_nodes <- igraph::subcomponent(g, branch_root_id, mode = "out")
+      subtree_nodes <- graph_subcomponent_ids(
+        g,
+        branch_root_id,
+        mode = "out"
+      )
       subtree <- igraph::induced_subgraph(g, subtree_nodes)
 
       # 5. Handle Anomer
@@ -99,10 +102,10 @@ extract_branch_motif <- function(glycans, ..., including_core = FALSE) {
       # This information is contained in the linkage of the INCOMING edge to branch_root_id in 'g'.
 
       # Find the incoming edge to the branch root in the original graph
-      in_edges <- igraph::incident(g, branch_root_id, mode = "in")
+      in_edges <- graph_incident_edge_ids(g, branch_root_id, mode = "in")
 
       # There should be exactly one incoming edge for a tree structure (unless it's the absolute root)
-      linkage <- in_edges$linkage
+      linkage <- graph_edge_attr(g, "linkage", in_edges)
       # Linkage format is like "b1-4" or "a1-3" or "??-?".
       # We need to extract the anomer part (first 2 chars usually, e.g. "b1", "a1", "??")
 
@@ -125,7 +128,7 @@ extract_branch_motif <- function(glycans, ..., including_core = FALSE) {
 
   # Optionally append core structure
   if (including_core && length(res) > 0) {
-    mono_type <- glyrepr::get_mono_type(res)
+    mono_type <- structure_mono_type(res)
     core_suffix <- if (mono_type == "concrete") {
       "?)Man(??-?)Man(??-?)GlcNAc(??-?)GlcNAc(??-"
     } else {
@@ -180,7 +183,6 @@ extract_branch_motif <- function(glycans, ..., including_core = FALSE) {
 #' glycan <- "Gal(b1-3)[GlcNAc(a1-6)]GalNAc(a1-"
 #' extract_motif(glycan, max_size = 2)
 #'
-#' @importFrom igraph V E induced_subgraph incident edge_attr neighbors
 #' @export
 extract_motif <- function(glycans, ..., max_size = 3) {
   rlang::check_dots_empty()
@@ -206,7 +208,7 @@ extract_motif <- function(glycans, ..., max_size = 3) {
 }
 
 .extract_motifs_from_graph <- function(g, max_size, seen_motifs) {
-  nodes <- as.numeric(igraph::V(g))
+  nodes <- graph_vertex_ids(g)
   key_context <- .new_motif_key_context(g)
 
   unlist(
@@ -260,7 +262,7 @@ extract_motif <- function(glycans, ..., max_size = 3) {
   edges <- igraph::as_edgelist(g, names = FALSE)
 
   if (nrow(edges) > 0) {
-    linkages <- igraph::edge_attr(g, "linkage")
+    linkages <- graph_edge_attr(g, "linkage")
     for (edge_id in seq_len(nrow(edges))) {
       parent <- edges[edge_id, 1]
       children[[parent]] <- c(children[[parent]], edges[edge_id, 2])
@@ -272,8 +274,8 @@ extract_motif <- function(glycans, ..., max_size = 3) {
   }
 
   list(
-    mono = igraph::vertex_attr(g, "mono"),
-    sub = igraph::vertex_attr(g, "sub"),
+    mono = graph_vertex_attr(g, "mono"),
+    sub = graph_vertex_attr(g, "sub"),
     children = children,
     child_linkages = child_linkages
   )
@@ -331,12 +333,12 @@ extract_motif <- function(glycans, ..., max_size = 3) {
 }
 
 .get_node_anomer <- function(g, node_id) {
-  in_edges <- igraph::incident(g, node_id, mode = "in")
+  in_edges <- graph_incident_edge_ids(g, node_id, mode = "in")
   if (length(in_edges) == 0) {
     return(g$anomer)
   }
 
-  linkage <- igraph::edge_attr(g, "linkage", in_edges)
+  linkage <- graph_edge_attr(g, "linkage", in_edges)
   # Linkage format: "b1-4". We want "b1".
   stringr::str_split_i(linkage, "-", 1)
 }
@@ -350,7 +352,7 @@ extract_motif <- function(glycans, ..., max_size = 3) {
     return(results)
   }
 
-  children <- as.numeric(igraph::neighbors(g, root, mode = "out"))
+  children <- graph_neighbor_ids(g, root, mode = "out")
   if (length(children) == 0) {
     return(results)
   }
