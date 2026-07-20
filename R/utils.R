@@ -107,8 +107,8 @@ prepare_motif_args <- function(
 #' @return `NULL`, invisibly.
 #' @noRd
 warn_mismatched_structure_levels <- function(glycans, motifs) {
-  glycan_level <- suppressWarnings(glyrepr::get_structure_level(glycans))
-  motif_level <- suppressWarnings(glyrepr::get_structure_level(motifs))
+  glycan_level <- structure_level(glycans)
+  motif_level <- structure_level(motifs)
 
   if (
     isTRUE(
@@ -683,7 +683,7 @@ apply_single_motif_to_glycans <- function(
   # Handle mono type conversion based on motif type
   # glyrepr 0.9.0.9000 guarantees all elements in a glyrepr_structure vector
   # have the same mono_type, so get_mono_type() returns a scalar
-  motif_type <- glyrepr::get_mono_type(motif)
+  motif_type <- structure_mono_type(motif)
   if (motif_type == "generic") {
     # For generic motifs, convert glycans to generic to allow matching concrete glycans
     glycans_to_use <- fast_convert_to_generic(glycans)
@@ -694,7 +694,7 @@ apply_single_motif_to_glycans <- function(
   }
 
   motif_graph <- glyrepr::get_structure_graphs(motif)
-  motif_has_linkages <- glyrepr::has_linkages(motif)[[1]]
+  motif_has_linkages <- graph_has_linkages(motif_graph)
   motif_composition_profile <- new_motif_composition_profile(
     motif_graph,
     mode = mode
@@ -736,12 +736,7 @@ apply_single_motif_to_glycans <- function(
 #' @noRd
 fast_convert_to_generic <- function(glycans) {
   iupacs <- as.character(glycans)
-  unique_iupacs <- names(attr(glycans, "graphs"))
-  convert_one_graph <- function(graph) {
-    igraph::V(graph)$mono <- glyrepr::convert_to_generic(igraph::V(graph)$mono)
-    graph
-  }
-  new_graphs <- purrr::map(attr(glycans, "graphs"), convert_one_graph)
+  new_graphs <- purrr::map(attr(glycans, "graphs"), convert_graph_to_generic)
   glyrepr:::new_glycan_structure(iupacs, new_graphs)
 }
 
