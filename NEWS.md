@@ -1,6 +1,6 @@
 # glymotif (development version)
 
-* Motif matching and extraction functions now avoid accumulating graph references across repeated calls, preventing progressive slowdowns in long-running R sessions.
+* Motif matching and extraction functions now avoid accumulating graph references across repeated calls, preventing progressive slowdowns in long-running R sessions. (#52)
 
 # glymotif 0.17.3
 
