@@ -2,7 +2,7 @@
 
 ## Breaking changes
 
-* `add_motifs_int()` and `add_motifs_lgl()` are removed; use `count_motifs()` or `have_motifs()` with your data-manipulation workflow instead.
+* `add_motifs_int()` and `add_motifs_lgl()` are removed; use `count_motifs()` or `have_motifs()` with your data-manipulation workflow instead. (#53)
 
 ## Improvements
 
