@@ -2,7 +2,7 @@
 #'
 #' Create a specification for dynamic motif extraction.
 #' This should be passed to the `motifs` argument of [have_motifs()],
-#' [count_motifs()], [match_motifs()], [add_motifs_lgl()], or [add_motifs_int()].
+#' [count_motifs()], or [match_motifs()].
 #'
 #' @details
 #' Passing `dynamic_motifs()` to the `motifs` argument of supported functions will:
@@ -35,7 +35,7 @@ dynamic_motifs <- function(max_size = 3) {
 print.dynamic_motifs_spec <- function(x, ...) {
   cli::cli_text("<{.cls dynamic_motifs_spec}>")
   cli::cli_text(
-    "This object should be passed to the {.arg motifs} argument of {.fn have_motifs}, {.fn count_motifs}, {.fn match_motifs}, {.fn add_motifs_lgl}, or {.fn add_motifs_int}."
+    "This object should be passed to the {.arg motifs} argument of {.fn have_motifs}, {.fn count_motifs}, or {.fn match_motifs}."
   )
   cli::cli_text("Configuration: {.field max_size} = {.val {x$max_size}}")
   invisible(x)
@@ -45,7 +45,7 @@ print.dynamic_motifs_spec <- function(x, ...) {
 #'
 #' Create a specification for branch motif extraction.
 #' This should be passed to the `motifs` argument of [have_motifs()],
-#' [count_motifs()], [match_motifs()], [add_motifs_lgl()], or [add_motifs_int()].
+#' [count_motifs()], or [match_motifs()].
 #'
 #' @details
 #' Passing `branch_motifs()` to the `motifs` argument of supported functions will:
@@ -83,7 +83,7 @@ branch_motifs <- function() {
 print.branch_motifs_spec <- function(x, ...) {
   cli::cli_text("<{.cls branch_motifs_spec}>")
   cli::cli_text(
-    "This object should be passed to the {.arg motifs} argument of {.fn have_motifs}, {.fn count_motifs}, {.fn match_motifs}, {.fn add_motifs_lgl}, or {.fn add_motifs_int}."
+    "This object should be passed to the {.arg motifs} argument of {.fn have_motifs}, {.fn count_motifs}, or {.fn match_motifs}."
   )
   cli::cli_text("Configuration: extracts branch motifs with core included")
   invisible(x)
