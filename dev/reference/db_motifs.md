@@ -45,6 +45,6 @@ available sources.
 db_motifs()
 #> <<db_motifs_spec>>
 #> This object should be passed to the `motifs` argument of `have_motifs()`,
-#> `count_motifs()`, `match_motifs()`, `add_motifs_lgl()`, or `add_motifs_int()`.
+#> `count_motifs()`, or `match_motifs()`.
 #> Configuration: uses GlycoMotif database source ID: "GGM"
 ```

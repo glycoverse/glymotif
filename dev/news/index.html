@@ -38,8 +38,16 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="development version" id="glymotif-development-version">glymotif (development version)<a class="anchor" aria-label="anchor" href="#glymotif-development-version"></a></h2>
+<div class="section level3">
+<h3 id="breaking-changes-development-version">Breaking changes<a class="anchor" aria-label="anchor" href="#breaking-changes-development-version"></a></h3>
+<ul><li>
+<code>add_motifs_int()</code> and <code>add_motifs_lgl()</code> are removed; use <code><a href="../reference/count_motif.html">count_motifs()</a></code> or <code><a href="../reference/have_motif.html">have_motifs()</a></code> with your data-manipulation workflow instead. (<a href="https://github.com/glycoverse/glymotif/issues/53" class="external-link">#53</a>)</li>
+</ul></div>
+<div class="section level3">
+<h3 id="improvements-development-version">Improvements<a class="anchor" aria-label="anchor" href="#improvements-development-version"></a></h3>
 <ul><li>Motif matching and extraction functions now avoid accumulating graph references across repeated calls, preventing progressive slowdowns in long-running R sessions. (<a href="https://github.com/glycoverse/glymotif/issues/52" class="external-link">#52</a>)</li>
 </ul></div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.17.3" id="glymotif-0173">glymotif 0.17.3<a class="anchor" aria-label="anchor" href="#glymotif-0173"></a></h2>
 <ul><li>
@@ -48,11 +56,11 @@
 </ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.17.2" id="glymotif-0172">glymotif 0.17.2<a class="anchor" aria-label="anchor" href="#glymotif-0172"></a></h2>
-<ul><li>Documentation now recommends <code>GlycomicSE</code> and <code>GlycoproteomicSE</code> containers and the <code><a href="https://glycoverse.github.io/glyexp/reference/mutate_col.html" class="external-link">mutate_row()</a></code> replacement for deprecated motif-annotation helpers as part of Stage II of glycoverse/glyexp#15. (<a href="https://github.com/glycoverse/glymotif/issues/49" class="external-link">#49</a>)</li>
+<ul><li>Documentation now recommends <code>GlycomicSE</code> and <code>GlycoproteomicSE</code> containers and the <code>mutate_row()</code> replacement for deprecated motif-annotation helpers as part of Stage II of glycoverse/glyexp#15. (<a href="https://github.com/glycoverse/glymotif/issues/49" class="external-link">#49</a>)</li>
 </ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.17.1" id="glymotif-0171">glymotif 0.17.1<a class="anchor" aria-label="anchor" href="#glymotif-0171"></a></h2>
-<ul><li>Examples for <code><a href="../reference/add_motifs_int.html">add_motifs_int()</a></code> now run with both legacy and current <code>glyexp</code> containers and use valid condensed IUPAC glycans.</li>
+<ul><li>Examples for <code>add_motifs_int()</code> now run with both legacy and current <code>glyexp</code> containers and use valid condensed IUPAC glycans.</li>
 </ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.17.0" id="glymotif-0170">glymotif 0.17.0<a class="anchor" aria-label="anchor" href="#glymotif-0170"></a></h2>
@@ -67,7 +75,7 @@
 <div class="section level3">
 <h3 id="minor-improvements-and-bug-fixes-0-17-0">Minor improvements and bug fixes<a class="anchor" aria-label="anchor" href="#minor-improvements-and-bug-fixes-0-17-0"></a></h3>
 <ul><li>
-<code><a href="../reference/add_motifs_int.html">add_motifs_lgl()</a></code> and <code><a href="../reference/add_motifs_int.html">add_motifs_int()</a></code> are deprecated. Use <code><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">dplyr::mutate()</a></code> or <code><a href="https://glycoverse.github.io/glyexp/reference/deprecated-dplyr-aliases.html" class="external-link">glyexp::mutate_var()</a></code> with <code>tibble::as_tibble(have_motifs(...))</code> or <code>tibble::as_tibble(count_motifs(...))</code> instead (<a href="https://github.com/glycoverse/glymotif/issues/44" class="external-link">#44</a>).</li>
+<code>add_motifs_lgl()</code> and <code>add_motifs_int()</code> are deprecated. Use <code><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">dplyr::mutate()</a></code> or <code><a href="https://glycoverse.github.io/glyexp/reference/deprecated-dplyr-aliases.html" class="external-link">glyexp::mutate_var()</a></code> with <code>tibble::as_tibble(have_motifs(...))</code> or <code>tibble::as_tibble(count_motifs(...))</code> instead (<a href="https://github.com/glycoverse/glymotif/issues/44" class="external-link">#44</a>).</li>
 </ul></div>
 </div>
     <div class="section level2">
@@ -82,7 +90,7 @@
 <div class="section level3">
 <h3 id="breaking-changes-0-16-0">Breaking changes<a class="anchor" aria-label="anchor" href="#breaking-changes-0-16-0"></a></h3>
 <ul><li>
-<code><a href="../reference/db_motifs.html">db_motifs()</a></code> no longer returns a character vector of motif names. It now returns a <code>db_motifs_spec</code> object that should be passed directly to the <code>motifs</code> argument of <code><a href="../reference/have_motif.html">have_motifs()</a></code>, <code><a href="../reference/count_motif.html">count_motifs()</a></code>, <code><a href="../reference/match_motif.html">match_motifs()</a></code>, <code><a href="../reference/add_motifs_int.html">add_motifs_lgl()</a></code>, and <code><a href="../reference/add_motifs_int.html">add_motifs_int()</a></code>. Specifying <code>alignments</code>, <code>ignore_linkages</code>, <code>strict_sub</code>, or <code>match_degree</code> is no longer valid. (<a href="https://github.com/glycoverse/glymotif/issues/35" class="external-link">#35</a>)</li>
+<code><a href="../reference/db_motifs.html">db_motifs()</a></code> no longer returns a character vector of motif names. It now returns a <code>db_motifs_spec</code> object that should be passed directly to the <code>motifs</code> argument of <code><a href="../reference/have_motif.html">have_motifs()</a></code>, <code><a href="../reference/count_motif.html">count_motifs()</a></code>, <code><a href="../reference/match_motif.html">match_motifs()</a></code>, <code>add_motifs_lgl()</code>, and <code>add_motifs_int()</code>. Specifying <code>alignments</code>, <code>ignore_linkages</code>, <code>strict_sub</code>, or <code>match_degree</code> is no longer valid. (<a href="https://github.com/glycoverse/glymotif/issues/35" class="external-link">#35</a>)</li>
 <li>
 <code><a href="../reference/get_motif_structure.html">get_motif_structure()</a></code>, <code><a href="../reference/get_motif_structure.html">get_motif_alignment()</a></code>, and <code><a href="../reference/is_known_motif.html">is_known_motif()</a></code> are deprecated. Use <code><a href="../reference/db_motif_info.html">db_motif_info()</a></code> to inspect database motifs instead. (<a href="https://github.com/glycoverse/glymotif/issues/35" class="external-link">#35</a>)</li>
 <li>
@@ -163,7 +171,7 @@
 <h2 class="pkg-version" data-toc-text="0.12.2" id="glymotif-0122">glymotif 0.12.2<a class="anchor" aria-label="anchor" href="#glymotif-0122"></a></h2>
 <div class="section level3">
 <h3 id="minor-improvements-and-fixes-0-12-2">Minor improvements and fixes<a class="anchor" aria-label="anchor" href="#minor-improvements-and-fixes-0-12-2"></a></h3>
-<ul><li>Add validation to raise an error when <code>motifs</code> parameter contains duplicates in <code><a href="../reference/have_motif.html">have_motifs()</a></code>, <code><a href="../reference/count_motif.html">count_motifs()</a></code>, <code><a href="../reference/match_motif.html">match_motifs()</a></code>, <code><a href="../reference/add_motifs_int.html">add_motifs_lgl()</a></code> and <code><a href="../reference/add_motifs_int.html">add_motifs_int()</a></code>. (<a href="https://github.com/glycoverse/glymotif/issues/8" class="external-link">#8</a>)</li>
+<ul><li>Add validation to raise an error when <code>motifs</code> parameter contains duplicates in <code><a href="../reference/have_motif.html">have_motifs()</a></code>, <code><a href="../reference/count_motif.html">count_motifs()</a></code>, <code><a href="../reference/match_motif.html">match_motifs()</a></code>, <code>add_motifs_lgl()</code> and <code>add_motifs_int()</code>. (<a href="https://github.com/glycoverse/glymotif/issues/8" class="external-link">#8</a>)</li>
 <li>Update all motif functions to properly preserve and use names from input vectors, taking advantage of glyrepr 0.10.0’s support for names on glycan structure vectors. (<a href="https://github.com/glycoverse/glymotif/issues/5" class="external-link">#5</a>)(<a href="https://github.com/glycoverse/glymotif/issues/6" class="external-link">#6</a>)</li>
 </ul></div>
 </div>
@@ -211,7 +219,7 @@
 <div class="section level3">
 <h3 id="new-features-0-10-0">New features<a class="anchor" aria-label="anchor" href="#new-features-0-10-0"></a></h3>
 <ul><li>
-<code><a href="../reference/add_motifs_int.html">add_motifs_int()</a></code> and <code><a href="../reference/add_motifs_int.html">add_motifs_lgl()</a></code> now support data frames as input.</li>
+<code>add_motifs_int()</code> and <code>add_motifs_lgl()</code> now support data frames as input.</li>
 </ul></div>
 <div class="section level3">
 <h3 id="minor-improvements-and-bug-fixes-0-10-0">Minor improvements and bug fixes<a class="anchor" aria-label="anchor" href="#minor-improvements-and-bug-fixes-0-10-0"></a></h3>
@@ -248,7 +256,7 @@
 <ul><li>
 <code>quantify_motifs()</code> has been totally rewritten. Serious bug about column aggregation with descriptional columns about glycan structures are fixed. The function now behaves like <code>glydet::derive_traits()</code>, adding back columns in <code>var_info</code> only when they have “many-to-one” relationship with glycosites (unique combinations of <code>protein</code> and <code>protein_site</code>).</li>
 <li>
-<code>quantify_motifs()</code>, <code><a href="../reference/add_motifs_int.html">add_motifs_int()</a></code>, and <code><a href="../reference/add_motifs_int.html">add_motifs_lgl()</a></code> now support a character vector ofglycan structure strings as the “glycan_structure” column in <code>var_info</code>.</li>
+<code>quantify_motifs()</code>, <code>add_motifs_int()</code>, and <code>add_motifs_lgl()</code> now support a character vector ofglycan structure strings as the “glycan_structure” column in <code>var_info</code>.</li>
 </ul></div>
 <div class="section level3">
 <h3 id="minor-improvements-and-bug-fixes-0-8-0">Minor improvements and bug fixes<a class="anchor" aria-label="anchor" href="#minor-improvements-and-bug-fixes-0-8-0"></a></h3>
@@ -370,7 +378,7 @@
 <div class="section level3">
 <h3 id="major-changes-0-3-0">Major changes<a class="anchor" aria-label="anchor" href="#major-changes-0-3-0"></a></h3>
 <ul><li>Add <code>add_glycan_descriptions()</code>, <code>add_struct_descriptions()</code>, and <code>add_comp_descriptions()</code>. These functions are moved from <code>glyexp</code> to <code>glymotif</code> for better separation of concerns.</li>
-<li>Add <code><a href="../reference/add_motifs_int.html">add_motifs_int()</a></code> and <code><a href="../reference/add_motifs_int.html">add_motifs_lgl()</a></code> for adding motif annotations to a <code><a href="https://glycoverse.github.io/glyexp/reference/experiment.html" class="external-link">glyexp::experiment()</a></code>.</li>
+<li>Add <code>add_motifs_int()</code> and <code>add_motifs_lgl()</code> for adding motif annotations to a <code><a href="https://glycoverse.github.io/glyexp/reference/experiment.html" class="external-link">glyexp::experiment()</a></code>.</li>
 </ul></div>
 <div class="section level3">
 <h3 id="minor-improvements-0-3-0">Minor improvements<a class="anchor" aria-label="anchor" href="#minor-improvements-0-3-0"></a></h3>
@@ -379,7 +387,7 @@
 </ul></div>
 <div class="section level3">
 <h3 id="bug-fixes-0-3-0">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-3-0"></a></h3>
-<ul><li>Fix a bug in <code><a href="../reference/get_motif_structure.html">get_motif_structure()</a></code>, where the order of the results was not consistent with the order of the input motifs. This caused unexpected results in a wide range of functions including <code><a href="../reference/have_motif.html">have_motifs()</a></code>, <code><a href="../reference/count_motif.html">count_motifs()</a></code>, and the new <code><a href="../reference/add_motifs_int.html">add_motifs_lgl()</a></code> and <code><a href="../reference/add_motifs_int.html">add_motifs_int()</a></code> functions, when using motif names as input. Alone with <code><a href="../reference/get_motif_structure.html">get_motif_structure()</a></code>, similar bugs in <code><a href="../reference/get_motif_structure.html">get_motif_alignment()</a></code> and <code>get_motif_aglycon()</code> are also fixed.</li>
+<ul><li>Fix a bug in <code><a href="../reference/get_motif_structure.html">get_motif_structure()</a></code>, where the order of the results was not consistent with the order of the input motifs. This caused unexpected results in a wide range of functions including <code><a href="../reference/have_motif.html">have_motifs()</a></code>, <code><a href="../reference/count_motif.html">count_motifs()</a></code>, and the new <code>add_motifs_lgl()</code> and <code>add_motifs_int()</code> functions, when using motif names as input. Alone with <code><a href="../reference/get_motif_structure.html">get_motif_structure()</a></code>, similar bugs in <code><a href="../reference/get_motif_structure.html">get_motif_alignment()</a></code> and <code>get_motif_aglycon()</code> are also fixed.</li>
 </ul></div>
 </div>
     <div class="section level2">

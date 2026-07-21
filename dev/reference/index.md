@@ -2,9 +2,6 @@
 
 ## All functions
 
-- [`add_motifs_int()`](https://glycoverse.github.io/glymotif/dev/reference/add_motifs_int.md)
-  [`add_motifs_lgl()`](https://glycoverse.github.io/glymotif/dev/reference/add_motifs_int.md)
-  **\[deprecated\]** : Add Motif Annotations
 - [`branch_motifs()`](https://glycoverse.github.io/glymotif/dev/reference/branch_motifs.md)
   : Branch Motifs Specification
 - [`count_motif()`](https://glycoverse.github.io/glymotif/dev/reference/count_motif.md)

@@ -519,17 +519,13 @@ and
 [`branch_motifs()`](https://glycoverse.github.io/glymotif/dev/reference/branch_motifs.md):
 [`have_motifs()`](https://glycoverse.github.io/glymotif/dev/reference/have_motif.md),
 [`count_motifs()`](https://glycoverse.github.io/glymotif/dev/reference/count_motif.md),
-[`match_motifs()`](https://glycoverse.github.io/glymotif/dev/reference/match_motif.md),
-[`add_motifs_lgl()`](https://glycoverse.github.io/glymotif/dev/reference/add_motifs_int.md),
 and
-[`add_motifs_int()`](https://glycoverse.github.io/glymotif/dev/reference/add_motifs_int.md).
+[`match_motifs()`](https://glycoverse.github.io/glymotif/dev/reference/match_motif.md).
 
 ## What’s Next?
 
 - Want more detail about motif matching rules? See [Motif Matching
   Rules](https://glycoverse.github.io/glymotif/articles/motif-matching.html).
-- Working with `GlycomicSE` or `GlycoproteomicSE`? See [Creating a Glyco
-  SummarizedExperiment](https://glycoverse.github.io/glyexp/articles/create-exp.html).
 
 ## Related Projects
 

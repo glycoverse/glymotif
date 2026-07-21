@@ -4,10 +4,8 @@ Create a specification for branch motif extraction. This should be
 passed to the `motifs` argument of
 [`have_motifs()`](https://glycoverse.github.io/glymotif/dev/reference/have_motif.md),
 [`count_motifs()`](https://glycoverse.github.io/glymotif/dev/reference/count_motif.md),
-[`match_motifs()`](https://glycoverse.github.io/glymotif/dev/reference/match_motif.md),
-[`add_motifs_lgl()`](https://glycoverse.github.io/glymotif/dev/reference/add_motifs_int.md),
 or
-[`add_motifs_int()`](https://glycoverse.github.io/glymotif/dev/reference/add_motifs_int.md).
+[`match_motifs()`](https://glycoverse.github.io/glymotif/dev/reference/match_motif.md).
 
 ## Usage
 
