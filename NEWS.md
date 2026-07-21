@@ -1,5 +1,11 @@
 # glymotif (development version)
 
+## Breaking changes
+
+* `add_motifs_int()` and `add_motifs_lgl()` are removed; use `count_motifs()` or `have_motifs()` with your data-manipulation workflow instead. (#53)
+
+## Improvements
+
 * Motif matching and extraction functions now avoid accumulating graph references across repeated calls, preventing progressive slowdowns in long-running R sessions. (#52)
 
 # glymotif 0.17.3

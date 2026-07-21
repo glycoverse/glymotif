@@ -12,7 +12,7 @@ A \code{branch_motifs_spec} object.
 \description{
 Create a specification for branch motif extraction.
 This should be passed to the \code{motifs} argument of \code{\link[=have_motifs]{have_motifs()}},
-\code{\link[=count_motifs]{count_motifs()}}, \code{\link[=match_motifs]{match_motifs()}}, \code{\link[=add_motifs_lgl]{add_motifs_lgl()}}, or \code{\link[=add_motifs_int]{add_motifs_int()}}.
+\code{\link[=count_motifs]{count_motifs()}}, or \code{\link[=match_motifs]{match_motifs()}}.
 }
 \details{
 Passing \code{branch_motifs()} to the \code{motifs} argument of supported functions will:

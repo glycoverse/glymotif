@@ -41,7 +41,7 @@ db_motifs <- function(source_id = "GGM") {
 print.db_motifs_spec <- function(x, ...) {
   cli::cli_text("<{.cls db_motifs_spec}>")
   cli::cli_text(
-    "This object should be passed to the {.arg motifs} argument of {.fn have_motifs}, {.fn count_motifs}, {.fn match_motifs}, {.fn add_motifs_lgl}, or {.fn add_motifs_int}."
+    "This object should be passed to the {.arg motifs} argument of {.fn have_motifs}, {.fn count_motifs}, or {.fn match_motifs}."
   )
   cli::cli_text(
     "Configuration: uses GlycoMotif database source ID{?s}: {.val {x$source_id}}"
