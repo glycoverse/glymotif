@@ -35,6 +35,19 @@
 #' - `.g_count_motif()` returns an integer scalar.
 #' - `.g_match_motif()` returns a list of integer vectors.
 #'
+#' @examples
+#' library(glyparse)
+#' library(glyrepr)
+#'
+#' glycan <- parse_iupac_condensed("Gal(b1-3)GalNAc(b1-")
+#' motif <- parse_iupac_condensed("Gal(b1-")
+#' glycan_graph <- get_structure_graphs(glycan)
+#' motif_graph <- get_structure_graphs(motif)
+#'
+#' .g_have_motif(glycan_graph, motif_graph)
+#' .g_count_motif(glycan_graph, motif_graph)
+#' .g_match_motif(glycan_graph, motif_graph)
+#'
 #' @seealso [have_motif()], [count_motif()], [match_motif()]
 #'
 #' @name dot-g_motif

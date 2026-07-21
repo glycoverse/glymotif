@@ -85,6 +85,20 @@ the compatible generic representation.
 
 These functions never call \code{\link[glyrepr:as_glycan_structure]{glyrepr::as_glycan_structure()}}.
 }
+\examples{
+library(glyparse)
+library(glyrepr)
+
+glycan <- parse_iupac_condensed("Gal(b1-3)GalNAc(b1-")
+motif <- parse_iupac_condensed("Gal(b1-")
+glycan_graph <- get_structure_graphs(glycan)
+motif_graph <- get_structure_graphs(motif)
+
+.g_have_motif(glycan_graph, motif_graph)
+.g_count_motif(glycan_graph, motif_graph)
+.g_match_motif(glycan_graph, motif_graph)
+
+}
 \seealso{
 \code{\link[=have_motif]{have_motif()}}, \code{\link[=count_motif]{count_motif()}}, \code{\link[=match_motif]{match_motif()}}
 }
