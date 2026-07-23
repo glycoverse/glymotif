@@ -8,7 +8,7 @@
 \description{
 \if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
 
-Provides comprehensive tools for glycan motif analysis and detection in glycobioinformatics research. The package enables users to identify, count, and match glycan motifs (recurring substructures) within complex glycan structures using advanced subgraph isomorphism algorithms. It includes a curated database of known motifs from the GlycoMotif database, supports both concrete and generic monosaccharide matching, and offers flexible alignment options (core, terminal, or anywhere). Key functionalities include motif presence detection, occurrence counting, detailed node-to-node mapping, and batch analysis of multiple glycans against multiple motifs. The package seamlessly integrates with the glycoverse ecosystem, particularly 'glyrepr' and 'glyparse', making it essential for structural glycomics analysis, biomarker discovery, and understanding glycan-mediated biological processes.
+Identify, count, and match recurring substructures in glycan structures. Supports concrete and generic monosaccharide matching, several structural alignment modes, node-to-node mappings, and batch analysis using subgraph isomorphism. Includes curated motif annotations derived from the 'GlycoMotif' resource \url{https://glycomotif.glyomics.org/}. Integrates with 'glyrepr' and 'glyparse' for structural glycomics workflows.
 }
 \seealso{
 Useful links:

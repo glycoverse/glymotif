@@ -18,7 +18,8 @@ A \code{db_motifs_spec} object.
 }
 \description{
 This function returns a database motif specification.
-We use GlycoMotif collections (https://glycomotif.glyomics.org/glycomotif/)
+We use GlycoMotif collections
+(https://glycomotif.glyomics.org/glycomotif/GlycoMotif)
 as the source of the motifs.
 This function is useful to be integrated with \code{\link[=have_motifs]{have_motifs()}} and \code{\link[=count_motifs]{count_motifs()}}.
 For example, use \code{have_motifs(glycans, db_motifs())} to check against the
@@ -30,6 +31,15 @@ Use \code{\link[=db_motif_info]{db_motif_info()}} to inspect the motifs included
 You can use \code{dplyr::distinct(db_motif_info(), source_id, source)} to get
 all available sources.
 }
+\section{Data source and license}{
+
+The bundled annotations are derived from the
+\href{https://glycomotif.glyomics.org/glycomotif/GlycoMotif}{GlycoMotif}
+resource. GlyGen distributes its database sets under the
+\href{https://www.glygen.org/license/}{Creative Commons Attribution 4.0 International license}. See the package \code{COPYRIGHTS}
+file for attribution and snapshot details.
+}
+
 \examples{
 db_motifs()
 

@@ -1,0 +1,31 @@
+Package code
+============
+
+Copyright (c) 2026 glymotif authors
+
+The package code is distributed under the MIT License. See the top-level
+LICENSE file for details.
+
+
+Bundled GlycoMotif annotations
+==============================
+
+The internal motif annotations in R/sysdata.rda are derived from the
+GlycoMotif resource:
+
+  https://glycomotif.glyomics.org/glycomotif/GlycoMotif
+
+The snapshot incorporated into this package on 2026-07-07 contains the
+GlyGen Motifs, CCRC Motifs, GlyTouCan Motifs, GlycoEpitope Epitopes,
+Glydin, Glydin - BiOligo, Glydin - Cermav, Glydin - Cummings,
+Glydin - Hayes, Glydin - SugarBind, UniCarbKB Motifs, and All Motifs
+collections.
+
+GlyGen applies the Creative Commons Attribution 4.0 International
+(CC BY 4.0) license to its database sets:
+
+  https://www.glygen.org/license/
+
+Attribution: GlyGen and the GlycoMotif resource. Collection-specific
+provenance and original-resource links are available from the GlycoMotif
+collection pages.

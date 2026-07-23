@@ -9,7 +9,8 @@
 #' Get All Motifs from the Database
 #'
 #' This function returns a database motif specification.
-#' We use GlycoMotif collections (https://glycomotif.glyomics.org/glycomotif/)
+#' We use GlycoMotif collections
+#' (https://glycomotif.glyomics.org/glycomotif/GlycoMotif)
 #' as the source of the motifs.
 #' This function is useful to be integrated with [have_motifs()] and [count_motifs()].
 #' For example, use `have_motifs(glycans, db_motifs())` to check against the
@@ -26,6 +27,13 @@
 #'   You can use more than one motif collections like `c("GGM", "CCRC")`.
 #'   To use all available motifs, use the `"GM"` collection directly.
 #' @return A `db_motifs_spec` object.
+#' @section Data source and license:
+#' The bundled annotations are derived from the
+#' [GlycoMotif](https://glycomotif.glyomics.org/glycomotif/GlycoMotif)
+#' resource. GlyGen distributes its database sets under the
+#' [Creative Commons Attribution 4.0 International
+#' license](https://www.glygen.org/license/). See the package `COPYRIGHTS`
+#' file for attribution and snapshot details.
 #'
 #' @examples
 #' db_motifs()

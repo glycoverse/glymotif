@@ -715,21 +715,18 @@ apply_single_motif_to_glycans <- function(
 
 #' Fast Convert Mono Types
 #'
-#' `apply_single_motif_to_glycans` used to use `glyrepr::convert_mono_type()` (now `convert_to_generic()`)
-#' to ensure that mono types of glycans and motifs are the same.
-#' That function uses `glyrepr::spmap_structure()` under the hood,
-#' which calls time-consuming `glyrepr:::.structure_to_iupac_single()`
-#' to ensure the new `glyrepr::glycan_structure()` has the correct IUPACs.
+#' `apply_single_motif_to_glycans` used to use
+#' `glyrepr::convert_to_generic()` to ensure that mono types of glycans and
+#' motifs are the same. That function rebuilds the structure representation
+#' after applying the graph transformation.
 #' However, in motif mathcing functions of `glymotif`,
 #' we don't need to return the converted `glyrepr::glycan_structure()` object.
 #' All we need to do is to make sure the underlying glycan graphs are of correct mono types.
 #' Therefore, we implement a fast version of `convert_to_generic()` here
 #' for this special use case.
 #' It only converts the underlying graphs without modifying anything else.
-#' The implementation peeks under the hood of `glyrepr`,
-#' which is generally a bad decision.
-#' But currently `glrepr` cannot fulfill our needs here,
-#' and the performance gain is worth the sacrifice.
+#' The transformed graphs are trusted internal values and can therefore use
+#' the low-level `glyrepr::new_glycan_structure()` constructor.
 #'
 #' @param glycans A `glyrepr_structure` object.
 #' @return A `glyrepr_structure` object with the same IUPACs but generic mono types.
@@ -737,7 +734,7 @@ apply_single_motif_to_glycans <- function(
 fast_convert_to_generic <- function(glycans) {
   iupacs <- as.character(glycans)
   new_graphs <- purrr::map(attr(glycans, "graphs"), convert_graph_to_generic)
-  glyrepr:::new_glycan_structure(iupacs, new_graphs)
+  glyrepr::new_glycan_structure(iupacs, new_graphs)
 }
 
 # ----- Generic function for multiple motifs -----
