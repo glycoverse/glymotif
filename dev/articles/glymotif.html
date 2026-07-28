@@ -190,7 +190,7 @@ names)</li>
 <span><span class="co">#&gt; [5,] FALSE FALSE FALSE</span></span></code></pre></div>
 <p><strong>Tip:</strong> You don’t need to memorize complex IUPAC
 strings. Use predefined motif names in the GlyGen GlycoMotif database
-(<a href="https://glycomotif.glyomics.org/glycomotif/GGM" class="external-link uri">https://glycomotif.glyomics.org/glycomotif/GGM</a>)
+(<a href="https://glycomotif.glyomics.org/glycomotif/GlycoMotif" class="external-link uri">https://glycomotif.glyomics.org/glycomotif/GlycoMotif</a>)
 instead:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/have_motif.html">have_motif</a></span><span class="op">(</span><span class="va">glycans</span>, <span class="st">"Type 2 LN2"</span><span class="op">)</span></span>
@@ -327,10 +327,11 @@ coverage.</p>
 <h2 id="database-motif-detection">Database Motif Detection<a class="anchor" aria-label="anchor" href="#database-motif-detection"></a>
 </h2>
 <p>Previously, we mentioned that you can use motif names in the
-GlycoMotif database (<a href="https://glycomotif.glyomics.org/glycomotif/" class="external-link uri">https://glycomotif.glyomics.org/glycomotif/</a>). A common
-task is to match your glycans against a packaged motif collection. By
-default, <code><a href="../reference/db_motifs.html">db_motifs()</a></code> uses the GlyGen Motifs collection
-(<code>source_id = "GGM"</code>) for backward compatibility:</p>
+GlycoMotif database (<a href="https://glycomotif.glyomics.org/glycomotif/GlycoMotif" class="external-link uri">https://glycomotif.glyomics.org/glycomotif/GlycoMotif</a>).
+A common task is to match your glycans against a packaged motif
+collection. By default, <code><a href="../reference/db_motifs.html">db_motifs()</a></code> uses the GlyGen Motifs
+collection (<code>source_id = "GGM"</code>) for backward
+compatibility:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/have_motif.html">have_motifs</a></span><span class="op">(</span><span class="va">glycans</span>, <span class="fu"><a href="../reference/db_motifs.html">db_motifs</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span></span>

@@ -24,29 +24,32 @@ this package and other core glycoverse packages.
 If you don’t want to install all glycoverse packages, you can only
 install glymotif.
 
-You can install the latest release of glymotif from
-[r-universe](https://glycoverse.r-universe.dev/glymotif)
-(**recommended**):
+You can install the latest release of glymotif from CRAN:
 
 ``` r
 
-# install.packages("pak")
-pak::repo_add(glycoverse = "https://glycoverse.r-universe.dev")
-pak::pkg_install("glymotif")
+install.packages("glymotif")
+```
+
+Or from [r-universe](https://glycoverse.r-universe.dev/glymotif):
+
+``` r
+
+install.packages("glymotif", repos = c("https://glycoverse.r-universe.dev", "https://cloud.r-project.org"))
 ```
 
 Or from [GitHub](https://github.com/glycoverse/glymotif):
 
 ``` r
 
-pak::pkg_install("glycoverse/glymotif@*release")
+remotes::install_github("glycoverse/glymotif@*release")
 ```
 
-Or install the development version (NOT recommended):
+Or install the development version:
 
 ``` r
 
-pak::pkg_install("glycoverse/glymotif")
+remotes::install_github("glycoverse/glymotif")
 ```
 
 **Note:** Tips and troubleshooting for the meta-package

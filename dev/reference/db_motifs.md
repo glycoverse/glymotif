@@ -1,8 +1,8 @@
 # Get All Motifs from the Database
 
 This function returns a database motif specification. We use GlycoMotif
-collections (https://glycomotif.glyomics.org/glycomotif/) as the source
-of the motifs. This function is useful to be integrated with
+collections (https://glycomotif.glyomics.org/glycomotif/GlycoMotif) as
+the source of the motifs. This function is useful to be integrated with
 [`have_motifs()`](https://glycoverse.github.io/glymotif/dev/reference/have_motif.md)
 and
 [`count_motifs()`](https://glycoverse.github.io/glymotif/dev/reference/count_motif.md).
@@ -38,6 +38,15 @@ Use
 to inspect the motifs included in the database. You can use
 `dplyr::distinct(db_motif_info(), source_id, source)` to get all
 available sources.
+
+## Data source and license
+
+The bundled annotations are derived from the
+[GlycoMotif](https://glycomotif.glyomics.org/glycomotif/GlycoMotif)
+resource. GlyGen distributes its database sets under the [Creative
+Commons Attribution 4.0 International
+license](https://www.glygen.org/license/). See the package `COPYRIGHTS`
+file for attribution and snapshot details.
 
 ## Examples
 

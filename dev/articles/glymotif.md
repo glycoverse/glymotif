@@ -142,7 +142,7 @@ unname(have_motifs(glycans, motifs))  # Removing names for cleaner display
 
 **Tip:** You don’t need to memorize complex IUPAC strings. Use
 predefined motif names in the GlyGen GlycoMotif database
-(<https://glycomotif.glyomics.org/glycomotif/GGM>) instead:
+(<https://glycomotif.glyomics.org/glycomotif/GlycoMotif>) instead:
 
 ``` r
 
@@ -290,9 +290,9 @@ appropriate caution. You’re trading specificity for coverage.
 ## Database Motif Detection
 
 Previously, we mentioned that you can use motif names in the GlycoMotif
-database (<https://glycomotif.glyomics.org/glycomotif/>). A common task
-is to match your glycans against a packaged motif collection. By
-default,
+database (<https://glycomotif.glyomics.org/glycomotif/GlycoMotif>). A
+common task is to match your glycans against a packaged motif
+collection. By default,
 [`db_motifs()`](https://glycoverse.github.io/glymotif/dev/reference/db_motifs.md)
 uses the GlyGen Motifs collection (`source_id = "GGM"`) for backward
 compatibility:
