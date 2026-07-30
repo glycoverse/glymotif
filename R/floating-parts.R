@@ -9,64 +9,15 @@ floating_localization_graphs <- function(structure, graph) {
     return(list(graph))
   }
 
+  localizations <- glyrepr::enumerate_floating_localizations(
+    structure,
+    max_variants = .max_floating_localizations,
+    deduplicate = FALSE
+  )
   candidate_edges <- glyrepr::structure_candidate_edges(structure)
-  candidate_domains <- split(
-    candidate_edges$from_node,
-    candidate_edges$part_id
-  )
-  combination_count <- prod(as.double(lengths(candidate_domains)))
-  if (
-    !is.finite(combination_count) ||
-      combination_count > .max_floating_localizations
-  ) {
-    cli::cli_abort(c(
-      "Floating localization count exceeds the supported limit.",
-      "x" = "The glycan has {format(combination_count, scientific = FALSE)} raw candidate combinations; the limit is {.val {(.max_floating_localizations)}}.",
-      "i" = "Localize floating parts with {.fn glyrepr::localize_floating_parts} before matching this glycan."
-    ))
-  }
-
-  combinations <- do.call(
-    expand.grid,
-    c(
-      candidate_domains,
-      list(
-        KEEP.OUT.ATTRS = FALSE,
-        stringsAsFactors = FALSE
-      )
-    )
-  )
-  assignments <- purrr::map(
-    seq_len(nrow(combinations)),
-    function(i) {
-      tibble::tibble(
-        glycan_id = rep(1L, length(candidate_domains)),
-        part_id = as.integer(names(candidate_domains)),
-        parent_node = as.integer(
-          unlist(combinations[i, , drop = FALSE])
-        )
-      )
-    }
-  )
-  valid <- purrr::map_lgl(
-    assignments,
-    function(x) {
-      tryCatch(
-        {
-          glyrepr::localize_floating_parts(structure, x)
-          TRUE
-        },
-        error = function(cnd) FALSE
-      )
-    }
-  )
-  assignments <- assignments[valid]
-  if (length(assignments) == 0L) {
-    cli::cli_abort("The glycan has no conflict-free floating localization.")
-  }
 
   purrr::map(
-    assignments,
+    localizations$assignments,
     add_floating_assignment_edges,
     graph = graph,
     candidate_edges = candidate_edges
