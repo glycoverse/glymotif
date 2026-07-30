@@ -1315,12 +1315,12 @@ test_that("strict-floating mode works", {
   # only if it appears in all possible glycans derived from the floating parts.
   motif <- "Gal(a1-3)Man(a1-"
   glycans <- c(
-    "{Gal(a1-3)}Man(a1-3)[Man(a1-6)]GlcNAc(b1-",  # implicit floating
-    "{Gal(a1-3)|1,2}Man(a1-3)[Glc(a1-6)]GlcNAc(b1-",  # good on one parents
-    "{Gal(a1-3)|1,2}Man(a1-3)[Man(a1-6)]GlcNAc(b1-"   # good on both parents
+    "{Gal(a1-3)}Man(a1-3)[Glc(a1-6)]GlcNAc(b1-", # implicit floating
+    "{Gal(a1-3)|1,2}Man(a1-3)[Glc(a1-6)]GlcNAc(b1-", # good on one parents
+    "{Gal(a1-3)|1,2}Man(a1-3)[Man(a1-6)]GlcNAc(b1-" # good on both parents
   )
 
-  res1 <- have_motif(glycans, motif)  # defaults to use strict-floating
+  res1 <- have_motif(glycans, motif) # defaults to use strict-floating
   res2 <- have_motif(glycans, motif, strict_floating = TRUE)
 
   expect_identical(res1, c(FALSE, FALSE, TRUE))
@@ -1332,14 +1332,15 @@ test_that("lenient-floating mode works", {
   # as long as it appears in one possible glycan derived from the floating parts.
   motif <- "Gal(a1-3)Man(a1-"
   glycans <- c(
-    "{Gal(a1-3)}Man(a1-3)[Man(a1-6)]GlcNAc(b1-",  # implicit floating
-    "{Gal(a1-3)|1,2}Man(a1-3)[Glc(a1-6)]GlcNAc(b1-",  # good on one parents
-    "{Gal(a1-3)|1,2}Man(a1-3)[Man(a1-6)]GlcNAc(b1-"   # good on both parents
+    "{Gal(a1-3)}Man(a1-3)[Man(a1-6)]GlcNAc(b1-", # implicit floating
+    "{Gal(a1-3)|1,2}Man(a1-3)[Glc(a1-6)]GlcNAc(b1-", # good on one parents
+    "{Gal(a1-3)|1,2}Man(a1-3)[Man(a1-6)]GlcNAc(b1-" # good on both parents
   )
 
+  res1 <- have_motif(glycans, motif, strict_floating = FALSE)
   res2 <- have_motif(glycans, motif, strict_floating = FALSE)
 
-  expect_identical(res1, c(FALSE, TRUE, TRUE))
+  expect_identical(res1, c(TRUE, TRUE, TRUE))
   expect_identical(res1, res2)
 })
 
@@ -1353,4 +1354,31 @@ test_that("have_motif detects new motifs assembled from two floating parts", {
   motif <- "Gal(a1-3)[Gal(a1-4)]Man(a1-"
   glycan <- "{Gal(a1-3)|1,2}{Gal(a1-4)|1,2}Man(a1-3)[Man(a1-6)]GlcNAc(b1-"
   expect_true(have_motif(glycan, motif, strict_floating = FALSE))
+})
+
+test_that("have_motifs aggregates floating localizations per motif", {
+  glycan <- "{Gal(a1-3)|1,2}Man(a1-3)[Glc(a1-6)]GlcNAc(b1-"
+  motifs <- c(
+    gal_man = "Gal(a1-3)Man(a1-",
+    gal_glc = "Gal(a1-3)Glc(a1-"
+  )
+
+  expect_identical(
+    unname(have_motifs(glycan, motifs, strict_floating = TRUE)),
+    matrix(c(FALSE, FALSE), nrow = 1L)
+  )
+  expect_identical(
+    unname(have_motifs(glycan, motifs, strict_floating = FALSE)),
+    matrix(c(TRUE, TRUE), nrow = 1L)
+  )
+})
+
+test_that("floating motifs are rejected clearly", {
+  expect_snapshot(
+    have_motif(
+      "Gal(a1-3)Man(a1-",
+      "{Gal(a1-3)}Man(a1-3)GlcNAc(b1-"
+    ),
+    error = TRUE
+  )
 })

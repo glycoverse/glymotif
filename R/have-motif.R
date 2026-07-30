@@ -86,6 +86,28 @@
 #' Concrete mismatches still fail: for example,
 #' glycan "Gal(?1-6)GalNAc(a1-" does not match motif "Gal(b1-3)GalNAc(a1-".
 #'
+#' # Floating parts
+#'
+#' Glycans with unresolved floating parts are matched across every
+#' conflict-free localization allowed by their candidate-parent domains.
+#' `strict_floating = TRUE` requires a match in every localization, while
+#' `strict_floating = FALSE` requires a match in at least one localization.
+#' This setting is independent of `mode`, which controls residue and linkage
+#' obscurity.
+#'
+#' [count_motif()] and [count_motifs()] return the minimum count across
+#' localizations in strict-floating mode and the maximum count otherwise.
+#' [match_motif()] and [match_motifs()] return the union of node mappings from
+#' every localization, using node indices from the original unresolved
+#' structure.
+#'
+#' Motifs must be connected structures and therefore cannot themselves contain
+#' unresolved floating parts.
+#'
+#' Matching supports up to 256 raw candidate-parent combinations per glycan.
+#' Localize floating parts with [glyrepr::localize_floating_parts()] first for
+#' larger domains.
+#'
 #' # Alignment
 #'
 #' According to the [GlycoMotif](https://glycomotif.glyomics.org) database,
@@ -208,6 +230,10 @@
 #'   glycans cannot be more obscure than motifs. `"lenient"` treats glycan-side
 #'   obscure fields as compatible with more specific motif fields while still
 #'   rejecting concrete mismatches.
+#' @param strict_floating A logical value. If `TRUE` (default), a motif is
+#'   present only when it occurs in every conflict-free localization of any
+#'   floating glycan parts. If `FALSE`, a motif is present when it occurs in at
+#'   least one possible localization.
 #'
 #' @returns
 #' - `have_motif()`: A logical vector indicating if each `glycan` has the `motif`.
@@ -313,7 +339,8 @@ have_motif <- function(
   ignore_linkages = FALSE,
   strict_sub = TRUE,
   match_degree = NULL,
-  mode = c("strict", "lenient")
+  mode = c("strict", "lenient"),
+  strict_floating = TRUE
 ) {
   rlang::check_dots_empty()
 
@@ -328,7 +355,8 @@ have_motif <- function(
     match_degree = match_degree,
     single_motif = TRUE,
     strict_sub = strict_sub,
-    mode = mode
+    mode = mode,
+    strict_floating = strict_floating
   )
   result <- rlang::exec("have_motif_", !!!params)
 
@@ -350,7 +378,8 @@ have_motifs <- function(
   ignore_linkages = FALSE,
   strict_sub = TRUE,
   match_degree = NULL,
-  mode = c("strict", "lenient")
+  mode = c("strict", "lenient"),
+  strict_floating = TRUE
 ) {
   rlang::check_dots_empty()
 
@@ -362,7 +391,8 @@ have_motifs <- function(
     match_degree = match_degree,
     single_motif = FALSE,
     strict_sub = strict_sub,
-    mode = mode
+    mode = mode,
+    strict_floating = strict_floating
   )
   glycan_names <- prepare_struc_names(glycans, params$glycans)
   # Use names from resolved motifs if available (e.g., from dynamic_motifs/branch_motifs)
@@ -398,7 +428,8 @@ have_motif_ <- function(
   ignore_linkages = FALSE,
   strict_sub = TRUE,
   match_degree = NULL,
-  mode = "strict"
+  mode = "strict",
+  strict_floating = TRUE
 ) {
   # This function is a simpler version of `have_motif()`.
   # It performs the logic directly without argument validations and conversions.
@@ -411,8 +442,10 @@ have_motif_ <- function(
     strict_sub = strict_sub,
     match_degree = match_degree,
     mode = mode,
+    strict_floating = strict_floating,
     single_glycan_func = .have_motif_single,
-    smap_func = glyrepr::smap_lgl
+    smap_func = glyrepr::smap_lgl,
+    result_type = "logical"
   )
 }
 
@@ -551,7 +584,8 @@ have_motifs_ <- function(
   ignore_linkages = FALSE,
   strict_sub = TRUE,
   match_degree = NULL,
-  mode = "strict"
+  mode = "strict",
+  strict_floating = TRUE
 ) {
   apply_motifs_to_glycans(
     glycans = glycans,
@@ -564,6 +598,7 @@ have_motifs_ <- function(
     strict_sub = strict_sub,
     match_degree = match_degree,
     mode = mode,
+    strict_floating = strict_floating,
     result_type = "logical"
   )
 }

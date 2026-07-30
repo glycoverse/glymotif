@@ -145,6 +145,20 @@ and the inner lists are named by glycans,
 following the same rules as in \code{have_motifs()} and \code{count_motifs()}.
 }
 
+\section{Floating parts}{
+Glycans with unresolved floating parts are matched across every
+conflict-free localization allowed by their candidate-parent domains. These
+functions return the union of node mappings from every localization, using
+node indices from the original unresolved structure.
+
+Motifs must be connected structures and therefore cannot themselves contain
+unresolved floating parts.
+
+Matching supports up to 256 raw candidate-parent combinations per glycan.
+Localize floating parts with \code{\link[glyrepr:localize_floating_parts]{glyrepr::localize_floating_parts()}} first for
+larger domains.
+}
+
 \examples{
 library(glyparse)
 library(glyrepr)

@@ -418,6 +418,23 @@ test_that("count_motif differs strict and lenient floating modes", {
   motif <- "Gal(??-?)GlcNAc(??-?)Gal(??-"
   glycan <- "{Gal(??-?)GlcNAc(??-?)}Gal(??-?)GlcNAc(??-?)Gal(??-"
 
-  expect_identical(have_motif(glycan, motif, strict_floating = TRUE), 1L)
-  expect_identical(have_motif(glycan, motif, strict_floating = FALSE), 2L)
+  expect_identical(count_motif(glycan, motif, strict_floating = TRUE), 1L)
+  expect_identical(count_motif(glycan, motif, strict_floating = FALSE), 2L)
+})
+
+test_that("count_motifs aggregates floating localizations per motif", {
+  glycan <- "{Gal(??-?)GlcNAc(??-?)}Gal(??-?)GlcNAc(??-?)Gal(??-"
+  motifs <- c(
+    trisaccharide = "Gal(??-?)GlcNAc(??-?)Gal(??-",
+    disaccharide = "Gal(??-?)GlcNAc(??-"
+  )
+
+  expect_identical(
+    unname(count_motifs(glycan, motifs, strict_floating = TRUE)),
+    matrix(c(1L, 2L), nrow = 1L)
+  )
+  expect_identical(
+    unname(count_motifs(glycan, motifs, strict_floating = FALSE)),
+    matrix(c(2L, 2L), nrow = 1L)
+  )
 })

@@ -13,7 +13,8 @@ count_motif(
   ignore_linkages = FALSE,
   strict_sub = TRUE,
   match_degree = NULL,
-  mode = c("strict", "lenient")
+  mode = c("strict", "lenient"),
+  strict_floating = TRUE
 )
 
 count_motifs(
@@ -24,7 +25,8 @@ count_motifs(
   ignore_linkages = FALSE,
   strict_sub = TRUE,
   match_degree = NULL,
-  mode = c("strict", "lenient")
+  mode = c("strict", "lenient"),
+  strict_floating = TRUE
 )
 }
 \arguments{
@@ -71,6 +73,11 @@ provided, \code{alignment} and \code{alignments} are silently ignored.}
 glycans cannot be more obscure than motifs. \code{"lenient"} treats glycan-side
 obscure fields as compatible with more specific motif fields while still
 rejecting concrete mismatches.}
+
+\item{strict_floating}{A logical value. If \code{TRUE} (default), a motif is
+present only when it occurs in every conflict-free localization of any
+floating glycan parts. If \code{FALSE}, a motif is present when it occurs in at
+least one possible localization.}
 
 \item{motifs}{One of:
 \itemize{
@@ -157,6 +164,28 @@ Motif names have the following rules:
 \item If \code{motifs} don't have names and are GGM database motif names (e.g. "N-glycan core"), use them.
 \item Otherwise, no colnames.
 }
+}
+
+\section{Floating parts}{
+Glycans with unresolved floating parts are matched across every
+conflict-free localization allowed by their candidate-parent domains.
+\code{strict_floating = TRUE} requires a match in every localization, while
+\code{strict_floating = FALSE} requires a match in at least one localization.
+This setting is independent of \code{mode}, which controls residue and linkage
+obscurity.
+
+\code{\link[=count_motif]{count_motif()}} and \code{\link[=count_motifs]{count_motifs()}} return the minimum count across
+localizations in strict-floating mode and the maximum count otherwise.
+\code{\link[=match_motif]{match_motif()}} and \code{\link[=match_motifs]{match_motifs()}} return the union of node mappings from
+every localization, using node indices from the original unresolved
+structure.
+
+Motifs must be connected structures and therefore cannot themselves contain
+unresolved floating parts.
+
+Matching supports up to 256 raw candidate-parent combinations per glycan.
+Localize floating parts with \code{\link[glyrepr:localize_floating_parts]{glyrepr::localize_floating_parts()}} first for
+larger domains.
 }
 
 \examples{

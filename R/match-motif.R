@@ -45,6 +45,20 @@
 #' and the inner lists are named by glycans,
 #' following the same rules as in `have_motifs()` and `count_motifs()`.
 #'
+#' # Floating parts
+#'
+#' Glycans with unresolved floating parts are matched across every
+#' conflict-free localization allowed by their candidate-parent domains. These
+#' functions return the union of node mappings from every localization, using
+#' node indices from the original unresolved structure.
+#'
+#' Motifs must be connected structures and therefore cannot themselves contain
+#' unresolved floating parts.
+#'
+#' Matching supports up to 256 raw candidate-parent combinations per glycan.
+#' Localize floating parts with [glyrepr::localize_floating_parts()] first for
+#' larger domains.
+#'
 #' @inheritParams have_motif
 #'
 #' @returns
@@ -215,7 +229,8 @@ match_motif_ <- function(
   ignore_linkages = FALSE,
   strict_sub = TRUE,
   match_degree = NULL,
-  mode = "strict"
+  mode = "strict",
+  strict_floating = TRUE
 ) {
   apply_single_motif_to_glycans(
     glycans = glycans,
@@ -225,8 +240,10 @@ match_motif_ <- function(
     strict_sub = strict_sub,
     match_degree = match_degree,
     mode = mode,
+    strict_floating = strict_floating,
     single_glycan_func = .match_motif_single,
-    smap_func = glyrepr::smap
+    smap_func = glyrepr::smap,
+    result_type = "list"
   )
 }
 
@@ -249,7 +266,8 @@ match_motifs_ <- function(
   ignore_linkages = FALSE,
   strict_sub = TRUE,
   match_degree = NULL,
-  mode = "strict"
+  mode = "strict",
+  strict_floating = TRUE
 ) {
   match_degree_list <- if (is.null(match_degree)) {
     rep(list(NULL), length(motifs))
@@ -268,6 +286,7 @@ match_motifs_ <- function(
     strict_sub = strict_sub,
     match_degree = match_degree_list,
     mode = mode,
+    strict_floating = strict_floating,
     result_type = "list"
   )
 }

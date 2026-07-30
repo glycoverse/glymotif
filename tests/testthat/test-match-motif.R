@@ -586,8 +586,26 @@ test_that("match_motif works for floating parts", {
   # all possible matches, but the two others have to condense the matches into one value.
   motif <- "Gal(??-?)GlcNAc(??-?)Gal(??-"
   glycan <- "{Gal(??-?)GlcNAc(??-?)}Gal(??-?)GlcNAc(??-?)Gal(??-"
+  motif <- glyparse::parse_iupac_condensed(motif)
+  glycan <- glyparse::parse_iupac_condensed(glycan)
 
   result <- match_motif(glycan, motif)
-  expected <- list(c(1L, 2L, 3L), c(1L, 2L, 5L))
+  expected <- list(list(
+    c(1L, 2L, 3L),
+    c(3L, 4L, 5L),
+    c(1L, 2L, 5L)
+  ))
   expect_identical(result, expected)
+})
+
+test_that("match_motif retains mappings from canonical duplicate localizations", {
+  glycan <- glyparse::parse_iupac_condensed(
+    "{Neu5Ac(a2-3)|1,2}Gal(??-?)[Gal(??-?)]GlcNAc(??-"
+  )
+  motif <- glyparse::parse_iupac_condensed("Neu5Ac(??-?)Gal(??-")
+
+  expect_identical(
+    match_motif(glycan, motif),
+    list(list(c(1L, 2L), c(1L, 3L)))
+  )
 })

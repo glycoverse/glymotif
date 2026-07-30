@@ -9,6 +9,7 @@
 #' @inheritParams have_motif
 #'
 #' @inheritSection have_motif About Names
+#' @inheritSection have_motif Floating parts
 #'
 #' @details
 #' This function actually perform v2f algorithm to get all possible matches
@@ -93,7 +94,8 @@ count_motif <- function(
   ignore_linkages = FALSE,
   strict_sub = TRUE,
   match_degree = NULL,
-  mode = c("strict", "lenient")
+  mode = c("strict", "lenient"),
+  strict_floating = TRUE
 ) {
   rlang::check_dots_empty()
 
@@ -108,7 +110,8 @@ count_motif <- function(
     match_degree = match_degree,
     single_motif = TRUE,
     strict_sub = strict_sub,
-    mode = mode
+    mode = mode,
+    strict_floating = strict_floating
   )
   result <- rlang::exec("count_motif_", !!!params)
 
@@ -130,7 +133,8 @@ count_motifs <- function(
   ignore_linkages = FALSE,
   strict_sub = TRUE,
   match_degree = NULL,
-  mode = c("strict", "lenient")
+  mode = c("strict", "lenient"),
+  strict_floating = TRUE
 ) {
   rlang::check_dots_empty()
 
@@ -142,7 +146,8 @@ count_motifs <- function(
     match_degree = match_degree,
     single_motif = FALSE,
     strict_sub = strict_sub,
-    mode = mode
+    mode = mode,
+    strict_floating = strict_floating
   )
   glycan_names <- prepare_struc_names(glycans, params$glycans)
   # Use names from resolved motifs if available (e.g., from dynamic_motifs/branch_motifs)
@@ -179,7 +184,8 @@ count_motif_ <- function(
   ignore_linkages = FALSE,
   strict_sub = TRUE,
   match_degree = NULL,
-  mode = "strict"
+  mode = "strict",
+  strict_floating = TRUE
 ) {
   # This function is a simpler version of `count_motif()`.
   # It performs the logic directly without argument validations and conversions.
@@ -192,8 +198,10 @@ count_motif_ <- function(
     strict_sub = strict_sub,
     match_degree = match_degree,
     mode = mode,
+    strict_floating = strict_floating,
     single_glycan_func = .count_motif_single,
-    smap_func = glyrepr::smap_int
+    smap_func = glyrepr::smap_int,
+    result_type = "integer"
   )
 }
 
@@ -323,7 +331,8 @@ count_motifs_ <- function(
   ignore_linkages = FALSE,
   strict_sub = TRUE,
   match_degree = NULL,
-  mode = "strict"
+  mode = "strict",
+  strict_floating = TRUE
 ) {
   apply_motifs_to_glycans(
     glycans = glycans,
@@ -336,6 +345,7 @@ count_motifs_ <- function(
     strict_sub = strict_sub,
     match_degree = match_degree,
     mode = mode,
+    strict_floating = strict_floating,
     result_type = "integer"
   )
 }
