@@ -1296,3 +1296,61 @@ test_that("mode is validated", {
     "`mode` must be"
   )
 })
+
+# ========== Floating Parts ==========
+test_that("motif in a floating part can be detected", {
+  glycan <- "{Gal(a1-3)Glc(a1-3)}Man(a1-3)[Man(a1-6)]GlcNAc(b1-"
+  motif <- "Gal(a1-3)Glc(a1-"
+  expect_true(have_motif(glycan, motif))
+})
+
+test_that("motif in a non-floating part can be detected", {
+  glycan <- "{Gal(a1-3)Glc(a1-3)}Man(a1-3)[Man(a1-6)]GlcNAc(b1-"
+  motif <- "Man(a1-3)GlcNAc(b1-"
+  expect_true(have_motif(glycan, motif))
+})
+
+test_that("strict-floating mode works", {
+  # In the strict-floating mode, a motif is regarded to exist
+  # only if it appears in all possible glycans derived from the floating parts.
+  motif <- "Gal(a1-3)Man(a1-"
+  glycans <- c(
+    "{Gal(a1-3)}Man(a1-3)[Man(a1-6)]GlcNAc(b1-",  # implicit floating
+    "{Gal(a1-3)|1,2}Man(a1-3)[Glc(a1-6)]GlcNAc(b1-",  # good on one parents
+    "{Gal(a1-3)|1,2}Man(a1-3)[Man(a1-6)]GlcNAc(b1-"   # good on both parents
+  )
+
+  res1 <- have_motif(glycans, motif)  # defaults to use strict-floating
+  res2 <- have_motif(glycans, motif, strict_floating = TRUE)
+
+  expect_identical(res1, c(FALSE, FALSE, TRUE))
+  expect_identical(res1, res2)
+})
+
+test_that("lenient-floating mode works", {
+  # In the lenient-floating mode, a motif is regarded to exist
+  # as long as it appears in one possible glycan derived from the floating parts.
+  motif <- "Gal(a1-3)Man(a1-"
+  glycans <- c(
+    "{Gal(a1-3)}Man(a1-3)[Man(a1-6)]GlcNAc(b1-",  # implicit floating
+    "{Gal(a1-3)|1,2}Man(a1-3)[Glc(a1-6)]GlcNAc(b1-",  # good on one parents
+    "{Gal(a1-3)|1,2}Man(a1-3)[Man(a1-6)]GlcNAc(b1-"   # good on both parents
+  )
+
+  res2 <- have_motif(glycans, motif, strict_floating = FALSE)
+
+  expect_identical(res1, c(FALSE, TRUE, TRUE))
+  expect_identical(res1, res2)
+})
+
+test_that("have_motif works for multiple floating parts", {
+  motif <- "Gal(a1-3)Man(a1-"
+  glycan <- "{Gal(a1-3)|1,2}{Glc(a1-3)|1,2}Man(a1-3)[Man(a1-6)]GlcNAc(b1-"
+  expect_true(have_motif(glycan, motif, strict_floating = FALSE))
+})
+
+test_that("have_motif detects new motifs assembled from two floating parts", {
+  motif <- "Gal(a1-3)[Gal(a1-4)]Man(a1-"
+  glycan <- "{Gal(a1-3)|1,2}{Gal(a1-4)|1,2}Man(a1-3)[Man(a1-6)]GlcNAc(b1-"
+  expect_true(have_motif(glycan, motif, strict_floating = FALSE))
+})

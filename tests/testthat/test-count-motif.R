@@ -397,3 +397,27 @@ test_that("count_motif supports lenient mode", {
   expect_equal(suppressWarnings(count_motif(glycan, motif)), 0L)
   expect_equal(count_motif(glycan, motif, mode = "lenient"), 1L)
 })
+
+# ========== Floating Parts ==========
+test_that("count_motif supports floating parts", {
+  motif <- "Gal(a1-3)Man(a1-"
+  glycan <- c(
+    "{Gal(a1-3)|1,2}{Gal(a1-3)|1,2}Man(a1-3)[Man(a1-6)]GlcNAc(b1-",
+    "{Gal(a1-4)|1,2}{Gal(a1-3)|1,2}Man(a1-3)[Man(a1-6)]GlcNAc(b1-"
+  )
+  expect_identical(count_motif(glycan, motif), c(2L, 1L))
+})
+
+test_that("count_motif differs strict and lenient floating modes", {
+  # Similar to the rule in `have_motif()`,
+  # in the strict mode, a motif is regarded to be appeared only when
+  # it appears in every possible glycans derived from the floating parts,
+  # while in the lenient mode, a motif appears as long as it could possibly appear.
+  # In the context of `count_motif()`, this means when `strict_floating = TRUE`,
+  # we take the minimum count, and for `strict_floating = FALSE` the maximum.
+  motif <- "Gal(??-?)GlcNAc(??-?)Gal(??-"
+  glycan <- "{Gal(??-?)GlcNAc(??-?)}Gal(??-?)GlcNAc(??-?)Gal(??-"
+
+  expect_identical(have_motif(glycan, motif, strict_floating = TRUE), 1L)
+  expect_identical(have_motif(glycan, motif, strict_floating = FALSE), 2L)
+})

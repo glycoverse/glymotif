@@ -579,3 +579,15 @@ test_that("match_motif supports lenient mode", {
     list(list(c(1, 2)))
   )
 })
+
+test_that("match_motif works for floating parts", {
+  # Unlike `have_motif()` or `count_motif()`, `match_motif()` don't have the
+  # `strict_floating` argument, as the nature of this function is to return
+  # all possible matches, but the two others have to condense the matches into one value.
+  motif <- "Gal(??-?)GlcNAc(??-?)Gal(??-"
+  glycan <- "{Gal(??-?)GlcNAc(??-?)}Gal(??-?)GlcNAc(??-?)Gal(??-"
+
+  result <- match_motif(glycan, motif)
+  expected <- list(c(1L, 2L, 3L), c(1L, 2L, 5L))
+  expect_identical(result, expected)
+})
