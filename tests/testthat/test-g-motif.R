@@ -112,3 +112,69 @@ test_that(".g_* motif functions recycle scalar match_degree like high-level API"
     unname(match_motif(glycan, motif, match_degree = TRUE)[[1]])
   )
 })
+
+test_that(".g_* motif functions aggregate floating localizations", {
+  glycan <- glyrepr::as_glycan_structure(
+    "{Gal(a1-3)|1,2}Man(a1-3)[Glc(a1-6)]GlcNAc(b1-"
+  )
+  motif <- glyrepr::as_glycan_structure("Gal(a1-3)Man(a1-")
+  glycan_graph <- glyrepr::get_structure_graphs(glycan)
+  motif_graph <- glyrepr::get_structure_graphs(motif)
+
+  expect_identical(
+    .g_have_motif(glycan_graph, motif_graph, strict_floating = TRUE),
+    FALSE
+  )
+  expect_identical(
+    .g_have_motif(glycan_graph, motif_graph, strict_floating = FALSE),
+    TRUE
+  )
+  expect_identical(
+    .g_count_motif(glycan_graph, motif_graph, strict_floating = TRUE),
+    0L
+  )
+  expect_identical(
+    .g_count_motif(glycan_graph, motif_graph, strict_floating = FALSE),
+    1L
+  )
+  expect_identical(
+    .g_match_motif(glycan_graph, motif_graph),
+    list(c(1L, 2L))
+  )
+})
+
+test_that(".g_match_motif retains original nodes across floating localizations", {
+  glycan <- glyrepr::as_glycan_structure(
+    "{Neu5Ac(a2-3)|1,2}Gal(??-?)[Gal(??-?)]GlcNAc(??-"
+  )
+  motif <- glyrepr::as_glycan_structure("Neu5Ac(??-?)Gal(??-")
+  glycan_graph <- glyrepr::get_structure_graphs(glycan)
+  motif_graph <- glyrepr::get_structure_graphs(motif)
+
+  expect_identical(
+    .g_match_motif(glycan_graph, motif_graph),
+    list(c(1L, 2L), c(1L, 3L))
+  )
+})
+
+test_that(".g_* motif functions support motifs assembled from floating parts", {
+  glycan <- glyrepr::as_glycan_structure(
+    "{Gal(a1-3)|1,2}{Gal(a1-4)|1,2}Man(a1-3)[Man(a1-6)]GlcNAc(b1-"
+  )
+  motif <- glyrepr::as_glycan_structure("Gal(a1-3)[Gal(a1-4)]Man(a1-")
+  glycan_graph <- glyrepr::get_structure_graphs(glycan)
+  motif_graph <- glyrepr::get_structure_graphs(motif)
+
+  expect_identical(
+    .g_have_motif(glycan_graph, motif_graph, strict_floating = FALSE),
+    TRUE
+  )
+  expect_identical(
+    .g_count_motif(glycan_graph, motif_graph, strict_floating = FALSE),
+    1L
+  )
+  expect_identical(
+    .g_match_motif(glycan_graph, motif_graph),
+    list(c(1L, 2L, 3L), c(1L, 2L, 4L))
+  )
+})

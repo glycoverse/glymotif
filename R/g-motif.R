@@ -20,6 +20,11 @@
 #' @param mode Matching mode. `"strict"` preserves the default behavior;
 #'   `"lenient"` treats glycan-side unknowns as compatible with more specific
 #'   motif fields.
+#' @param strict_floating A logical scalar. For `.g_have_motif()`, `TRUE`
+#'   requires the motif in every possible floating-part localization and
+#'   `FALSE` requires it in at least one. For `.g_count_motif()`, `TRUE`
+#'   returns the minimum count across localizations and `FALSE` returns the
+#'   maximum.
 #'
 #' @details
 #' These functions do no validation, parsing, naming, or graph mutation.
@@ -27,6 +32,11 @@
 #' high-level matching rules, including generic and mixed motif residues.
 #'
 #' These functions never call [glyrepr::as_glycan_structure()].
+#'
+#' Glycan graphs with unresolved floating parts are matched across all
+#' conflict-free localizations. `.g_match_motif()` returns the union of
+#' mappings from every localization, with node indices referring to the
+#' original unresolved graph.
 #'
 #' @returns
 #' - `.g_have_motif()` returns a logical scalar.
@@ -61,9 +71,11 @@ NULL
   ignore_linkages = FALSE,
   strict_sub = TRUE,
   match_degree = NULL,
-  mode = c("strict", "lenient")
+  mode = c("strict", "lenient"),
+  strict_floating = TRUE
 ) {
   rlang::check_dots_empty()
+  checkmate::assert_flag(strict_floating)
 
   apply_single_motif_to_graph(
     glycan_graph = glycan_graph,
@@ -73,6 +85,8 @@ NULL
     strict_sub = strict_sub,
     match_degree = match_degree,
     mode = mode,
+    strict_floating = strict_floating,
+    result_type = "logical",
     single_glycan_func = .have_motif_single
   )
 }
@@ -87,9 +101,11 @@ NULL
   ignore_linkages = FALSE,
   strict_sub = TRUE,
   match_degree = NULL,
-  mode = c("strict", "lenient")
+  mode = c("strict", "lenient"),
+  strict_floating = TRUE
 ) {
   rlang::check_dots_empty()
+  checkmate::assert_flag(strict_floating)
 
   apply_single_motif_to_graph(
     glycan_graph = glycan_graph,
@@ -99,6 +115,8 @@ NULL
     strict_sub = strict_sub,
     match_degree = match_degree,
     mode = mode,
+    strict_floating = strict_floating,
+    result_type = "integer",
     single_glycan_func = .count_motif_single
   )
 }
@@ -125,6 +143,8 @@ NULL
     strict_sub = strict_sub,
     match_degree = match_degree,
     mode = mode,
+    strict_floating = TRUE,
+    result_type = "list",
     single_glycan_func = .match_motif_single
   )
 }
@@ -138,6 +158,9 @@ NULL
 #' @param strict_sub A logical scalar.
 #' @param match_degree A logical vector or `NULL`.
 #' @param mode Matching mode.
+#' @param strict_floating Whether logical and count results must hold across
+#'   every floating-part localization.
+#' @param result_type The result type used to aggregate floating localizations.
 #' @param single_glycan_func A graph-level motif matching function.
 #'
 #' @return The result from `single_glycan_func`.
@@ -150,6 +173,8 @@ apply_single_motif_to_graph <- function(
   strict_sub,
   match_degree,
   mode,
+  strict_floating,
+  result_type,
   single_glycan_func
 ) {
   mode <- rlang::arg_match(mode, c("strict", "lenient"))
@@ -160,16 +185,23 @@ apply_single_motif_to_graph <- function(
   )
   match_degree <- normalize_graph_match_degree(match_degree, motif_graph)
 
-  single_glycan_func(
-    glycan_graph = glycan_graph,
-    motif_graph = motif_graph,
-    motif_has_linkages = motif_has_linkages,
-    motif_composition_profile = motif_composition_profile,
-    alignment = alignment,
-    ignore_linkages = ignore_linkages,
-    strict_sub = strict_sub,
-    match_degree = match_degree,
-    mode = mode
+  aggregate_floating_graph_results(
+    glycan_graph,
+    function(graph) {
+      single_glycan_func(
+        glycan_graph = graph,
+        motif_graph = motif_graph,
+        motif_has_linkages = motif_has_linkages,
+        motif_composition_profile = motif_composition_profile,
+        alignment = alignment,
+        ignore_linkages = ignore_linkages,
+        strict_sub = strict_sub,
+        match_degree = match_degree,
+        mode = mode
+      )
+    },
+    result_type = result_type,
+    strict_floating = strict_floating
   )
 }
 

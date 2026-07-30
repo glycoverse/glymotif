@@ -4,52 +4,39 @@ has_any_floating_parts <- function(structures) {
 
 .max_floating_localizations <- 256L
 
-floating_localization_graphs <- function(structure, graph) {
-  if (!isTRUE(glyrepr::has_floating_parts(structure))) {
+graph_has_floating_parts <- function(graph) {
+  "floating_parts" %in% igraph::graph_attr_names(graph)
+}
+
+floating_localization_graphs <- function(graph) {
+  if (!graph_has_floating_parts(graph)) {
     return(list(graph))
   }
 
-  localizations <- glyrepr::enumerate_floating_localizations(
-    structure,
-    max_variants = .max_floating_localizations,
-    deduplicate = FALSE
-  )
-  candidate_edges <- glyrepr::structure_candidate_edges(structure)
-
-  purrr::map(
-    localizations$assignments,
-    add_floating_assignment_edges,
-    graph = graph,
-    candidate_edges = candidate_edges
-  )
+  glyrepr::enumerate_floating_graph_localizations(
+    graph,
+    max_variants = .max_floating_localizations
+  )$graph
 }
 
-add_floating_assignment_edges <- function(
-  assignments,
+aggregate_floating_graph_results <- function(
   graph,
-  candidate_edges
+  .f,
+  result_type,
+  strict_floating
 ) {
-  edge_rows <- purrr::map_int(
-    seq_len(nrow(assignments)),
-    function(i) {
-      matches <- which(
-        candidate_edges$part_id == assignments$part_id[[i]] &
-          candidate_edges$from_node == assignments$parent_node[[i]]
-      )
-      if (length(matches) != 1L) {
-        cli::cli_abort(
-          "Unable to resolve a floating-part localization edge."
-        )
-      }
-      matches
-    }
-  )
-  edges <- candidate_edges[edge_rows, , drop = FALSE]
+  if (!graph_has_floating_parts(graph)) {
+    return(.f(graph))
+  }
 
-  igraph::add_edges(
-    graph,
-    as.integer(t(cbind(edges$from_node, edges$to_node))),
-    attr = list(linkage = edges$linkage)
+  results <- lapply(
+    floating_localization_graphs(graph),
+    .f
+  )
+  aggregate_floating_results(
+    results,
+    result_type = result_type,
+    strict_floating = strict_floating
   )
 }
 
@@ -99,13 +86,7 @@ map_floating_structures <- function(
 
 prepare_floating_graph_index <- function(structures) {
   index <- index_unique_structures(structures)
-  codes <- unname(as.character(structures))
-  first <- match(unique(codes[!is.na(codes)]), codes)
-  index$graphs <- purrr::map2(
-    structures[first],
-    index$graphs,
-    floating_localization_graphs
-  )
+  index$graphs <- purrr::map(index$graphs, floating_localization_graphs)
   index
 }
 
