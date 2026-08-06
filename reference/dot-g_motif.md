@@ -110,3 +110,24 @@ These functions never call
 [`have_motif()`](https://glycoverse.github.io/glymotif/reference/have_motif.md),
 [`count_motif()`](https://glycoverse.github.io/glymotif/reference/count_motif.md),
 [`match_motif()`](https://glycoverse.github.io/glymotif/reference/match_motif.md)
+
+## Examples
+
+``` r
+library(glyparse)
+library(glyrepr)
+
+glycan <- parse_iupac_condensed("Gal(b1-3)GalNAc(b1-")
+motif <- parse_iupac_condensed("Gal(b1-")
+glycan_graph <- get_structure_graphs(glycan)
+motif_graph <- get_structure_graphs(motif)
+
+.g_have_motif(glycan_graph, motif_graph)
+#> [1] TRUE
+.g_count_motif(glycan_graph, motif_graph)
+#> [1] 1
+.g_match_motif(glycan_graph, motif_graph)
+#> [[1]]
+#> [1] 1
+#> 
+```

@@ -1,5 +1,23 @@
 # Changelog
 
+## glymotif 0.18.0
+
+### Breaking changes
+
+- `add_motifs_int()` and `add_motifs_lgl()` are removed; use
+  [`count_motifs()`](https://glycoverse.github.io/glymotif/reference/count_motif.md)
+  or
+  [`have_motifs()`](https://glycoverse.github.io/glymotif/reference/have_motif.md)
+  with your data-manipulation workflow instead.
+  ([\#53](https://github.com/glycoverse/glymotif/issues/53))
+
+### Improvements
+
+- Motif matching and extraction functions now avoid accumulating graph
+  references across repeated calls, preventing progressive slowdowns in
+  long-running R sessions.
+  ([\#52](https://github.com/glycoverse/glymotif/issues/52))
+
 ## glymotif 0.17.3
 
 - [`extract_branch_motif()`](https://glycoverse.github.io/glymotif/reference/extract_branch_motif.md)
@@ -14,18 +32,14 @@
 ## glymotif 0.17.2
 
 - Documentation now recommends `GlycomicSE` and `GlycoproteomicSE`
-  containers and the
-  [`mutate_row()`](https://glycoverse.github.io/glyexp/reference/mutate_col.html)
-  replacement for deprecated motif-annotation helpers as part of Stage
-  II of glycoverse/glyexp#15.
+  containers and the `mutate_row()` replacement for deprecated
+  motif-annotation helpers as part of Stage II of glycoverse/glyexp#15.
   ([\#49](https://github.com/glycoverse/glymotif/issues/49))
 
 ## glymotif 0.17.1
 
-- Examples for
-  [`add_motifs_int()`](https://glycoverse.github.io/glymotif/reference/add_motifs_int.md)
-  now run with both legacy and current `glyexp` containers and use valid
-  condensed IUPAC glycans.
+- Examples for `add_motifs_int()` now run with both legacy and current
+  `glyexp` containers and use valid condensed IUPAC glycans.
 
 ## glymotif 0.17.0
 
@@ -44,15 +58,10 @@
 
 ### Minor improvements and bug fixes
 
-- [`add_motifs_lgl()`](https://glycoverse.github.io/glymotif/reference/add_motifs_int.md)
-  and
-  [`add_motifs_int()`](https://glycoverse.github.io/glymotif/reference/add_motifs_int.md)
-  are deprecated. Use
+- `add_motifs_lgl()` and `add_motifs_int()` are deprecated. Use
   [`dplyr::mutate()`](https://dplyr.tidyverse.org/reference/mutate.html)
-  or
-  [`glyexp::mutate_var()`](https://glycoverse.github.io/glyexp/reference/deprecated-dplyr-aliases.html)
-  with `tibble::as_tibble(have_motifs(...))` or
-  `tibble::as_tibble(count_motifs(...))` instead
+  or `glyexp::mutate_var()` with `tibble::as_tibble(have_motifs(...))`
+  or `tibble::as_tibble(count_motifs(...))` instead
   ([\#44](https://github.com/glycoverse/glymotif/issues/44)).
 
 ## glymotif 0.16.1
@@ -72,11 +81,8 @@
   [`have_motifs()`](https://glycoverse.github.io/glymotif/reference/have_motif.md),
   [`count_motifs()`](https://glycoverse.github.io/glymotif/reference/count_motif.md),
   [`match_motifs()`](https://glycoverse.github.io/glymotif/reference/match_motif.md),
-  [`add_motifs_lgl()`](https://glycoverse.github.io/glymotif/reference/add_motifs_int.md),
-  and
-  [`add_motifs_int()`](https://glycoverse.github.io/glymotif/reference/add_motifs_int.md).
-  Specifying `alignments`, `ignore_linkages`, `strict_sub`, or
-  `match_degree` is no longer valid.
+  `add_motifs_lgl()`, and `add_motifs_int()`. Specifying `alignments`,
+  `ignore_linkages`, `strict_sub`, or `match_degree` is no longer valid.
   ([\#35](https://github.com/glycoverse/glymotif/issues/35))
 - [`get_motif_structure()`](https://glycoverse.github.io/glymotif/reference/get_motif_structure.md),
   [`get_motif_alignment()`](https://glycoverse.github.io/glymotif/reference/get_motif_structure.md),
@@ -204,9 +210,7 @@
   [`have_motifs()`](https://glycoverse.github.io/glymotif/reference/have_motif.md),
   [`count_motifs()`](https://glycoverse.github.io/glymotif/reference/count_motif.md),
   [`match_motifs()`](https://glycoverse.github.io/glymotif/reference/match_motif.md),
-  [`add_motifs_lgl()`](https://glycoverse.github.io/glymotif/reference/add_motifs_int.md)
-  and
-  [`add_motifs_int()`](https://glycoverse.github.io/glymotif/reference/add_motifs_int.md).
+  `add_motifs_lgl()` and `add_motifs_int()`.
   ([\#8](https://github.com/glycoverse/glymotif/issues/8))
 - Update all motif functions to properly preserve and use names from
   input vectors, taking advantage of glyrepr 0.10.0’s support for names
@@ -276,10 +280,8 @@ purpose.
 
 ### New features
 
-- [`add_motifs_int()`](https://glycoverse.github.io/glymotif/reference/add_motifs_int.md)
-  and
-  [`add_motifs_lgl()`](https://glycoverse.github.io/glymotif/reference/add_motifs_int.md)
-  now support data frames as input.
+- `add_motifs_int()` and `add_motifs_lgl()` now support data frames as
+  input.
 
 ### Minor improvements and bug fixes
 
@@ -303,11 +305,9 @@ purpose.
 
 ### Minor improvements and bug fixes
 
-- `quantify_motifs()` now returns a
-  [`glyexp::experiment()`](https://glycoverse.github.io/glyexp/reference/experiment.html)
-  object with “traitomics” type for glycomics data, and
-  “traitproteomics” type for glycoproteomics data, instead of
-  “traitomics” for all input.
+- `quantify_motifs()` now returns a `glyexp::experiment()` object with
+  “traitomics” type for glycomics data, and “traitproteomics” type for
+  glycoproteomics data, instead of “traitomics” for all input.
 
 ## glymotif 0.8.0
 
@@ -319,18 +319,15 @@ purpose.
   adding back columns in `var_info` only when they have “many-to-one”
   relationship with glycosites (unique combinations of `protein` and
   `protein_site`).
-- `quantify_motifs()`,
-  [`add_motifs_int()`](https://glycoverse.github.io/glymotif/reference/add_motifs_int.md),
-  and
-  [`add_motifs_lgl()`](https://glycoverse.github.io/glymotif/reference/add_motifs_int.md)
-  now support a character vector ofglycan structure strings as the
+- `quantify_motifs()`, `add_motifs_int()`, and `add_motifs_lgl()` now
+  support a character vector ofglycan structure strings as the
   “glycan_structure” column in `var_info`.
 
 ### Minor improvements and bug fixes
 
 - Add a section in the Get Started vignette about ambiguity handling.
 - Update the “Working with glyexp” vignette to use
-  [`glyexp::real_experiment`](https://glycoverse.github.io/glyexp/reference/real_experiment.html).
+  `glyexp::real_experiment`.
 - Update the URL of GlycoMotif in the documentation of `all_motifs()`.
 - Remove old “N-glycans” vignette from README.
 
@@ -348,9 +345,8 @@ purpose.
 
 - Update dependencies to depend on release versions of glycoverse
   packages.
-- `quantify_motifs()` now returns a
-  [`glyexp::experiment()`](https://glycoverse.github.io/glyexp/reference/experiment.html)
-  object with “traitomics” type instead of “motifomics”.
+- `quantify_motifs()` now returns a `glyexp::experiment()` object with
+  “traitomics” type instead of “motifomics”.
 
 ## glymotif 0.6.2
 
@@ -439,7 +435,7 @@ purpose.
 ### Major changes
 
 - Add `quantify_motifs()` to quantify motifs in a
-  [`glyexp::experiment()`](https://glycoverse.github.io/glyexp/reference/experiment.html).
+  `glyexp::experiment()`.
 
 ### Minor improvements
 
@@ -447,10 +443,8 @@ purpose.
   - The new “Get Started” vignette, only covering basic motif matching
     functions.
   - A new “N-Glycans” vignette, covering N-glycan-specific functions.
-  - A new “Working with
-    [`glyexp::experiment()`](https://glycoverse.github.io/glyexp/reference/experiment.html)”
-    vignette, covering the integration with
-    [`glyexp::experiment()`](https://glycoverse.github.io/glyexp/reference/experiment.html).
+  - A new “Working with `glyexp::experiment()`” vignette, covering the
+    integration with `glyexp::experiment()`.
 
 ## glymotif 0.3.1
 
@@ -471,12 +465,8 @@ purpose.
 - Add `add_glycan_descriptions()`, `add_struct_descriptions()`, and
   `add_comp_descriptions()`. These functions are moved from `glyexp` to
   `glymotif` for better separation of concerns.
-- Add
-  [`add_motifs_int()`](https://glycoverse.github.io/glymotif/reference/add_motifs_int.md)
-  and
-  [`add_motifs_lgl()`](https://glycoverse.github.io/glymotif/reference/add_motifs_int.md)
-  for adding motif annotations to a
-  [`glyexp::experiment()`](https://glycoverse.github.io/glyexp/reference/experiment.html).
+- Add `add_motifs_int()` and `add_motifs_lgl()` for adding motif
+  annotations to a `glyexp::experiment()`.
 
 ### Minor improvements
 
@@ -494,11 +484,8 @@ purpose.
   functions including
   [`have_motifs()`](https://glycoverse.github.io/glymotif/reference/have_motif.md),
   [`count_motifs()`](https://glycoverse.github.io/glymotif/reference/count_motif.md),
-  and the new
-  [`add_motifs_lgl()`](https://glycoverse.github.io/glymotif/reference/add_motifs_int.md)
-  and
-  [`add_motifs_int()`](https://glycoverse.github.io/glymotif/reference/add_motifs_int.md)
-  functions, when using motif names as input. Alone with
+  and the new `add_motifs_lgl()` and `add_motifs_int()` functions, when
+  using motif names as input. Alone with
   [`get_motif_structure()`](https://glycoverse.github.io/glymotif/reference/get_motif_structure.md),
   similar bugs in
   [`get_motif_alignment()`](https://glycoverse.github.io/glymotif/reference/get_motif_structure.md)

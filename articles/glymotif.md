@@ -142,7 +142,7 @@ unname(have_motifs(glycans, motifs))  # Removing names for cleaner display
 
 **Tip:** You don’t need to memorize complex IUPAC strings. Use
 predefined motif names in the GlyGen GlycoMotif database
-(<https://glycomotif.glyomics.org/glycomotif/GGM>) instead:
+(<https://glycomotif.glyomics.org/glycomotif/GlycoMotif>) instead:
 
 ``` r
 
@@ -290,9 +290,9 @@ appropriate caution. You’re trading specificity for coverage.
 ## Database Motif Detection
 
 Previously, we mentioned that you can use motif names in the GlycoMotif
-database (<https://glycomotif.glyomics.org/glycomotif/>). A common task
-is to match your glycans against a packaged motif collection. By
-default,
+database (<https://glycomotif.glyomics.org/glycomotif/GlycoMotif>). A
+common task is to match your glycans against a packaged motif
+collection. By default,
 [`db_motifs()`](https://glycoverse.github.io/glymotif/reference/db_motifs.md)
 uses the GlyGen Motifs collection (`source_id = "GGM"`) for backward
 compatibility:
@@ -519,17 +519,13 @@ and
 [`branch_motifs()`](https://glycoverse.github.io/glymotif/reference/branch_motifs.md):
 [`have_motifs()`](https://glycoverse.github.io/glymotif/reference/have_motif.md),
 [`count_motifs()`](https://glycoverse.github.io/glymotif/reference/count_motif.md),
-[`match_motifs()`](https://glycoverse.github.io/glymotif/reference/match_motif.md),
-[`add_motifs_lgl()`](https://glycoverse.github.io/glymotif/reference/add_motifs_int.md),
 and
-[`add_motifs_int()`](https://glycoverse.github.io/glymotif/reference/add_motifs_int.md).
+[`match_motifs()`](https://glycoverse.github.io/glymotif/reference/match_motif.md).
 
 ## What’s Next?
 
 - Want more detail about motif matching rules? See [Motif Matching
   Rules](https://glycoverse.github.io/glymotif/articles/motif-matching.html).
-- Working with `GlycomicSE` or `GlycoproteomicSE`? See [Creating a Glyco
-  SummarizedExperiment](https://glycoverse.github.io/glyexp/articles/create-exp.html).
 
 ## Related Projects
 
