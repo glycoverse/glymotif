@@ -72,10 +72,8 @@ library(glyrepr)
 
 glycan <- n_glycan_core()
 motif <- parse_iupac_condensed("Man(a1-3)[Man(a1-6)]Man(b1-")
-
-\dontrun{
 view_motif(glycan, motif)
-}
+
 }
 \seealso{
 \code{\link[=match_motif]{match_motif()}}, \code{\link[glydraw:draw_cartoon]{glydraw::draw_cartoon()}}

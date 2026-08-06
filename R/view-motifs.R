@@ -24,10 +24,8 @@
 #'
 #' glycan <- n_glycan_core()
 #' motif <- parse_iupac_condensed("Man(a1-3)[Man(a1-6)]Man(b1-")
-#'
-#' \dontrun{
 #' view_motif(glycan, motif)
-#' }
+#'
 #' @export
 view_motif <- function(
   glycan,
