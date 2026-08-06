@@ -1,7 +1,8 @@
 ## Resubmission
+
 This is a resubmission. In this version I have:
 
-* Remove one `\dontrun{}` tag from examples.
+* Removed one `\dontrun{}` tag from examples.
 
 ## R CMD check results
 
