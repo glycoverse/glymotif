@@ -145,11 +145,22 @@ resolve_residue_key_mode <- function(motif, mode = "strict") {
     return("generic")
   }
 
-  if (fuzzy) {
-    "base"
-  } else {
-    "exact"
+  motif_type <- graph_mono_type(motif)
+  if (motif_type == "mixed") {
+    return("none")
   }
+
+  if (fuzzy) {
+    if (motif_type == "generic") {
+      return("none")
+    }
+    return("base")
+  }
+
+  if (motif_type == "generic") {
+    return("generic")
+  }
+  "exact"
 }
 
 
@@ -845,19 +856,19 @@ match_mono <- function(glycan_mono, motif_mono, mode = "strict") {
     return(TRUE)
   }
 
-  if (mode != "lenient") {
-    return(FALSE)
-  }
-
   glycan_type <- glyrepr::get_mono_type(glycan_mono)
   motif_type <- glyrepr::get_mono_type(motif_mono)
 
-  if (glycan_type == "generic" && motif_type == "concrete") {
-    return(glycan_mono == glyrepr::convert_to_generic(motif_mono))
-  }
-
   if (glycan_type == "concrete" && motif_type == "generic") {
     return(glyrepr::convert_to_generic(glycan_mono) == motif_mono)
+  }
+
+  if (
+    mode == "lenient" &&
+      glycan_type == "generic" &&
+      motif_type == "concrete"
+  ) {
+    return(glycan_mono == glyrepr::convert_to_generic(motif_mono))
   }
 
   FALSE

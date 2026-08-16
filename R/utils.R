@@ -81,7 +81,7 @@ prepare_motif_args <- function(
     call = call
   )
   if (mode == "strict") {
-    warn_mismatched_structure_levels(glycans, motifs)
+    warn_uniformly_incompatible_inputs(glycans, motifs)
   }
 
   new_prepared_motif_args(
@@ -96,40 +96,72 @@ prepare_motif_args <- function(
   )
 }
 
-#' Warn About Mismatched Structure Levels
+#' Warn About Uniformly Incompatible Matching Inputs
 #'
-#' Informs users when lower-information `glycans` are matched against
-#' higher-information `motifs`, a common mistake that usually returns no matches.
+#' Informs users when the mono types or structure levels guarantee that every
+#' requested strict match will fail.
 #'
 #' @param glycans A normalized glycan structure vector.
 #' @param motifs A normalized motif structure vector.
 #'
 #' @return `NULL`, invisibly.
 #' @noRd
-warn_mismatched_structure_levels <- function(glycans, motifs) {
-  glycan_level <- structure_level(glycans)
-  motif_level <- structure_level(motifs)
+warn_uniformly_incompatible_inputs <- function(glycans, motifs) {
+  glycan_types <- structure_mono_type(glycans)
+  motif_types <- structure_mono_type(motifs)
+  glycan_types <- glycan_types[!is.na(glycan_types)]
+  motif_types <- motif_types[!is.na(motif_types)]
 
-  if (
-    isTRUE(
-      glycan_level == "topological" &&
-        motif_level %in% c("intact", "partial")
-    )
-  ) {
-    warn_structure_level_mismatch(glycan_level, motif_level)
+  all_glycans_generic <- length(glycan_types) > 0L &&
+    all(glycan_types == "generic")
+  all_motifs_concrete <- length(motif_types) > 0L &&
+    all(motif_types == "concrete")
+  if (all_glycans_generic && all_motifs_concrete) {
+    warn_mono_type_mismatch()
+    return(invisible(NULL))
   }
 
-  if (isTRUE(glycan_level == "basic" && motif_level != "basic")) {
-    warn_structure_level_mismatch(glycan_level, motif_level)
+  glycan_levels <- structure_level(glycans)
+  motif_levels <- structure_level(motifs)
+  glycan_levels <- glycan_levels[!is.na(glycan_levels)]
+  motif_levels <- motif_levels[!is.na(motif_levels)]
+  all_glycans_topological <- length(glycan_levels) > 0L &&
+    all(glycan_levels == "topological")
+  all_motifs_higher <- length(motif_levels) > 0L &&
+    all(motif_levels %in% c("intact", "partial"))
+
+  if (all_glycans_topological && all_motifs_higher) {
+    warn_structure_level_mismatch(
+      "topological",
+      paste(unique(motif_levels), collapse = "/")
+    )
   }
 
   invisible(NULL)
 }
 
+#' Emit Monosaccharide-Type Mismatch Warning
+#'
+#' @return `NULL`, invisibly.
+#' @noRd
+warn_mono_type_mismatch <- function() {
+  cli::cli_warn(
+    c(
+      "Matching generic {.arg glycans} against concrete {.arg motifs} always returns no matches in strict mode.",
+      "i" = "Convert motifs with `glyrepr::convert_to_generic()`, or use {.code mode = \"lenient\"} when generic identities should match their concrete counterparts."
+    ),
+    class = c(
+      "warning_mismatched_mono_type",
+      "warning_mismatched_structure_level"
+    )
+  )
+  invisible(NULL)
+}
+
 #' Emit Structure-Level Mismatch Warning
 #'
-#' @param glycan_level The aggregate structure level of `glycans`.
-#' @param motif_level The aggregate structure level of `motifs`.
+#' @param glycan_level The mismatched structure level in `glycans`.
+#' @param motif_level The higher structure level or levels in `motifs`.
 #'
 #' @return `NULL`, invisibly.
 #' @noRd
@@ -138,7 +170,7 @@ warn_structure_level_mismatch <- function(glycan_level, motif_level) {
     c(
       "Matching lower-level {.arg glycans} against higher-level {.arg motifs} usually returns no matches.",
       "i" = "{.arg glycans} have {.val {glycan_level}} structure level, while {.arg motifs} have {.val {motif_level}} structure level.",
-      "i" = "Use motifs at the same structure level as the glycans, or reduce motif structure levels before matching.",
+      "i" = "Use motifs at the same structure level as the glycans, or remove motif linkage constraints with `glyrepr::remove_linkages()`.",
       "i" = "See {.code ?get_structure_level} for details."
     ),
     class = "warning_mismatched_structure_level"
@@ -680,19 +712,6 @@ apply_single_motif_to_glycans <- function(
   # single_glycan_func should be either .have_motif_single or .count_motif_single
   # smap_func should be either glyrepr::smap_lgl or glyrepr::smap_int
 
-  # Handle mono type conversion based on motif type
-  # glyrepr 0.9.0.9000 guarantees all elements in a glyrepr_structure vector
-  # have the same mono_type, so get_mono_type() returns a scalar
-  motif_type <- structure_mono_type(motif)
-  if (motif_type == "generic") {
-    # For generic motifs, convert glycans to generic to allow matching concrete glycans
-    glycans_to_use <- fast_convert_to_generic(glycans)
-  } else {
-    # For concrete motifs, use glycans as-is
-    # (generic glycans will naturally not match due to different mono names)
-    glycans_to_use <- glycans
-  }
-
   motif_graph <- glyrepr::get_structure_graphs(motif)
   motif_has_linkages <- graph_has_linkages(motif_graph)
   motif_composition_profile <- new_motif_composition_profile(
@@ -700,7 +719,7 @@ apply_single_motif_to_glycans <- function(
     mode = mode
   )
   smap_func(
-    glycans_to_use,
+    glycans,
     single_glycan_func,
     motif_graph,
     motif_has_linkages,
@@ -711,30 +730,6 @@ apply_single_motif_to_glycans <- function(
     match_degree,
     mode
   )
-}
-
-#' Fast Convert Mono Types
-#'
-#' `apply_single_motif_to_glycans` used to use
-#' `glyrepr::convert_to_generic()` to ensure that mono types of glycans and
-#' motifs are the same. That function rebuilds the structure representation
-#' after applying the graph transformation.
-#' However, in motif mathcing functions of `glymotif`,
-#' we don't need to return the converted `glyrepr::glycan_structure()` object.
-#' All we need to do is to make sure the underlying glycan graphs are of correct mono types.
-#' Therefore, we implement a fast version of `convert_to_generic()` here
-#' for this special use case.
-#' It only converts the underlying graphs without modifying anything else.
-#' The transformed graphs are trusted internal values and can therefore use
-#' the low-level `glyrepr::new_glycan_structure()` constructor.
-#'
-#' @param glycans A `glyrepr_structure` object.
-#' @return A `glyrepr_structure` object with the same IUPACs but generic mono types.
-#' @noRd
-fast_convert_to_generic <- function(glycans) {
-  iupacs <- as.character(glycans)
-  new_graphs <- purrr::map(attr(glycans, "graphs"), convert_graph_to_generic)
-  glyrepr::new_glycan_structure(iupacs, new_graphs)
 }
 
 # ----- Generic function for multiple motifs -----

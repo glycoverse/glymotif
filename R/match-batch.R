@@ -5,10 +5,6 @@ prepare_match_batch <- function(glycans, motifs, mode = "strict") {
   glycan_graphs <- glycan_index$graphs
   motif_graphs <- motif_index$graphs
 
-  if (identical(structure_mono_type(motifs), "generic")) {
-    glycan_graphs <- purrr::map(glycan_graphs, convert_graph_to_generic)
-  }
-
   glycan_monos <- purrr::map(
     glycan_graphs,
     graph_vertex_attr,
@@ -91,17 +87,6 @@ index_unique_structures <- function(structures) {
   list(
     graphs = graphs,
     restore = match(codes, unique_codes)
-  )
-}
-
-convert_graph_to_generic <- function(graph) {
-  vertex_ids <- graph_vertex_ids(graph)
-  monos <- graph_vertex_attr(graph, "mono", vertex_ids)
-  igraph::set_vertex_attr(
-    graph,
-    "mono",
-    index = vertex_ids,
-    value = glyrepr::convert_to_generic(monos)
   )
 }
 

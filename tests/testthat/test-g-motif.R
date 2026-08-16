@@ -70,20 +70,25 @@ test_that("optional .g_* motif arguments must be named", {
   )
 })
 
-test_that(".g_* motif functions keep mono-type compatibility as caller contract", {
-  glycan <- glyrepr::as_glycan_structure("Man(?1-")
-  generic_motif <- glyrepr::as_glycan_structure("Hex(?1-")
-  glycan_graph <- glyrepr::get_structure_graphs(glycan)
-  generic_motif_graph <- glyrepr::get_structure_graphs(generic_motif)
+test_that(".g_* motif functions support generic and mixed residue rules", {
+  concrete <- glyrepr::as_glycan_structure("Gal(b1-3)GalNAc(a1-")
+  generic <- glyrepr::as_glycan_structure("Hex(b1-3)HexNAc(a1-")
+  mixed_motif <- glyrepr::as_glycan_structure("Hex(b1-3)GalNAc(a1-")
+  concrete_graph <- glyrepr::get_structure_graphs(concrete)
+  generic_graph <- glyrepr::get_structure_graphs(generic)
+  mixed_motif_graph <- glyrepr::get_structure_graphs(mixed_motif)
 
-  expect_false(.g_have_motif(glycan_graph, generic_motif_graph))
-  expect_identical(.g_count_motif(glycan_graph, generic_motif_graph), 0L)
-  expect_equal(.g_match_motif(glycan_graph, generic_motif_graph), list())
-
-  igraph::V(glycan_graph)$mono <- glyrepr::convert_to_generic(
-    igraph::V(glycan_graph)$mono
+  expect_identical(.g_have_motif(concrete_graph, mixed_motif_graph), TRUE)
+  expect_identical(.g_count_motif(concrete_graph, mixed_motif_graph), 1L)
+  expect_equal(
+    .g_match_motif(concrete_graph, mixed_motif_graph),
+    list(c(1L, 2L))
   )
-  expect_true(.g_have_motif(glycan_graph, generic_motif_graph))
+  expect_identical(.g_have_motif(generic_graph, mixed_motif_graph), FALSE)
+  expect_identical(
+    .g_have_motif(generic_graph, mixed_motif_graph, mode = "lenient"),
+    TRUE
+  )
 })
 
 test_that(".g_* motif functions recycle scalar match_degree like high-level API", {

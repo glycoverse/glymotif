@@ -115,46 +115,50 @@ graph_mono_type <- function(graph) {
 }
 
 structure_mono_type <- function(structures) {
-  if (length(structures) == 0L) {
-    return(character())
+  restore_structure_graph_values(structures, graph_mono_type)
+}
+
+restore_structure_graph_values <- function(structures, summarize_graph) {
+  index <- index_unique_structures(structures)
+  values <- vapply(index$graphs, summarize_graph, character(1L))
+  result <- values[index$restore]
+  names(result) <- names(structures)
+  result
+}
+
+graph_linkages <- function(graph) {
+  linkages <- graph_edge_attr(graph, "linkage")
+  floating_parts <- igraph::graph_attr(graph, "floating_parts")
+  if (length(floating_parts) > 0L) {
+    linkages <- c(
+      linkages,
+      vapply(floating_parts, \(part) part$linkage, character(1L))
+    )
   }
-  graphs <- attr(structures, "graphs")
-  if (length(graphs) == 0L) {
-    return(NA_character_)
-  }
-  graph_mono_type(graphs[[1]])
+  linkages
 }
 
 graph_has_linkages <- function(graph) {
-  any(graph_edge_attr(graph, "linkage") != "??-?") ||
+  any(graph_linkages(graph) != "??-?") ||
     igraph::graph_attr(graph, "anomer") != "??"
 }
 
 graph_has_strict_linkages <- function(graph) {
-  linkages <- graph_edge_attr(graph, "linkage")
+  linkages <- graph_linkages(graph)
   anomer <- igraph::graph_attr(graph, "anomer")
   all(!stringr::str_detect(c(linkages, anomer), stringr::fixed("?"))) &&
     all(!stringr::str_detect(linkages, stringr::fixed("/")))
 }
 
 structure_level <- function(structures) {
-  codes <- as.character(structures)
-  valid_codes <- unique(codes[!is.na(codes)])
-  if (length(valid_codes) == 0L) {
-    return(NA_character_)
-  }
+  restore_structure_graph_values(structures, graph_structure_level)
+}
 
-  graphs <- attr(structures, "graphs")[valid_codes]
-  if (graph_mono_type(graphs[[1]]) == "generic") {
-    return("basic")
-  }
-
-  strict <- vapply(graphs, graph_has_strict_linkages, logical(1L))
-  if (all(strict)) {
+graph_structure_level <- function(graph) {
+  if (graph_has_strict_linkages(graph)) {
     return("intact")
   }
-  lenient <- vapply(graphs, graph_has_linkages, logical(1L))
-  if (any(lenient)) {
+  if (graph_has_linkages(graph)) {
     return("partial")
   }
   "topological"

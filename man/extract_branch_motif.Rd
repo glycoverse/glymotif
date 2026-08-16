@@ -18,7 +18,9 @@ arguments to be supplied by name.}
 
 \item{including_core}{A logical scalar. If \code{TRUE}, the N-glycan core structure
 (\verb{Man(??-?)Man(??-?)GlcNAc(??-?)GlcNAc(??-} or \verb{Hex(??-?)Hex(??-?)HexNAc(??-?)HexNAc(??-})
-is appended to each branch motif. Default is \code{FALSE}.}
+is appended to each branch motif. Concrete branches receive a concrete
+core; generic and mixed branches receive a generic core. Default is
+\code{FALSE}.}
 }
 \value{
 A \code{\link[glyrepr:glycan_structure]{glyrepr::glycan_structure()}} vector containing the unique extracted branching motifs.

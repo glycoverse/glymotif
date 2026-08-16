@@ -202,3 +202,29 @@ test_that("extract_branch_motif with including_core works for glycans without li
   ))
   expect_setequal(as.character(res), as.character(expected))
 })
+
+test_that("extract_branch_motif appends cores element-wise for mixed vectors", {
+  concrete <- glyrepr::as_glycan_structure(
+    "Gal(b1-4)GlcNAc(b1-2)Man(a1-3)[Man(a1-6)]Man(b1-4)GlcNAc(a1-4)GlcNAc(b1-"
+  )
+  generic <- glyrepr::convert_to_generic(concrete)
+  mixed <- glyrepr::as_glycan_structure(
+    "Hex(b1-4)GlcNAc(b1-2)Man(a1-3)[Man(a1-6)]Man(b1-4)GlcNAc(a1-4)GlcNAc(b1-"
+  )
+
+  result <- extract_branch_motif(
+    c(concrete = concrete, generic = generic, mixed = mixed),
+    including_core = TRUE
+  )
+  expected <- glyrepr::as_glycan_structure(c(
+    "Gal(b1-4)GlcNAc(b1-?)Man(??-?)Man(??-?)GlcNAc(??-?)GlcNAc(??-",
+    "Hex(b1-4)HexNAc(b1-?)Hex(??-?)Hex(??-?)HexNAc(??-?)HexNAc(??-",
+    "Hex(b1-4)GlcNAc(b1-?)Hex(??-?)Hex(??-?)HexNAc(??-?)HexNAc(??-"
+  ))
+
+  expect_identical(as.character(result), as.character(expected))
+  expect_identical(
+    glyrepr::get_mono_type(result),
+    c("concrete", "generic", "mixed")
+  )
+})

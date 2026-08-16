@@ -119,28 +119,33 @@ Motif names have the following rules:
 }
 
 \section{Monosaccharide type}{
-As of glyrepr 0.9.0.9000, all elements in a \code{glycans} or \code{motifs} vector
-must have the same monosaccharide type ("concrete" or "generic").
-This invariant is enforced when creating or combining \code{glyrepr_structure} objects.
-The matching rules are:
+Glycans and motifs can each contain concrete residues, generic residues, or
+a mixture of both. Structure vectors can likewise combine concrete, generic,
+and mixed elements. Matching is performed residue by residue for every
+glycan-motif pair; structures are not converted as a whole.
+
+In the default strict mode:
 \itemize{
-\item When the motif is "generic", glycans are converted to "generic" type for comparison,
-allowing both concrete and generic glycans to match generic motifs.
-\item When the motif is "concrete", glycans are used as-is, so only concrete glycans
-with matching monosaccharide names will match, while generic glycans will not match.
+\item Concrete glycan residues match the same concrete motif residue.
+\item Concrete glycan residues also match compatible generic motif residues.
+\item Generic glycan residues do not match concrete motif residues.
+\item Generic glycan residues match the same generic motif residue.
+\item Concrete residues with different identities never match.
 }
 
 Examples:
 \itemize{
-\item \code{Man} (concrete glycan) vs \code{Hex} (generic motif) → TRUE (Man converted to Hex for comparison)
-\item \code{Hex} (generic glycan) vs \code{Man} (concrete motif) → FALSE (names don't match)
-\item \code{Man} (concrete glycan) vs \code{Man} (concrete motif) → TRUE (exact match)
-\item \code{Hex} (generic glycan) vs \code{Hex} (generic motif) → TRUE (exact match)
+\item \code{Man} (concrete glycan) vs \code{Hex} (generic motif) → TRUE
+\item \code{Hex} (generic glycan) vs \code{Man} (concrete motif) → FALSE
+\item \code{Man} (concrete glycan) vs \code{Man} (concrete motif) → TRUE
+\item \code{Hex} (generic glycan) vs \code{Hex} (generic motif) → TRUE
+\item \verb{Gal(b1-3)GalNAc} (concrete glycan) vs \verb{Hex(b1-3)GalNAc}
+(mixed motif) → TRUE
 }
 
-With \code{mode = "lenient"}, generic glycan residues can match compatible
-concrete motif residues. For example, \code{Hex} can match a \code{Gal} motif residue,
-but \code{HexNAc} still cannot match \code{Gal}.
+With \code{mode = "lenient"}, compatibility becomes bidirectional: generic glycan
+residues can also match compatible concrete motif residues. For example,
+\code{Hex} can match a \code{Gal} motif residue, but \code{HexNAc} still cannot match \code{Gal}.
 }
 
 \section{Linkages}{

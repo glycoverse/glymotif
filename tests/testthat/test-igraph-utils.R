@@ -63,33 +63,27 @@ test_that("integer VF2 mappings preserve mapping order", {
 })
 
 test_that("structure levels preserve glyrepr classifications", {
-  structures <- list(
-    intact = glyparse::auto_parse("Gal(b1-3)GalNAc(a1-"),
-    partial = glyparse::auto_parse("Gal(b1-?)GalNAc(a1-"),
-    topological = glyparse::auto_parse("Gal(??-?)GalNAc(??-"),
-    basic = glyparse::auto_parse("Hex(??-?)HexNAc(??-")
-  )
+  structures <- glyrepr::as_glycan_structure(c(
+    intact = "Gal(b1-3)GalNAc(a1-",
+    partial = "Gal(b1-?)GalNAc(a1-",
+    topological = "Hex(??-?)HexNAc(??-",
+    mixed = "Hex(b1-3)GalNAc(a1-",
+    missing = NA_character_
+  ))
 
-  expected <- vapply(
-    structures,
-    \(structure) suppressWarnings(glyrepr::get_structure_level(structure)),
-    character(1L)
-  )
-  actual <- vapply(structures, structure_level, character(1L))
-
-  expect_identical(actual, expected)
   expect_identical(
-    structure_level(c(structures$intact, structures$topological)),
-    suppressWarnings(
-      glyrepr::get_structure_level(
-        c(structures$intact, structures$topological)
-      )
-    )
+    structure_mono_type(structures),
+    glyrepr::get_mono_type(structures)
   )
   expect_identical(
-    structure_level(glyrepr::glycan_structure()),
-    NA_character_
+    structure_level(structures),
+    glyrepr::get_structure_level(structures)
   )
+  expect_identical(
+    structure_mono_type(glyrepr::glycan_structure()),
+    character()
+  )
+  expect_identical(structure_level(glyrepr::glycan_structure()), character())
 })
 
 test_that("repeated matching does not retain graph weak references", {

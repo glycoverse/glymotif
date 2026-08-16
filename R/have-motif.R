@@ -27,24 +27,29 @@
 #'
 #' # Monosaccharide type
 #'
-#' As of glyrepr 0.9.0.9000, all elements in a `glycans` or `motifs` vector
-#' must have the same monosaccharide type ("concrete" or "generic").
-#' This invariant is enforced when creating or combining `glyrepr_structure` objects.
-#' The matching rules are:
-#' - When the motif is "generic", glycans are converted to "generic" type for comparison,
-#'   allowing both concrete and generic glycans to match generic motifs.
-#' - When the motif is "concrete", glycans are used as-is, so only concrete glycans
-#'   with matching monosaccharide names will match, while generic glycans will not match.
+#' Glycans and motifs can each contain concrete residues, generic residues, or
+#' a mixture of both. Structure vectors can likewise combine concrete, generic,
+#' and mixed elements. Matching is performed residue by residue for every
+#' glycan-motif pair; structures are not converted as a whole.
+#'
+#' In the default strict mode:
+#' - Concrete glycan residues match the same concrete motif residue.
+#' - Concrete glycan residues also match compatible generic motif residues.
+#' - Generic glycan residues do not match concrete motif residues.
+#' - Generic glycan residues match the same generic motif residue.
+#' - Concrete residues with different identities never match.
 #'
 #' Examples:
-#' - `Man` (concrete glycan) vs `Hex` (generic motif) → TRUE (Man converted to Hex for comparison)
-#' - `Hex` (generic glycan) vs `Man` (concrete motif) → FALSE (names don't match)
-#' - `Man` (concrete glycan) vs `Man` (concrete motif) → TRUE (exact match)
-#' - `Hex` (generic glycan) vs `Hex` (generic motif) → TRUE (exact match)
+#' - `Man` (concrete glycan) vs `Hex` (generic motif) → TRUE
+#' - `Hex` (generic glycan) vs `Man` (concrete motif) → FALSE
+#' - `Man` (concrete glycan) vs `Man` (concrete motif) → TRUE
+#' - `Hex` (generic glycan) vs `Hex` (generic motif) → TRUE
+#' - `Gal(b1-3)GalNAc` (concrete glycan) vs `Hex(b1-3)GalNAc`
+#'   (mixed motif) → TRUE
 #'
-#' With `mode = "lenient"`, generic glycan residues can match compatible
-#' concrete motif residues. For example, `Hex` can match a `Gal` motif residue,
-#' but `HexNAc` still cannot match `Gal`.
+#' With `mode = "lenient"`, compatibility becomes bidirectional: generic glycan
+#' residues can also match compatible concrete motif residues. For example,
+#' `Hex` can match a `Gal` motif residue, but `HexNAc` still cannot match `Gal`.
 #'
 #' # Linkages
 #'

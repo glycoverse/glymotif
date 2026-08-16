@@ -43,6 +43,64 @@ test_that("batch motif functions restore repeated and missing glycans", {
   expect_identical(match_motifs(glycans, motifs), expected_match)
 })
 
+test_that("batch motif functions match heterogeneous vectors element-wise", {
+  glycans <- glyrepr::as_glycan_structure(c(
+    concrete = "Gal(b1-3)GalNAc(a1-",
+    mixed = "Hex(b1-3)GalNAc(a1-",
+    generic = "Hex(b1-3)HexNAc(a1-",
+    missing = NA_character_,
+    concrete_copy = "Gal(b1-3)GalNAc(a1-"
+  ))
+  motifs <- glyrepr::as_glycan_structure(c(
+    generic = "Hex(b1-3)HexNAc(a1-",
+    concrete = "Gal(b1-3)GalNAc(a1-",
+    mixed = "Hex(b1-3)GalNAc(a1-"
+  ))
+  expected_have <- rbind(
+    concrete = c(generic = TRUE, concrete = TRUE, mixed = TRUE),
+    mixed = c(generic = TRUE, concrete = FALSE, mixed = TRUE),
+    generic = c(generic = TRUE, concrete = FALSE, mixed = FALSE),
+    missing = c(generic = NA, concrete = NA, mixed = NA),
+    concrete_copy = c(generic = TRUE, concrete = TRUE, mixed = TRUE)
+  )
+  expected_count <- expected_have
+  storage.mode(expected_count) <- "integer"
+
+  matches <- match_motifs(glycans, motifs)
+  match_counts <- vapply(
+    matches,
+    function(motif_matches) {
+      vapply(
+        motif_matches,
+        \(x) if (is.null(x)) NA_integer_ else length(x),
+        integer(1L)
+      )
+    },
+    integer(length(glycans))
+  )
+  dimnames(match_counts) <- dimnames(expected_count)
+
+  expect_identical(have_motifs(glycans, motifs), expected_have)
+  expect_identical(count_motifs(glycans, motifs), expected_count)
+  expect_identical(match_counts, expected_count)
+  expect_identical(names(matches), names(motifs))
+  expect_identical(
+    unname(lapply(matches, names)),
+    rep(list(names(glycans)), length(motifs))
+  )
+
+  reversed <- motifs[3:1]
+  expect_identical(
+    have_motifs(glycans, reversed),
+    expected_have[, 3:1, drop = FALSE]
+  )
+  expect_identical(
+    count_motifs(glycans, reversed),
+    expected_count[, 3:1, drop = FALSE]
+  )
+  expect_identical(match_motifs(glycans, reversed), matches[3:1])
+})
+
 test_that("batch motif functions preserve empty glycan shapes", {
   glycans <- glyrepr::glycan_structure()
   motifs <- glyparse::parse_iupac_condensed(c(
