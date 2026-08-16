@@ -2,7 +2,7 @@
 
 ## New features
 
-* Motif matching and branch extraction now support mixed generic and concrete residues within structures and across vectors, using residue-wise matching semantics.
+* Motif matching and branch extraction now support mixed generic and concrete residues within structures and across vectors, using residue-wise matching semantics. (#55)
 
 # glymotif 0.18.1
 
