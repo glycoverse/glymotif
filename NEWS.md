@@ -8,6 +8,10 @@
 
 * Motif matching and branch extraction now support mixed generic and concrete residues within structures and across vectors, using residue-wise matching semantics. (#55)
 
+## Improvements
+
+* `have_motif()`, `count_motif()`, `match_motif()`, and their plural and graph-level variants now prune incompatible residues, substituents, linkages, anomers, alignments, and degrees during graph search, substantially reducing work for mixed and wildcard-rich motifs.
+
 # glymotif 0.18.1
 
 # glymotif 0.18.0

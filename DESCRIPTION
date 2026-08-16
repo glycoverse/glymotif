@@ -34,7 +34,11 @@ Imports:
     checkmate,
     tibble,
     vctrs,
-    lifecycle
+    lifecycle,
+    Rcpp
+LinkingTo:
+    BH,
+    Rcpp
 Depends: 
     R (>= 4.1)
 VignetteBuilder: knitr

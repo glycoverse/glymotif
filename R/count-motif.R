@@ -216,7 +216,8 @@ count_motif_ <- function(
   match_degree = NULL,
   mode = "strict",
   glycan_batch_profile = NULL,
-  motif_batch_profile = NULL
+  motif_batch_profile = NULL,
+  compatibility_cache = NULL
 ) {
   # This function is the logic part of `count_motif()`.
   if (
@@ -269,46 +270,19 @@ count_motif_ <- function(
     return(0L)
   }
 
-  c_graphs <- colorize_graphs(
-    glycan_graph,
-    motif_graph,
-    mode = mode,
-    glycan_batch_profile = glycan_batch_profile,
-    motif_batch_profile = motif_batch_profile
-  )
-  res <- perform_vf2(
-    glycan_graph,
-    motif_graph,
-    glycan_colors = c_graphs$glycan_colors,
-    motif_colors = c_graphs$motif_colors
-  )
-  if (length(res) == 0) {
-    return(0L)
-  }
-
-  validation_context <- prepare_validation_context(
+  res <- perform_compatible_vf2(
     glycan_graph,
     motif_graph,
     alignment = alignment,
-    ignore_linkages = linkage_match_mode == "ignore",
-    match_degree = match_degree
-  )
-  valid_mask <- purrr::map_lgl(
-    res,
-    is_valid_result,
-    glycan = glycan_graph,
-    motif = motif_graph,
-    context = validation_context,
-    alignment = alignment,
-    # "ignore" still runs VF2 and the non-linkage validators, but bypasses the
-    # expensive linkage/anomer checks inside is_valid_result().
     ignore_linkages = linkage_match_mode == "ignore",
     strict_sub = strict_sub,
     match_degree = match_degree,
-    mode = mode
+    mode = mode,
+    glycan_batch_profile = glycan_batch_profile,
+    motif_batch_profile = motif_batch_profile,
+    compatibility_cache = compatibility_cache
   )
-  valid_res <- res[valid_mask]
-  length(unique_vf2_res(valid_res))
+  length(res)
 }
 
 #' Internal verison of `count_motifs()`

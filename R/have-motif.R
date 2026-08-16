@@ -460,7 +460,8 @@ have_motif_ <- function(
   match_degree = NULL,
   mode = "strict",
   glycan_batch_profile = NULL,
-  motif_batch_profile = NULL
+  motif_batch_profile = NULL,
+  compatibility_cache = NULL
 ) {
   # Optimized version with early termination
   # Check if any match is valid, returning immediately on first valid match
@@ -514,53 +515,20 @@ have_motif_ <- function(
     return(FALSE)
   }
 
-  c_graphs <- colorize_graphs(
+  res <- perform_compatible_vf2(
     glycan_graph,
     motif_graph,
-    mode = mode,
-    glycan_batch_profile = glycan_batch_profile,
-    motif_batch_profile = motif_batch_profile
-  )
-  res <- perform_vf2(
-    glycan_graph,
-    motif_graph,
-    glycan_colors = c_graphs$glycan_colors,
-    motif_colors = c_graphs$motif_colors
-  )
-  if (length(res) == 0) {
-    return(FALSE)
-  }
-
-  use_validation_context <- length(res) > 1 &&
-    alignment == "substructure" &&
-    is.null(match_degree) &&
-    igraph::vcount(motif_graph) == 1
-
-  validation_context <- if (use_validation_context) {
-    prepare_validation_context(
-      glycan_graph,
-      motif_graph,
-      alignment = alignment,
-      ignore_linkages = linkage_match_mode == "ignore",
-      match_degree = match_degree
-    )
-  } else {
-    NULL
-  }
-  purrr::some(
-    res,
-    is_valid_result,
-    glycan = glycan_graph,
-    motif = motif_graph,
-    context = validation_context,
     alignment = alignment,
-    # "ignore" still runs VF2 and the non-linkage validators, but bypasses the
-    # expensive linkage/anomer checks inside is_valid_result().
     ignore_linkages = linkage_match_mode == "ignore",
     strict_sub = strict_sub,
     match_degree = match_degree,
-    mode = mode
+    mode = mode,
+    first_only = TRUE,
+    glycan_batch_profile = glycan_batch_profile,
+    motif_batch_profile = motif_batch_profile,
+    compatibility_cache = compatibility_cache
   )
+  length(res) > 0L
 }
 
 #' Internal verison of `have_motifs()`
