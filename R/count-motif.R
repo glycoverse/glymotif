@@ -78,7 +78,7 @@
 #' print(result)
 #'
 #' # Monosaccharide type matching examples
-#' # Concrete glycan vs generic motif: matches (glycan converted to generic)
+#' # Concrete glycan vs generic motif: compatible residues match
 #' count_motif("Man(?1-", "Hex(?1-") # Returns 1
 #'
 #' # Generic glycan vs concrete motif: doesn't match
