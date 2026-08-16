@@ -113,8 +113,6 @@ library(glyrepr)
 
 glycan <- n_glycan_core()
 motif <- parse_iupac_condensed("Man(a1-3)[Man(a1-6)]Man(b1-")
-
-if (FALSE) { # \dontrun{
 view_motif(glycan, motif)
-} # }
+
 ```

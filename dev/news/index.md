@@ -2,6 +2,10 @@
 
 ## glymotif (development version)
 
+## glymotif 0.18.1
+
+## glymotif 0.18.0
+
 ### Breaking changes
 
 - `add_motifs_int()` and `add_motifs_lgl()` are removed; use
@@ -60,10 +64,8 @@
 
 - `add_motifs_lgl()` and `add_motifs_int()` are deprecated. Use
   [`dplyr::mutate()`](https://dplyr.tidyverse.org/reference/mutate.html)
-  or
-  [`glyexp::mutate_var()`](https://glycoverse.github.io/glyexp/reference/deprecated-dplyr-aliases.html)
-  with `tibble::as_tibble(have_motifs(...))` or
-  `tibble::as_tibble(count_motifs(...))` instead
+  or `glyexp::mutate_var()` with `tibble::as_tibble(have_motifs(...))`
+  or `tibble::as_tibble(count_motifs(...))` instead
   ([\#44](https://github.com/glycoverse/glymotif/issues/44)).
 
 ## glymotif 0.16.1
@@ -307,11 +309,9 @@ purpose.
 
 ### Minor improvements and bug fixes
 
-- `quantify_motifs()` now returns a
-  [`glyexp::experiment()`](https://glycoverse.github.io/glyexp/reference/experiment.html)
-  object with “traitomics” type for glycomics data, and
-  “traitproteomics” type for glycoproteomics data, instead of
-  “traitomics” for all input.
+- `quantify_motifs()` now returns a `glyexp::experiment()` object with
+  “traitomics” type for glycomics data, and “traitproteomics” type for
+  glycoproteomics data, instead of “traitomics” for all input.
 
 ## glymotif 0.8.0
 
@@ -331,7 +331,7 @@ purpose.
 
 - Add a section in the Get Started vignette about ambiguity handling.
 - Update the “Working with glyexp” vignette to use
-  [`glyexp::real_experiment`](https://glycoverse.github.io/glyexp/reference/real_experiment.html).
+  `glyexp::real_experiment`.
 - Update the URL of GlycoMotif in the documentation of `all_motifs()`.
 - Remove old “N-glycans” vignette from README.
 
@@ -349,9 +349,8 @@ purpose.
 
 - Update dependencies to depend on release versions of glycoverse
   packages.
-- `quantify_motifs()` now returns a
-  [`glyexp::experiment()`](https://glycoverse.github.io/glyexp/reference/experiment.html)
-  object with “traitomics” type instead of “motifomics”.
+- `quantify_motifs()` now returns a `glyexp::experiment()` object with
+  “traitomics” type instead of “motifomics”.
 
 ## glymotif 0.6.2
 
@@ -440,7 +439,7 @@ purpose.
 ### Major changes
 
 - Add `quantify_motifs()` to quantify motifs in a
-  [`glyexp::experiment()`](https://glycoverse.github.io/glyexp/reference/experiment.html).
+  `glyexp::experiment()`.
 
 ### Minor improvements
 
@@ -448,10 +447,8 @@ purpose.
   - The new “Get Started” vignette, only covering basic motif matching
     functions.
   - A new “N-Glycans” vignette, covering N-glycan-specific functions.
-  - A new “Working with
-    [`glyexp::experiment()`](https://glycoverse.github.io/glyexp/reference/experiment.html)”
-    vignette, covering the integration with
-    [`glyexp::experiment()`](https://glycoverse.github.io/glyexp/reference/experiment.html).
+  - A new “Working with `glyexp::experiment()`” vignette, covering the
+    integration with `glyexp::experiment()`.
 
 ## glymotif 0.3.1
 
@@ -473,8 +470,7 @@ purpose.
   `add_comp_descriptions()`. These functions are moved from `glyexp` to
   `glymotif` for better separation of concerns.
 - Add `add_motifs_int()` and `add_motifs_lgl()` for adding motif
-  annotations to a
-  [`glyexp::experiment()`](https://glycoverse.github.io/glyexp/reference/experiment.html).
+  annotations to a `glyexp::experiment()`.
 
 ### Minor improvements
 
