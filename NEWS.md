@@ -2,9 +2,9 @@
 
 ## New features
 
-* `have_motif()`, `count_motif()`, `match_motif()`, and their plural variants now support glycans with unresolved floating parts and substituents; `strict_floating` selects all-localization or any-localization aggregation for logical and count results.
+* `have_motif()`, `count_motif()`, `match_motif()`, and their plural variants now support glycans with unresolved floating parts and substituents; `strict_floating` selects all-localization or any-localization aggregation for logical and count results. (#56)
 
-* `.g_have_motif()`, `.g_count_motif()`, and `.g_match_motif()` now support unresolved floating parts and substituents in graph inputs while preserving original node indices in returned mappings.
+* `.g_have_motif()`, `.g_count_motif()`, and `.g_match_motif()` now support unresolved floating parts and substituents in graph inputs while preserving original node indices in returned mappings. (#56)
 
 * Motif matching and branch extraction now support mixed generic and concrete residues within structures and across vectors, using residue-wise matching semantics. (#55)
 
