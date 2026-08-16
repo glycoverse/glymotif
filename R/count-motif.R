@@ -9,7 +9,7 @@
 #' @inheritParams have_motif
 #'
 #' @inheritSection have_motif About Names
-#' @inheritSection have_motif Floating parts
+#' @inheritSection have_motif Floating parts and substituents
 #'
 #' @details
 #' This function actually perform v2f algorithm to get all possible matches

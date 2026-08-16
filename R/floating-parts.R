@@ -1,15 +1,20 @@
-has_any_floating_parts <- function(structures) {
-  any(glyrepr::has_floating_parts(structures), na.rm = TRUE)
+has_any_floating_metadata <- function(structures) {
+  has_floating <- glyrepr::has_floating_parts(structures) |
+    glyrepr::has_floating_substituents(structures)
+  any(has_floating, na.rm = TRUE)
 }
 
 .max_floating_localizations <- 256L
 
-graph_has_floating_parts <- function(graph) {
-  "floating_parts" %in% igraph::graph_attr_names(graph)
+graph_has_floating_metadata <- function(graph) {
+  any(
+    c("floating_parts", "floating_substituents") %in%
+      igraph::graph_attr_names(graph)
+  )
 }
 
 floating_localization_graphs <- function(graph) {
-  if (!graph_has_floating_parts(graph)) {
+  if (!graph_has_floating_metadata(graph)) {
     return(list(graph))
   }
 
@@ -25,7 +30,7 @@ aggregate_floating_graph_results <- function(
   result_type,
   strict_floating
 ) {
-  if (!graph_has_floating_parts(graph)) {
+  if (!graph_has_floating_metadata(graph)) {
     return(.f(graph))
   }
 

@@ -76,8 +76,8 @@ rejecting concrete mismatches.}
 
 \item{strict_floating}{A logical value. If \code{TRUE} (default), a motif is
 present only when it occurs in every conflict-free localization of any
-floating glycan parts. If \code{FALSE}, a motif is present when it occurs in at
-least one possible localization.}
+floating glycan parts or substituents. If \code{FALSE}, a motif is present when
+it occurs in at least one possible localization.}
 
 \item{motifs}{One of:
 \itemize{
@@ -166,9 +166,9 @@ Motif names have the following rules:
 }
 }
 
-\section{Floating parts}{
-Glycans with unresolved floating parts are matched across every
-conflict-free localization allowed by their candidate-parent domains.
+\section{Floating parts and substituents}{
+Glycans with unresolved floating parts or substituents are matched across
+every conflict-free localization allowed by their candidate-parent domains.
 \code{strict_floating = TRUE} requires a match in every localization, while
 \code{strict_floating = FALSE} requires a match in at least one localization.
 This setting is independent of \code{mode}, which controls residue and linkage
@@ -181,11 +181,11 @@ every localization, using node indices from the original unresolved
 structure.
 
 Motifs must be connected structures and therefore cannot themselves contain
-unresolved floating parts.
+unresolved floating parts or substituents.
 
 Matching supports up to 256 raw candidate-parent combinations per glycan.
-Localize floating parts with \code{\link[glyrepr:localize_floating_parts]{glyrepr::localize_floating_parts()}} first for
-larger domains.
+Localize floating parts and substituents with
+\code{\link[glyrepr:localize_floating_parts]{glyrepr::localize_floating_parts()}} first for larger domains.
 }
 
 \examples{

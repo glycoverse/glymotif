@@ -21,7 +21,7 @@
 #'   `"lenient"` treats glycan-side unknowns as compatible with more specific
 #'   motif fields.
 #' @param strict_floating A logical scalar. For `.g_have_motif()`, `TRUE`
-#'   requires the motif in every possible floating-part localization and
+#'   requires the motif in every possible floating localization and
 #'   `FALSE` requires it in at least one. For `.g_count_motif()`, `TRUE`
 #'   returns the minimum count across localizations and `FALSE` returns the
 #'   maximum.
@@ -33,9 +33,9 @@
 #'
 #' These functions never call [glyrepr::as_glycan_structure()].
 #'
-#' Glycan graphs with unresolved floating parts are matched across all
-#' conflict-free localizations. `.g_match_motif()` returns the union of
-#' mappings from every localization, with node indices referring to the
+#' Glycan graphs with unresolved floating parts or substituents are matched
+#' across all conflict-free localizations. `.g_match_motif()` returns the union
+#' of mappings from every localization, with node indices referring to the
 #' original unresolved graph.
 #'
 #' @returns
@@ -159,7 +159,7 @@ NULL
 #' @param match_degree A logical vector or `NULL`.
 #' @param mode Matching mode.
 #' @param strict_floating Whether logical and count results must hold across
-#'   every floating-part localization.
+#'   every floating localization.
 #' @param result_type The result type used to aggregate floating localizations.
 #' @param single_glycan_func A graph-level motif matching function.
 #'

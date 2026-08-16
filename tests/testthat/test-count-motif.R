@@ -398,7 +398,7 @@ test_that("count_motif supports lenient mode", {
   expect_equal(count_motif(glycan, motif, mode = "lenient"), 1L)
 })
 
-# ========== Floating Parts ==========
+# ========== Floating Structures ==========
 test_that("count_motif supports floating parts", {
   motif <- "Gal(a1-3)Man(a1-"
   glycan <- c(
@@ -436,5 +436,22 @@ test_that("count_motifs aggregates floating localizations per motif", {
   expect_identical(
     unname(count_motifs(glycan, motifs, strict_floating = FALSE)),
     matrix(c(2L, 2L), nrow = 1L)
+  )
+})
+
+test_that("count_motif aggregates floating substituent localizations", {
+  glycans <- glyrepr::as_glycan_structure(c(
+    floating = "{6S}Gal(a1-3)Glc(a1-",
+    ordinary = "Gal6S(a1-3)Glc(a1-"
+  ))
+  motif <- glyrepr::as_glycan_structure("Gal6S(a1-")
+
+  expect_identical(
+    count_motif(glycans, motif, strict_floating = TRUE),
+    c(floating = 0L, ordinary = 1L)
+  )
+  expect_identical(
+    count_motif(glycans, motif, strict_floating = FALSE),
+    c(floating = 1L, ordinary = 1L)
   )
 })

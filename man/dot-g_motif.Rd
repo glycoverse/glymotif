@@ -67,7 +67,7 @@ number of motif nodes.}
 motif fields.}
 
 \item{strict_floating}{A logical scalar. For \code{.g_have_motif()}, \code{TRUE}
-requires the motif in every possible floating-part localization and
+requires the motif in every possible floating localization and
 \code{FALSE} requires it in at least one. For \code{.g_count_motif()}, \code{TRUE}
 returns the minimum count across localizations and \code{FALSE} returns the
 maximum.}
@@ -91,9 +91,9 @@ high-level matching rules, including generic and mixed motif residues.
 
 These functions never call \code{\link[glyrepr:as_glycan_structure]{glyrepr::as_glycan_structure()}}.
 
-Glycan graphs with unresolved floating parts are matched across all
-conflict-free localizations. \code{.g_match_motif()} returns the union of
-mappings from every localization, with node indices referring to the
+Glycan graphs with unresolved floating parts or substituents are matched
+across all conflict-free localizations. \code{.g_match_motif()} returns the union
+of mappings from every localization, with node indices referring to the
 original unresolved graph.
 }
 \examples{

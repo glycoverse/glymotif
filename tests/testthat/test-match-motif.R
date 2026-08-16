@@ -609,3 +609,21 @@ test_that("match_motif retains mappings from canonical duplicate localizations",
     list(list(c(1L, 2L), c(1L, 3L)))
   )
 })
+
+test_that("match_motifs unions floating substituent mappings", {
+  glycan <- glyrepr::as_glycan_structure(
+    c(sample = "{6S}Gal(a1-3)Glc(a1-")
+  )
+  motifs <- glyrepr::as_glycan_structure(c(
+    gal = "Gal6S(a1-",
+    glc = "Glc6S(a1-"
+  ))
+
+  expect_identical(
+    match_motifs(glycan, motifs),
+    list(
+      gal = list(sample = list(1L)),
+      glc = list(sample = list(2L))
+    )
+  )
+})

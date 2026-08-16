@@ -86,10 +86,10 @@
 #' Concrete mismatches still fail: for example,
 #' glycan "Gal(?1-6)GalNAc(a1-" does not match motif "Gal(b1-3)GalNAc(a1-".
 #'
-#' # Floating parts
+#' # Floating parts and substituents
 #'
-#' Glycans with unresolved floating parts are matched across every
-#' conflict-free localization allowed by their candidate-parent domains.
+#' Glycans with unresolved floating parts or substituents are matched across
+#' every conflict-free localization allowed by their candidate-parent domains.
 #' `strict_floating = TRUE` requires a match in every localization, while
 #' `strict_floating = FALSE` requires a match in at least one localization.
 #' This setting is independent of `mode`, which controls residue and linkage
@@ -102,11 +102,11 @@
 #' structure.
 #'
 #' Motifs must be connected structures and therefore cannot themselves contain
-#' unresolved floating parts.
+#' unresolved floating parts or substituents.
 #'
 #' Matching supports up to 256 raw candidate-parent combinations per glycan.
-#' Localize floating parts with [glyrepr::localize_floating_parts()] first for
-#' larger domains.
+#' Localize floating parts and substituents with
+#' [glyrepr::localize_floating_parts()] first for larger domains.
 #'
 #' # Alignment
 #'
@@ -232,8 +232,8 @@
 #'   rejecting concrete mismatches.
 #' @param strict_floating A logical value. If `TRUE` (default), a motif is
 #'   present only when it occurs in every conflict-free localization of any
-#'   floating glycan parts. If `FALSE`, a motif is present when it occurs in at
-#'   least one possible localization.
+#'   floating glycan parts or substituents. If `FALSE`, a motif is present when
+#'   it occurs in at least one possible localization.
 #'
 #' @returns
 #' - `have_motif()`: A logical vector indicating if each `glycan` has the `motif`.

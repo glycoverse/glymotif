@@ -12,8 +12,8 @@
 #' @param single_motif Whether the caller expects exactly one motif.
 #' @param strict_sub Whether substituent matching should be strict.
 #' @param mode Matching mode.
-#' @param strict_floating Whether floating-part matches must hold across every
-#'   possible localization.
+#' @param strict_floating Whether matches involving floating parts or
+#'   substituents must hold across every possible localization.
 #' @param call The call environment used for errors.
 #'
 #' @return A normalized argument list for single- or multiple-motif internals.
@@ -113,14 +113,14 @@ validate_no_floating_motifs <- function(
   motifs,
   call = rlang::caller_env()
 ) {
-  if (!any(glyrepr::has_floating_parts(motifs), na.rm = TRUE)) {
+  if (!has_any_floating_metadata(motifs)) {
     return(invisible(NULL))
   }
 
   cli::cli_abort(
     c(
-      "`motifs` cannot contain unresolved floating parts.",
-      "i" = "Localize floating motif parts before matching."
+      "`motifs` cannot contain unresolved floating parts or substituents.",
+      "i" = "Localize floating motif parts and substituents before matching."
     ),
     call = call
   )
@@ -763,7 +763,7 @@ apply_single_motif_to_glycans <- function(
   # single_glycan_func should be either .have_motif_single or .count_motif_single
   # smap_func should be either glyrepr::smap_lgl or glyrepr::smap_int
 
-  has_floating <- has_any_floating_parts(glycans)
+  has_floating <- has_any_floating_metadata(glycans)
   motif_graph <- glyrepr::get_structure_graphs(motif)
   motif_has_linkages <- graph_has_linkages(motif_graph)
   motif_composition_profile <- new_motif_composition_profile(
@@ -882,7 +882,7 @@ apply_motifs_to_glycans <- function(
     match_degree
   }
 
-  if (has_any_floating_parts(glycans)) {
+  if (has_any_floating_metadata(glycans)) {
     localization_index <- prepare_floating_graph_index(glycans)
     smap_func <- switch(
       result_type,

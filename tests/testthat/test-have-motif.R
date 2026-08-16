@@ -1297,7 +1297,7 @@ test_that("mode is validated", {
   )
 })
 
-# ========== Floating Parts ==========
+# ========== Floating Structures ==========
 test_that("motif in a floating part can be detected", {
   glycan <- "{Gal(a1-3)Glc(a1-3)}Man(a1-3)[Man(a1-6)]GlcNAc(b1-"
   motif <- "Gal(a1-3)Glc(a1-"
@@ -1373,11 +1373,67 @@ test_that("have_motifs aggregates floating localizations per motif", {
   )
 })
 
-test_that("floating motifs are rejected clearly", {
+test_that("floating substituents use strict-floating aggregation", {
+  glycans <- glyrepr::as_glycan_structure(c(
+    floating = "{6S}Gal(a1-3)Glc(a1-",
+    ordinary = "Gal6S(a1-3)Glc(a1-"
+  ))
+  motif <- glyrepr::as_glycan_structure("Gal6S(a1-")
+
+  expect_identical(
+    have_motif(glycans, motif, strict_floating = TRUE),
+    c(floating = FALSE, ordinary = TRUE)
+  )
+  expect_identical(
+    have_motif(glycans, motif, strict_floating = FALSE),
+    c(floating = TRUE, ordinary = TRUE)
+  )
+})
+
+test_that("have_motifs aggregates floating substituents per motif", {
+  glycan <- glyrepr::as_glycan_structure(
+    c(sample = "{6S}Gal(a1-3)Glc(a1-")
+  )
+  motifs <- glyrepr::as_glycan_structure(c(
+    gal = "Gal6S(a1-",
+    glc = "Glc6S(a1-"
+  ))
+
+  strict <- matrix(
+    c(FALSE, FALSE),
+    nrow = 1L,
+    dimnames = list("sample", c("gal", "glc"))
+  )
+  possible <- matrix(
+    c(TRUE, TRUE),
+    nrow = 1L,
+    dimnames = list("sample", c("gal", "glc"))
+  )
+  expect_identical(
+    have_motifs(glycan, motifs, strict_floating = TRUE),
+    strict
+  )
+  expect_identical(
+    have_motifs(glycan, motifs, strict_floating = FALSE),
+    possible
+  )
+})
+
+test_that("floating parts in motifs are rejected clearly", {
   expect_snapshot(
     have_motif(
       "Gal(a1-3)Man(a1-",
       "{Gal(a1-3)}Man(a1-3)GlcNAc(b1-"
+    ),
+    error = TRUE
+  )
+})
+
+test_that("floating substituents in motifs are rejected clearly", {
+  expect_snapshot(
+    have_motif(
+      "Gal6S(a1-3)Glc(a1-",
+      "{6S}Gal(a1-3)Glc(a1-"
     ),
     error = TRUE
   )
