@@ -26,7 +26,9 @@
 #'   arguments to be supplied by name.
 #' @param including_core A logical scalar. If `TRUE`, the N-glycan core structure
 #'   (`Man(??-?)Man(??-?)GlcNAc(??-?)GlcNAc(??-` or `Hex(??-?)Hex(??-?)HexNAc(??-?)HexNAc(??-`)
-#'   is appended to each branch motif. Default is `FALSE`.
+#'   is appended to each branch motif. Concrete branches receive a concrete
+#'   core; generic and mixed branches receive a generic core. Default is
+#'   `FALSE`.
 #'
 #' @details
 #' The function works by:
@@ -129,11 +131,11 @@ extract_branch_motif <- function(glycans, ..., including_core = FALSE) {
   # Optionally append core structure
   if (including_core && length(res) > 0) {
     mono_type <- structure_mono_type(res)
-    core_suffix <- if (mono_type == "concrete") {
-      "?)Man(??-?)Man(??-?)GlcNAc(??-?)GlcNAc(??-"
-    } else {
+    core_suffix <- ifelse(
+      mono_type == "concrete",
+      "?)Man(??-?)Man(??-?)GlcNAc(??-?)GlcNAc(??-",
       "?)Hex(??-?)Hex(??-?)HexNAc(??-?)HexNAc(??-"
-    }
+    )
 
     res_chars <- as.character(res)
     # Append core suffix to each branch (position is always ?)

@@ -22,11 +22,9 @@
 #'   motif fields.
 #'
 #' @details
-#' These functions do no validation, parsing, naming, or monosaccharide-type
-#' conversion. Callers must provide valid, already-compatible graph objects.
-#' In strict mode, when matching a generic motif graph, callers must pass a
-#' glycan graph whose `mono` vertex attributes have already been converted to
-#' the compatible generic representation.
+#' These functions do no validation, parsing, naming, or graph mutation.
+#' Callers must provide valid graph objects. Residue compatibility follows the
+#' high-level matching rules, including generic and mixed motif residues.
 #'
 #' These functions never call [glyrepr::as_glycan_structure()].
 #'

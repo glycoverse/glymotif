@@ -24,7 +24,7 @@ Roxygen: list(markdown = TRUE)
 URL: https://glycoverse.github.io/glymotif/, https://github.com/glycoverse/glymotif
 Imports: 
     cli,
-    glyrepr (>= 0.14.0),
+    glyrepr (>= 0.14.0.9000),
     glyparse (>= 0.6.0),
     glydraw (>= 0.4.0),
     igraph,
@@ -40,3 +40,5 @@ Depends:
 VignetteBuilder: knitr
 BugReports: https://github.com/glycoverse/glymotif/issues
 RoxygenNote: 7.3.3
+Remotes:  
+    glycoverse/glyrepr

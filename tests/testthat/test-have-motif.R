@@ -182,37 +182,84 @@ test_that("concrete glycan and generic motif", {
 })
 
 
-test_that("generic glycan and concrete motif", {
+test_that("all-generic glycans and all-concrete motifs warn", {
   glycan <- glyrepr::o_glycan_core_2(mono_type = "generic")
   motif <- glyparse::parse_iupac_condensed("Gal(b1-3)GalNAc(?1-")
-  expect_warning(
-    expect_false(have_motif(glycan, motif)),
-    class = "warning_mismatched_structure_level"
+  expect_snapshot_warning(have_motif(glycan, motif))
+  expect_identical(suppressWarnings(have_motif(glycan, motif)), FALSE)
+
+  generic_topological <- glyrepr::remove_linkages(glycan)
+  concrete_topological <- glyrepr::remove_linkages(
+    glyrepr::o_glycan_core_2()
+  )
+  expect_snapshot_warning(
+    count_motif(generic_topological, concrete_topological)
+  )
+
+  glycans <- c(first = glycan, second = glycan)
+  motifs <- glyparse::parse_iupac_condensed(c(
+    first = "Gal(b1-3)GalNAc(?1-",
+    second = "Gal(b1-4)GalNAc(?1-"
+  ))
+  expect_snapshot_warning(have_motifs(glycans, motifs))
+  expect_identical(
+    unname(suppressWarnings(have_motifs(glycans, motifs))),
+    matrix(FALSE, nrow = 2L, ncol = 2L)
   )
 })
 
-test_that("mismatched structure levels warn before returning no matches", {
+test_that("all-topological glycans and higher-level motifs warn", {
   intact <- glyrepr::as_glycan_structure("Gal(b1-3)GalNAc(a1-")
   partial <- glyrepr::as_glycan_structure("Gal(b1-?)GalNAc(a1-")
-  topological <- glyrepr::reduce_structure_level(intact, "topological")
-  basic <- glyrepr::reduce_structure_level(intact, "basic")
+  topological <- glyrepr::remove_linkages(intact)
 
   expect_no_warning(have_motif(intact, topological))
   expect_no_warning(have_motif(partial, intact))
 
-  expect_warning(
-    expect_false(have_motif(topological, intact)),
-    "See `\\?get_structure_level` for details\\.",
-    class = "warning_mismatched_structure_level"
+  expect_snapshot_warning(have_motif(topological, intact))
+  expect_identical(
+    suppressWarnings(have_motif(topological, intact)),
+    FALSE
   )
-  expect_warning(
-    expect_equal(count_motif(basic, topological), 0L),
-    class = "warning_mismatched_structure_level"
+
+  glycans <- c(first = topological, second = topological)
+  motifs <- c(intact = intact, partial = partial)
+  expect_snapshot_warning(
+    have_motifs(glycans, motifs)
   )
-  expect_warning(
-    expect_false(have_motifs(topological, c(intact, topological))[[1]]),
-    class = "warning_mismatched_structure_level"
+  expect_identical(
+    unname(suppressWarnings(have_motifs(glycans, motifs))),
+    matrix(FALSE, nrow = 2L, ncol = 2L)
   )
+
+  expect_no_warning(
+    have_motifs(
+      c(intact = intact, topological = topological),
+      c(topological = topological, intact = intact)
+    )
+  )
+})
+
+test_that("mixed motif residues keep strict and lenient matching rules", {
+  glycans <- glyrepr::as_glycan_structure(c(
+    compatible = "Gal(b1-3)GalNAc(a1-",
+    concrete_mismatch = "Gal(b1-3)GlcNAc(a1-",
+    generic_at_concrete = "Hex(b1-3)HexNAc(a1-"
+  ))
+  motif <- glyrepr::as_glycan_structure("Hex(b1-3)GalNAc(a1-")
+
+  expect_identical(
+    have_motif(glycans, motif),
+    c(compatible = TRUE, concrete_mismatch = FALSE, generic_at_concrete = FALSE)
+  )
+  expect_identical(
+    have_motif(glycans, motif, mode = "lenient"),
+    c(compatible = TRUE, concrete_mismatch = FALSE, generic_at_concrete = TRUE)
+  )
+})
+
+test_that("generic fuzzy motif residues match concrete glycans", {
+  expect_identical(have_motif("GalNAc(a1-", "Hex?NAc(a1-"), TRUE)
 })
 
 
@@ -793,7 +840,7 @@ test_that("have_motifs works with ignore_linkages", {
 
 # ========== Monosaccharide Type Matching ==========
 test_that("have_motif: concrete glycan matches generic motif", {
-  # Man (concrete) should match Hex (generic) after conversion
+  # Man (concrete) should match Hex (generic)
   expect_true(have_motif("Man(?1-", "Hex(?1-"))
   expect_true(have_motif("Gal(?1-", "Hex(?1-"))
   expect_true(have_motif("Glc(?1-", "Hex(?1-"))
@@ -801,24 +848,13 @@ test_that("have_motif: concrete glycan matches generic motif", {
 
 test_that("have_motif: generic glycan does not match concrete motif", {
   # Hex (generic) should not match Man (concrete) - names don't match
-  expect_warning(
-    expect_false(
-      have_motif("Hex(?1-", "Man(?1-")
-    ),
-    class = "warning_mismatched_structure_level"
+  expect_snapshot_warning(have_motif("Hex(?1-", "Man(?1-"))
+  result <- vapply(
+    c("Man(?1-", "Gal(?1-", "Glc(?1-"),
+    \(motif) suppressWarnings(have_motif("Hex(?1-", motif)),
+    logical(1L)
   )
-  expect_warning(
-    expect_false(
-      have_motif("Hex(?1-", "Gal(?1-")
-    ),
-    class = "warning_mismatched_structure_level"
-  )
-  expect_warning(
-    expect_false(
-      have_motif("Hex(?1-", "Glc(?1-")
-    ),
-    class = "warning_mismatched_structure_level"
-  )
+  expect_identical(unname(result), c(FALSE, FALSE, FALSE))
 })
 
 test_that("have_motif: same type matches", {
@@ -840,9 +876,27 @@ test_that("have_motif: complex structures with type conversion", {
   # Reverse should not match
   generic_glycan <- "Hex(b1-3)HexNAc(?1-"
   concrete_motif <- "Gal(b1-3)GalNAc(?1-"
-  expect_warning(
-    expect_false(have_motif(generic_glycan, concrete_motif)),
-    class = "warning_mismatched_structure_level"
+  expect_snapshot_warning(
+    have_motif(generic_glycan, concrete_motif)
+  )
+  expect_identical(
+    suppressWarnings(have_motif(generic_glycan, concrete_motif)),
+    FALSE
+  )
+})
+
+test_that("have_motifs matches mixed glycans residue by residue", {
+  glycan <- "Hex(b1-3)GalNAc(a1-"
+  motifs <- c(
+    "Hex(b1-3)HexNAc(a1-",
+    "Gal(b1-3)GalNAc(a1-",
+    "Hex(b1-3)GalNAc(a1-",
+    "Gal(b1-3)HexNAc(a1-"
+  )
+
+  expect_identical(
+    unname(have_motifs(glycan, motifs)[1, ]),
+    c(TRUE, FALSE, TRUE, FALSE)
   )
 })
 
@@ -867,7 +921,6 @@ test_that("have_motif: vectorized glycans with single motif", {
 })
 
 test_that("have_motif works for repeated glycans", {
-  # This is to test the internal `fast_convert_to_generic` function.
   glycans <- c("Man(??-", "Man(??-", "Gal(??-", "Gal(??-", "GlcNAc(??-")
   motif <- "Hex(??-"
 
