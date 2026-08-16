@@ -1316,8 +1316,8 @@ test_that("strict-floating mode works", {
   motif <- "Gal(a1-3)Man(a1-"
   glycans <- c(
     "{Gal(a1-3)}Man(a1-3)[Glc(a1-6)]GlcNAc(b1-", # implicit floating
-    "{Gal(a1-3)|1,2}Man(a1-3)[Glc(a1-6)]GlcNAc(b1-", # good on one parents
-    "{Gal(a1-3)|1,2}Man(a1-3)[Man(a1-6)]GlcNAc(b1-" # good on both parents
+    "{Gal(a1-3)|2,3}Man(a1-3)[Glc(a1-6)]GlcNAc(b1-", # good on one parents
+    "{Gal(a1-3)|2,3}Man(a1-3)[Man(a1-6)]GlcNAc(b1-" # good on both parents
   )
 
   res1 <- have_motif(glycans, motif) # defaults to use strict-floating
@@ -1333,8 +1333,8 @@ test_that("lenient-floating mode works", {
   motif <- "Gal(a1-3)Man(a1-"
   glycans <- c(
     "{Gal(a1-3)}Man(a1-3)[Man(a1-6)]GlcNAc(b1-", # implicit floating
-    "{Gal(a1-3)|1,2}Man(a1-3)[Glc(a1-6)]GlcNAc(b1-", # good on one parents
-    "{Gal(a1-3)|1,2}Man(a1-3)[Man(a1-6)]GlcNAc(b1-" # good on both parents
+    "{Gal(a1-3)|2,3}Man(a1-3)[Glc(a1-6)]GlcNAc(b1-", # good on one parents
+    "{Gal(a1-3)|2,3}Man(a1-3)[Man(a1-6)]GlcNAc(b1-" # good on both parents
   )
 
   res1 <- have_motif(glycans, motif, strict_floating = FALSE)
@@ -1346,18 +1346,18 @@ test_that("lenient-floating mode works", {
 
 test_that("have_motif works for multiple floating parts", {
   motif <- "Gal(a1-3)Man(a1-"
-  glycan <- "{Gal(a1-3)|1,2}{Glc(a1-3)|1,2}Man(a1-3)[Man(a1-6)]GlcNAc(b1-"
+  glycan <- "{Gal(a1-3)|3,4}{Glc(a1-3)|3,4}Man(a1-3)[Man(a1-6)]GlcNAc(b1-"
   expect_true(have_motif(glycan, motif, strict_floating = FALSE))
 })
 
 test_that("have_motif detects new motifs assembled from two floating parts", {
   motif <- "Gal(a1-3)[Gal(a1-4)]Man(a1-"
-  glycan <- "{Gal(a1-3)|1,2}{Gal(a1-4)|1,2}Man(a1-3)[Man(a1-6)]GlcNAc(b1-"
+  glycan <- "{Gal(a1-3)|3,4}{Gal(a1-4)|3,4}Man(a1-3)[Man(a1-6)]GlcNAc(b1-"
   expect_true(have_motif(glycan, motif, strict_floating = FALSE))
 })
 
 test_that("have_motifs aggregates floating localizations per motif", {
-  glycan <- "{Gal(a1-3)|1,2}Man(a1-3)[Glc(a1-6)]GlcNAc(b1-"
+  glycan <- "{Gal(a1-3)|2,3}Man(a1-3)[Glc(a1-6)]GlcNAc(b1-"
   motifs <- c(
     gal_man = "Gal(a1-3)Man(a1-",
     gal_glc = "Gal(a1-3)Glc(a1-"

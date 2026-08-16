@@ -115,7 +115,7 @@ test_that(".g_* motif functions recycle scalar match_degree like high-level API"
 
 test_that(".g_* motif functions aggregate floating localizations", {
   glycan <- glyrepr::as_glycan_structure(
-    "{Gal(a1-3)|1,2}Man(a1-3)[Glc(a1-6)]GlcNAc(b1-"
+    "{Gal(a1-3)|2,3}Man(a1-3)[Glc(a1-6)]GlcNAc(b1-"
   )
   motif <- glyrepr::as_glycan_structure("Gal(a1-3)Man(a1-")
   glycan_graph <- glyrepr::get_structure_graphs(glycan)
@@ -145,7 +145,7 @@ test_that(".g_* motif functions aggregate floating localizations", {
 
 test_that(".g_match_motif retains original nodes across floating localizations", {
   glycan <- glyrepr::as_glycan_structure(
-    "{Neu5Ac(a2-3)|1,2}Gal(??-?)[Gal(??-?)]GlcNAc(??-"
+    "{Neu5Ac(a2-3)|2,3}Gal(??-?)[Gal(??-?)]GlcNAc(??-"
   )
   motif <- glyrepr::as_glycan_structure("Neu5Ac(??-?)Gal(??-")
   glycan_graph <- glyrepr::get_structure_graphs(glycan)
@@ -159,7 +159,7 @@ test_that(".g_match_motif retains original nodes across floating localizations",
 
 test_that(".g_* motif functions support motifs assembled from floating parts", {
   glycan <- glyrepr::as_glycan_structure(
-    "{Gal(a1-3)|1,2}{Gal(a1-4)|1,2}Man(a1-3)[Man(a1-6)]GlcNAc(b1-"
+    "{Gal(a1-3)|3,4}{Gal(a1-4)|3,4}Man(a1-3)[Man(a1-6)]GlcNAc(b1-"
   )
   motif <- glyrepr::as_glycan_structure("Gal(a1-3)[Gal(a1-4)]Man(a1-")
   glycan_graph <- glyrepr::get_structure_graphs(glycan)

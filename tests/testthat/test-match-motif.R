@@ -600,7 +600,7 @@ test_that("match_motif works for floating parts", {
 
 test_that("match_motif retains mappings from canonical duplicate localizations", {
   glycan <- glyparse::parse_iupac_condensed(
-    "{Neu5Ac(a2-3)|1,2}Gal(??-?)[Gal(??-?)]GlcNAc(??-"
+    "{Neu5Ac(a2-3)|2,3}Gal(??-?)[Gal(??-?)]GlcNAc(??-"
   )
   motif <- glyparse::parse_iupac_condensed("Neu5Ac(??-?)Gal(??-")
 

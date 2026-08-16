@@ -402,8 +402,8 @@ test_that("count_motif supports lenient mode", {
 test_that("count_motif supports floating parts", {
   motif <- "Gal(a1-3)Man(a1-"
   glycan <- c(
-    "{Gal(a1-3)|1,2}{Gal(a1-3)|1,2}Man(a1-3)[Man(a1-6)]GlcNAc(b1-",
-    "{Gal(a1-4)|1,2}{Gal(a1-3)|1,2}Man(a1-3)[Man(a1-6)]GlcNAc(b1-"
+    "{Gal(a1-3)|3,4}{Gal(a1-3)|3,4}Man(a1-3)[Man(a1-6)]GlcNAc(b1-",
+    "{Gal(a1-4)|3,4}{Gal(a1-3)|3,4}Man(a1-3)[Man(a1-6)]GlcNAc(b1-"
   )
   expect_identical(count_motif(glycan, motif), c(2L, 1L))
 })
