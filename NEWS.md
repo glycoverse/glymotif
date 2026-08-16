@@ -1,3 +1,5 @@
+# glymotif (development version)
+
 # glymotif 0.18.1
 
 # glymotif 0.18.0
