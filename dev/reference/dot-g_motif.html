@@ -57,7 +57,8 @@ objects from <code><a href="https://glycoverse.github.io/glyrepr/reference/get_s
 <span>  ignore_linkages <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  strict_sub <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  match_degree <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  mode <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"strict"</span>, <span class="st">"lenient"</span><span class="op">)</span></span>
+<span>  mode <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"strict"</span>, <span class="st">"lenient"</span><span class="op">)</span>,</span>
+<span>  strict_floating <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">.g_count_motif</span><span class="op">(</span></span>
@@ -68,7 +69,8 @@ objects from <code><a href="https://glycoverse.github.io/glyrepr/reference/get_s
 <span>  ignore_linkages <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  strict_sub <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  match_degree <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  mode <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"strict"</span>, <span class="st">"lenient"</span><span class="op">)</span></span>
+<span>  mode <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"strict"</span>, <span class="st">"lenient"</span><span class="op">)</span>,</span>
+<span>  strict_floating <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">.g_match_motif</span><span class="op">(</span></span>
@@ -125,6 +127,14 @@ number of motif nodes.</p></dd>
 <code>"lenient"</code> treats glycan-side unknowns as compatible with more specific
 motif fields.</p></dd>
 
+
+<dt id="arg-strict-floating">strict_floating<a class="anchor" aria-label="anchor" href="#arg-strict-floating"></a></dt>
+<dd><p>A logical scalar. For <code>.g_have_motif()</code>, <code>TRUE</code>
+requires the motif in every possible floating localization and
+<code>FALSE</code> requires it in at least one. For <code>.g_count_motif()</code>, <code>TRUE</code>
+returns the minimum count across localizations and <code>FALSE</code> returns the
+maximum.</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
@@ -139,6 +149,10 @@ motif fields.</p></dd>
 Callers must provide valid graph objects. Residue compatibility follows the
 high-level matching rules, including generic and mixed motif residues.</p>
 <p>These functions never call <code><a href="https://glycoverse.github.io/glyrepr/reference/as_glycan_structure.html" class="external-link">glyrepr::as_glycan_structure()</a></code>.</p>
+<p>Glycan graphs with unresolved floating parts or substituents are matched
+across all conflict-free localizations. <code>.g_match_motif()</code> returns the union
+of mappings from every localization, with node indices referring to the
+original unresolved graph.</p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>

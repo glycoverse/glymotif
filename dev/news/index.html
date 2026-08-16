@@ -40,7 +40,9 @@
 <h2 class="pkg-version" data-toc-text="development version" id="glymotif-development-version">glymotif (development version)<a class="anchor" aria-label="anchor" href="#glymotif-development-version"></a></h2>
 <div class="section level3">
 <h3 id="new-features-development-version">New features<a class="anchor" aria-label="anchor" href="#new-features-development-version"></a></h3>
-<ul><li>Motif matching and branch extraction now support mixed generic and concrete residues within structures and across vectors, using residue-wise matching semantics. (<a href="https://github.com/glycoverse/glymotif/issues/55" class="external-link">#55</a>)</li>
+<ul><li><p><code><a href="../reference/have_motif.html">have_motif()</a></code>, <code><a href="../reference/count_motif.html">count_motif()</a></code>, <code><a href="../reference/match_motif.html">match_motif()</a></code>, and their plural variants now support glycans with unresolved floating parts and substituents; <code>strict_floating</code> selects all-localization or any-localization aggregation for logical and count results. (<a href="https://github.com/glycoverse/glymotif/issues/56" class="external-link">#56</a>)</p></li>
+<li><p><code><a href="../reference/dot-g_motif.html">.g_have_motif()</a></code>, <code><a href="../reference/dot-g_motif.html">.g_count_motif()</a></code>, and <code><a href="../reference/dot-g_motif.html">.g_match_motif()</a></code> now support unresolved floating parts and substituents in graph inputs while preserving original node indices in returned mappings. (<a href="https://github.com/glycoverse/glymotif/issues/56" class="external-link">#56</a>)</p></li>
+<li><p>Motif matching and branch extraction now support mixed generic and concrete residues within structures and across vectors, using residue-wise matching semantics. (<a href="https://github.com/glycoverse/glymotif/issues/55" class="external-link">#55</a>)</p></li>
 </ul></div>
 </div>
     <div class="section level2">

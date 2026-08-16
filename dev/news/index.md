@@ -4,6 +4,22 @@
 
 ### New features
 
+- [`have_motif()`](https://glycoverse.github.io/glymotif/dev/reference/have_motif.md),
+  [`count_motif()`](https://glycoverse.github.io/glymotif/dev/reference/count_motif.md),
+  [`match_motif()`](https://glycoverse.github.io/glymotif/dev/reference/match_motif.md),
+  and their plural variants now support glycans with unresolved floating
+  parts and substituents; `strict_floating` selects all-localization or
+  any-localization aggregation for logical and count results.
+  ([\#56](https://github.com/glycoverse/glymotif/issues/56))
+
+- [`.g_have_motif()`](https://glycoverse.github.io/glymotif/dev/reference/dot-g_motif.md),
+  [`.g_count_motif()`](https://glycoverse.github.io/glymotif/dev/reference/dot-g_motif.md),
+  and
+  [`.g_match_motif()`](https://glycoverse.github.io/glymotif/dev/reference/dot-g_motif.md)
+  now support unresolved floating parts and substituents in graph inputs
+  while preserving original node indices in returned mappings.
+  ([\#56](https://github.com/glycoverse/glymotif/issues/56))
+
 - Motif matching and branch extraction now support mixed generic and
   concrete residues within structures and across vectors, using
   residue-wise matching semantics.

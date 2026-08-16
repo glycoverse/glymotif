@@ -226,6 +226,18 @@ and the inner lists are named by glycans,
 following the same rules as in <code><a href="have_motif.html">have_motifs()</a></code> and <code><a href="count_motif.html">count_motifs()</a></code>.</p>
     </div>
     <div class="section level2">
+    <h2 id="floating-parts-and-substituents">Floating parts and substituents<a class="anchor" aria-label="anchor" href="#floating-parts-and-substituents"></a></h2>
+    <p>Glycans with unresolved floating parts or substituents are matched across
+every conflict-free localization allowed by their candidate-parent domains.
+These functions return the union of node mappings from every localization,
+using node indices from the original unresolved structure.</p>
+<p>Motifs must be connected structures and therefore cannot themselves contain
+unresolved floating parts or substituents.</p>
+<p>Matching supports up to 256 raw candidate-parent combinations per glycan.
+Localize floating parts and substituents with
+<code><a href="https://glycoverse.github.io/glyrepr/reference/localize_floating_parts.html" class="external-link">glyrepr::localize_floating_parts()</a></code> first for larger domains.</p>
+    </div>
+    <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
     <div class="dont-index"><p><code><a href="have_motif.html">have_motif()</a></code>, <code><a href="count_motif.html">count_motif()</a></code></p></div>
     </div>

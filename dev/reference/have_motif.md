@@ -21,7 +21,8 @@ have_motif(
   ignore_linkages = FALSE,
   strict_sub = TRUE,
   match_degree = NULL,
-  mode = c("strict", "lenient")
+  mode = c("strict", "lenient"),
+  strict_floating = TRUE
 )
 
 have_motifs(
@@ -32,7 +33,8 @@ have_motifs(
   ignore_linkages = FALSE,
   strict_sub = TRUE,
   match_degree = NULL,
-  mode = c("strict", "lenient")
+  mode = c("strict", "lenient"),
+  strict_floating = TRUE
 )
 ```
 
@@ -111,6 +113,13 @@ have_motifs(
   cannot be more obscure than motifs. `"lenient"` treats glycan-side
   obscure fields as compatible with more specific motif fields while
   still rejecting concrete mismatches.
+
+- strict_floating:
+
+  A logical value. If `TRUE` (default), a motif is present only when it
+  occurs in every conflict-free localization of any floating glycan
+  parts or substituents. If `FALSE`, a motif is present when it occurs
+  in at least one possible localization.
 
 - motifs:
 
@@ -240,6 +249,34 @@ specific motif fields. In the lenient mode, glycan "Gal(?1-?)GalNAc(?1-"
 matches motif "Gal(b1-3)GalNAc(a1-". Concrete mismatches still fail: for
 example, glycan "Gal(?1-6)GalNAc(a1-" does not match motif
 "Gal(b1-3)GalNAc(a1-".
+
+## Floating parts and substituents
+
+Glycans with unresolved floating parts or substituents are matched
+across every conflict-free localization allowed by their
+candidate-parent domains. `strict_floating = TRUE` requires a match in
+every localization, while `strict_floating = FALSE` requires a match in
+at least one localization. This setting is independent of `mode`, which
+controls residue and linkage obscurity.
+
+[`count_motif()`](https://glycoverse.github.io/glymotif/dev/reference/count_motif.md)
+and
+[`count_motifs()`](https://glycoverse.github.io/glymotif/dev/reference/count_motif.md)
+return the minimum count across localizations in strict-floating mode
+and the maximum count otherwise.
+[`match_motif()`](https://glycoverse.github.io/glymotif/dev/reference/match_motif.md)
+and
+[`match_motifs()`](https://glycoverse.github.io/glymotif/dev/reference/match_motif.md)
+return the union of node mappings from every localization, using node
+indices from the original unresolved structure.
+
+Motifs must be connected structures and therefore cannot themselves
+contain unresolved floating parts or substituents.
+
+Matching supports up to 256 raw candidate-parent combinations per
+glycan. Localize floating parts and substituents with
+[`glyrepr::localize_floating_parts()`](https://glycoverse.github.io/glyrepr/reference/localize_floating_parts.html)
+first for larger domains.
 
 ## Alignment
 
