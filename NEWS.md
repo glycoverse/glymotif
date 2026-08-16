@@ -10,7 +10,7 @@
 
 ## Improvements
 
-* `have_motif()`, `count_motif()`, `match_motif()`, and their plural and graph-level variants now prune incompatible residues, substituents, linkages, anomers, alignments, and degrees during graph search, substantially reducing work for mixed and wildcard-rich motifs.
+* `have_motif()`, `count_motif()`, `match_motif()`, and their plural and graph-level variants now prune incompatible residues, substituents, linkages, anomers, alignments, and degrees during graph search, substantially reducing work for mixed and wildcard-rich motifs. (#57)
 
 # glymotif 0.18.1
 
