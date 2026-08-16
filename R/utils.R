@@ -764,27 +764,33 @@ apply_single_motif_to_glycans <- function(
   # smap_func should be either glyrepr::smap_lgl or glyrepr::smap_int
 
   has_floating <- has_any_floating_metadata(glycans)
+  if (!has_floating) {
+    batch <- prepare_match_batch(
+      glycans,
+      motif,
+      mode = mode,
+      strict_sub = strict_sub,
+      ignore_linkages = ignore_linkages
+    )
+    return(apply_batch_motif(
+      batch = batch,
+      motif_position = 1L,
+      alignment = alignment,
+      ignore_linkages = ignore_linkages,
+      strict_sub = strict_sub,
+      match_degree = match_degree,
+      mode = mode,
+      single_glycan_func = single_glycan_func,
+      result_type = result_type
+    ))
+  }
+
   motif_graph <- glyrepr::get_structure_graphs(motif)
   motif_has_linkages <- graph_has_linkages(motif_graph)
   motif_composition_profile <- new_motif_composition_profile(
     motif_graph,
     mode = mode
   )
-  if (!has_floating) {
-    return(smap_func(
-      glycans,
-      single_glycan_func,
-      motif_graph,
-      motif_has_linkages,
-      motif_composition_profile,
-      alignment,
-      ignore_linkages,
-      strict_sub,
-      match_degree,
-      mode
-    ))
-  }
-
   apply_one <- function(glycan_graph) {
     single_glycan_func(
       glycan_graph,
@@ -910,7 +916,13 @@ apply_motifs_to_glycans <- function(
       }
     )
   } else {
-    batch <- prepare_match_batch(glycans, motifs, mode = mode)
+    batch <- prepare_match_batch(
+      glycans,
+      motifs,
+      mode = mode,
+      strict_sub = strict_sub,
+      ignore_linkages = ignore_linkages
+    )
     motif_results_list <- lapply(
       seq_along(motifs),
       function(i) {

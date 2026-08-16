@@ -1,4 +1,10 @@
-prepare_match_batch <- function(glycans, motifs, mode = "strict") {
+prepare_match_batch <- function(
+  glycans,
+  motifs,
+  mode = "strict",
+  strict_sub = TRUE,
+  ignore_linkages = FALSE
+) {
   glycan_index <- index_unique_structures(glycans)
   motif_index <- index_unique_structures(motifs)
 
@@ -66,9 +72,18 @@ prepare_match_batch <- function(glycans, motifs, mode = "strict") {
     )
   )
 
+  native_compatibility <- new_native_compatibility_cache(
+    glycan_profiles,
+    motif_profiles,
+    strict_sub = strict_sub,
+    ignore_linkages = ignore_linkages,
+    mode = mode
+  )
+
   list(
     glycan_profiles = glycan_profiles,
     motif_profiles = motif_profiles,
+    native_compatibility = native_compatibility,
     glycan_restore = glycan_index$restore,
     motif_restore = motif_index$restore
   )
@@ -100,6 +115,8 @@ new_batch_graph_profile <- function(
   include_composition_profile = FALSE,
   mode = "strict"
 ) {
+  subs <- graph_vertex_attr(graph, "sub")
+  native <- new_native_graph_profile(graph, monos = monos, subs = subs)
   exact_colors <- match(monos, exact_keys)
   base_colors <- if (is.null(base_keys)) {
     NULL
@@ -115,10 +132,10 @@ new_batch_graph_profile <- function(
   list(
     graph = graph,
     monos = monos,
-    subs = graph_vertex_attr(graph, "sub"),
+    subs = subs,
     vcount = igraph::vcount(graph),
     ecount = igraph::ecount(graph),
-    core = core_node(graph),
+    core = native$core,
     has_linkages = graph_has_linkages(graph),
     key_mode = key_mode,
     exact_colors = exact_colors,
@@ -139,7 +156,8 @@ new_batch_graph_profile <- function(
       new_motif_composition_profile(graph, mode = mode)
     } else {
       NULL
-    }
+    },
+    native = native
   )
 }
 
@@ -170,7 +188,8 @@ apply_batch_motif <- function(
       match_degree = match_degree,
       mode = mode,
       glycan_batch_profile = glycan_profile,
-      motif_batch_profile = motif_profile
+      motif_batch_profile = motif_profile,
+      compatibility_cache = batch$native_compatibility
     )
   }
 

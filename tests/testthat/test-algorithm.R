@@ -36,7 +36,7 @@ test_that("core alignment root mismatch bypasses VF2", {
   motif <- glyparse::parse_iupac_condensed("Gal(b1-6)GlcNAc(a1-")
 
   testthat::local_mocked_bindings(
-    perform_vf2 = function(...) {
+    perform_compatible_vf2 = function(...) {
       stop("VF2 should not run")
     },
     .package = "glymotif"
