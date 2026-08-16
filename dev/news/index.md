@@ -25,6 +25,17 @@
   residue-wise matching semantics.
   ([\#55](https://github.com/glycoverse/glymotif/issues/55))
 
+### Improvements
+
+- [`have_motif()`](https://glycoverse.github.io/glymotif/dev/reference/have_motif.md),
+  [`count_motif()`](https://glycoverse.github.io/glymotif/dev/reference/count_motif.md),
+  [`match_motif()`](https://glycoverse.github.io/glymotif/dev/reference/match_motif.md),
+  and their plural and graph-level variants now prune incompatible
+  residues, substituents, linkages, anomers, alignments, and degrees
+  during graph search, substantially reducing work for mixed and
+  wildcard-rich motifs.
+  ([\#57](https://github.com/glycoverse/glymotif/issues/57))
+
 ## glymotif 0.18.1
 
 ## glymotif 0.18.0
