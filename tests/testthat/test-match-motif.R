@@ -579,3 +579,51 @@ test_that("match_motif supports lenient mode", {
     list(list(c(1, 2)))
   )
 })
+
+test_that("match_motif works for floating parts", {
+  # Unlike `have_motif()` or `count_motif()`, `match_motif()` don't have the
+  # `strict_floating` argument, as the nature of this function is to return
+  # all possible matches, but the two others have to condense the matches into one value.
+  motif <- "Gal(??-?)GlcNAc(??-?)Gal(??-"
+  glycan <- "{Gal(??-?)GlcNAc(??-?)}Gal(??-?)GlcNAc(??-?)Gal(??-"
+  motif <- glyparse::parse_iupac_condensed(motif)
+  glycan <- glyparse::parse_iupac_condensed(glycan)
+
+  result <- match_motif(glycan, motif)
+  expected <- list(list(
+    c(1L, 2L, 3L),
+    c(3L, 4L, 5L),
+    c(1L, 2L, 5L)
+  ))
+  expect_identical(result, expected)
+})
+
+test_that("match_motif retains mappings from canonical duplicate localizations", {
+  glycan <- glyparse::parse_iupac_condensed(
+    "{Neu5Ac(a2-3)|2,3}Gal(??-?)[Gal(??-?)]GlcNAc(??-"
+  )
+  motif <- glyparse::parse_iupac_condensed("Neu5Ac(??-?)Gal(??-")
+
+  expect_identical(
+    match_motif(glycan, motif),
+    list(list(c(1L, 2L), c(1L, 3L)))
+  )
+})
+
+test_that("match_motifs unions floating substituent mappings", {
+  glycan <- glyrepr::as_glycan_structure(
+    c(sample = "{6S}Gal(a1-3)Glc(a1-")
+  )
+  motifs <- glyrepr::as_glycan_structure(c(
+    gal = "Gal6S(a1-",
+    glc = "Glc6S(a1-"
+  ))
+
+  expect_identical(
+    match_motifs(glycan, motifs),
+    list(
+      gal = list(sample = list(1L)),
+      glc = list(sample = list(2L))
+    )
+  )
+})

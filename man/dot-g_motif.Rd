@@ -15,7 +15,8 @@
   ignore_linkages = FALSE,
   strict_sub = TRUE,
   match_degree = NULL,
-  mode = c("strict", "lenient")
+  mode = c("strict", "lenient"),
+  strict_floating = TRUE
 )
 
 .g_count_motif(
@@ -26,7 +27,8 @@
   ignore_linkages = FALSE,
   strict_sub = TRUE,
   match_degree = NULL,
-  mode = c("strict", "lenient")
+  mode = c("strict", "lenient"),
+  strict_floating = TRUE
 )
 
 .g_match_motif(
@@ -63,6 +65,12 @@ number of motif nodes.}
 \item{mode}{Matching mode. \code{"strict"} preserves the default behavior;
 \code{"lenient"} treats glycan-side unknowns as compatible with more specific
 motif fields.}
+
+\item{strict_floating}{A logical scalar. For \code{.g_have_motif()}, \code{TRUE}
+requires the motif in every possible floating localization and
+\code{FALSE} requires it in at least one. For \code{.g_count_motif()}, \code{TRUE}
+returns the minimum count across localizations and \code{FALSE} returns the
+maximum.}
 }
 \value{
 \itemize{
@@ -82,6 +90,11 @@ Callers must provide valid graph objects. Residue compatibility follows the
 high-level matching rules, including generic and mixed motif residues.
 
 These functions never call \code{\link[glyrepr:as_glycan_structure]{glyrepr::as_glycan_structure()}}.
+
+Glycan graphs with unresolved floating parts or substituents are matched
+across all conflict-free localizations. \code{.g_match_motif()} returns the union
+of mappings from every localization, with node indices referring to the
+original unresolved graph.
 }
 \examples{
 library(glyparse)

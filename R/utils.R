@@ -12,6 +12,8 @@
 #' @param single_motif Whether the caller expects exactly one motif.
 #' @param strict_sub Whether substituent matching should be strict.
 #' @param mode Matching mode.
+#' @param strict_floating Whether matches involving floating parts or
+#'   substituents must hold across every possible localization.
 #' @param call The call environment used for errors.
 #'
 #' @return A normalized argument list for single- or multiple-motif internals.
@@ -25,9 +27,11 @@ prepare_motif_args <- function(
   single_motif = FALSE,
   strict_sub = TRUE,
   mode = "strict",
+  strict_floating = TRUE,
   call = rlang::caller_env()
 ) {
   mode <- rlang::arg_match(mode, c("strict", "lenient"))
+  checkmate::assert_flag(strict_floating)
 
   prepared <- if (is_motif_spec(motifs)) {
     prepare_spec_motif_args(
@@ -74,6 +78,7 @@ prepare_motif_args <- function(
     require_scalar = single_motif,
     call = call
   )
+  validate_no_floating_motifs(motifs, call = call)
   match_degree <- validate_match_degree(
     prepared$match_degree,
     motifs,
@@ -92,7 +97,32 @@ prepare_motif_args <- function(
     strict_sub = strict_sub,
     match_degree = match_degree,
     mode = mode,
+    strict_floating = strict_floating,
     single_motif = single_motif
+  )
+}
+
+#' Validate That Motifs Are Connected Structures
+#'
+#' @param motifs A normalized motif structure vector.
+#' @param call The call environment used for errors.
+#'
+#' @return `NULL`, invisibly.
+#' @noRd
+validate_no_floating_motifs <- function(
+  motifs,
+  call = rlang::caller_env()
+) {
+  if (!has_any_floating_metadata(motifs)) {
+    return(invisible(NULL))
+  }
+
+  cli::cli_abort(
+    c(
+      "`motifs` cannot contain unresolved floating parts or substituents.",
+      "i" = "Localize floating motif parts and substituents before matching."
+    ),
+    call = call
   )
 }
 
@@ -334,6 +364,7 @@ new_prepared_motif_args <- function(
   strict_sub,
   match_degree,
   mode,
+  strict_floating,
   single_motif
 ) {
   common_args <- list(
@@ -341,21 +372,38 @@ new_prepared_motif_args <- function(
     ignore_linkages = ignore_linkages,
     strict_sub = strict_sub,
     match_degree = match_degree,
-    mode = mode
+    mode = mode,
+    strict_floating = strict_floating
   )
 
   if (single_motif) {
     return(c(
       common_args["glycans"],
       list(motif = motifs, alignment = alignments),
-      common_args[c("ignore_linkages", "strict_sub", "match_degree", "mode")]
+      common_args[
+        c(
+          "ignore_linkages",
+          "strict_sub",
+          "match_degree",
+          "mode",
+          "strict_floating"
+        )
+      ]
     ))
   }
 
   c(
     common_args["glycans"],
     list(motifs = motifs, alignments = alignments),
-    common_args[c("ignore_linkages", "strict_sub", "match_degree", "mode")]
+    common_args[
+      c(
+        "ignore_linkages",
+        "strict_sub",
+        "match_degree",
+        "mode",
+        "strict_floating"
+      )
+    ]
   )
 }
 
@@ -705,30 +753,58 @@ apply_single_motif_to_glycans <- function(
   strict_sub,
   match_degree,
   mode,
+  strict_floating,
   single_glycan_func,
-  smap_func
+  smap_func,
+  result_type,
+  localization_index = NULL
 ) {
   # Generic function to apply a single motif to multiple glycans
   # single_glycan_func should be either .have_motif_single or .count_motif_single
   # smap_func should be either glyrepr::smap_lgl or glyrepr::smap_int
 
+  has_floating <- has_any_floating_metadata(glycans)
   motif_graph <- glyrepr::get_structure_graphs(motif)
   motif_has_linkages <- graph_has_linkages(motif_graph)
   motif_composition_profile <- new_motif_composition_profile(
     motif_graph,
     mode = mode
   )
-  smap_func(
+  if (!has_floating) {
+    return(smap_func(
+      glycans,
+      single_glycan_func,
+      motif_graph,
+      motif_has_linkages,
+      motif_composition_profile,
+      alignment,
+      ignore_linkages,
+      strict_sub,
+      match_degree,
+      mode
+    ))
+  }
+
+  apply_one <- function(glycan_graph) {
+    single_glycan_func(
+      glycan_graph,
+      motif_graph,
+      motif_has_linkages,
+      motif_composition_profile,
+      alignment,
+      ignore_linkages,
+      strict_sub,
+      match_degree,
+      mode
+    )
+  }
+
+  map_floating_structures(
     glycans,
-    single_glycan_func,
-    motif_graph,
-    motif_has_linkages,
-    motif_composition_profile,
-    alignment,
-    ignore_linkages,
-    strict_sub,
-    match_degree,
-    mode
+    apply_one,
+    result_type = result_type,
+    strict_floating = strict_floating,
+    localization_index = localization_index
   )
 }
 
@@ -789,6 +865,7 @@ apply_motifs_to_glycans <- function(
   strict_sub,
   match_degree,
   mode,
+  strict_floating,
   result_type
 ) {
   # Generic function to apply multiple motifs to multiple glycans
@@ -805,23 +882,52 @@ apply_motifs_to_glycans <- function(
     match_degree
   }
 
-  batch <- prepare_match_batch(glycans, motifs, mode = mode)
-  motif_results_list <- lapply(
-    seq_along(motifs),
-    function(i) {
-      apply_batch_motif(
-        batch = batch,
-        motif_position = i,
-        alignment = alignments[[i]],
-        ignore_linkages = ignore_linkages,
-        strict_sub = strict_sub,
-        match_degree = match_degree_list[[i]],
-        mode = mode,
-        single_glycan_func = single_glycan_func,
-        result_type = result_type
-      )
-    }
-  )
+  if (has_any_floating_metadata(glycans)) {
+    localization_index <- prepare_floating_graph_index(glycans)
+    smap_func <- switch(
+      result_type,
+      logical = glyrepr::smap_lgl,
+      integer = glyrepr::smap_int,
+      list = glyrepr::smap
+    )
+    motif_results_list <- lapply(
+      seq_along(motifs),
+      function(i) {
+        apply_single_motif_to_glycans(
+          glycans = glycans,
+          motif = motifs[i],
+          alignment = alignments[[i]],
+          ignore_linkages = ignore_linkages,
+          strict_sub = strict_sub,
+          match_degree = match_degree_list[[i]],
+          mode = mode,
+          strict_floating = strict_floating,
+          single_glycan_func = single_glycan_func,
+          smap_func = smap_func,
+          result_type = result_type,
+          localization_index = localization_index
+        )
+      }
+    )
+  } else {
+    batch <- prepare_match_batch(glycans, motifs, mode = mode)
+    motif_results_list <- lapply(
+      seq_along(motifs),
+      function(i) {
+        apply_batch_motif(
+          batch = batch,
+          motif_position = i,
+          alignment = alignments[[i]],
+          ignore_linkages = ignore_linkages,
+          strict_sub = strict_sub,
+          match_degree = match_degree_list[[i]],
+          mode = mode,
+          single_glycan_func = single_glycan_func,
+          result_type = result_type
+        )
+      }
+    )
+  }
 
   # Set names for the results if provided
   if (!is.null(motif_names)) {

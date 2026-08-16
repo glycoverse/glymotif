@@ -1296,3 +1296,145 @@ test_that("mode is validated", {
     "`mode` must be"
   )
 })
+
+# ========== Floating Structures ==========
+test_that("motif in a floating part can be detected", {
+  glycan <- "{Gal(a1-3)Glc(a1-3)}Man(a1-3)[Man(a1-6)]GlcNAc(b1-"
+  motif <- "Gal(a1-3)Glc(a1-"
+  expect_true(have_motif(glycan, motif))
+})
+
+test_that("motif in a non-floating part can be detected", {
+  glycan <- "{Gal(a1-3)Glc(a1-3)}Man(a1-3)[Man(a1-6)]GlcNAc(b1-"
+  motif <- "Man(a1-3)GlcNAc(b1-"
+  expect_true(have_motif(glycan, motif))
+})
+
+test_that("strict-floating mode works", {
+  # In the strict-floating mode, a motif is regarded to exist
+  # only if it appears in all possible glycans derived from the floating parts.
+  motif <- "Gal(a1-3)Man(a1-"
+  glycans <- c(
+    "{Gal(a1-3)}Man(a1-3)[Glc(a1-6)]GlcNAc(b1-", # implicit floating
+    "{Gal(a1-3)|2,3}Man(a1-3)[Glc(a1-6)]GlcNAc(b1-", # good on one parents
+    "{Gal(a1-3)|2,3}Man(a1-3)[Man(a1-6)]GlcNAc(b1-" # good on both parents
+  )
+
+  res1 <- have_motif(glycans, motif) # defaults to use strict-floating
+  res2 <- have_motif(glycans, motif, strict_floating = TRUE)
+
+  expect_identical(res1, c(FALSE, FALSE, TRUE))
+  expect_identical(res1, res2)
+})
+
+test_that("lenient-floating mode works", {
+  # In the lenient-floating mode, a motif is regarded to exist
+  # as long as it appears in one possible glycan derived from the floating parts.
+  motif <- "Gal(a1-3)Man(a1-"
+  glycans <- c(
+    "{Gal(a1-3)}Man(a1-3)[Man(a1-6)]GlcNAc(b1-", # implicit floating
+    "{Gal(a1-3)|2,3}Man(a1-3)[Glc(a1-6)]GlcNAc(b1-", # good on one parents
+    "{Gal(a1-3)|2,3}Man(a1-3)[Man(a1-6)]GlcNAc(b1-" # good on both parents
+  )
+
+  res1 <- have_motif(glycans, motif, strict_floating = FALSE)
+  res2 <- have_motif(glycans, motif, strict_floating = FALSE)
+
+  expect_identical(res1, c(TRUE, TRUE, TRUE))
+  expect_identical(res1, res2)
+})
+
+test_that("have_motif works for multiple floating parts", {
+  motif <- "Gal(a1-3)Man(a1-"
+  glycan <- "{Gal(a1-3)|3,4}{Glc(a1-3)|3,4}Man(a1-3)[Man(a1-6)]GlcNAc(b1-"
+  expect_true(have_motif(glycan, motif, strict_floating = FALSE))
+})
+
+test_that("have_motif detects new motifs assembled from two floating parts", {
+  motif <- "Gal(a1-3)[Gal(a1-4)]Man(a1-"
+  glycan <- "{Gal(a1-3)|3,4}{Gal(a1-4)|3,4}Man(a1-3)[Man(a1-6)]GlcNAc(b1-"
+  expect_true(have_motif(glycan, motif, strict_floating = FALSE))
+})
+
+test_that("have_motifs aggregates floating localizations per motif", {
+  glycan <- "{Gal(a1-3)|2,3}Man(a1-3)[Glc(a1-6)]GlcNAc(b1-"
+  motifs <- c(
+    gal_man = "Gal(a1-3)Man(a1-",
+    gal_glc = "Gal(a1-3)Glc(a1-"
+  )
+
+  expect_identical(
+    unname(have_motifs(glycan, motifs, strict_floating = TRUE)),
+    matrix(c(FALSE, FALSE), nrow = 1L)
+  )
+  expect_identical(
+    unname(have_motifs(glycan, motifs, strict_floating = FALSE)),
+    matrix(c(TRUE, TRUE), nrow = 1L)
+  )
+})
+
+test_that("floating substituents use strict-floating aggregation", {
+  glycans <- glyrepr::as_glycan_structure(c(
+    floating = "{6S}Gal(a1-3)Glc(a1-",
+    ordinary = "Gal6S(a1-3)Glc(a1-"
+  ))
+  motif <- glyrepr::as_glycan_structure("Gal6S(a1-")
+
+  expect_identical(
+    have_motif(glycans, motif, strict_floating = TRUE),
+    c(floating = FALSE, ordinary = TRUE)
+  )
+  expect_identical(
+    have_motif(glycans, motif, strict_floating = FALSE),
+    c(floating = TRUE, ordinary = TRUE)
+  )
+})
+
+test_that("have_motifs aggregates floating substituents per motif", {
+  glycan <- glyrepr::as_glycan_structure(
+    c(sample = "{6S}Gal(a1-3)Glc(a1-")
+  )
+  motifs <- glyrepr::as_glycan_structure(c(
+    gal = "Gal6S(a1-",
+    glc = "Glc6S(a1-"
+  ))
+
+  strict <- matrix(
+    c(FALSE, FALSE),
+    nrow = 1L,
+    dimnames = list("sample", c("gal", "glc"))
+  )
+  possible <- matrix(
+    c(TRUE, TRUE),
+    nrow = 1L,
+    dimnames = list("sample", c("gal", "glc"))
+  )
+  expect_identical(
+    have_motifs(glycan, motifs, strict_floating = TRUE),
+    strict
+  )
+  expect_identical(
+    have_motifs(glycan, motifs, strict_floating = FALSE),
+    possible
+  )
+})
+
+test_that("floating parts in motifs are rejected clearly", {
+  expect_snapshot(
+    have_motif(
+      "Gal(a1-3)Man(a1-",
+      "{Gal(a1-3)}Man(a1-3)GlcNAc(b1-"
+    ),
+    error = TRUE
+  )
+})
+
+test_that("floating substituents in motifs are rejected clearly", {
+  expect_snapshot(
+    have_motif(
+      "Gal6S(a1-3)Glc(a1-",
+      "{6S}Gal(a1-3)Glc(a1-"
+    ),
+    error = TRUE
+  )
+})

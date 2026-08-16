@@ -37,3 +37,20 @@
     Matching generic `glycans` against concrete `motifs` always returns no matches in strict mode.
     i Convert motifs with `glyrepr::convert_to_generic()`, or use `mode = "lenient"` when generic identities should match their concrete counterparts.
 
+# floating parts in motifs are rejected clearly
+
+    Code
+      have_motif("Gal(a1-3)Man(a1-", "{Gal(a1-3)}Man(a1-3)GlcNAc(b1-")
+    Condition
+      Error in `have_motif()`:
+      ! `motifs` cannot contain unresolved floating parts or substituents.
+      i Localize floating motif parts and substituents before matching.
+
+# floating substituents in motifs are rejected clearly
+
+    Code
+      have_motif("Gal6S(a1-3)Glc(a1-", "{6S}Gal(a1-3)Glc(a1-")
+    Condition
+      Error in `have_motif()`:
+      ! `motifs` cannot contain unresolved floating parts or substituents.
+      i Localize floating motif parts and substituents before matching.
