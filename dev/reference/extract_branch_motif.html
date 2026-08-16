@@ -96,7 +96,9 @@ arguments to be supplied by name.</p></dd>
 <dt id="arg-including-core">including_core<a class="anchor" aria-label="anchor" href="#arg-including-core"></a></dt>
 <dd><p>A logical scalar. If <code>TRUE</code>, the N-glycan core structure
 (<code>Man(??-?)Man(??-?)GlcNAc(??-?)GlcNAc(??-</code> or <code>Hex(??-?)Hex(??-?)HexNAc(??-?)HexNAc(??-</code>)
-is appended to each branch motif. Default is <code>FALSE</code>.</p></dd>
+is appended to each branch motif. Concrete branches receive a concrete
+core; generic and mixed branches receive a generic core. Default is
+<code>FALSE</code>.</p></dd>
 
 </dl></div>
     <div class="section level2">

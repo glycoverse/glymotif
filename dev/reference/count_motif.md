@@ -247,18 +247,15 @@ print(result)
 #> Man(b1-?)[Man(b1-?)]GalNAc(b1-4)GlcNAc(b1-    0    0    2
 
 # Monosaccharide type matching examples
-# Concrete glycan vs generic motif: matches (glycan converted to generic)
+# Concrete glycan vs generic motif: compatible residues match
 count_motif("Man(?1-", "Hex(?1-") # Returns 1
 #> [1] 1
 
 # Generic glycan vs concrete motif: doesn't match
 count_motif("Hex(?1-", "Man(?1-") # Returns 0
-#> Warning: Matching lower-level `glycans` against higher-level `motifs` usually returns no
-#> matches.
-#> ℹ `glycans` have "basic" structure level, while `motifs` have "partial"
-#>   structure level.
-#> ℹ Use motifs at the same structure level as the glycans, or reduce motif
-#>   structure levels before matching.
-#> ℹ See `?get_structure_level` for details.
+#> Warning: Matching generic `glycans` against concrete `motifs` always returns no matches
+#> in strict mode.
+#> ℹ Convert motifs with `glyrepr::convert_to_generic()`, or use `mode =
+#>   "lenient"` when generic identities should match their concrete counterparts.
 #> [1] 0
 ```

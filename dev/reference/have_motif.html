@@ -177,20 +177,24 @@ The row names are the glycan names, and the column names are the motif names.</p
 </ol></div>
     <div class="section level2">
     <h2 id="monosaccharide-type">Monosaccharide type<a class="anchor" aria-label="anchor" href="#monosaccharide-type"></a></h2>
-    <p>As of glyrepr 0.9.0.9000, all elements in a <code>glycans</code> or <code>motifs</code> vector
-must have the same monosaccharide type ("concrete" or "generic").
-This invariant is enforced when creating or combining <code>glyrepr_structure</code> objects.
-The matching rules are:</p><ul><li><p>When the motif is "generic", glycans are converted to "generic" type for comparison,
-allowing both concrete and generic glycans to match generic motifs.</p></li>
-<li><p>When the motif is "concrete", glycans are used as-is, so only concrete glycans
-with matching monosaccharide names will match, while generic glycans will not match.</p></li>
-</ul><p>Examples:</p><ul><li><p><code>Man</code> (concrete glycan) vs <code>Hex</code> (generic motif) → TRUE (Man converted to Hex for comparison)</p></li>
-<li><p><code>Hex</code> (generic glycan) vs <code>Man</code> (concrete motif) → FALSE (names don't match)</p></li>
-<li><p><code>Man</code> (concrete glycan) vs <code>Man</code> (concrete motif) → TRUE (exact match)</p></li>
-<li><p><code>Hex</code> (generic glycan) vs <code>Hex</code> (generic motif) → TRUE (exact match)</p></li>
-</ul><p>With <code>mode = "lenient"</code>, generic glycan residues can match compatible
-concrete motif residues. For example, <code>Hex</code> can match a <code>Gal</code> motif residue,
-but <code>HexNAc</code> still cannot match <code>Gal</code>.</p>
+    <p>Glycans and motifs can each contain concrete residues, generic residues, or
+a mixture of both. Structure vectors can likewise combine concrete, generic,
+and mixed elements. Matching is performed residue by residue for every
+glycan-motif pair; structures are not converted as a whole.</p>
+<p>In the default strict mode:</p><ul><li><p>Concrete glycan residues match the same concrete motif residue.</p></li>
+<li><p>Concrete glycan residues also match compatible generic motif residues.</p></li>
+<li><p>Generic glycan residues do not match concrete motif residues.</p></li>
+<li><p>Generic glycan residues match the same generic motif residue.</p></li>
+<li><p>Concrete residues with different identities never match.</p></li>
+</ul><p>Examples:</p><ul><li><p><code>Man</code> (concrete glycan) vs <code>Hex</code> (generic motif) → TRUE</p></li>
+<li><p><code>Hex</code> (generic glycan) vs <code>Man</code> (concrete motif) → FALSE</p></li>
+<li><p><code>Man</code> (concrete glycan) vs <code>Man</code> (concrete motif) → TRUE</p></li>
+<li><p><code>Hex</code> (generic glycan) vs <code>Hex</code> (generic motif) → TRUE</p></li>
+<li><p><code>Gal(b1-3)GalNAc</code> (concrete glycan) vs <code>Hex(b1-3)GalNAc</code>
+(mixed motif) → TRUE</p></li>
+</ul><p>With <code>mode = "lenient"</code>, compatibility becomes bidirectional: generic glycan
+residues can also match compatible concrete motif residues. For example,
+<code>Hex</code> can match a <code>Gal</code> motif residue, but <code>HexNAc</code> still cannot match <code>Gal</code>.</p>
     </div>
     <div class="section level2">
     <h2 id="linkages">Linkages<a class="anchor" aria-label="anchor" href="#linkages"></a></h2>

@@ -2,6 +2,13 @@
 
 ## glymotif (development version)
 
+### New features
+
+- Motif matching and branch extraction now support mixed generic and
+  concrete residues within structures and across vectors, using
+  residue-wise matching semantics.
+  ([\#55](https://github.com/glycoverse/glymotif/issues/55))
+
 ## glymotif 0.18.1
 
 ## glymotif 0.18.0
