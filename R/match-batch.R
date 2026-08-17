@@ -32,7 +32,7 @@ prepare_match_batch <- function(
     mode = mode
   )
   base_keys <- if (any(motif_key_modes == "base")) {
-    unique(residue_color_keys(exact_keys))
+    unique(residue_base_keys(exact_keys))
   } else {
     NULL
   }
@@ -117,13 +117,13 @@ new_batch_graph_profile <- function(
 ) {
   subs <- graph_vertex_attr(graph, "sub")
   native <- new_native_graph_profile(graph, monos = monos, subs = subs)
-  exact_colors <- match(monos, exact_keys)
-  base_colors <- if (is.null(base_keys)) {
+  exact_ids <- match(monos, exact_keys)
+  base_ids <- if (is.null(base_keys)) {
     NULL
   } else {
-    match(residue_color_keys(monos), base_keys)
+    match(residue_base_keys(monos), base_keys)
   }
-  generic_colors <- if (is.null(generic_keys)) {
+  generic_ids <- if (is.null(generic_keys)) {
     NULL
   } else {
     match(residue_match_keys(monos, "generic"), generic_keys)
@@ -138,19 +138,16 @@ new_batch_graph_profile <- function(
     core = native$core,
     has_linkages = graph_has_linkages(graph),
     key_mode = key_mode,
-    exact_colors = exact_colors,
-    base_colors = base_colors,
-    generic_colors = generic_colors,
-    exact_counts = tabulate(exact_colors, nbins = length(exact_keys)),
-    base_counts = if (is.null(base_colors)) {
+    exact_counts = tabulate(exact_ids, nbins = length(exact_keys)),
+    base_counts = if (is.null(base_ids)) {
       NULL
     } else {
-      tabulate(base_colors, nbins = length(base_keys))
+      tabulate(base_ids, nbins = length(base_keys))
     },
-    generic_counts = if (is.null(generic_colors)) {
+    generic_counts = if (is.null(generic_ids)) {
       NULL
     } else {
-      tabulate(generic_colors, nbins = length(generic_keys))
+      tabulate(generic_ids, nbins = length(generic_keys))
     },
     composition_profile = if (include_composition_profile) {
       new_motif_composition_profile(graph, mode = mode)

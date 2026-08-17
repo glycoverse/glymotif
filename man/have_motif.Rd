@@ -290,18 +290,10 @@ so the glycan "Neu5Ac9Ac" can match the motif "Neu5Ac".
 }
 
 \section{Implementation}{
-Under the hood, the function uses \code{\link[igraph:subgraph_isomorphisms]{igraph::graph.get.subisomorphisms.vf2()}}
-to get all possible subgraph isomorphisms between \code{glycan} and \code{motif}.
-\code{color} vertex attributes are added to the graphs to distinguish monosaccharides.
-For all possible matches, the function checks the following:
-\itemize{
-\item Alignment: using \code{alignment_check()}
-\item Residues and substituents: using \code{residue_check()}
-\item Degree: using \code{degree_check()} (only when \code{match_degree} is provided)
-\item Linkages: using \code{linkage_check()}
-\item Anomer: using \code{anomer_check()}
-The function returns \code{TRUE} if any of the matches pass all checks.
-}
+Under the hood, the function uses Boost Graph's VF2 subgraph monomorphism
+algorithm. Custom vertex and edge compatibility predicates enforce residue,
+substituent, linkage, anomer, alignment, and degree constraints during the
+search. The function returns \code{TRUE} as soon as a compatible mapping is found.
 }
 
 \examples{

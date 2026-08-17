@@ -1,54 +1,3 @@
-colorize_graphs <- function(
-  glycan,
-  motif,
-  mode = "strict",
-  glycan_batch_profile = NULL,
-  motif_batch_profile = NULL
-) {
-  if (!is.null(glycan_batch_profile) && !is.null(motif_batch_profile)) {
-    key_mode <- motif_batch_profile$key_mode
-    if (key_mode == "none") {
-      return(list(glycan_colors = NULL, motif_colors = NULL))
-    }
-    if (key_mode == "exact") {
-      return(list(
-        glycan_colors = glycan_batch_profile$exact_colors,
-        motif_colors = motif_batch_profile$exact_colors
-      ))
-    }
-    if (key_mode == "base") {
-      return(list(
-        glycan_colors = glycan_batch_profile$base_colors,
-        motif_colors = motif_batch_profile$base_colors
-      ))
-    }
-    return(list(
-      glycan_colors = glycan_batch_profile$generic_colors,
-      motif_colors = motif_batch_profile$generic_colors
-    ))
-  }
-
-  # Prepare VF2 color vectors from the "mono" vertex attributes without
-  # mutating the input graphs.
-  glycan_monos <- graph_vertex_attr(glycan, "mono")
-  motif_monos <- graph_vertex_attr(motif, "mono")
-  key_mode <- resolve_residue_key_mode(motif, mode)
-  if (key_mode == "none") {
-    return(list(glycan_colors = NULL, motif_colors = NULL))
-  }
-  glycan_monos <- residue_match_keys(glycan_monos, key_mode)
-  motif_monos <- residue_match_keys(motif_monos, key_mode)
-
-  unique_monos <- unique(c(glycan_monos, motif_monos))
-  color_map <- seq_along(unique_monos)
-  names(color_map) <- unique_monos
-  glycan_colors <- color_map[glycan_monos]
-  motif_colors <- color_map[motif_monos]
-  names(glycan_colors) <- NULL
-  names(motif_colors) <- NULL
-  list(glycan_colors = glycan_colors, motif_colors = motif_colors)
-}
-
 #' Create a Motif Composition Profile
 #'
 #' @param motif A motif graph.
@@ -175,7 +124,7 @@ residue_match_keys <- function(monos, key_mode) {
   switch(
     key_mode,
     exact = monos,
-    base = residue_color_keys(monos),
+    base = residue_base_keys(monos),
     generic = glyrepr::convert_to_generic(monos),
     none = character()
   )
@@ -276,13 +225,13 @@ has_fuzzy_modification <- function(motif) {
 }
 
 
-#' Create Residue Color Keys for Fuzzy Modification Matching
+#' Create Base Residue Keys for Fuzzy Modification Matching
 #'
 #' @param monos A character vector of monosaccharide names.
 #'
-#' @return A character vector of color keys.
+#' @return A character vector of base residue keys.
 #' @noRd
-residue_color_keys <- function(monos) {
+residue_base_keys <- function(monos) {
   purrr::map_chr(monos, function(mono) {
     built_in <- decompose_builtin_modification(mono)
     if (is.null(built_in)) {
@@ -294,14 +243,14 @@ residue_color_keys <- function(monos) {
 }
 
 
-#' Create a Base Validation Context
+#' Create a Base VF2 Compatibility Context
 #'
 #' @param glycan A glycan graph.
 #' @param motif A motif graph.
 #'
-#' @return A base validation context.
+#' @return A base compatibility context.
 #' @noRd
-new_validation_context <- function(glycan, motif) {
+new_vf2_context <- function(glycan, motif) {
   list(
     glycan = glycan,
     motif = motif,
@@ -317,13 +266,6 @@ new_validation_context <- function(glycan, motif) {
     motif_core = NULL,
     glycan_terminals = NULL,
     motif_terminals = NULL,
-    glycan_v = NULL,
-    motif_v = NULL,
-    glycan_e = NULL,
-    motif_e = NULL,
-    motif_edge_list = NULL,
-    motif_linkages = NULL,
-    glycan_edge_linkages = NULL,
     glycan_anomer = NULL,
     motif_anomer = NULL,
     glycan_incoming_linkages = NULL
@@ -331,12 +273,12 @@ new_validation_context <- function(glycan, motif) {
 }
 
 
-#' Add Alignment Data to a Validation Context
+#' Add Alignment Data to a VF2 Compatibility Context
 #'
-#' @param context A validation context.
+#' @param context A VF2 compatibility context.
 #' @param alignment Alignment mode.
 #'
-#' @return A validation context with alignment-specific data.
+#' @return A compatibility context with alignment-specific data.
 #' @noRd
 add_alignment_context <- function(context, alignment) {
   switch(
@@ -352,22 +294,16 @@ add_alignment_context <- function(context, alignment) {
       )
       context
     },
-    "whole" = {
-      context$glycan_v <- igraph::vcount(context$glycan)
-      context$motif_v <- igraph::vcount(context$motif)
-      context$glycan_e <- igraph::ecount(context$glycan)
-      context$motif_e <- igraph::ecount(context$motif)
-      context
-    }
+    "whole" = context
   )
 }
 
 
-#' Add Degree Data to a Validation Context
+#' Add Degree Data to a VF2 Compatibility Context
 #'
-#' @param context A validation context.
+#' @param context A VF2 compatibility context.
 #'
-#' @return A validation context with degree vectors.
+#' @return A compatibility context with degree vectors.
 #' @noRd
 add_degree_context <- function(context) {
   context$motif_in <- graph_degree(context$motif, mode = "in")
@@ -378,11 +314,11 @@ add_degree_context <- function(context) {
 }
 
 
-#' Add Core Node Data to a Validation Context
+#' Add Core Node Data to a VF2 Compatibility Context
 #'
-#' @param context A validation context.
+#' @param context A VF2 compatibility context.
 #'
-#' @return A validation context with core node indices.
+#' @return A compatibility context with core node indices.
 #' @noRd
 add_core_context <- function(context) {
   if (is.null(context$glycan_core)) {
@@ -395,11 +331,11 @@ add_core_context <- function(context) {
 }
 
 
-#' Add Linkage and Anomer Data to a Validation Context
+#' Add Linkage and Anomer Data to a VF2 Compatibility Context
 #'
-#' @param context A validation context.
+#' @param context A VF2 compatibility context.
 #'
-#' @return A validation context with linkage and anomer data.
+#' @return A compatibility context with linkage and anomer data.
 #' @noRd
 add_linkage_context <- function(context) {
   context <- add_core_context(context)
@@ -417,23 +353,11 @@ add_linkage_context <- function(context) {
     context$glycan_incoming_linkages[glycan_edge_list[, 2]] <- glycan_linkages
   }
 
-  motif_edge_list <- igraph::as_edgelist(context$motif, names = FALSE)
-  context$motif_edge_list <- motif_edge_list
-  context$motif_linkages <- graph_edge_attr(context$motif, "linkage")
-  if (nrow(motif_edge_list) > 0) {
-    context$glycan_edge_linkages <- matrix(
-      NA_character_,
-      nrow = igraph::vcount(context$glycan),
-      ncol = igraph::vcount(context$glycan)
-    )
-    context$glycan_edge_linkages[glycan_edge_list] <- glycan_linkages
-  }
-
   context
 }
 
 
-#' Prepare Reusable Graph Data for Candidate Validation
+#' Prepare Reusable Graph Data for VF2 Compatibility
 #'
 #' @param glycan A glycan graph.
 #' @param motif A motif graph.
@@ -441,16 +365,16 @@ add_linkage_context <- function(context) {
 #' @param ignore_linkages Whether linkage/anomer checks are skipped.
 #' @param match_degree Degree matching vector.
 #'
-#' @return A validation context containing only data needed for this validation mode.
+#' @return A context containing only data needed for compatibility predicates.
 #' @noRd
-prepare_validation_context <- function(
+prepare_vf2_context <- function(
   glycan,
   motif,
   alignment = "substructure",
   ignore_linkages = FALSE,
   match_degree = NULL
 ) {
-  context <- new_validation_context(glycan, motif)
+  context <- new_vf2_context(glycan, motif)
   context <- add_alignment_context(context, alignment)
   if (!is.null(match_degree) && any(match_degree)) {
     context <- add_degree_context(context)
@@ -462,155 +386,6 @@ prepare_validation_context <- function(
 }
 
 
-perform_vf2 <- function(
-  glycan,
-  motif,
-  glycan_colors = NULL,
-  motif_colors = NULL
-) {
-  # Perform "VF2" algorithm
-  # `res` is a list of all possible matches between `glycan` and `motif`.
-  # Each match is an integer vector, with the same length as `vcount(motif)`.
-  # The `i`-th element of the vector is the index of the vertex in `glycan`
-  # that matches the `i`-th vertex in `motif`.
-  # e.g. If `res[[1]] = c(2, 3)`,
-  # it means the 1st vertex in `motif` matches the 2nd vertex in `glycan`,
-  # and the 2nd vertex in `motif` matches the 3rd vertex in `glycan`.
-  graph_subisomorphisms_vf2(
-    graph = glycan,
-    pattern = motif,
-    graph_colors = glycan_colors,
-    pattern_colors = motif_colors
-  )
-}
-
-
-unique_vf2_res <- function(res) {
-  if (length(res) <= 1) {
-    return(res)
-  }
-  keys <- vapply(
-    res,
-    function(x) paste(sort(x), collapse = ","),
-    character(1L),
-    USE.NAMES = FALSE
-  )
-  res[!duplicated(keys)]
-}
-
-
-is_valid_result <- function(
-  r,
-  glycan,
-  motif,
-  alignment,
-  ignore_linkages,
-  strict_sub = TRUE,
-  match_degree = NULL,
-  mode = "strict",
-  context = NULL
-) {
-  # Optimized early exit using most selective checks first
-  # Alignment check is often the most selective and fastest
-  if (is.null(match_degree)) {
-    if (
-      !alignment_check(
-        r,
-        glycan,
-        motif,
-        context = context,
-        alignment = alignment
-      )
-    ) {
-      return(FALSE)
-    }
-  }
-
-  # Residue check combines monosaccharide and substituent validation because
-  # built-in modifications such as NAc and 5Ac may be represented either in
-  # the mono name or in the sub attribute.
-  if (
-    !residue_check(
-      r,
-      glycan,
-      motif,
-      context = context,
-      strict_sub = strict_sub,
-      mode = mode
-    )
-  ) {
-    return(FALSE)
-  }
-
-  if (
-    !degree_check(
-      r,
-      glycan,
-      motif,
-      context = context,
-      match_degree = match_degree
-    )
-  ) {
-    return(FALSE)
-  }
-
-  # Only check linkages and anomer if linkages are not ignored
-  # These are the most expensive checks, so do them last
-  if (!ignore_linkages) {
-    if (!linkage_check(r, glycan, motif, context = context, mode = mode)) {
-      return(FALSE)
-    }
-    if (!anomer_check(r, glycan, motif, context = context, mode = mode)) {
-      return(FALSE)
-    }
-  }
-
-  return(TRUE)
-}
-
-
-#' Validate Residue Matching
-#'
-#' @param r A vector mapping motif vertices to glycan vertices.
-#' @param glycan A glycan graph.
-#' @param motif A motif graph.
-#' @param strict_sub Whether substituent matching should be strict.
-#' @param context A validation context.
-#'
-#' @return `TRUE` if all matched residues are compatible.
-#' @noRd
-residue_check <- function(
-  r,
-  glycan = NULL,
-  motif = NULL,
-  strict_sub,
-  mode = "strict",
-  context = NULL
-) {
-  if (!is.null(context)) {
-    glycan_monos <- context$glycan_mono[r]
-    motif_monos <- context$motif_mono
-    glycan_subs <- context$glycan_sub[r]
-    motif_subs <- context$motif_sub
-  } else {
-    glycan_monos <- graph_vertex_attr(glycan, "mono", r)
-    motif_monos <- graph_vertex_attr(motif, "mono")
-    glycan_subs <- graph_vertex_attr(glycan, "sub", r)
-    motif_subs <- graph_vertex_attr(motif, "sub")
-  }
-
-  purrr::every(seq_along(glycan_monos), function(i) {
-    match_residue(
-      glycan_monos[[i]],
-      glycan_subs[[i]],
-      motif_monos[[i]],
-      motif_subs[[i]],
-      strict_sub,
-      mode
-    )
-  })
-}
-
 #' Resolve Linkage Matching Mode
 #'
 #' @param glycan A glycan graph.
@@ -618,13 +393,12 @@ residue_check <- function(
 #' @param ignore_linkages Whether linkage matching should be ignored.
 #'
 #' @return One of three linkage modes:
-#'   * `"ignore"`: skip `linkage_check()` and `anomer_check()` because the
-#'     user requested `ignore_linkages = TRUE`, or because the motif has no
-#'     informative linkage constraints to enforce.
+#'   * `"ignore"`: skip linkage and anomer compatibility because the user
+#'     requested `ignore_linkages = TRUE`, or because the motif has no
+#'     informative constraints to enforce.
 #'   * `"none"`: return no matches before VF2 because the motif has informative
 #'     linkage constraints but the glycan has no informative linkages to match.
-#'   * `"check"`: run the normal VF2 candidate validation with linkage and
-#'     anomer checks enabled.
+#'   * `"check"`: enable linkage and anomer compatibility predicates in VF2.
 #' @noRd
 resolve_linkage_match_mode <- function(
   glycan,
@@ -652,93 +426,6 @@ resolve_linkage_match_mode <- function(
 
   "check"
 }
-
-alignment_check <- function(
-  r,
-  glycan = NULL,
-  motif = NULL,
-  alignment,
-  context = NULL
-) {
-  switch(
-    alignment,
-    "substructure" = TRUE,
-    "core" = {
-      if (is.null(context)) {
-        glycan_core <- core_node(glycan)
-        motif_core <- core_node(motif)
-        r[[motif_core]] == glycan_core
-      } else {
-        r[[context$motif_core]] == context$glycan_core
-      }
-    },
-    "terminal" = {
-      if (is.null(context)) {
-        glycan_terminals <- terminal_nodes(glycan)
-        motif_terminals <- terminal_nodes(motif)
-        all(r[motif_terminals] %in% glycan_terminals)
-      } else {
-        all(r[context$motif_terminals] %in% context$glycan_terminals)
-      }
-    },
-    "whole" = {
-      if (is.null(context)) {
-        glycan_v <- igraph::vcount(glycan)
-        motif_v <- igraph::vcount(motif)
-        glycan_e <- igraph::ecount(glycan)
-        motif_e <- igraph::ecount(motif)
-        motif_v == glycan_v &&
-          length(unique(r)) == glycan_v &&
-          motif_e == glycan_e
-      } else {
-        context$motif_v == context$glycan_v &&
-          length(unique(r)) == context$glycan_v &&
-          context$motif_e == context$glycan_e
-      }
-    }
-  )
-}
-
-
-#' Validate Degree Matching
-#'
-#' @param r A vector mapping motif vertices to glycan vertices.
-#' @param glycan A glycan graph.
-#' @param motif A motif graph.
-#' @param match_degree A logical vector indicating which motif nodes to enforce degree matching.
-#'
-#' @return `TRUE` if all selected nodes have matching in- and out-degrees.
-#' @noRd
-degree_check <- function(
-  r,
-  glycan = NULL,
-  motif = NULL,
-  match_degree,
-  context = NULL
-) {
-  if (is.null(match_degree) || !any(match_degree)) {
-    return(TRUE)
-  }
-
-  if (!is.null(context)) {
-    motif_in <- context$motif_in
-    motif_out <- context$motif_out
-    glycan_in <- context$glycan_in
-    glycan_out <- context$glycan_out
-  } else {
-    motif_in <- graph_degree(motif, mode = "in")
-    motif_out <- graph_degree(motif, mode = "out")
-    glycan_in <- graph_degree(glycan, mode = "in")
-    glycan_out <- graph_degree(glycan, mode = "out")
-  }
-
-  motif_idx <- which(match_degree)
-  all(purrr::map_lgl(motif_idx, function(i) {
-    g_idx <- r[[i]]
-    motif_in[[i]] == glycan_in[[g_idx]] && motif_out[[i]] == glycan_out[[g_idx]]
-  }))
-}
-
 
 match_sub <- function(glycan_sub, motif_sub, strict_sub, mode = "strict") {
   # Handle unstrict matching:
@@ -964,63 +651,6 @@ match_single_sub <- function(glycan_sub, motif_sub, mode = "strict") {
 }
 
 
-linkage_check <- function(
-  r,
-  glycan = NULL,
-  motif = NULL,
-  context = NULL,
-  mode = "strict"
-) {
-  if (is.null(context)) {
-    edges <- get_corresponding_edges(r, glycan, motif)
-    glycan_linkages <- edges$glycan$linkage
-    motif_linkages <- edges$motif$linkage
-  } else {
-    if (nrow(context$motif_edge_list) == 0) {
-      return(TRUE)
-    }
-
-    glycan_edge_list <- matrix(
-      r[as.vector(context$motif_edge_list)],
-      ncol = 2L
-    )
-    glycan_linkages <- context$glycan_edge_linkages[glycan_edge_list]
-    motif_linkages <- context$motif_linkages
-  }
-  for (i in seq_along(glycan_linkages)) {
-    if (
-      !match_linkage(glycan_linkages[[i]], motif_linkages[[i]], mode = mode)
-    ) {
-      return(FALSE)
-    }
-  }
-  return(TRUE)
-}
-
-
-get_corresponding_edges <- function(r, glycan, motif) {
-  motif_edge_list <- igraph::as_edgelist(motif, names = FALSE)
-
-  glycan_edge_ids <- purrr::map_int(
-    seq_len(nrow(motif_edge_list)),
-    function(i) {
-      motif_edge <- motif_edge_list[i, ] # c(node_id_1, node_id_2)
-      glycan_edge <- r[motif_edge]
-      # Convert igraph.vs to vector as get_edge_ids expects a simple vector
-      # This fix a bug introduced by igraph v2.2.0
-      igraph::get_edge_ids(glycan, as.vector(glycan_edge))
-    }
-  )
-
-  list(
-    glycan = list(
-      linkage = graph_edge_attr(glycan, "linkage", glycan_edge_ids)
-    ),
-    motif = list(linkage = graph_edge_attr(motif, "linkage"))
-  )
-}
-
-
 match_linkage <- function(glycan_linkage, motif_linkage, mode = "strict") {
   gl <- parse_linkage(glycan_linkage)
   ml <- parse_linkage(motif_linkage)
@@ -1074,44 +704,6 @@ parse_pos2 <- function(pos2) {
 }
 
 
-anomer_check <- function(
-  r,
-  glycan = NULL,
-  motif = NULL,
-  context = NULL,
-  mode = "strict"
-) {
-  if (is.null(context)) {
-    glycan_core <- core_node(glycan)
-    motif_core <- core_node(motif)
-    matched_g_node <- r[[motif_core]]
-
-    if (matched_g_node == glycan_core) {
-      # This means two cores are matched.
-      match_anomer(glycan$anomer, motif$anomer, mode = mode)
-    } else {
-      # The motif anomer should match a linkage in the glycan.
-      in_edge <- graph_incident_edge_ids(glycan, matched_g_node, mode = "in")
-      linkage <- graph_edge_attr(glycan, "linkage", in_edge)
-      linkage_anomer <- stringr::str_split_1(linkage, "-")[[1]]
-      match_anomer(linkage_anomer, motif$anomer, mode = mode)
-    }
-  } else {
-    matched_g_node <- r[[context$motif_core]]
-
-    if (matched_g_node == context$glycan_core) {
-      # This means two cores are matched.
-      match_anomer(context$glycan_anomer, context$motif_anomer, mode = mode)
-    } else {
-      # The motif anomer should match a linkage in the glycan.
-      linkage <- context$glycan_incoming_linkages[[matched_g_node]]
-      linkage_anomer <- stringr::str_split_1(linkage, "-")[[1]]
-      match_anomer(linkage_anomer, context$motif_anomer, mode = mode)
-    }
-  }
-}
-
-
 match_anomer <- function(glycan_anomer, motif_anomer, mode = "strict") {
   # Check if the anomer of the glycan and motif are matched.
   # - "??" in motif will match any anomer and position in glycan.
@@ -1141,12 +733,6 @@ parse_anomer <- function(anomer) {
     anomer = stringr::str_sub(anomer, 1, 1),
     pos = stringr::str_sub(anomer, 2)
   )
-}
-
-
-terminal_nodes <- function(glycan) {
-  out_degree <- graph_degree(glycan, mode = "out")
-  which(out_degree == 0)
 }
 
 

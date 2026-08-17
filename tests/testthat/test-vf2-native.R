@@ -97,45 +97,13 @@ test_that("native VF2 deduplicates motif automorphisms by mapped vertices", {
 })
 
 
-test_that("native VF2 preserves legacy mapping order", {
+test_that("native VF2 returns mappings in deterministic order", {
   glycan <- glyparse::parse_iupac_condensed(
     "Gal(a1-3)Gal(a1-4)Gal(a1-6)Gal(?1-"
   )
   motif <- glyparse::parse_iupac_condensed("Hex(?1-?)Hex(?1-")
   glycan_graph <- glyrepr::get_structure_graphs(glycan)
   motif_graph <- glyrepr::get_structure_graphs(motif)
-  colors <- colorize_graphs(glycan_graph, motif_graph)
-  candidates <- perform_vf2(
-    glycan_graph,
-    motif_graph,
-    colors$glycan_colors,
-    colors$motif_colors
-  )
-  context <- prepare_validation_context(
-    glycan_graph,
-    motif_graph,
-    alignment = "substructure",
-    ignore_linkages = FALSE
-  )
-  valid_mask <- vapply(
-    candidates,
-    function(candidate) {
-      is_valid_result(
-        candidate,
-        glycan = glycan_graph,
-        motif = motif_graph,
-        alignment = "substructure",
-        ignore_linkages = FALSE,
-        strict_sub = TRUE,
-        mode = "strict",
-        context = context
-      )
-    },
-    logical(1L)
-  )
-  valid <- candidates[valid_mask]
-  expected <- unique_vf2_res(valid)
-
   result <- perform_compatible_vf2(
     glycan_graph,
     motif_graph,
@@ -146,7 +114,7 @@ test_that("native VF2 preserves legacy mapping order", {
     mode = "strict"
   )
 
-  expect_identical(result, expected)
+  expect_identical(result, list(1:2, 2:3, 3:4))
 })
 
 

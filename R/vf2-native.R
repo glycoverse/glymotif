@@ -403,7 +403,7 @@ prepare_vf2_compatibility <- function(
   match_degree,
   mode
 ) {
-  context <- prepare_validation_context(
+  context <- prepare_vf2_context(
     glycan,
     motif,
     alignment = alignment,

@@ -34,34 +34,6 @@ test_that("integer graph helpers preserve igraph results", {
   )
 })
 
-test_that("integer VF2 mappings preserve mapping order", {
-  glycan <- glyparse::auto_parse(
-    "Gal(b1-3)[GlcNAc(a1-6)]GalNAc(a1-"
-  )
-  motif <- glyparse::auto_parse("Gal(b1-3)GalNAc(a1-")
-  glycan_graph <- glyrepr::get_structure_graphs(glycan)
-  motif_graph <- glyrepr::get_structure_graphs(motif)
-  colors <- colorize_graphs(glycan_graph, motif_graph)
-
-  expected <- igraph::graph.get.subisomorphisms.vf2(
-    glycan_graph,
-    motif_graph,
-    vertex.color1 = colors$glycan_colors,
-    vertex.color2 = colors$motif_colors
-  )
-  expected <- lapply(expected, as.integer)
-
-  expect_identical(
-    perform_vf2(
-      glycan_graph,
-      motif_graph,
-      colors$glycan_colors,
-      colors$motif_colors
-    ),
-    expected
-  )
-})
-
 test_that("structure levels preserve glyrepr classifications", {
   structures <- glyrepr::as_glycan_structure(c(
     intact = "Gal(b1-3)GalNAc(a1-",
