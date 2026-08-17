@@ -26,10 +26,14 @@ prepare_match_batch <- function(
     unlist(motif_monos, use.names = FALSE)
   ))
 
-  motif_key_modes <- purrr::map_chr(
+  motif_composition_profiles <- purrr::map(
     motif_graphs,
-    resolve_residue_key_mode,
+    new_motif_composition_profile,
     mode = mode
+  )
+  motif_key_modes <- purrr::map_chr(
+    motif_composition_profiles,
+    "key_mode"
   )
   base_keys <- if (any(motif_key_modes == "base")) {
     unique(residue_base_keys(exact_keys))
@@ -38,8 +42,8 @@ prepare_match_batch <- function(
   }
   generic_keys <- if (any(motif_key_modes == "generic")) {
     generic_key_vectors <- c(
-      purrr::map(glycan_monos, residue_match_keys, key_mode = "generic"),
-      purrr::map(motif_monos, residue_match_keys, key_mode = "generic")
+      purrr::map(glycan_monos, composition_residue_keys, key_mode = "generic"),
+      purrr::map(motif_monos, composition_residue_keys, key_mode = "generic")
     )
     unique(unlist(generic_key_vectors, use.names = FALSE))
   } else {
@@ -66,9 +70,7 @@ prepare_match_batch <- function(
       exact_keys = exact_keys,
       base_keys = base_keys,
       generic_keys = generic_keys,
-      key_mode = motif_key_modes[[.y]],
-      include_composition_profile = TRUE,
-      mode = mode
+      composition_profile = motif_composition_profiles[[.y]]
     )
   )
 
@@ -111,9 +113,7 @@ new_batch_graph_profile <- function(
   exact_keys,
   base_keys = NULL,
   generic_keys = NULL,
-  key_mode = "exact",
-  include_composition_profile = FALSE,
-  mode = "strict"
+  composition_profile = NULL
 ) {
   subs <- graph_vertex_attr(graph, "sub")
   native <- new_native_graph_profile(graph, monos = monos, subs = subs)
@@ -126,7 +126,7 @@ new_batch_graph_profile <- function(
   generic_ids <- if (is.null(generic_keys)) {
     NULL
   } else {
-    match(residue_match_keys(monos, "generic"), generic_keys)
+    match(composition_residue_keys(monos, "generic"), generic_keys)
   }
 
   list(
@@ -137,7 +137,6 @@ new_batch_graph_profile <- function(
     ecount = igraph::ecount(graph),
     core = native$core,
     has_linkages = graph_has_linkages(graph),
-    key_mode = key_mode,
     exact_counts = tabulate(exact_ids, nbins = length(exact_keys)),
     base_counts = if (is.null(base_ids)) {
       NULL
@@ -149,11 +148,7 @@ new_batch_graph_profile <- function(
     } else {
       tabulate(generic_ids, nbins = length(generic_keys))
     },
-    composition_profile = if (include_composition_profile) {
-      new_motif_composition_profile(graph, mode = mode)
-    } else {
-      NULL
-    },
+    composition_profile = composition_profile,
     native = native
   )
 }

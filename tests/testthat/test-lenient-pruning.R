@@ -61,7 +61,10 @@ test_that("plural lenient matching uses graph-local generic residue keys", {
 
   batch <- prepare_match_batch(glycans, motifs, mode = "lenient")
   expect_identical(
-    purrr::map_chr(batch$motif_profiles, "key_mode"),
+    purrr::map_chr(
+      batch$motif_profiles,
+      \(profile) profile$composition_profile$key_mode
+    ),
     c("none", "generic", "generic")
   )
 })

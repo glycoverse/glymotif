@@ -136,7 +136,7 @@ test_that("batch motif functions keep per-motif degree constraints", {
   )
 })
 
-test_that("batch profiles keep strict fuzzy modification colors", {
+test_that("batch profiles keep strict fuzzy composition keys", {
   glycans <- glyparse::parse_iupac_condensed(c(
     match = "Glc3Me6S(a1-",
     miss = "Glc4Me3S(a1-"
@@ -149,7 +149,10 @@ test_that("batch profiles keep strict fuzzy modification colors", {
   batch <- prepare_match_batch(glycans, motifs)
 
   expect_identical(
-    unname(purrr::map_chr(batch$motif_profiles, "key_mode")),
+    unname(purrr::map_chr(
+      batch$motif_profiles,
+      \(profile) profile$composition_profile$key_mode
+    )),
     c("base", "exact")
   )
   expect_identical(

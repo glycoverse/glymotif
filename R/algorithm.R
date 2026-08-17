@@ -6,24 +6,28 @@
 #' @return A list containing residue keys, required counts, and keying mode.
 #' @noRd
 new_motif_composition_profile <- function(motif, mode = "strict") {
-  key_mode <- resolve_residue_key_mode(motif, mode)
-  if (key_mode == "none") {
-    return(list(
-      keys = character(),
-      counts = integer(),
-      key_mode = key_mode
-    ))
+  fuzzy <- has_fuzzy_modification(motif)
+  motif_type <- graph_mono_type(motif)
+  key_mode <- if (mode == "lenient") {
+    if (fuzzy) "none" else "generic"
+  } else if (motif_type == "mixed") {
+    "none"
+  } else if (fuzzy) {
+    if (motif_type == "generic") "none" else "base"
+  } else if (motif_type == "generic") {
+    "generic"
+  } else {
+    "exact"
   }
 
-  motif_monos <- residue_match_keys(
+  motif_keys <- composition_residue_keys(
     graph_vertex_attr(motif, "mono"),
     key_mode
   )
-  keys <- unique(motif_monos)
-  counts <- tabulate(match(motif_monos, keys), nbins = length(keys))
+  keys <- unique(motif_keys)
   list(
     keys = keys,
-    counts = counts,
+    counts = tabulate(match(motif_keys, keys), nbins = length(keys)),
     key_mode = key_mode
   )
 }
@@ -65,62 +69,27 @@ composition_can_match <- function(
     ))
   }
 
-  glycan_monos <- residue_match_keys(
+  glycan_keys <- composition_residue_keys(
     graph_vertex_attr(glycan, "mono"),
     key_mode
   )
 
   glycan_counts <- tabulate(
-    match(glycan_monos, motif_profile$keys),
+    match(glycan_keys, motif_profile$keys),
     nbins = length(motif_profile$keys)
   )
   all(glycan_counts >= motif_profile$counts)
 }
 
 
-#' Resolve Residue Keys for Conservative VF2 Pruning
-#'
-#' @param motif A motif graph.
-#' @param mode Matching mode.
-#'
-#' @return One of `"exact"`, `"base"`, `"generic"`, or `"none"`.
-#' @noRd
-resolve_residue_key_mode <- function(motif, mode = "strict") {
-  fuzzy <- has_fuzzy_modification(motif)
-  if (mode == "lenient") {
-    if (fuzzy) {
-      return("none")
-    }
-    return("generic")
-  }
-
-  motif_type <- graph_mono_type(motif)
-  if (motif_type == "mixed") {
-    return("none")
-  }
-
-  if (fuzzy) {
-    if (motif_type == "generic") {
-      return("none")
-    }
-    return("base")
-  }
-
-  if (motif_type == "generic") {
-    return("generic")
-  }
-  "exact"
-}
-
-
-#' Create Residue Keys for Conservative VF2 Pruning
+#' Create Residue Keys for Composition Filtering
 #'
 #' @param monos A character vector of monosaccharide names from one graph.
 #' @param key_mode The residue keying mode.
 #'
 #' @return A character vector of residue keys.
 #' @noRd
-residue_match_keys <- function(monos, key_mode) {
+composition_residue_keys <- function(monos, key_mode) {
   switch(
     key_mode,
     exact = monos,
