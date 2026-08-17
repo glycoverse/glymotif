@@ -318,16 +318,11 @@ so the glycan "Neu5Ac9Ac" can match the motif "Neu5Ac".</p>
     </div>
     <div class="section level2">
     <h2 id="implementation">Implementation<a class="anchor" aria-label="anchor" href="#implementation"></a></h2>
-    <p>Under the hood, the function uses <code><a href="https://r.igraph.org/reference/subgraph_isomorphisms.html" class="external-link">igraph::graph.get.subisomorphisms.vf2()</a></code>
-to get all possible subgraph isomorphisms between <code>glycan</code> and <code>motif</code>.
-<code>color</code> vertex attributes are added to the graphs to distinguish monosaccharides.
-For all possible matches, the function checks the following:</p><ul><li><p>Alignment: using <code>alignment_check()</code></p></li>
-<li><p>Residues and substituents: using <code>residue_check()</code></p></li>
-<li><p>Degree: using <code>degree_check()</code> (only when <code>match_degree</code> is provided)</p></li>
-<li><p>Linkages: using <code>linkage_check()</code></p></li>
-<li><p>Anomer: using <code>anomer_check()</code>
-The function returns <code>TRUE</code> if any of the matches pass all checks.</p></li>
-</ul></div>
+    <p>Under the hood, the function uses Boost Graph's VF2 subgraph monomorphism
+algorithm. Custom vertex and edge compatibility predicates enforce residue,
+substituent, linkage, anomer, alignment, and degree constraints during the
+search. The function returns <code>TRUE</code> as soon as a compatible mapping is found.</p>
+    </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
     <div class="dont-index"><p><code><a href="count_motif.html">count_motif()</a></code>, <code><a href="count_motif.html">count_motifs()</a></code>, <code><a href="https://glycoverse.github.io/glyparse/reference/auto_parse.html" class="external-link">glyparse::auto_parse()</a></code></p></div>

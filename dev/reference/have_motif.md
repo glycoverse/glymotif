@@ -367,23 +367,11 @@ motif, so the glycan "Neu5Ac9Ac" can match the motif "Neu5Ac".
 
 ## Implementation
 
-Under the hood, the function uses
-[`igraph::graph.get.subisomorphisms.vf2()`](https://r.igraph.org/reference/subgraph_isomorphisms.html)
-to get all possible subgraph isomorphisms between `glycan` and `motif`.
-`color` vertex attributes are added to the graphs to distinguish
-monosaccharides. For all possible matches, the function checks the
-following:
-
-- Alignment: using `alignment_check()`
-
-- Residues and substituents: using `residue_check()`
-
-- Degree: using `degree_check()` (only when `match_degree` is provided)
-
-- Linkages: using `linkage_check()`
-
-- Anomer: using `anomer_check()` The function returns `TRUE` if any of
-  the matches pass all checks.
+Under the hood, the function uses Boost Graph's VF2 subgraph
+monomorphism algorithm. Custom vertex and edge compatibility predicates
+enforce residue, substituent, linkage, anomer, alignment, and degree
+constraints during the search. The function returns `TRUE` as soon as a
+compatible mapping is found.
 
 ## See also
 
