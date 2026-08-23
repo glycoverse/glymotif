@@ -21,7 +21,7 @@ Monosaccharides, linkages, and substituents are all considered."><meta property=
 
     <a class="navbar-brand me-2" href="../index.html">glymotif</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.18.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.19.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -69,7 +69,8 @@ Monosaccharides, linkages, and substituents are all considered.</p>
 <span>  ignore_linkages <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  strict_sub <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  match_degree <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  mode <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"strict"</span>, <span class="st">"lenient"</span><span class="op">)</span></span>
+<span>  mode <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"strict"</span>, <span class="st">"lenient"</span><span class="op">)</span>,</span>
+<span>  strict_floating <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">have_motifs</span><span class="op">(</span></span>
@@ -80,7 +81,8 @@ Monosaccharides, linkages, and substituents are all considered.</p>
 <span>  ignore_linkages <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  strict_sub <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  match_degree <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  mode <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"strict"</span>, <span class="st">"lenient"</span><span class="op">)</span></span>
+<span>  mode <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"strict"</span>, <span class="st">"lenient"</span><span class="op">)</span>,</span>
+<span>  strict_floating <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -144,6 +146,13 @@ obscure fields as compatible with more specific motif fields while still
 rejecting concrete mismatches.</p></dd>
 
 
+<dt id="arg-strict-floating">strict_floating<a class="anchor" aria-label="anchor" href="#arg-strict-floating"></a></dt>
+<dd><p>A logical value. If <code>TRUE</code> (default), a motif is
+present only when it occurs in every conflict-free localization of any
+floating glycan parts or substituents. If <code>FALSE</code>, a motif is present when
+it occurs in at least one possible localization.</p></dd>
+
+
 <dt id="arg-motifs">motifs<a class="anchor" aria-label="anchor" href="#arg-motifs"></a></dt>
 <dd><p>One of:</p><ul><li><p>A <code><a href="https://glycoverse.github.io/glyrepr/reference/glycan_structure.html" class="external-link">glyrepr::glycan_structure()</a></code> vector.</p></li>
 <li><p>A glycan structure string vector, supported by <code><a href="https://glycoverse.github.io/glyparse/reference/auto_parse.html" class="external-link">glyparse::auto_parse()</a></code>.</p></li>
@@ -177,20 +186,24 @@ The row names are the glycan names, and the column names are the motif names.</p
 </ol></div>
     <div class="section level2">
     <h2 id="monosaccharide-type">Monosaccharide type<a class="anchor" aria-label="anchor" href="#monosaccharide-type"></a></h2>
-    <p>As of glyrepr 0.9.0.9000, all elements in a <code>glycans</code> or <code>motifs</code> vector
-must have the same monosaccharide type ("concrete" or "generic").
-This invariant is enforced when creating or combining <code>glyrepr_structure</code> objects.
-The matching rules are:</p><ul><li><p>When the motif is "generic", glycans are converted to "generic" type for comparison,
-allowing both concrete and generic glycans to match generic motifs.</p></li>
-<li><p>When the motif is "concrete", glycans are used as-is, so only concrete glycans
-with matching monosaccharide names will match, while generic glycans will not match.</p></li>
-</ul><p>Examples:</p><ul><li><p><code>Man</code> (concrete glycan) vs <code>Hex</code> (generic motif) → TRUE (Man converted to Hex for comparison)</p></li>
-<li><p><code>Hex</code> (generic glycan) vs <code>Man</code> (concrete motif) → FALSE (names don't match)</p></li>
-<li><p><code>Man</code> (concrete glycan) vs <code>Man</code> (concrete motif) → TRUE (exact match)</p></li>
-<li><p><code>Hex</code> (generic glycan) vs <code>Hex</code> (generic motif) → TRUE (exact match)</p></li>
-</ul><p>With <code>mode = "lenient"</code>, generic glycan residues can match compatible
-concrete motif residues. For example, <code>Hex</code> can match a <code>Gal</code> motif residue,
-but <code>HexNAc</code> still cannot match <code>Gal</code>.</p>
+    <p>Glycans and motifs can each contain concrete residues, generic residues, or
+a mixture of both. Structure vectors can likewise combine concrete, generic,
+and mixed elements. Matching is performed residue by residue for every
+glycan-motif pair; structures are not converted as a whole.</p>
+<p>In the default strict mode:</p><ul><li><p>Concrete glycan residues match the same concrete motif residue.</p></li>
+<li><p>Concrete glycan residues also match compatible generic motif residues.</p></li>
+<li><p>Generic glycan residues do not match concrete motif residues.</p></li>
+<li><p>Generic glycan residues match the same generic motif residue.</p></li>
+<li><p>Concrete residues with different identities never match.</p></li>
+</ul><p>Examples:</p><ul><li><p><code>Man</code> (concrete glycan) vs <code>Hex</code> (generic motif) → TRUE</p></li>
+<li><p><code>Hex</code> (generic glycan) vs <code>Man</code> (concrete motif) → FALSE</p></li>
+<li><p><code>Man</code> (concrete glycan) vs <code>Man</code> (concrete motif) → TRUE</p></li>
+<li><p><code>Hex</code> (generic glycan) vs <code>Hex</code> (generic motif) → TRUE</p></li>
+<li><p><code>Gal(b1-3)GalNAc</code> (concrete glycan) vs <code>Hex(b1-3)GalNAc</code>
+(mixed motif) → TRUE</p></li>
+</ul><p>With <code>mode = "lenient"</code>, compatibility becomes bidirectional: generic glycan
+residues can also match compatible concrete motif residues. For example,
+<code>Hex</code> can match a <code>Gal</code> motif residue, but <code>HexNAc</code> still cannot match <code>Gal</code>.</p>
     </div>
     <div class="section level2">
     <h2 id="linkages">Linkages<a class="anchor" aria-label="anchor" href="#linkages"></a></h2>
@@ -222,6 +235,25 @@ specific motif fields. In the lenient mode,
 glycan "Gal(?1-?)GalNAc(?1-" matches motif "Gal(b1-3)GalNAc(a1-".
 Concrete mismatches still fail: for example,
 glycan "Gal(?1-6)GalNAc(a1-" does not match motif "Gal(b1-3)GalNAc(a1-".</p>
+    </div>
+    <div class="section level2">
+    <h2 id="floating-parts-and-substituents">Floating parts and substituents<a class="anchor" aria-label="anchor" href="#floating-parts-and-substituents"></a></h2>
+    <p>Glycans with unresolved floating parts or substituents are matched across
+every conflict-free localization allowed by their candidate-parent domains.
+<code>strict_floating = TRUE</code> requires a match in every localization, while
+<code>strict_floating = FALSE</code> requires a match in at least one localization.
+This setting is independent of <code>mode</code>, which controls residue and linkage
+obscurity.</p>
+<p><code><a href="count_motif.html">count_motif()</a></code> and <code><a href="count_motif.html">count_motifs()</a></code> return the minimum count across
+localizations in strict-floating mode and the maximum count otherwise.
+<code><a href="match_motif.html">match_motif()</a></code> and <code><a href="match_motif.html">match_motifs()</a></code> return the union of node mappings from
+every localization, using node indices from the original unresolved
+structure.</p>
+<p>Motifs must be connected structures and therefore cannot themselves contain
+unresolved floating parts or substituents.</p>
+<p>Matching supports up to 256 raw candidate-parent combinations per glycan.
+Localize floating parts and substituents with
+<code><a href="https://glycoverse.github.io/glyrepr/reference/localize_floating_parts.html" class="external-link">glyrepr::localize_floating_parts()</a></code> first for larger domains.</p>
     </div>
     <div class="section level2">
     <h2 id="alignment">Alignment<a class="anchor" aria-label="anchor" href="#alignment"></a></h2>
@@ -286,16 +318,11 @@ so the glycan "Neu5Ac9Ac" can match the motif "Neu5Ac".</p>
     </div>
     <div class="section level2">
     <h2 id="implementation">Implementation<a class="anchor" aria-label="anchor" href="#implementation"></a></h2>
-    <p>Under the hood, the function uses <code><a href="https://r.igraph.org/reference/subgraph_isomorphisms.html" class="external-link">igraph::graph.get.subisomorphisms.vf2()</a></code>
-to get all possible subgraph isomorphisms between <code>glycan</code> and <code>motif</code>.
-<code>color</code> vertex attributes are added to the graphs to distinguish monosaccharides.
-For all possible matches, the function checks the following:</p><ul><li><p>Alignment: using <code>alignment_check()</code></p></li>
-<li><p>Residues and substituents: using <code>residue_check()</code></p></li>
-<li><p>Degree: using <code>degree_check()</code> (only when <code>match_degree</code> is provided)</p></li>
-<li><p>Linkages: using <code>linkage_check()</code></p></li>
-<li><p>Anomer: using <code>anomer_check()</code>
-The function returns <code>TRUE</code> if any of the matches pass all checks.</p></li>
-</ul></div>
+    <p>Under the hood, the function uses Boost Graph's VF2 subgraph monomorphism
+algorithm. Custom vertex and edge compatibility predicates enforce residue,
+substituent, linkage, anomer, alignment, and degree constraints during the
+search. The function returns <code>TRUE</code> as soon as a compatible mapping is found.</p>
+    </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
     <div class="dont-index"><p><code><a href="count_motif.html">count_motif()</a></code>, <code><a href="count_motif.html">count_motifs()</a></code>, <code><a href="https://glycoverse.github.io/glyparse/reference/auto_parse.html" class="external-link">glyparse::auto_parse()</a></code></p></div>

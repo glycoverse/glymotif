@@ -19,7 +19,8 @@ for package code that already has compatible igraph objects from
   ignore_linkages = FALSE,
   strict_sub = TRUE,
   match_degree = NULL,
-  mode = c("strict", "lenient")
+  mode = c("strict", "lenient"),
+  strict_floating = TRUE
 )
 
 .g_count_motif(
@@ -30,7 +31,8 @@ for package code that already has compatible igraph objects from
   ignore_linkages = FALSE,
   strict_sub = TRUE,
   match_degree = NULL,
-  mode = c("strict", "lenient")
+  mode = c("strict", "lenient"),
+  strict_floating = TRUE
 )
 
 .g_match_motif(
@@ -85,6 +87,13 @@ for package code that already has compatible igraph objects from
   treats glycan-side unknowns as compatible with more specific motif
   fields.
 
+- strict_floating:
+
+  A logical scalar. For `.g_have_motif()`, `TRUE` requires the motif in
+  every possible floating localization and `FALSE` requires it in at
+  least one. For `.g_count_motif()`, `TRUE` returns the minimum count
+  across localizations and `FALSE` returns the maximum.
+
 ## Value
 
 - `.g_have_motif()` returns a logical scalar.
@@ -95,15 +104,18 @@ for package code that already has compatible igraph objects from
 
 ## Details
 
-These functions do no validation, parsing, naming, or
-monosaccharide-type conversion. Callers must provide valid,
-already-compatible graph objects. In strict mode, when matching a
-generic motif graph, callers must pass a glycan graph whose `mono`
-vertex attributes have already been converted to the compatible generic
-representation.
+These functions do no validation, parsing, naming, or graph mutation.
+Callers must provide valid graph objects. Residue compatibility follows
+the high-level matching rules, including generic and mixed motif
+residues.
 
 These functions never call
 [`glyrepr::as_glycan_structure()`](https://glycoverse.github.io/glyrepr/reference/as_glycan_structure.html).
+
+Glycan graphs with unresolved floating parts or substituents are matched
+across all conflict-free localizations. `.g_match_motif()` returns the
+union of mappings from every localization, with node indices referring
+to the original unresolved graph.
 
 ## See also
 

@@ -20,7 +20,8 @@ count_motif(
   ignore_linkages = FALSE,
   strict_sub = TRUE,
   match_degree = NULL,
-  mode = c("strict", "lenient")
+  mode = c("strict", "lenient"),
+  strict_floating = TRUE
 )
 
 count_motifs(
@@ -31,7 +32,8 @@ count_motifs(
   ignore_linkages = FALSE,
   strict_sub = TRUE,
   match_degree = NULL,
-  mode = c("strict", "lenient")
+  mode = c("strict", "lenient"),
+  strict_floating = TRUE
 )
 ```
 
@@ -110,6 +112,13 @@ count_motifs(
   cannot be more obscure than motifs. `"lenient"` treats glycan-side
   obscure fields as compatible with more specific motif fields while
   still rejecting concrete mismatches.
+
+- strict_floating:
+
+  A logical value. If `TRUE` (default), a motif is present only when it
+  occurs in every conflict-free localization of any floating glycan
+  parts or substituents. If `FALSE`, a motif is present when it occurs
+  in at least one possible localization.
 
 - motifs:
 
@@ -210,6 +219,31 @@ Motif names have the following rules:
 
 3.  Otherwise, no colnames.
 
+## Floating parts and substituents
+
+Glycans with unresolved floating parts or substituents are matched
+across every conflict-free localization allowed by their
+candidate-parent domains. `strict_floating = TRUE` requires a match in
+every localization, while `strict_floating = FALSE` requires a match in
+at least one localization. This setting is independent of `mode`, which
+controls residue and linkage obscurity.
+
+`count_motif()` and `count_motifs()` return the minimum count across
+localizations in strict-floating mode and the maximum count otherwise.
+[`match_motif()`](https://glycoverse.github.io/glymotif/reference/match_motif.md)
+and
+[`match_motifs()`](https://glycoverse.github.io/glymotif/reference/match_motif.md)
+return the union of node mappings from every localization, using node
+indices from the original unresolved structure.
+
+Motifs must be connected structures and therefore cannot themselves
+contain unresolved floating parts or substituents.
+
+Matching supports up to 256 raw candidate-parent combinations per
+glycan. Localize floating parts and substituents with
+[`glyrepr::localize_floating_parts()`](https://glycoverse.github.io/glyrepr/reference/localize_floating_parts.html)
+first for larger domains.
+
 ## See also
 
 [`have_motif()`](https://glycoverse.github.io/glymotif/reference/have_motif.md),
@@ -247,18 +281,15 @@ print(result)
 #> Man(b1-?)[Man(b1-?)]GalNAc(b1-4)GlcNAc(b1-    0    0    2
 
 # Monosaccharide type matching examples
-# Concrete glycan vs generic motif: matches (glycan converted to generic)
+# Concrete glycan vs generic motif: compatible residues match
 count_motif("Man(?1-", "Hex(?1-") # Returns 1
 #> [1] 1
 
 # Generic glycan vs concrete motif: doesn't match
 count_motif("Hex(?1-", "Man(?1-") # Returns 0
-#> Warning: Matching lower-level `glycans` against higher-level `motifs` usually returns no
-#> matches.
-#> ℹ `glycans` have "basic" structure level, while `motifs` have "partial"
-#>   structure level.
-#> ℹ Use motifs at the same structure level as the glycans, or reduce motif
-#>   structure levels before matching.
-#> ℹ See `?get_structure_level` for details.
+#> Warning: Matching generic `glycans` against concrete `motifs` always returns no matches
+#> in strict mode.
+#> ℹ Convert motifs with `glyrepr::convert_to_generic()`, or use `mode =
+#>   "lenient"` when generic identities should match their concrete counterparts.
 #> [1] 0
 ```

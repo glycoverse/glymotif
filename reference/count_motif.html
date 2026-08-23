@@ -19,7 +19,7 @@ count_motifs() counts multiple motifs in multiple glycans
 
     <a class="navbar-brand me-2" href="../index.html">glymotif</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.18.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.19.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -66,7 +66,8 @@ the <code>glycans</code> have the <code>motif</code>(s).</p><ul><li><p><code>cou
 <span>  ignore_linkages <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  strict_sub <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  match_degree <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  mode <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"strict"</span>, <span class="st">"lenient"</span><span class="op">)</span></span>
+<span>  mode <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"strict"</span>, <span class="st">"lenient"</span><span class="op">)</span>,</span>
+<span>  strict_floating <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">count_motifs</span><span class="op">(</span></span>
@@ -77,7 +78,8 @@ the <code>glycans</code> have the <code>motif</code>(s).</p><ul><li><p><code>cou
 <span>  ignore_linkages <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  strict_sub <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  match_degree <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  mode <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"strict"</span>, <span class="st">"lenient"</span><span class="op">)</span></span>
+<span>  mode <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"strict"</span>, <span class="st">"lenient"</span><span class="op">)</span>,</span>
+<span>  strict_floating <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -141,6 +143,13 @@ obscure fields as compatible with more specific motif fields while still
 rejecting concrete mismatches.</p></dd>
 
 
+<dt id="arg-strict-floating">strict_floating<a class="anchor" aria-label="anchor" href="#arg-strict-floating"></a></dt>
+<dd><p>A logical value. If <code>TRUE</code> (default), a motif is
+present only when it occurs in every conflict-free localization of any
+floating glycan parts or substituents. If <code>FALSE</code>, a motif is present when
+it occurs in at least one possible localization.</p></dd>
+
+
 <dt id="arg-motifs">motifs<a class="anchor" aria-label="anchor" href="#arg-motifs"></a></dt>
 <dd><p>One of:</p><ul><li><p>A <code><a href="https://glycoverse.github.io/glyrepr/reference/glycan_structure.html" class="external-link">glyrepr::glycan_structure()</a></code> vector.</p></li>
 <li><p>A glycan structure string vector, supported by <code><a href="https://glycoverse.github.io/glyparse/reference/auto_parse.html" class="external-link">glyparse::auto_parse()</a></code>.</p></li>
@@ -201,6 +210,25 @@ The row names are the glycan names, and the column names are the motif names.</p
 <li><p>Otherwise, no colnames.</p></li>
 </ol></div>
     <div class="section level2">
+    <h2 id="floating-parts-and-substituents">Floating parts and substituents<a class="anchor" aria-label="anchor" href="#floating-parts-and-substituents"></a></h2>
+    <p>Glycans with unresolved floating parts or substituents are matched across
+every conflict-free localization allowed by their candidate-parent domains.
+<code>strict_floating = TRUE</code> requires a match in every localization, while
+<code>strict_floating = FALSE</code> requires a match in at least one localization.
+This setting is independent of <code>mode</code>, which controls residue and linkage
+obscurity.</p>
+<p><code>count_motif()</code> and <code>count_motifs()</code> return the minimum count across
+localizations in strict-floating mode and the maximum count otherwise.
+<code><a href="match_motif.html">match_motif()</a></code> and <code><a href="match_motif.html">match_motifs()</a></code> return the union of node mappings from
+every localization, using node indices from the original unresolved
+structure.</p>
+<p>Motifs must be connected structures and therefore cannot themselves contain
+unresolved floating parts or substituents.</p>
+<p>Matching supports up to 256 raw candidate-parent combinations per glycan.
+Localize floating parts and substituents with
+<code><a href="https://glycoverse.github.io/glyrepr/reference/localize_floating_parts.html" class="external-link">glyrepr::localize_floating_parts()</a></code> first for larger domains.</p>
+    </div>
+    <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
     <div class="dont-index"><p><code><a href="have_motif.html">have_motif()</a></code>, <code><a href="have_motif.html">have_motifs()</a></code></p></div>
     </div>
@@ -236,19 +264,16 @@ The row names are the glycan names, and the column names are the motif names.</p
 <span class="r-out co"><span class="r-pr">#&gt;</span> Man(b1-?)[Man(b1-?)]GalNAc(b1-4)GlcNAc(b1-    0    0    2</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Monosaccharide type matching examples</span></span></span>
-<span class="r-in"><span><span class="co"># Concrete glycan vs generic motif: matches (glycan converted to generic)</span></span></span>
+<span class="r-in"><span><span class="co"># Concrete glycan vs generic motif: compatible residues match</span></span></span>
 <span class="r-in"><span><span class="fu">count_motif</span><span class="op">(</span><span class="st">"Man(?1-"</span>, <span class="st">"Hex(?1-"</span><span class="op">)</span> <span class="co"># Returns 1</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 1</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Generic glycan vs concrete motif: doesn't match</span></span></span>
 <span class="r-in"><span><span class="fu">count_motif</span><span class="op">(</span><span class="st">"Hex(?1-"</span>, <span class="st">"Man(?1-"</span><span class="op">)</span> <span class="co"># Returns 0</span></span></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Matching lower-level `glycans` against higher-level `motifs` usually returns no</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> matches.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> `glycans` have <span style="color: #0000BB;">"basic"</span> structure level, while `motifs` have <span style="color: #0000BB;">"partial"</span></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span>   structure level.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Use motifs at the same structure level as the glycans, or reduce motif</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span>   structure levels before matching.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> See `?get_structure_level` for details.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Matching generic `glycans` against concrete `motifs` always returns no matches</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> in strict mode.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Convert motifs with `glyrepr::convert_to_generic()`, or use `mode =</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span>   "lenient"` when generic identities should match their concrete counterparts.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>

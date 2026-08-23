@@ -202,20 +202,17 @@ have_motif("Gal(??-?)GalNAc(??-", "Gal(a1-6)GalNAc(a1-")
 #> matches.
 #> ℹ `glycans` have "topological" structure level, while `motifs` have "intact"
 #>   structure level.
-#> ℹ Use motifs at the same structure level as the glycans, or reduce motif
-#>   structure levels before matching.
+#> ℹ Use motifs at the same structure level as the glycans, or remove motif
+#>   linkage constraints with `glyrepr::remove_linkages()`.
 #> ℹ See `?get_structure_level` for details.
 #> [1] FALSE
 
 # Generic monosaccharides won't match specific ones
 have_motif("Hex(a1-6)HexNAc(a1-", "Gal(a1-6)GalNAc(a1-")
-#> Warning: Matching lower-level `glycans` against higher-level `motifs` usually returns no
-#> matches.
-#> ℹ `glycans` have "basic" structure level, while `motifs` have "intact"
-#>   structure level.
-#> ℹ Use motifs at the same structure level as the glycans, or reduce motif
-#>   structure levels before matching.
-#> ℹ See `?get_structure_level` for details.
+#> Warning: Matching generic `glycans` against concrete `motifs` always returns no matches
+#> in strict mode.
+#> ℹ Convert motifs with `glyrepr::convert_to_generic()`, or use `mode =
+#>   "lenient"` when generic identities should match their concrete counterparts.
 #> [1] FALSE
 ```
 
@@ -236,7 +233,7 @@ to help you with this task.
 
 # get_structure_level() expects a glycan structure vector
 get_structure_level(as_glycan_structure(c("Gal(??-?)GalNAc(??-", "Gal(a1-6)GalNAc(a1-")))
-#> [1] "partial"
+#> [1] "topological" "intact"
 ```
 
 There are four structure levels:
@@ -267,8 +264,8 @@ have_motif("Gal(??-?)GalNAc(??-", "Gal(a1-6)GalNAc(a1-", ignore_linkages = TRUE)
 #> matches.
 #> ℹ `glycans` have "topological" structure level, while `motifs` have "intact"
 #>   structure level.
-#> ℹ Use motifs at the same structure level as the glycans, or reduce motif
-#>   structure levels before matching.
+#> ℹ Use motifs at the same structure level as the glycans, or remove motif
+#>   linkage constraints with `glyrepr::remove_linkages()`.
 #> ℹ See `?get_structure_level` for details.
 #> [1] TRUE
 ```

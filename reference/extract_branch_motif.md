@@ -51,7 +51,8 @@ extract_branch_motif(glycans, ..., including_core = FALSE)
   A logical scalar. If `TRUE`, the N-glycan core structure
   (`Man(??-?)Man(??-?)GlcNAc(??-?)GlcNAc(??-` or
   `Hex(??-?)Hex(??-?)HexNAc(??-?)HexNAc(??-`) is appended to each branch
-  motif. Default is `FALSE`.
+  motif. Concrete branches receive a concrete core; generic and mixed
+  branches receive a generic core. Default is `FALSE`.
 
 ## Value
 

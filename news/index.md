@@ -1,5 +1,36 @@
 # Changelog
 
+## glymotif 0.19.0
+
+### New features
+
+- [`have_motif()`](https://glycoverse.github.io/glymotif/reference/have_motif.md),
+  [`count_motif()`](https://glycoverse.github.io/glymotif/reference/count_motif.md),
+  [`match_motif()`](https://glycoverse.github.io/glymotif/reference/match_motif.md),
+  and their plural and graph-level variants now support glycans with
+  unresolved floating parts and substituents; `strict_floating` selects
+  all-localization or any-localization aggregation for logical and count
+  results, while graph-level mappings preserve original node indices.
+  ([\#56](https://github.com/glycoverse/glymotif/issues/56))
+
+- Motif matching and branch extraction now support mixed generic and
+  concrete residues within structures and across vectors, using
+  residue-wise matching semantics.
+  ([\#55](https://github.com/glycoverse/glymotif/issues/55))
+
+### Improvements
+
+- [`have_motif()`](https://glycoverse.github.io/glymotif/reference/have_motif.md),
+  [`count_motif()`](https://glycoverse.github.io/glymotif/reference/count_motif.md),
+  [`match_motif()`](https://glycoverse.github.io/glymotif/reference/match_motif.md),
+  and their plural and graph-level variants now prune incompatible
+  residues, substituents, linkages, anomers, alignments, and degrees
+  during graph search, substantially reducing work for mixed and
+  wildcard-rich motifs.
+  ([\#57](https://github.com/glycoverse/glymotif/issues/57))
+
+## glymotif 0.18.1
+
 ## glymotif 0.18.0
 
 ### Breaking changes

@@ -21,7 +21,8 @@ have_motif(
   ignore_linkages = FALSE,
   strict_sub = TRUE,
   match_degree = NULL,
-  mode = c("strict", "lenient")
+  mode = c("strict", "lenient"),
+  strict_floating = TRUE
 )
 
 have_motifs(
@@ -32,7 +33,8 @@ have_motifs(
   ignore_linkages = FALSE,
   strict_sub = TRUE,
   match_degree = NULL,
-  mode = c("strict", "lenient")
+  mode = c("strict", "lenient"),
+  strict_floating = TRUE
 )
 ```
 
@@ -112,6 +114,13 @@ have_motifs(
   obscure fields as compatible with more specific motif fields while
   still rejecting concrete mismatches.
 
+- strict_floating:
+
+  A logical value. If `TRUE` (default), a motif is present only when it
+  occurs in every conflict-free localization of any floating glycan
+  parts or substituents. If `FALSE`, a motif is present when it occurs
+  in at least one possible localization.
+
 - motifs:
 
   One of:
@@ -167,34 +176,40 @@ Motif names have the following rules:
 
 ## Monosaccharide type
 
-As of glyrepr 0.9.0.9000, all elements in a `glycans` or `motifs` vector
-must have the same monosaccharide type ("concrete" or "generic"). This
-invariant is enforced when creating or combining `glyrepr_structure`
-objects. The matching rules are:
+Glycans and motifs can each contain concrete residues, generic residues,
+or a mixture of both. Structure vectors can likewise combine concrete,
+generic, and mixed elements. Matching is performed residue by residue
+for every glycan-motif pair; structures are not converted as a whole.
 
-- When the motif is "generic", glycans are converted to "generic" type
-  for comparison, allowing both concrete and generic glycans to match
-  generic motifs.
+In the default strict mode:
 
-- When the motif is "concrete", glycans are used as-is, so only concrete
-  glycans with matching monosaccharide names will match, while generic
-  glycans will not match.
+- Concrete glycan residues match the same concrete motif residue.
+
+- Concrete glycan residues also match compatible generic motif residues.
+
+- Generic glycan residues do not match concrete motif residues.
+
+- Generic glycan residues match the same generic motif residue.
+
+- Concrete residues with different identities never match.
 
 Examples:
 
-- `Man` (concrete glycan) vs `Hex` (generic motif) → TRUE (Man converted
-  to Hex for comparison)
+- `Man` (concrete glycan) vs `Hex` (generic motif) → TRUE
 
-- `Hex` (generic glycan) vs `Man` (concrete motif) → FALSE (names don't
-  match)
+- `Hex` (generic glycan) vs `Man` (concrete motif) → FALSE
 
-- `Man` (concrete glycan) vs `Man` (concrete motif) → TRUE (exact match)
+- `Man` (concrete glycan) vs `Man` (concrete motif) → TRUE
 
-- `Hex` (generic glycan) vs `Hex` (generic motif) → TRUE (exact match)
+- `Hex` (generic glycan) vs `Hex` (generic motif) → TRUE
 
-With `mode = "lenient"`, generic glycan residues can match compatible
-concrete motif residues. For example, `Hex` can match a `Gal` motif
-residue, but `HexNAc` still cannot match `Gal`.
+- `Gal(b1-3)GalNAc` (concrete glycan) vs `Hex(b1-3)GalNAc` (mixed motif)
+  → TRUE
+
+With `mode = "lenient"`, compatibility becomes bidirectional: generic
+glycan residues can also match compatible concrete motif residues. For
+example, `Hex` can match a `Gal` motif residue, but `HexNAc` still
+cannot match `Gal`.
 
 ## Linkages
 
@@ -234,6 +249,34 @@ specific motif fields. In the lenient mode, glycan "Gal(?1-?)GalNAc(?1-"
 matches motif "Gal(b1-3)GalNAc(a1-". Concrete mismatches still fail: for
 example, glycan "Gal(?1-6)GalNAc(a1-" does not match motif
 "Gal(b1-3)GalNAc(a1-".
+
+## Floating parts and substituents
+
+Glycans with unresolved floating parts or substituents are matched
+across every conflict-free localization allowed by their
+candidate-parent domains. `strict_floating = TRUE` requires a match in
+every localization, while `strict_floating = FALSE` requires a match in
+at least one localization. This setting is independent of `mode`, which
+controls residue and linkage obscurity.
+
+[`count_motif()`](https://glycoverse.github.io/glymotif/reference/count_motif.md)
+and
+[`count_motifs()`](https://glycoverse.github.io/glymotif/reference/count_motif.md)
+return the minimum count across localizations in strict-floating mode
+and the maximum count otherwise.
+[`match_motif()`](https://glycoverse.github.io/glymotif/reference/match_motif.md)
+and
+[`match_motifs()`](https://glycoverse.github.io/glymotif/reference/match_motif.md)
+return the union of node mappings from every localization, using node
+indices from the original unresolved structure.
+
+Motifs must be connected structures and therefore cannot themselves
+contain unresolved floating parts or substituents.
+
+Matching supports up to 256 raw candidate-parent combinations per
+glycan. Localize floating parts and substituents with
+[`glyrepr::localize_floating_parts()`](https://glycoverse.github.io/glyrepr/reference/localize_floating_parts.html)
+first for larger domains.
 
 ## Alignment
 
@@ -324,23 +367,11 @@ motif, so the glycan "Neu5Ac9Ac" can match the motif "Neu5Ac".
 
 ## Implementation
 
-Under the hood, the function uses
-[`igraph::graph.get.subisomorphisms.vf2()`](https://r.igraph.org/reference/subgraph_isomorphisms.html)
-to get all possible subgraph isomorphisms between `glycan` and `motif`.
-`color` vertex attributes are added to the graphs to distinguish
-monosaccharides. For all possible matches, the function checks the
-following:
-
-- Alignment: using `alignment_check()`
-
-- Residues and substituents: using `residue_check()`
-
-- Degree: using `degree_check()` (only when `match_degree` is provided)
-
-- Linkages: using `linkage_check()`
-
-- Anomer: using `anomer_check()` The function returns `TRUE` if any of
-  the matches pass all checks.
+Under the hood, the function uses Boost Graph's VF2 subgraph
+monomorphism algorithm. Custom vertex and edge compatibility predicates
+enforce residue, substituent, linkage, anomer, alignment, and degree
+constraints during the search. The function returns `TRUE` as soon as a
+compatible mapping is found.
 
 ## See also
 

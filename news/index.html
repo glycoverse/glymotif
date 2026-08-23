@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">glymotif</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.18.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.19.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -36,6 +36,22 @@
       <small>Source: <a href="https://github.com/glycoverse/glymotif/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.19.0" id="glymotif-0190">glymotif 0.19.0<a class="anchor" aria-label="anchor" href="#glymotif-0190"></a></h2>
+<div class="section level3">
+<h3 id="new-features-0-19-0">New features<a class="anchor" aria-label="anchor" href="#new-features-0-19-0"></a></h3>
+<ul><li><p><code><a href="../reference/have_motif.html">have_motif()</a></code>, <code><a href="../reference/count_motif.html">count_motif()</a></code>, <code><a href="../reference/match_motif.html">match_motif()</a></code>, and their plural and graph-level variants now support glycans with unresolved floating parts and substituents; <code>strict_floating</code> selects all-localization or any-localization aggregation for logical and count results, while graph-level mappings preserve original node indices. (<a href="https://github.com/glycoverse/glymotif/issues/56" class="external-link">#56</a>)</p></li>
+<li><p>Motif matching and branch extraction now support mixed generic and concrete residues within structures and across vectors, using residue-wise matching semantics. (<a href="https://github.com/glycoverse/glymotif/issues/55" class="external-link">#55</a>)</p></li>
+</ul></div>
+<div class="section level3">
+<h3 id="improvements-0-19-0">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-19-0"></a></h3>
+<ul><li>
+<code><a href="../reference/have_motif.html">have_motif()</a></code>, <code><a href="../reference/count_motif.html">count_motif()</a></code>, <code><a href="../reference/match_motif.html">match_motif()</a></code>, and their plural and graph-level variants now prune incompatible residues, substituents, linkages, anomers, alignments, and degrees during graph search, substantially reducing work for mixed and wildcard-rich motifs. (<a href="https://github.com/glycoverse/glymotif/issues/57" class="external-link">#57</a>)</li>
+</ul></div>
+</div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.18.1" id="glymotif-0181">glymotif 0.18.1<a class="anchor" aria-label="anchor" href="#glymotif-0181"></a></h2>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.18.0" id="glymotif-0180">glymotif 0.18.0<a class="anchor" aria-label="anchor" href="#glymotif-0180"></a></h2>
 <div class="section level3">

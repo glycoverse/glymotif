@@ -43,7 +43,7 @@ so only glyrepr::glycan_structure() is supported for glycans and motifs."><meta 
 
     <a class="navbar-brand me-2" href="../index.html">glymotif</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.18.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.19.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -224,6 +224,18 @@ corresponds to the third vertex in the glycan.</p>
 <p>For <code>match_motifs()</code>, the outermost list is named by motifs,
 and the inner lists are named by glycans,
 following the same rules as in <code><a href="have_motif.html">have_motifs()</a></code> and <code><a href="count_motif.html">count_motifs()</a></code>.</p>
+    </div>
+    <div class="section level2">
+    <h2 id="floating-parts-and-substituents">Floating parts and substituents<a class="anchor" aria-label="anchor" href="#floating-parts-and-substituents"></a></h2>
+    <p>Glycans with unresolved floating parts or substituents are matched across
+every conflict-free localization allowed by their candidate-parent domains.
+These functions return the union of node mappings from every localization,
+using node indices from the original unresolved structure.</p>
+<p>Motifs must be connected structures and therefore cannot themselves contain
+unresolved floating parts or substituents.</p>
+<p>Matching supports up to 256 raw candidate-parent combinations per glycan.
+Localize floating parts and substituents with
+<code><a href="https://glycoverse.github.io/glyrepr/reference/localize_floating_parts.html" class="external-link">glyrepr::localize_floating_parts()</a></code> first for larger domains.</p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
