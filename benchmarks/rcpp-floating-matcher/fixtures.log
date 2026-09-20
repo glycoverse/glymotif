@@ -1,0 +1,24 @@
+Fixture localization graphs identical
+strict substructure TRUE passed
+strict substructure FALSE passed
+strict core TRUE passed
+strict core FALSE passed
+strict terminal TRUE passed
+strict terminal FALSE passed
+strict whole TRUE passed
+strict whole FALSE passed
+lenient substructure TRUE passed
+lenient substructure FALSE passed
+lenient core TRUE passed
+lenient core FALSE passed
+lenient terminal TRUE passed
+lenient terminal FALSE passed
+lenient whole TRUE passed
+lenient whole FALSE passed
+options TRUE TRUE passed
+options TRUE FALSE passed
+options FALSE TRUE passed
+options FALSE FALSE passed
+degree TRUE passed
+degree FALSE passed
+FIXTURES DONE

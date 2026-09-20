@@ -1,21 +1,4 @@
-from pathlib import Path
-import csv, statistics, collections
-p=Path('benchmarks/rcpp-floating-matcher')
-a=list(csv.DictReader((p/'localization-audit.csv').open()))
-f=list(csv.DictReader((p/'fixture-parity.csv').open()))
-t=list(csv.DictReader((p/'timings.csv').open()))
-groups=collections.defaultdict(list)
-for r in t: groups[(r['workload'],r['output'],r['strict_floating'],r['engine'])].append(r)
-assert len(a)==564 and sum(x['result']=='identical' for x in a)==503
-assert len(groups)==15 and all(len(v)==3 for v in groups.values()), 'Incomplete benchmark'
-assert all({int(x['rep']) for x in v}=={1,2,3} for v in groups.values())
-lines=['| 数据／输出 | 当前 API（秒） | 直接 C++（秒） | 保留参数检查（秒） | 保留检查加速 |', '|---|---:|---:|---:|---:|']
-for work,kind,sf in [('32x6','have','TRUE'),('32x6','count','TRUE'),('32x6','match','TRUE'),('32x6-any','have','FALSE'),('503x6','have','TRUE')]:
-    med={e:statistics.median(float(x['elapsed_s']) for x in groups[(work,kind,sf,e)]) for e in ['current','cpp_direct','cpp_validated']}
-    lines.append(f'| {work} / {kind} / strict_floating={sf} | {med["current"]:.3f} | {med["cpp_direct"]:.3f} | {med["cpp_validated"]:.3f} | {med["current"]/med["cpp_validated"]:.1f}× |')
-variants=sum(int(x['variants']) for x in a if x['result']=='identical')
-checks=sum(int(x['pairs']) for x in f)+503*6*6
-text=f'''# C++ 浮动结构匹配：核验与端到端 benchmark
+# C++ 浮动结构匹配：核验与端到端 benchmark
 
 日期：2026-09-20。在独立原型中，**浮动定位、子结构匹配和跨定位汇总已全部在 C++ 执行**，
 从原始 `glycan_structure` 读取图和浮动元数据，返回 R 结果。定位和匹配期间没有 R 函数回调。
@@ -26,7 +9,7 @@ text=f'''# C++ 浮动结构匹配：核验与端到端 benchmark
 本地 glydb 共 8,573 个结构，其中 564 个有浮动信息：560 个包含浮动糖链组件，
 5 个包含浮动取代基，二者有 1 个重叠。
 
-- **503 个**在现有 256 种原始候选组合上限内，产生 **{variants:,} 个有效定位**。
+- **503 个**在现有 256 种原始候选组合上限内，产生 **11,026 个有效定位**。
   每个定位的边、连接、取代基、原始节点编号以及父节点选择顺序，与 R 完全一致。
 - **61 个**超过上限；C++ 和现有 R API 均报错。本实验不提高该上限，
   也不把这些结构计入性能分母。
@@ -36,8 +19,8 @@ text=f'''# C++ 浮动结构匹配：核验与端到端 benchmark
   另用固定前 12 个结构核对六种输出与公开 API 完全一致。
 - 13 个边界结构加重复项、NA（15 行）× 12 motif，测试 strict/lenient、四种 alignment、
   strict_floating 两值、链接与取代基选项、degree mask 全 TRUE/FALSE。
-  {len(f)} 个配置／输出检查、{sum(int(x['pairs']) for x in f):,} 次结构对／输出比较全部通过。
-- 上述边界加全量匹配共 **{checks:,} 次结构对／输出比较**，使用 `identical()`；
+  66 个配置／输出检查、11,880 次结构对／输出比较全部通过。
+- 上述边界加全量匹配共 **29,988 次结构对／输出比较**，使用 `identical()`；
   含参数和输出的重复，不是独立结构数量。不将定位图检查混入此数字。
 - 单独验证组件互相成环、糖基／取代基占用相同碳位点时拒绝，
   恰好 256 种组合时保留全部定位，512 种组合时报错。
@@ -52,7 +35,13 @@ text=f'''# C++ 浮动结构匹配：核验与端到端 benchmark
 **没有在计时外预定位或缓存图 profile**。不计字符串解析、包加载和编译。
 字典转为 C++ 数据结构的成本在计时内。
 
-{chr(10).join(lines)}
+| 数据／输出 | 当前 API（秒） | 直接 C++（秒） | 保留参数检查（秒） | 保留检查加速 |
+|---|---:|---:|---:|---:|
+| 32x6 / have / strict_floating=TRUE | 6.577 | 0.013 | 0.018 | 365.4× |
+| 32x6 / count / strict_floating=TRUE | 7.073 | 0.017 | 0.022 | 321.5× |
+| 32x6 / match / strict_floating=TRUE | 7.513 | 0.017 | 0.022 | 341.5× |
+| 32x6-any / have / strict_floating=FALSE | 8.256 | 0.004 | 0.010 | 825.6× |
+| 503x6 / have / strict_floating=TRUE | 258.633 | 0.183 | 0.292 | 885.7× |
 
 32 个结构按有效定位数分层选取，6 个 motif 与全量一致；全量是全部 503 个可处理的
 浮动结构 × 6 motif，共 3,018 对查询。严格浮动模式为默认。
@@ -97,11 +86,3 @@ glyrepr 使用已安装 1.0.0，igraph 2.3.3。完整环境和源文件指纹另
 从 glymotif 根目录按 [README](README.md) 顺序运行审计、边界测试、全量匹配与计时脚本。
 `localization-audit.csv`、`fixture-parity.csv`、`corpus-parity.csv`、`guard-audit.csv`
 保存核验结果，`timings.csv` 为逐轮原始计时，`statistics.csv` 还包含范围与 CPU 中位数。
-'''
-(p/'REPORT.md').write_text(text)
-with (p/'statistics.csv').open('w') as fp:
-    w=csv.writer(fp,lineterminator='\n');w.writerow(['workload','output','strict_floating','engine','reps','median_s','min_s','max_s','median_cpu_s'])
-    for k,v in groups.items():
-        times=[float(x['elapsed_s']) for x in v];cpu=[float(x['cpu_s']) for x in v]
-        w.writerow([*k,len(v),statistics.median(times),min(times),max(times),statistics.median(cpu)])
-print('Report generated; comparisons:',checks,'localizations:',variants)

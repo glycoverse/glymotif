@@ -1,0 +1,4 @@
+"case","output","pairs","identical"
+"ordinary-128x25","have",3200,TRUE
+"ordinary-128x25","count",3200,TRUE
+"ordinary-128x25","match",3200,TRUE
