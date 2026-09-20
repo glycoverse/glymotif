@@ -1,0 +1,8 @@
+Date: 2026-09-20
+OS: macOS Tahoe 26.5.2 / Darwin 25.5.0
+Machine: arm64
+R: 4.6.1
+Oracle: adjacent glymotif checkout, 0.19.0.9000
+glymotif HEAD: 3dce7f593da6c655102806490b821c491ef01f81
+glyrepr dependency: installed 1.0.0 (not loaded from checkout)
+igraph: 2.3.3

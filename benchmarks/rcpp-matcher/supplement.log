@@ -1,0 +1,26 @@
+Full corpus identical: have
+Full corpus identical: count
+Full corpus identical: match
+Floating structures explicitly rejected: 564
+scalar-positive have 1 cpp_validated 0.00111 s
+scalar-positive have 1 cpp_direct 7e-05 s
+scalar-positive have 1 current 0.00235 s
+scalar-positive have 2 cpp_validated 0.00109 s
+scalar-positive have 2 cpp_direct 7e-05 s
+scalar-positive have 2 current 0.00249 s
+scalar-positive have 3 cpp_direct 7e-05 s
+scalar-positive have 3 cpp_validated 0.00111 s
+scalar-positive have 3 current 0.00236 s
+scalar-positive have 4 cpp_direct 7e-05 s
+scalar-positive have 4 current 0.0024 s
+scalar-positive have 4 cpp_validated 0.00111 s
+scalar-positive have 5 cpp_validated 0.0011 s
+scalar-positive have 5 current 0.00233 s
+scalar-positive have 5 cpp_direct 7e-05 s
+scalar-positive have 6 cpp_validated 0.0011 s
+scalar-positive have 6 cpp_direct 7e-05 s
+scalar-positive have 6 current 0.00233 s
+scalar-positive have 7 cpp_direct 7e-05 s
+scalar-positive have 7 cpp_validated 0.00109 s
+scalar-positive have 7 current 0.00238 s
+SUPPLEMENT DONE
