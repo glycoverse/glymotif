@@ -67,7 +67,7 @@ bool subs(const string& g,const string& m,bool strict,bool lenient) {
 struct Dictionary {
   std::unordered_map<string,string> generic;
   std::set<string> generic_names,known;
-  Dictionary(DataFrame table) {
+  explicit Dictionary(DataFrame table) {
     CharacterVector c=table["concrete"], g=table["generic"];
     for(int i=0;i<c.size();++i) {
       string cs=as<string>(c[i]),gs=as<string>(g[i]);
@@ -102,7 +102,7 @@ struct Profile {
   int n; vector<string> mono,sub,links,anomers;
   vector<int> in,out; IntegerMatrix edges;
   bool informative=false;
-  Profile(SEXP obj, bool forest=false):edges(0,2) {
+  explicit Profile(SEXP obj, bool forest=false):edges(0,2) {
     List graph(obj); n=as<int>(graph["n"]);
     List ga=graph["attributes"],va=graph["vertices"],ea=graph["edge_attributes"];
     for(auto key:{"floating_parts","floating_substituents"})
@@ -131,7 +131,7 @@ struct Profile {
 };
 struct Structures {
   vector<Profile> graphs;vector<SEXP> sources;vector<int> restore;CharacterVector codes;
-  Structures(SEXP obj, bool forest=false) {
+  explicit Structures(SEXP obj, bool forest=false) {
     List x(obj), pool=x["graphs"];
     codes=CharacterVector(x["codes"]);
     IntegerVector index=x["restore"];
@@ -295,7 +295,7 @@ struct Localizations {
 SEXP cpp_match_structures(SEXP glycans,SEXP motifs,DataFrame dictionary,
                        CharacterVector alignments,bool ignore_linkages,
                        bool strict_sub,bool lenient,List degrees,
-                       std::string output="have",bool strict_floating=true,int maximum=256) {
+                       const std::string& output="have",bool strict_floating=true,int maximum=256) {
   fused::Structures gs(glycans,true),ms(motifs);fused::Dictionary dict(dictionary);
   int ng=gs.restore.size(),nm=ms.restore.size();
   if(maximum<1 || nm==0 || alignments.size()!=nm || degrees.size()!=nm) stop("Invalid options.");

@@ -11,7 +11,7 @@ Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
 // cpp_match_structures
-SEXP cpp_match_structures(SEXP glycans, SEXP motifs, DataFrame dictionary, CharacterVector alignments, bool ignore_linkages, bool strict_sub, bool lenient, List degrees, std::string output, bool strict_floating, int maximum);
+SEXP cpp_match_structures(SEXP glycans, SEXP motifs, DataFrame dictionary, CharacterVector alignments, bool ignore_linkages, bool strict_sub, bool lenient, List degrees, const std::string& output, bool strict_floating, int maximum);
 RcppExport SEXP _glymotif_cpp_match_structures(SEXP glycansSEXP, SEXP motifsSEXP, SEXP dictionarySEXP, SEXP alignmentsSEXP, SEXP ignore_linkagesSEXP, SEXP strict_subSEXP, SEXP lenientSEXP, SEXP degreesSEXP, SEXP outputSEXP, SEXP strict_floatingSEXP, SEXP maximumSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
@@ -24,7 +24,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< bool >::type strict_sub(strict_subSEXP);
     Rcpp::traits::input_parameter< bool >::type lenient(lenientSEXP);
     Rcpp::traits::input_parameter< List >::type degrees(degreesSEXP);
-    Rcpp::traits::input_parameter< std::string >::type output(outputSEXP);
+    Rcpp::traits::input_parameter< const std::string& >::type output(outputSEXP);
     Rcpp::traits::input_parameter< bool >::type strict_floating(strict_floatingSEXP);
     Rcpp::traits::input_parameter< int >::type maximum(maximumSEXP);
     rcpp_result_gen = Rcpp::wrap(cpp_match_structures(glycans, motifs, dictionary, alignments, ignore_linkages, strict_sub, lenient, degrees, output, strict_floating, maximum));
