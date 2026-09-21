@@ -43,7 +43,10 @@ jobs:
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
-          extra-packages: any::rcmdcheck
+          # The macOS knitr binary uses zstd, unsupported by stable pak's extractor.
+          extra-packages: |
+            any::rcmdcheck
+            ${{ runner.os == 'macOS' && 'knitr=?source' || '' }}
           needs: check
 
       - uses: r-lib/actions/check-r-package@v2
