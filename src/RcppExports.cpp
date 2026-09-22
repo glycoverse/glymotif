@@ -10,6 +10,27 @@ Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
 Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
+// cpp_match_structures
+SEXP cpp_match_structures(SEXP glycans, SEXP motifs, DataFrame dictionary, CharacterVector alignments, bool ignore_linkages, bool strict_sub, bool lenient, List degrees, const std::string& output, bool strict_floating, int maximum);
+RcppExport SEXP _glymotif_cpp_match_structures(SEXP glycansSEXP, SEXP motifsSEXP, SEXP dictionarySEXP, SEXP alignmentsSEXP, SEXP ignore_linkagesSEXP, SEXP strict_subSEXP, SEXP lenientSEXP, SEXP degreesSEXP, SEXP outputSEXP, SEXP strict_floatingSEXP, SEXP maximumSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type glycans(glycansSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type motifs(motifsSEXP);
+    Rcpp::traits::input_parameter< DataFrame >::type dictionary(dictionarySEXP);
+    Rcpp::traits::input_parameter< CharacterVector >::type alignments(alignmentsSEXP);
+    Rcpp::traits::input_parameter< bool >::type ignore_linkages(ignore_linkagesSEXP);
+    Rcpp::traits::input_parameter< bool >::type strict_sub(strict_subSEXP);
+    Rcpp::traits::input_parameter< bool >::type lenient(lenientSEXP);
+    Rcpp::traits::input_parameter< List >::type degrees(degreesSEXP);
+    Rcpp::traits::input_parameter< const std::string& >::type output(outputSEXP);
+    Rcpp::traits::input_parameter< bool >::type strict_floating(strict_floatingSEXP);
+    Rcpp::traits::input_parameter< int >::type maximum(maximumSEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_match_structures(glycans, motifs, dictionary, alignments, ignore_linkages, strict_sub, lenient, degrees, output, strict_floating, maximum));
+    return rcpp_result_gen;
+END_RCPP
+}
 // cpp_vf2_subgraph_mono
 Rcpp::List cpp_vf2_subgraph_mono(int glycan_vertex_count, Rcpp::IntegerMatrix glycan_edges, int motif_vertex_count, Rcpp::IntegerMatrix motif_edges, Rcpp::LogicalMatrix vertex_compatibility, Rcpp::LogicalMatrix edge_compatibility, bool first_only, bool unique_vertex_sets);
 RcppExport SEXP _glymotif_cpp_vf2_subgraph_mono(SEXP glycan_vertex_countSEXP, SEXP glycan_edgesSEXP, SEXP motif_vertex_countSEXP, SEXP motif_edgesSEXP, SEXP vertex_compatibilitySEXP, SEXP edge_compatibilitySEXP, SEXP first_onlySEXP, SEXP unique_vertex_setsSEXP) {
@@ -30,6 +51,7 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
+    {"_glymotif_cpp_match_structures", (DL_FUNC) &_glymotif_cpp_match_structures, 11},
     {"_glymotif_cpp_vf2_subgraph_mono", (DL_FUNC) &_glymotif_cpp_vf2_subgraph_mono, 8},
     {NULL, NULL, 0}
 };
