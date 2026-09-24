@@ -73,51 +73,19 @@ extract_branch_motif <- function(glycans, ..., including_core = FALSE) {
 
   structure_graphs <- glyrepr::get_structure_graphs(glycans, return_list = TRUE)
 
-  extracted_subtrees <- list()
-
-  for (i in seq_along(structure_graphs)) {
-    g <- structure_graphs[[i]]
-    g_matches <- matches[[i]]
-
-    if (length(g_matches) == 0) {
-      next
-    }
-
-    for (match_idx in g_matches) {
-      # The match_idx is a vector of node indices in 'g' corresponding to nodes in 'motif'.
-      # The first node of the motif (HexNAc) is the root of the branch.
-      # We assume the motif string was parsed such that the first node is indeed the root HexNAc.
-      # In glyrepr/igraph, nodes are 1-indexed.
-
-      branch_root_id <- match_idx[1]
-
-      # Extract the subtree rooted at branch_root_id
-      subtree_nodes <- graph_subcomponent_ids(
-        g,
-        branch_root_id,
-        mode = "out"
-      )
-      subtree <- igraph::induced_subgraph(g, subtree_nodes)
-
-      # 5. Handle Anomer
-      # The subtree needs an 'anomer' attribute (e.g., "b1").
-      # This information is contained in the linkage of the INCOMING edge to branch_root_id in 'g'.
-
-      # Find the incoming edge to the branch root in the original graph
-      in_edges <- graph_incident_edge_ids(g, branch_root_id, mode = "in")
-
-      # There should be exactly one incoming edge for a tree structure (unless it's the absolute root)
-      linkage <- graph_edge_attr(g, "linkage", in_edges)
-      # Linkage format is like "b1-4" or "a1-3" or "??-?".
-      # We need to extract the anomer part (first 2 chars usually, e.g. "b1", "a1", "??")
-
-      # Simple parsing logic (assuming standard format like "a1-..." or "b1-...")
-      # We can split by "-"
-      anomer_part <- stringr::str_split_i(linkage, "-", 1)
-      subtree$anomer <- anomer_part
-
-      extracted_subtrees[[length(extracted_subtrees) + 1]] <- subtree
-    }
+  roots <- lapply(matches, function(g_matches) {
+    vapply(g_matches, function(mapping) as.integer(mapping[[1]]), integer(1))
+  })
+  # Floating graph attributes need the existing per-occurrence construction.
+  if (any(vapply(structure_graphs, .has_floating_motif_parts, logical(1)))) {
+    extracted_subtrees <- .extract_branch_subtrees_r(structure_graphs, matches)
+  } else {
+    extracted_subtrees <- .extract_motif_candidates_native(
+      structure_graphs,
+      roots,
+      Inf,
+      branches = TRUE
+    )
   }
 
   if (length(extracted_subtrees) == 0) {
@@ -192,14 +160,21 @@ extract_motif <- function(glycans, ..., max_size = 3) {
   glycans <- ensure_glycans_are_structures(glycans)
   glycans <- unique(glycans)
   structure_graphs <- glyrepr::get_structure_graphs(glycans, return_list = TRUE)
-  seen_motifs <- new.env(hash = TRUE, parent = emptyenv())
-
-  extracted_subtrees <- unlist(
-    purrr::map(structure_graphs, function(g) {
-      .extract_motifs_from_graph(g, max_size, seen_motifs)
-    }),
-    recursive = FALSE
-  )
+  if (is.numeric(max_size) && length(max_size) == 1L && !is.na(max_size)) {
+    extracted_subtrees <- .extract_motif_candidates_native(
+      structure_graphs,
+      lapply(structure_graphs, graph_vertex_ids),
+      max_size
+    )
+  } else {
+    seen_motifs <- new.env(hash = TRUE, parent = emptyenv())
+    extracted_subtrees <- unlist(
+      lapply(structure_graphs, function(g) {
+        .extract_motifs_from_graph(g, max_size, seen_motifs)
+      }),
+      recursive = FALSE
+    )
+  }
 
   if (length(extracted_subtrees) == 0) {
     return(glyrepr::glycan_structure())
@@ -408,4 +383,96 @@ extract_motif <- function(glycans, ..., max_size = 3) {
   }
 
   valid_combos
+}
+
+.has_floating_motif_parts <- function(g) {
+  length(igraph::graph_attr(g, "floating_parts")) > 0L ||
+    length(igraph::graph_attr(g, "floating_substituents")) > 0L
+}
+
+.extract_motif_candidates_native <- function(
+  graphs,
+  roots,
+  max_size,
+  branches = FALSE
+) {
+  contexts <- lapply(graphs, function(g) {
+    context <- .new_motif_key_context(g)
+    anomers <- rep(g$anomer, igraph::vcount(g))
+    edges <- igraph::as_edgelist(g, names = FALSE)
+    if (nrow(edges) > 0L) {
+      anomers[edges[, 2]] <- stringr::str_split_i(
+        graph_edge_attr(g, "linkage"),
+        "-",
+        1
+      )
+    }
+    context$anomers <- anomers
+    context
+  })
+  candidates <- cpp_extract_motif_candidates(
+    contexts,
+    roots,
+    max_size,
+    branches
+  )
+  lapply(candidates, function(candidate) {
+    subtree <- igraph::induced_subgraph(
+      graphs[[candidate$graph]],
+      candidate$nodes
+    )
+    subtree$anomer <- candidate$anomer
+    subtree
+  })
+}
+
+.extract_branch_subtrees_r <- function(structure_graphs, matches) {
+  extracted_subtrees <- list()
+
+  for (i in seq_along(structure_graphs)) {
+    g <- structure_graphs[[i]]
+    g_matches <- matches[[i]]
+
+    if (length(g_matches) == 0) {
+      next
+    }
+
+    for (match_idx in g_matches) {
+      # The match_idx is a vector of node indices in 'g' corresponding to nodes in 'motif'.
+      # The first node of the motif (HexNAc) is the root of the branch.
+      # We assume the motif string was parsed such that the first node is indeed the root HexNAc.
+      # In glyrepr/igraph, nodes are 1-indexed.
+
+      branch_root_id <- match_idx[1]
+
+      # Extract the subtree rooted at branch_root_id
+      subtree_nodes <- graph_subcomponent_ids(
+        g,
+        branch_root_id,
+        mode = "out"
+      )
+      subtree <- igraph::induced_subgraph(g, subtree_nodes)
+
+      # 5. Handle Anomer
+      # The subtree needs an 'anomer' attribute (e.g., "b1").
+      # This information is contained in the linkage of the INCOMING edge to branch_root_id in 'g'.
+
+      # Find the incoming edge to the branch root in the original graph
+      in_edges <- graph_incident_edge_ids(g, branch_root_id, mode = "in")
+
+      # There should be exactly one incoming edge for a tree structure (unless it's the absolute root)
+      linkage <- graph_edge_attr(g, "linkage", in_edges)
+      # Linkage format is like "b1-4" or "a1-3" or "??-?".
+      # We need to extract the anomer part (first 2 chars usually, e.g. "b1", "a1", "??")
+
+      # Simple parsing logic (assuming standard format like "a1-..." or "b1-...")
+      # We can split by "-"
+      anomer_part <- stringr::str_split_i(linkage, "-", 1)
+      subtree$anomer <- anomer_part
+
+      extracted_subtrees[[length(extracted_subtrees) + 1]] <- subtree
+    }
+  }
+
+  extracted_subtrees
 }
