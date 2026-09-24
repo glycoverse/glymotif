@@ -2,6 +2,12 @@
 
 ## glymotif (development version)
 
+- [`extract_motif()`](https://glycoverse.github.io/glymotif/dev/reference/extract_motif.md)
+  and
+  [`extract_branch_motif()`](https://glycoverse.github.io/glymotif/dev/reference/extract_branch_motif.md)
+  extract motifs faster by pruning oversized combinations and
+  deduplicating candidates before constructing subgraphs.
+
 ## glymotif 0.19.0
 
 ### New features
