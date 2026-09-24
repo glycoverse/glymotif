@@ -1,5 +1,7 @@
 # glymotif (development version)
 
+* `extract_motif()` and `extract_branch_motif()` extract motifs faster by pruning oversized combinations and deduplicating candidates before constructing subgraphs.
+
 # glymotif 0.19.0
 
 ## New features

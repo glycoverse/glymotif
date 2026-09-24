@@ -10,6 +10,20 @@ Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
 Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
+// cpp_extract_motif_candidates
+Rcpp::List cpp_extract_motif_candidates(Rcpp::List contexts, Rcpp::List roots, double max_size, bool branches);
+RcppExport SEXP _glymotif_cpp_extract_motif_candidates(SEXP contextsSEXP, SEXP rootsSEXP, SEXP max_sizeSEXP, SEXP branchesSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::List >::type contexts(contextsSEXP);
+    Rcpp::traits::input_parameter< Rcpp::List >::type roots(rootsSEXP);
+    Rcpp::traits::input_parameter< double >::type max_size(max_sizeSEXP);
+    Rcpp::traits::input_parameter< bool >::type branches(branchesSEXP);
+    rcpp_result_gen = Rcpp::wrap(cpp_extract_motif_candidates(contexts, roots, max_size, branches));
+    return rcpp_result_gen;
+END_RCPP
+}
 // cpp_match_structures
 SEXP cpp_match_structures(SEXP glycans, SEXP motifs, DataFrame dictionary, CharacterVector alignments, bool ignore_linkages, bool strict_sub, bool lenient, List degrees, const std::string& output, bool strict_floating, int maximum);
 RcppExport SEXP _glymotif_cpp_match_structures(SEXP glycansSEXP, SEXP motifsSEXP, SEXP dictionarySEXP, SEXP alignmentsSEXP, SEXP ignore_linkagesSEXP, SEXP strict_subSEXP, SEXP lenientSEXP, SEXP degreesSEXP, SEXP outputSEXP, SEXP strict_floatingSEXP, SEXP maximumSEXP) {
@@ -51,6 +65,7 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
+    {"_glymotif_cpp_extract_motif_candidates", (DL_FUNC) &_glymotif_cpp_extract_motif_candidates, 4},
     {"_glymotif_cpp_match_structures", (DL_FUNC) &_glymotif_cpp_match_structures, 11},
     {"_glymotif_cpp_vf2_subgraph_mono", (DL_FUNC) &_glymotif_cpp_vf2_subgraph_mono, 8},
     {NULL, NULL, 0}
