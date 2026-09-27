@@ -1,13 +1,13 @@
 # glymotif (development version)
 
-* `extract_motif()` and `extract_branch_motif()` extract motifs faster by pruning oversized combinations and deduplicating candidates before constructing subgraphs.
+* `extract_motif()` and `extract_branch_motif()` extract motifs faster while preserving motif order. (#59)
+* `have_motif()`, `count_motif()`, `match_motif()`, and their plural variants now use C++ for structure matching, reducing overhead in batch analyses. (#58)
 
 # glymotif 0.19.0
 
 ## New features
 
 * `have_motif()`, `count_motif()`, `match_motif()`, and their plural and graph-level variants now support glycans with unresolved floating parts and substituents; `strict_floating` selects all-localization or any-localization aggregation for logical and count results, while graph-level mappings preserve original node indices. (#56)
-
 * Motif matching and branch extraction now support mixed generic and concrete residues within structures and across vectors, using residue-wise matching semantics. (#55)
 
 ## Improvements
