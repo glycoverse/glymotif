@@ -27,52 +27,41 @@ against multiple motifs.
 
 ## Installation
 
-### Install glycoverse
-
-We recommend installing the meta-package
-[glycoverse](https://github.com/glycoverse/glycoverse), which includes
-this package and other core glycoverse packages.
-
-### Install glymotif alone
-
-If you don’t want to install all glycoverse packages, you can only
-install glymotif.
-
-You can install the latest release of glymotif from
-[r-universe](https://glycoverse.r-universe.dev/glymotif)
-(**recommended**):
+Once glymotif is available on CRAN, you can install the latest release
+from [CRAN](https://CRAN.R-project.org/package=glymotif):
 
 ``` r
-# install.packages("pak")
+pak::pkg_install("glymotif")
+```
+
+Or from [r-universe](https://glycoverse.r-universe.dev/glymotif):
+
+``` r
 pak::repo_add(glycoverse = "https://glycoverse.r-universe.dev")
 pak::pkg_install("glymotif")
 ```
 
-Or from [GitHub](https://github.com/glycoverse/glymotif):
+Or install the latest GitHub release:
 
 ``` r
 pak::pkg_install("glycoverse/glymotif@*release")
 ```
 
-Or install the development version (NOT recommended):
+Or install the development version from
+[GitHub](https://github.com/glycoverse/glymotif):
 
 ``` r
 pak::pkg_install("glycoverse/glymotif")
 ```
 
-**Note:** Tips and troubleshooting for the meta-package
-[glycoverse](https://github.com/glycoverse/glycoverse) are also
-applicable here: [Installation of
-glycoverse](https://github.com/glycoverse/glycoverse#installation).
-
 ## Documentation
 
-- 🚀 Get started:
-  [Here](https://glycoverse.github.io/glymotif/articles/glymotif.html)
-- 🔧 Motif matching rules:
-  [Here](https://glycoverse.github.io/glymotif/articles/motif-matching.html)
-- 📚 Reference:
-  [Here](https://glycoverse.github.io/glymotif/reference/index.html)
+-   🚀 Get started:
+    [Here](https://glycoverse.github.io/glymotif/articles/glymotif.html)
+-   🔧 Motif matching rules:
+    [Here](https://glycoverse.github.io/glymotif/articles/motif-matching.html)
+-   📚 Reference:
+    [Here](https://glycoverse.github.io/glymotif/reference/index.html)
 
 ## Role in `glycoverse`
 
