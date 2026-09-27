@@ -5,8 +5,14 @@
 - [`extract_motif()`](https://glycoverse.github.io/glymotif/dev/reference/extract_motif.md)
   and
   [`extract_branch_motif()`](https://glycoverse.github.io/glymotif/dev/reference/extract_branch_motif.md)
-  extract motifs faster by pruning oversized combinations and
-  deduplicating candidates before constructing subgraphs.
+  extract motifs faster while preserving motif order.
+  ([\#59](https://github.com/glycoverse/glymotif/issues/59))
+- [`have_motif()`](https://glycoverse.github.io/glymotif/dev/reference/have_motif.md),
+  [`count_motif()`](https://glycoverse.github.io/glymotif/dev/reference/count_motif.md),
+  [`match_motif()`](https://glycoverse.github.io/glymotif/dev/reference/match_motif.md),
+  and their plural variants now use C++ for structure matching, reducing
+  overhead in batch analyses.
+  ([\#58](https://github.com/glycoverse/glymotif/issues/58))
 
 ## glymotif 0.19.0
 
@@ -20,7 +26,6 @@
   all-localization or any-localization aggregation for logical and count
   results, while graph-level mappings preserve original node indices.
   ([\#56](https://github.com/glycoverse/glymotif/issues/56))
-
 - Motif matching and branch extraction now support mixed generic and
   concrete residues within structures and across vectors, using
   residue-wise matching semantics.
