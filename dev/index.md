@@ -13,8 +13,8 @@ against multiple motifs.
 
 ## Installation
 
-Once glymotif is available on CRAN, you can install the latest release
-from [CRAN](https://CRAN.R-project.org/package=glymotif):
+You can install the latest release from
+[CRAN](https://CRAN.R-project.org/package=glymotif):
 
 ``` r
 
