@@ -1,3 +1,5 @@
+# glymotif (development version)
+
 # glymotif 1.0.0
 
 * `extract_motif()` and `extract_branch_motif()` extract motifs faster while preserving motif order. (#59)
