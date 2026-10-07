@@ -2,6 +2,10 @@
 
 ## glymotif (development version)
 
+## glymotif 1.0.0
+
+CRAN release: 2026-10-07
+
 - [`extract_motif()`](https://glycoverse.github.io/glymotif/dev/reference/extract_motif.md)
   and
   [`extract_branch_motif()`](https://glycoverse.github.io/glymotif/dev/reference/extract_branch_motif.md)
