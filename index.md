@@ -13,49 +13,36 @@ against multiple motifs.
 
 ## Installation
 
-### Install glycoverse
-
-We recommend installing the meta-package
-[glycoverse](https://github.com/glycoverse/glycoverse), which includes
-this package and other core glycoverse packages.
-
-### Install glymotif alone
-
-If you don’t want to install all glycoverse packages, you can only
-install glymotif.
-
-You can install the latest release of glymotif from CRAN:
+Once glymotif is available on CRAN, you can install the latest release
+from [CRAN](https://CRAN.R-project.org/package=glymotif):
 
 ``` r
 
-install.packages("glymotif")
+pak::pkg_install("glymotif")
 ```
 
 Or from [r-universe](https://glycoverse.r-universe.dev/glymotif):
 
 ``` r
 
-install.packages("glymotif", repos = c("https://glycoverse.r-universe.dev", "https://cloud.r-project.org"))
+pak::repo_add(glycoverse = "https://glycoverse.r-universe.dev")
+pak::pkg_install("glymotif")
 ```
 
-Or from [GitHub](https://github.com/glycoverse/glymotif):
+Or install the latest GitHub release:
 
 ``` r
 
-remotes::install_github("glycoverse/glymotif@*release")
+pak::pkg_install("glycoverse/glymotif@*release")
 ```
 
-Or install the development version:
+Or install the development version from
+[GitHub](https://github.com/glycoverse/glymotif):
 
 ``` r
 
-remotes::install_github("glycoverse/glymotif")
+pak::pkg_install("glycoverse/glymotif")
 ```
-
-**Note:** Tips and troubleshooting for the meta-package
-[glycoverse](https://github.com/glycoverse/glycoverse) are also
-applicable here: [Installation of
-glycoverse](https://github.com/glycoverse/glycoverse#installation).
 
 ## Documentation
 
