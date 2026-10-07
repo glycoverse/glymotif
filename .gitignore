@@ -12,3 +12,7 @@ inst/doc
 /data-raw/img/
 .worktrees/
 /benchmarks/*.csv
+
+# R package compilation artifacts
+*.o
+*.so
