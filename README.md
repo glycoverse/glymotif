@@ -7,6 +7,8 @@
 
 [![Lifecycle:
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
+[![CRAN
+status](https://www.r-pkg.org/badges/version/glymotif)](https://CRAN.R-project.org/package=glymotif)
 [![R-universe
 version](https://glycoverse.r-universe.dev/glymotif/badges/version)](https://glycoverse.r-universe.dev/glymotif)
 [![R-CMD-check](https://github.com/glycoverse/glymotif/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/glycoverse/glymotif/actions/workflows/R-CMD-check.yaml)
@@ -27,8 +29,8 @@ against multiple motifs.
 
 ## Installation
 
-Once glymotif is available on CRAN, you can install the latest release
-from [CRAN](https://CRAN.R-project.org/package=glymotif):
+You can install the latest release from
+[CRAN](https://CRAN.R-project.org/package=glymotif):
 
 ``` r
 pak::pkg_install("glymotif")
