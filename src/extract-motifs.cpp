@@ -25,7 +25,8 @@ class MotifTree {
   Rcpp::CharacterVector anomers;
   std::map<std::pair<int, int>, Subsets> cache;
 
-  explicit MotifTree(const Rcpp::List& context) : anomers(context["anomers"]) {
+  explicit MotifTree(const Rcpp::List& context)
+      : anomers(Rcpp::as<Rcpp::CharacterVector>(context["anomers"])) {
     Rcpp::List child_list = context["children"];
     Rcpp::List link_list = context["child_linkages"];
     Rcpp::CharacterVector mono = context["mono"], sub = context["sub"];
