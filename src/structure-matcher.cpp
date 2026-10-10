@@ -133,7 +133,7 @@ struct Structures {
   vector<Profile> graphs;vector<SEXP> sources;vector<int> restore;CharacterVector codes;
   explicit Structures(SEXP obj, bool forest=false) {
     List x(obj), pool=x["graphs"];
-    codes=CharacterVector(x["codes"]);
+    codes=as<CharacterVector>(x["codes"]);
     IntegerVector index=x["restore"];
     for (int i=0;i<pool.size();++i) {
       graphs.emplace_back(pool[i],forest);

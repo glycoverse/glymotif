@@ -283,6 +283,29 @@ test_that("native extraction handles empty inputs and singleton structures", {
   expect_identical(as.character(extract_motif("Gal(b1-")), "Gal(b1-")
 })
 
+test_that("native extraction preserves character anomers from list contexts", {
+  anomers <- c("a1", "b1", "??", "a1")
+  context <- list(
+    children = rep(list(integer()), length(anomers)),
+    child_linkages = rep(list(character()), length(anomers)),
+    mono = rep("Gal", length(anomers)),
+    sub = rep("", length(anomers)),
+    anomers = anomers
+  )
+  before <- serialize(context, NULL)
+  expected <- lapply(seq_len(3L), function(i) {
+    list(graph = 1L, nodes = i, anomer = anomers[i])
+  })
+
+  for (branches in c(FALSE, TRUE)) {
+    result <- cpp_extract_motif_candidates(
+      list(context), list(seq_along(anomers)), 1, branches
+    )
+    expect_identical(result, expected)
+  }
+  expect_identical(serialize(context, NULL), before)
+})
+
 test_that("native enumeration prunes wide branches before forming products", {
   g <- igraph::make_star(41, mode = "out")
   g <- igraph::set_vertex_attr(g, "mono", value = c("GlcNAc", rep("Gal", 40)))
