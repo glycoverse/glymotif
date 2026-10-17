@@ -519,6 +519,42 @@ and
 and
 [`match_motifs()`](https://glycoverse.github.io/glymotif/dev/reference/match_motif.md).
 
+By default, branch extraction includes only GlcNAc/HexNAc-rooted
+antennae. Both
+[`extract_branch_motif()`](https://glycoverse.github.io/glymotif/dev/reference/extract_branch_motif.md)
+and
+[`branch_motifs()`](https://glycoverse.github.io/glymotif/dev/reference/branch_motifs.md)
+accept `include_empty_branch = TRUE` to include core a3/a6 Man residues
+with no outward monosaccharides, and `include_mannose_branch = TRUE` to
+include full subtrees rooted at Man/Hex directly attached to these core
+arms. Both options default to `FALSE`.
+
+Empty branches are represented by their four-residue core path in
+[`extract_branch_motif()`](https://glycoverse.github.io/glymotif/dev/reference/extract_branch_motif.md),
+even without `including_core = TRUE`. The
+[`branch_motifs()`](https://glycoverse.github.io/glymotif/dev/reference/branch_motifs.md)
+helper labels them `empty` (or `empty (generic)`) and counts each bare
+arm separately.
+[`match_motifs()`](https://glycoverse.github.io/glymotif/dev/reference/match_motif.md)
+returns the core arm’s node index for each empty branch.
+
+Man-rooted branches retain their source core identities, including
+generic and mixed cores. Empty branches retain the residues and
+substituents of their source core path; mixed cores are labelled
+`empty (mixed)`, and substituents appear in labels such as
+`empty (Man6S)`. Identical branch labels with different cores receive
+numeric suffixes to distinguish their matching patterns.
+
+``` r
+
+count_motifs(
+  glyrepr::n_glycan_core(),
+  branch_motifs(include_empty_branch = TRUE, include_mannose_branch = TRUE)
+)
+#>                                                     empty
+#> Man(a1-3)[Man(a1-6)]Man(b1-4)GlcNAc(b1-4)GlcNAc(b1-     2
+```
+
 ## What’s Next?
 
 - Want more detail about motif matching rules? See [Motif Matching
