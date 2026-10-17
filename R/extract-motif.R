@@ -31,7 +31,8 @@
 #'   `Hex(??-?)Hex(??-?)HexNAc(??-?)HexNAc(??-`)
 #'   is appended to each branch motif. Concrete branches receive a concrete
 #'   core; generic and mixed branches receive a generic core. Default is
-#'   `FALSE`.
+#'   `FALSE`. For Man-rooted branches, the source core's residue identities
+#'   and substituents are preserved instead.
 #' @param include_empty_branch A logical scalar. If `TRUE`, also extract empty
 #'   branches: core a3/a6 mannose residues with no outward monosaccharides.
 #'   These are represented by the four-residue core path
@@ -113,6 +114,7 @@ extract_branch_motif <- function(
     )
     for (i in seq_along(matches)) {
       if (!have_n_core[[i]]) {
+        mannose_matches[[i]] <- list()
         next
       }
       mono <- graph_vertex_attr(structure_graphs[[i]], "mono")
@@ -120,7 +122,9 @@ extract_branch_motif <- function(
         \(mapping) mono[[mapping[[1]]]] %in% c("Man", "Hex"),
         mannose_matches[[i]]
       )
-      matches[[i]] <- c(matches[[i]], mannose_matches[[i]])
+      if (!including_core) {
+        matches[[i]] <- c(matches[[i]], mannose_matches[[i]])
+      }
     }
   }
 
@@ -162,7 +166,53 @@ extract_branch_motif <- function(
     res <- unique(c(res, .extract_empty_branch_motifs(glycans, have_n_core)))
   }
 
+  if (include_mannose_branch && including_core) {
+    res <- unique(c(
+      res,
+      .extract_mannose_branches_with_core(structure_graphs, mannose_matches)
+    ))
+  }
+
   res
+}
+
+.extract_branch_core_path <- function(graph, nodes) {
+  core <- igraph::induced_subgraph(graph, nodes)
+  core <- igraph::set_edge_attr(
+    core,
+    "linkage",
+    value = rep("??-?", igraph::ecount(core))
+  )
+  core$anomer <- "??"
+  core$alditol <- FALSE
+  core
+}
+
+.extract_mannose_branches_with_core <- function(graphs, matches) {
+  branches <- list()
+  cores <- list()
+  for (i in seq_along(graphs)) {
+    graph <- graphs[[i]]
+    for (mapping in matches[[i]]) {
+      root <- mapping[[1]]
+      branch <- igraph::induced_subgraph(
+        graph,
+        graph_subcomponent_ids(graph, root, mode = "out")
+      )
+      branch$anomer <- .get_node_anomer(graph, root)
+      branches[[length(branches) + 1L]] <- branch
+      cores[[length(cores) + 1L]] <- .extract_branch_core_path(
+        graph,
+        mapping[-1]
+      )
+    }
+  }
+  if (length(branches) == 0L) {
+    return(glyrepr::glycan_structure())
+  }
+  branch_iupac <- as.character(glyrepr::as_glycan_structure(branches))
+  core_iupac <- as.character(glyrepr::as_glycan_structure(cores))
+  unique(glyrepr::as_glycan_structure(paste0(branch_iupac, "?)", core_iupac)))
 }
 
 .extract_empty_branch_motifs <- function(glycans, have_n_core) {

@@ -37,7 +37,9 @@ Then, the \code{match_degree} is constructed so that the four residues in the su
 do not have to match the node degree in the motif matching process.
 
 With \code{include_mannose_branch = TRUE}, Man-rooted subtrees are extracted and
-matched in the same way as GlcNAc-rooted subtrees. With
+matched in the same way as GlcNAc-rooted subtrees. Identical branch labels
+with different source cores receive numeric suffixes to distinguish the
+motifs. With
 \code{include_empty_branch = TRUE}, bare core arms are labelled \code{empty} (or
 \code{empty (generic)} for a generic core). Their arm residue must have no outward
 monosaccharides. \code{\link[=match_motifs]{match_motifs()}} returns that core arm's node index for each

@@ -28,7 +28,8 @@ arguments to be supplied by name.}
 \verb{Hex(??-?)Hex(??-?)HexNAc(??-?)HexNAc(??-})
 is appended to each branch motif. Concrete branches receive a concrete
 core; generic and mixed branches receive a generic core. Default is
-\code{FALSE}.}
+\code{FALSE}. For Man-rooted branches, the source core's residue identities
+and substituents are preserved instead.}
 
 \item{include_empty_branch}{A logical scalar. If \code{TRUE}, also extract empty
 branches: core a3/a6 mannose residues with no outward monosaccharides.

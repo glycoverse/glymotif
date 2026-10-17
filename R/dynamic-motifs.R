@@ -60,7 +60,9 @@ print.dynamic_motifs_spec <- function(x, ...) {
 #' do not have to match the node degree in the motif matching process.
 #'
 #' With `include_mannose_branch = TRUE`, Man-rooted subtrees are extracted and
-#' matched in the same way as GlcNAc-rooted subtrees. With
+#' matched in the same way as GlcNAc-rooted subtrees. Identical branch labels
+#' with different source cores receive numeric suffixes to distinguish the
+#' motifs. With
 #' `include_empty_branch = TRUE`, bare core arms are labelled `empty` (or
 #' `empty (generic)` for a generic core). Their arm residue must have no outward
 #' monosaccharides. [match_motifs()] returns that core arm's node index for each
@@ -195,9 +197,10 @@ resolve_motif_spec.dynamic_motifs_spec <- function(
 #' is appended by extract_branch_motif(), but for display purposes we only want the branch part.
 #'
 #' @param iupac A character vector of IUPAC-condensed strings.
+#' @param graphs The corresponding motif graphs.
 #' @return Trimmed IUPAC strings.
 #' @noRd
-.trim_branch_iupac <- function(iupac) {
+.trim_branch_iupac <- function(iupac, graphs) {
   # Remove the core suffix pattern for concrete mono types using fixed string matching
   # Pattern: ?)Man(??-?)Man(??-?)GlcNAc(??-?)GlcNAc(??-
   concrete_suffix <- "?)Man(??-?)Man(??-?)GlcNAc(??-?)GlcNAc(??-"
@@ -212,7 +215,17 @@ resolve_motif_spec.dynamic_motifs_spec <- function(
     iupac == "Hex(??-?)Hex(??-?)HexNAc(??-?)HexNAc(??-"
   ] <- "empty (generic)"
 
-  result
+  for (i in seq_along(graphs)) {
+    graph <- graphs[[i]]
+    n_branch <- igraph::vcount(graph) - 4L
+    if (n_branch > 0L && result[[i]] == iupac[[i]]) {
+      branch <- igraph::induced_subgraph(graph, seq_len(n_branch))
+      branch$anomer <- .get_node_anomer(graph, n_branch)
+      result[[i]] <- as.character(glyrepr::as_glycan_structure(branch))
+    }
+  }
+
+  make.unique(result)
 }
 
 #' @export
@@ -250,7 +263,7 @@ resolve_motif_spec.branch_motifs_spec <- function(
   # Set trimmed IUPAC strings as names for display purposes
   if (length(motifs) > 0) {
     iupac_full <- as.character(motifs)
-    iupac_trimmed <- .trim_branch_iupac(iupac_full)
+    iupac_trimmed <- .trim_branch_iupac(iupac_full, motif_graphs)
     names(motifs) <- iupac_trimmed
   }
 

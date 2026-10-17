@@ -109,6 +109,33 @@ test_that("special branch options require logical scalars", {
   )
 })
 
+test_that("mannose motifs match concrete subtrees on generic and mixed cores", {
+  glycans <- glyrepr::as_glycan_structure(c(
+    "Man(??-?)Man(??-?)[Man(??-?)]Man(??-?)GlcNAc(??-?)GlcNAc(??-",
+    "Man(??-?)Hex(??-?)[Hex(??-?)]Hex(??-?)HexNAc(??-?)HexNAc(??-",
+    "Man(??-?)Man(??-?)[Hex(??-?)]Hex(??-?)HexNAc(??-?)HexNAc(??-"
+  ))
+  spec <- branch_motifs(include_mannose_branch = TRUE)
+  counts <- count_motifs(glycans, spec)
+  expect_identical(anyDuplicated(colnames(counts)), 0L)
+  expect_equal(
+    unname(counts),
+    rbind(c(1L, 1L, 1L), c(0L, 1L, 0L), c(0L, 1L, 1L))
+  )
+  expect_identical(have_motifs(glycans, spec), counts > 0L)
+  matches <- match_motifs(glycans, spec)
+  for (i in seq_along(glycans)) {
+    expect_equal(matches[[i]][[i]], list(1L))
+  }
+  expect_identical(
+    unname(count_motifs(
+      glyrepr::n_glycan_core(),
+      branch_motifs(include_empty_branch = TRUE, include_mannose_branch = TRUE)
+    )),
+    matrix(2L, nrow = 1)
+  )
+})
+
 test_that("db_motifs() creates a db_motifs_spec object", {
   spec <- db_motifs()
   expect_s3_class(spec, "db_motifs_spec")
