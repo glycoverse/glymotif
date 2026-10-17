@@ -206,7 +206,10 @@ match_motifs <- function(
 .trim_result_for_branch_motifs <- function(res) {
   purrr::map(res, function(motif_res) {
     purrr::map(motif_res, function(glycan_res) {
-      purrr::map(glycan_res, ~ .x[1:(length(.x) - 4)])
+      purrr::map(glycan_res, function(mapping) {
+        branch_size <- if (length(mapping) == 4L) 1L else length(mapping) - 4L
+        mapping[seq_len(branch_size)]
+      })
     })
   })
 }
