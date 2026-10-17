@@ -1,5 +1,7 @@
 # glymotif (development version)
 
+* `extract_branch_motif()` and `branch_motifs()` gain `include_empty_branch` and `include_mannose_branch` (both defaulting to `FALSE`) to include bare core arms and full Man-rooted branches.
+
 * Fix source installation with C++14 on older R versions by explicitly converting
   character vectors in native motif extraction and structure matching.
 

@@ -1,7 +1,8 @@
 #' Extract Branch Motifs
 #'
 #' @description
-#' An N-glycan branching motif if the substructures linked to either the a3- or a6-core-mannose.
+#' An N-glycan branching motif is a subtree linked to either the a3- or
+#' a6-core-mannose.
 #'
 #' For example:
 #'
@@ -13,32 +14,50 @@
 #'                         Man
 #' ```
 #'
-#' This function returns all the unique branching motifs found in the input glycans.
+#' This function returns all unique branching motifs found in the input glycans.
 #'
-#' If you want to perform branching motif matching in functions like `have_motifs()` or `glydet::quantify_motifs()`,
-#' use the [branch_motifs()] helper instead,
-#' which handles additional intricacies related to how the motifs should be matched.
+#' For branch motif matching with `have_motifs()` or
+#' `glydet::quantify_motifs()`, use the [branch_motifs()] helper, which handles
+#' the additional matching constraints.
 #'
 #' @param glycans One of:
 #'   - A [glyrepr::glycan_structure()] vector.
-#'   - A glycan structure string vector. All formats supported by [glyparse::auto_parse()] are accepted.
+#'   - A glycan structure string vector. All formats supported by
+#'     [glyparse::auto_parse()] are accepted.
 #' @param ... These dots must be empty and are used only to force optional
 #'   arguments to be supplied by name.
 #' @param including_core A logical scalar. If `TRUE`, the N-glycan core structure
-#'   (`Man(??-?)Man(??-?)GlcNAc(??-?)GlcNAc(??-` or `Hex(??-?)Hex(??-?)HexNAc(??-?)HexNAc(??-`)
+#'   (`Man(??-?)Man(??-?)GlcNAc(??-?)GlcNAc(??-` or
+#'   `Hex(??-?)Hex(??-?)HexNAc(??-?)HexNAc(??-`)
 #'   is appended to each branch motif. Concrete branches receive a concrete
 #'   core; generic and mixed branches receive a generic core. Default is
 #'   `FALSE`.
+#' @param include_empty_branch A logical scalar. If `TRUE`, also extract empty
+#'   branches: core a3/a6 mannose residues with no outward monosaccharides.
+#'   These are represented by the four-residue core path
+#'   `Man(??-?)Man(??-?)GlcNAc(??-?)GlcNAc(??-` (or its generic equivalent),
+#'   even when `including_core = FALSE`. Default is `FALSE`.
+#' @param include_mannose_branch A logical scalar. If `TRUE`, also extract full
+#'   subtrees rooted at Man (or generic Hex) directly attached to a core a3/a6
+#'   mannose. Default is `FALSE`.
 #'
 #' @details
 #' The function works by:
 #' 1. Converting the input to a set of unique `glycan_structure` objects.
-#' 2. Searching for the N-glycan branch pattern: `HexNAc(??-?)Hex(??-?)Hex(??-?)HexNAc(??-?)HexNAc(??-`.
-#' 3. For each match, identifying the root node of the branch (the leftmost HexNAc in the pattern).
+#' 2. Searching for the N-glycan branch pattern:
+#'    `HexNAc(??-?)Hex(??-?)Hex(??-?)HexNAc(??-?)HexNAc(??-`.
+#' 3. For each match, identifying the root node of the branch (the leftmost
+#'    HexNAc in the pattern).
 #' 4. Extracting the full subtree rooted at that node.
-#' 5. Preserving the correct anomeric configuration (e.g., "b1") by inspecting the linkage to the root node.
+#' 5. Preserving the correct anomeric configuration (e.g., "b1") by inspecting
+#'    the linkage to the root node.
 #'
-#' @return A [glyrepr::glycan_structure()] vector containing the unique extracted branching motifs.
+#' With `include_mannose_branch = TRUE`, the same procedure also extracts
+#' Man/Hex-rooted branches. With `include_empty_branch = TRUE`, bare core arms
+#' are returned as core paths so they remain valid `glycan_structure` objects.
+#'
+#' @return A [glyrepr::glycan_structure()] vector containing the unique
+#'   extracted branching motifs.
 #'
 #' @examples
 #' glycans <- c(
@@ -46,16 +65,27 @@
 #'   "Gal(b1-4)GlcNAc(b1-2)Man(a1-3)[Man(a1-6)]Man(b1-4)GlcNAc(a1-4)GlcNAc(b1-"
 #' )
 #' extract_branch_motif(glycans)
+#' extract_branch_motif(
+#'   glycans, include_empty_branch = TRUE, include_mannose_branch = TRUE
+#' )
 #'
 #' @export
-extract_branch_motif <- function(glycans, ..., including_core = FALSE) {
+extract_branch_motif <- function(
+  glycans,
+  ...,
+  including_core = FALSE,
+  include_empty_branch = FALSE,
+  include_mannose_branch = FALSE
+) {
   rlang::check_dots_empty()
 
   checkmate::assert_flag(including_core)
+  checkmate::assert_flag(include_empty_branch)
+  checkmate::assert_flag(include_mannose_branch)
   # 1. Handle input types and deduplicate
   glycans <- ensure_glycans_are_structures(glycans)
   glycans <- unique(glycans)
-  .assert_n_glycans(glycans)
+  have_n_core <- .assert_n_glycans(glycans)
 
   # 2. Define the motif
   # The motif represents an N-glycan branch, rooted at the GlcNAc attached to the Mannose core.
@@ -73,6 +103,27 @@ extract_branch_motif <- function(glycans, ..., including_core = FALSE) {
 
   structure_graphs <- glyrepr::get_structure_graphs(glycans, return_list = TRUE)
 
+  if (include_mannose_branch) {
+    mannose_matches <- match_motif(
+      glycans,
+      glyrepr::as_glycan_structure(
+        "Hex(??-?)Hex(??-?)Hex(??-?)HexNAc(??-?)HexNAc(??-"
+      ),
+      alignment = "core"
+    )
+    for (i in seq_along(matches)) {
+      if (!have_n_core[[i]]) {
+        next
+      }
+      mono <- graph_vertex_attr(structure_graphs[[i]], "mono")
+      mannose_matches[[i]] <- Filter(
+        \(mapping) mono[[mapping[[1]]]] %in% c("Man", "Hex"),
+        mannose_matches[[i]]
+      )
+      matches[[i]] <- c(matches[[i]], mannose_matches[[i]])
+    }
+  }
+
   roots <- lapply(matches, function(g_matches) {
     vapply(g_matches, function(mapping) as.integer(mapping[[1]]), integer(1))
   })
@@ -86,10 +137,6 @@ extract_branch_motif <- function(glycans, ..., including_core = FALSE) {
       Inf,
       branches = TRUE
     )
-  }
-
-  if (length(extracted_subtrees) == 0) {
-    return(glyrepr::glycan_structure())
   }
 
   # Convert extracted graphs back to glycan_structure and return unique ones
@@ -111,7 +158,38 @@ extract_branch_motif <- function(glycans, ..., including_core = FALSE) {
     res <- glyrepr::as_glycan_structure(res_chars)
   }
 
+  if (include_empty_branch) {
+    res <- unique(c(res, .extract_empty_branch_motifs(glycans, have_n_core)))
+  }
+
   res
+}
+
+.extract_empty_branch_motifs <- function(glycans, have_n_core) {
+  matches <- match_motif(
+    glycans,
+    glyrepr::as_glycan_structure("Hex(??-?)Hex(??-?)HexNAc(??-?)HexNAc(??-"),
+    alignment = "core"
+  )
+  graphs <- glyrepr::get_structure_graphs(glycans, return_list = TRUE)
+  cores <- character()
+  for (i in which(have_n_core)) {
+    mono <- graph_vertex_attr(graphs[[i]], "mono")
+    out_degree <- graph_degree(graphs[[i]], mode = "out")
+    for (mapping in matches[[i]]) {
+      arm <- mapping[[1]]
+      if (!mono[[arm]] %in% c("Man", "Hex") || out_degree[[arm]] != 0) {
+        next
+      }
+      core <- if (all(mono[mapping] %in% c("Man", "GlcNAc"))) {
+        "Man(??-?)Man(??-?)GlcNAc(??-?)GlcNAc(??-"
+      } else {
+        "Hex(??-?)Hex(??-?)HexNAc(??-?)HexNAc(??-"
+      }
+      cores <- c(cores, core)
+    }
+  }
+  glyrepr::as_glycan_structure(unique(cores))
 }
 
 .assert_n_glycans <- function(glycans) {
@@ -125,6 +203,7 @@ extract_branch_motif <- function(glycans, ..., including_core = FALSE) {
       "!" = "Those glycans are skipped."
     ))
   }
+  invisible(have_n_motif)
 }
 
 #' Extract All Substructures (Motifs)
@@ -439,8 +518,8 @@ extract_motif <- function(glycans, ..., max_size = 3) {
 
     for (match_idx in g_matches) {
       # The match_idx is a vector of node indices in 'g' corresponding to nodes in 'motif'.
-      # The first node of the motif (HexNAc) is the root of the branch.
-      # We assume the motif string was parsed such that the first node is indeed the root HexNAc.
+      # The first node of the motif (HexNAc or Hex) is the root of the branch.
+      # Motif strings are parsed with this branch root first.
       # In glyrepr/igraph, nodes are 1-indexed.
 
       branch_root_id <- match_idx[1]

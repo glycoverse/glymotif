@@ -358,6 +358,26 @@ count_motifs(glycans, branch_motifs())
 Functions supporting `dynamic_motifs()` and `branch_motifs()`:
 `have_motifs()`, `count_motifs()`, and `match_motifs()`.
 
+By default, branch extraction includes only GlcNAc/HexNAc-rooted antennae.
+Both `extract_branch_motif()` and `branch_motifs()` accept
+`include_empty_branch = TRUE` to include core a3/a6 Man residues with no outward
+monosaccharides, and `include_mannose_branch = TRUE` to include full subtrees
+rooted at Man/Hex directly attached to these core arms. Both options default
+to `FALSE`.
+
+Empty branches are represented by their four-residue core path in
+`extract_branch_motif()`, even without `including_core = TRUE`. The
+`branch_motifs()` helper labels them `empty` (or `empty (generic)`) and counts
+each bare arm separately. `match_motifs()` returns the core arm's node index
+for each empty branch.
+
+```{r}
+count_motifs(
+  glyrepr::n_glycan_core(),
+  branch_motifs(include_empty_branch = TRUE, include_mannose_branch = TRUE)
+)
+```
+
 ## What's Next?
 
 - Want more detail about motif matching rules? See [Motif Matching Rules](https://glycoverse.github.io/glymotif/articles/motif-matching.html).

@@ -59,9 +59,22 @@ print.dynamic_motifs_spec <- function(x, ...) {
 #' Then, the `match_degree` is constructed so that the four residues in the suffix
 #' do not have to match the node degree in the motif matching process.
 #'
+#' With `include_mannose_branch = TRUE`, Man-rooted subtrees are extracted and
+#' matched in the same way as GlcNAc-rooted subtrees. With
+#' `include_empty_branch = TRUE`, bare core arms are labelled `empty` (or
+#' `empty (generic)` for a generic core). Their arm residue must have no outward
+#' monosaccharides. [match_motifs()] returns that core arm's node index for each
+#' empty-branch match.
+#'
 #' Therefore, `have_motifs(glycans, branch_motifs())` doesn't equal to
 #' `have_motifs(glycans, extract_branch_motif(glycans))`.
 #' Never use the results from `extract_branch_motif()` directly in these functions.
+#'
+#' @param include_empty_branch A logical scalar. If `TRUE`, include bare core
+#'   a3/a6 mannose arms as empty branches. Default is `FALSE`.
+#' @param include_mannose_branch A logical scalar. If `TRUE`, include full
+#'   subtrees rooted at Man (or generic Hex) directly attached to core a3/a6
+#'   mannose. Default is `FALSE`.
 #'
 #' @returns A `branch_motifs_spec` object.
 #'
@@ -73,10 +86,25 @@ print.dynamic_motifs_spec <- function(x, ...) {
 #'   "Gal(b1-4)GlcNAc(b1-2)Man(a1-3)[Man(a1-6)]Man(b1-4)GlcNAc(b1-4)GlcNAc(b1-"
 #' )
 #' have_motifs(glycans, branch_motifs())
+#' count_motifs(
+#'   glycans,
+#'   branch_motifs(include_empty_branch = TRUE, include_mannose_branch = TRUE)
+#' )
 #'
 #' @export
-branch_motifs <- function() {
-  structure(list(), class = "branch_motifs_spec")
+branch_motifs <- function(
+  include_empty_branch = FALSE,
+  include_mannose_branch = FALSE
+) {
+  checkmate::assert_flag(include_empty_branch)
+  checkmate::assert_flag(include_mannose_branch)
+  structure(
+    list(
+      include_empty_branch = include_empty_branch,
+      include_mannose_branch = include_mannose_branch
+    ),
+    class = "branch_motifs_spec"
+  )
 }
 
 #' @export
@@ -86,6 +114,9 @@ print.branch_motifs_spec <- function(x, ...) {
     "This object should be passed to the {.arg motifs} argument of {.fn have_motifs}, {.fn count_motifs}, or {.fn match_motifs}."
   )
   cli::cli_text("Configuration: extracts branch motifs with core included")
+  cli::cli_text(
+    "Include empty branches: {.val {x$include_empty_branch}}; mannose branches: {.val {x$include_mannose_branch}}"
+  )
   invisible(x)
 }
 
@@ -176,6 +207,11 @@ resolve_motif_spec.dynamic_motifs_spec <- function(
   generic_suffix <- "?)Hex(??-?)Hex(??-?)HexNAc(??-?)HexNAc(??-"
   result <- stringr::str_remove(result, stringr::fixed(generic_suffix))
 
+  result[iupac == "Man(??-?)Man(??-?)GlcNAc(??-?)GlcNAc(??-"] <- "empty"
+  result[
+    iupac == "Hex(??-?)Hex(??-?)HexNAc(??-?)HexNAc(??-"
+  ] <- "empty (generic)"
+
   result
 }
 
@@ -188,9 +224,15 @@ resolve_motif_spec.branch_motifs_spec <- function(
   strict_sub = TRUE,
   ignore_linkages = FALSE
 ) {
-  motifs <- extract_branch_motif(glycans, including_core = TRUE)
+  motifs <- extract_branch_motif(
+    glycans,
+    including_core = TRUE,
+    include_empty_branch = spec$include_empty_branch,
+    include_mannose_branch = spec$include_mannose_branch
+  )
 
-  # Construct match_degree: for each motif, last 4 nodes are FALSE, others TRUE
+  # Ordinary branches leave the appended core degrees unconstrained.
+  # Empty branches constrain the bare arm, the first node of their core path.
   motif_graphs <- glyrepr::get_structure_graphs(motifs)
   if (inherits(motif_graphs, "igraph")) {
     motif_graphs <- list(motif_graphs)
@@ -198,8 +240,8 @@ resolve_motif_spec.branch_motifs_spec <- function(
 
   match_degree <- purrr::map(motif_graphs, function(g) {
     n_nodes <- igraph::vcount(g)
-    if (n_nodes <= 4) {
-      rep(FALSE, n_nodes)
+    if (n_nodes == 4) {
+      c(TRUE, FALSE, FALSE, FALSE)
     } else {
       c(rep(TRUE, n_nodes - 4), rep(FALSE, 4))
     }

@@ -4,29 +4,49 @@
 \alias{extract_branch_motif}
 \title{Extract Branch Motifs}
 \usage{
-extract_branch_motif(glycans, ..., including_core = FALSE)
+extract_branch_motif(
+  glycans,
+  ...,
+  including_core = FALSE,
+  include_empty_branch = FALSE,
+  include_mannose_branch = FALSE
+)
 }
 \arguments{
 \item{glycans}{One of:
 \itemize{
 \item A \code{\link[glyrepr:glycan_structure]{glyrepr::glycan_structure()}} vector.
-\item A glycan structure string vector. All formats supported by \code{\link[glyparse:auto_parse]{glyparse::auto_parse()}} are accepted.
+\item A glycan structure string vector. All formats supported by
+\code{\link[glyparse:auto_parse]{glyparse::auto_parse()}} are accepted.
 }}
 
 \item{...}{These dots must be empty and are used only to force optional
 arguments to be supplied by name.}
 
 \item{including_core}{A logical scalar. If \code{TRUE}, the N-glycan core structure
-(\verb{Man(??-?)Man(??-?)GlcNAc(??-?)GlcNAc(??-} or \verb{Hex(??-?)Hex(??-?)HexNAc(??-?)HexNAc(??-})
+(\verb{Man(??-?)Man(??-?)GlcNAc(??-?)GlcNAc(??-} or
+\verb{Hex(??-?)Hex(??-?)HexNAc(??-?)HexNAc(??-})
 is appended to each branch motif. Concrete branches receive a concrete
 core; generic and mixed branches receive a generic core. Default is
 \code{FALSE}.}
+
+\item{include_empty_branch}{A logical scalar. If \code{TRUE}, also extract empty
+branches: core a3/a6 mannose residues with no outward monosaccharides.
+These are represented by the four-residue core path
+\verb{Man(??-?)Man(??-?)GlcNAc(??-?)GlcNAc(??-} (or its generic equivalent),
+even when \code{including_core = FALSE}. Default is \code{FALSE}.}
+
+\item{include_mannose_branch}{A logical scalar. If \code{TRUE}, also extract full
+subtrees rooted at Man (or generic Hex) directly attached to a core a3/a6
+mannose. Default is \code{FALSE}.}
 }
 \value{
-A \code{\link[glyrepr:glycan_structure]{glyrepr::glycan_structure()}} vector containing the unique extracted branching motifs.
+A \code{\link[glyrepr:glycan_structure]{glyrepr::glycan_structure()}} vector containing the unique
+extracted branching motifs.
 }
 \description{
-An N-glycan branching motif if the substructures linked to either the a3- or a6-core-mannose.
+An N-glycan branching motif is a subtree linked to either the a3- or
+a6-core-mannose.
 
 For example:
 
@@ -37,21 +57,28 @@ For example:
                         Man
 }\if{html}{\out{</div>}}
 
-This function returns all the unique branching motifs found in the input glycans.
+This function returns all unique branching motifs found in the input glycans.
 
-If you want to perform branching motif matching in functions like \code{have_motifs()} or \code{glydet::quantify_motifs()},
-use the \code{\link[=branch_motifs]{branch_motifs()}} helper instead,
-which handles additional intricacies related to how the motifs should be matched.
+For branch motif matching with \code{have_motifs()} or
+\code{glydet::quantify_motifs()}, use the \code{\link[=branch_motifs]{branch_motifs()}} helper, which handles
+the additional matching constraints.
 }
 \details{
 The function works by:
 \enumerate{
 \item Converting the input to a set of unique \code{glycan_structure} objects.
-\item Searching for the N-glycan branch pattern: \verb{HexNAc(??-?)Hex(??-?)Hex(??-?)HexNAc(??-?)HexNAc(??-}.
-\item For each match, identifying the root node of the branch (the leftmost HexNAc in the pattern).
+\item Searching for the N-glycan branch pattern:
+\verb{HexNAc(??-?)Hex(??-?)Hex(??-?)HexNAc(??-?)HexNAc(??-}.
+\item For each match, identifying the root node of the branch (the leftmost
+HexNAc in the pattern).
 \item Extracting the full subtree rooted at that node.
-\item Preserving the correct anomeric configuration (e.g., "b1") by inspecting the linkage to the root node.
+\item Preserving the correct anomeric configuration (e.g., "b1") by inspecting
+the linkage to the root node.
 }
+
+With \code{include_mannose_branch = TRUE}, the same procedure also extracts
+Man/Hex-rooted branches. With \code{include_empty_branch = TRUE}, bare core arms
+are returned as core paths so they remain valid \code{glycan_structure} objects.
 }
 \examples{
 glycans <- c(
@@ -59,5 +86,8 @@ glycans <- c(
   "Gal(b1-4)GlcNAc(b1-2)Man(a1-3)[Man(a1-6)]Man(b1-4)GlcNAc(a1-4)GlcNAc(b1-"
 )
 extract_branch_motif(glycans)
+extract_branch_motif(
+  glycans, include_empty_branch = TRUE, include_mannose_branch = TRUE
+)
 
 }

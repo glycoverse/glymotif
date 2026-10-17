@@ -101,6 +101,112 @@ test_that("extract_branch_motif works for intact glycan structures", {
   expect_setequal(as.character(res), as.character(expected))
 })
 
+test_that("special branch extraction is opt-in and independently controlled", {
+  glycans <- glyrepr::as_glycan_structure(c(
+    "Man(a1-3)[Man(a1-6)]Man(b1-4)GlcNAc(b1-4)GlcNAc(b1-",
+    "Man(a1-2)Man(a1-3)[Man(a1-6)]Man(b1-4)GlcNAc(b1-4)GlcNAc(b1-",
+    "GlcNAc(b1-2)Man(a1-3)[GlcNAc(b1-2)Man(a1-6)]Man(b1-4)GlcNAc(b1-4)GlcNAc(b1-"
+  ))
+  empty <- "Man(??-?)Man(??-?)GlcNAc(??-?)GlcNAc(??-"
+
+  expect_identical(as.character(extract_branch_motif(glycans)), "GlcNAc(b1-")
+  expect_setequal(
+    as.character(extract_branch_motif(glycans, include_empty_branch = TRUE)),
+    c("GlcNAc(b1-", empty)
+  )
+  expect_setequal(
+    as.character(extract_branch_motif(glycans, include_mannose_branch = TRUE)),
+    c("GlcNAc(b1-", "Man(a1-")
+  )
+  expect_setequal(
+    as.character(extract_branch_motif(
+      glycans,
+      include_empty_branch = TRUE,
+      include_mannose_branch = TRUE
+    )),
+    c("GlcNAc(b1-", "Man(a1-", empty)
+  )
+})
+
+test_that("mannose branch extraction preserves complete subtrees and cores", {
+  glycans <- glyrepr::as_glycan_structure(c(
+    "Man(a1-2)Man(a1-2)Man(a1-3)[Man(a1-6)]Man(b1-4)GlcNAc(b1-4)GlcNAc(b1-",
+    "Man(a1-3)[Man(a1-2)[Man(a1-6)]Man(a1-6)]Man(b1-4)GlcNAc(b1-4)GlcNAc(b1-",
+    "Man(a1-3)[Man(a1-2)[Man(a1-6)]Man(a1-2)Man(a1-6)]Man(b1-4)GlcNAc(b1-4)GlcNAc(b1-"
+  ))
+  branches <- c(
+    "Man(a1-2)Man(a1-",
+    "Man(a1-",
+    "Man(a1-2)[Man(a1-6)]Man(a1-"
+  )
+
+  expect_setequal(
+    as.character(extract_branch_motif(glycans, include_mannose_branch = TRUE)),
+    branches
+  )
+  expect_setequal(
+    as.character(extract_branch_motif(
+      glycans,
+      including_core = TRUE,
+      include_mannose_branch = TRUE
+    )),
+    paste0(branches, "?)Man(??-?)Man(??-?)GlcNAc(??-?)GlcNAc(??-")
+  )
+  expect_identical(
+    as.character(extract_branch_motif(
+      glyrepr::n_glycan_core(),
+      including_core = TRUE,
+      include_empty_branch = TRUE
+    )),
+    "Man(??-?)Man(??-?)GlcNAc(??-?)GlcNAc(??-"
+  )
+})
+
+test_that("special branch extraction supports generic and mixed structures", {
+  glycans <- glyrepr::as_glycan_structure(c(
+    "Man(??-?)Man(??-?)[Man(??-?)]Man(??-?)GlcNAc(??-?)GlcNAc(??-",
+    "Hex(??-?)Hex(??-?)[Hex(??-?)]Hex(??-?)HexNAc(??-?)HexNAc(??-",
+    "Hex(??-?)Man(??-?)[Hex(??-?)]Man(??-?)GlcNAc(??-?)GlcNAc(??-"
+  ))
+  expect_setequal(
+    as.character(extract_branch_motif(
+      glycans,
+      including_core = TRUE,
+      include_empty_branch = TRUE,
+      include_mannose_branch = TRUE
+    )),
+    c(
+      "Man(??-?)Man(??-?)Man(??-?)GlcNAc(??-?)GlcNAc(??-",
+      "Hex(??-?)Hex(??-?)Hex(??-?)HexNAc(??-?)HexNAc(??-",
+      "Man(??-?)Man(??-?)GlcNAc(??-?)GlcNAc(??-",
+      "Hex(??-?)Hex(??-?)HexNAc(??-?)HexNAc(??-"
+    )
+  )
+})
+
+test_that("special branch extraction excludes non-core and non-mannose residues", {
+  glycans <- glyrepr::as_glycan_structure(c(
+    "GlcNAc(b1-2)Man(a1-3)[GlcNAc(b1-4)][Gal(b1-4)Man(a1-6)]Man(b1-4)GlcNAc(b1-4)GlcNAc(b1-",
+    "Man(a1-2)GlcNAc(b1-2)Man(a1-3)[GlcNAc(b1-2)Man(a1-6)]Man(b1-4)GlcNAc(b1-4)GlcNAc(b1-"
+  ))
+  expect_setequal(
+    as.character(extract_branch_motif(
+      glycans,
+      include_empty_branch = TRUE,
+      include_mannose_branch = TRUE
+    )),
+    c("GlcNAc(b1-", "Man(a1-2)GlcNAc(b1-")
+  )
+  expect_length(
+    extract_branch_motif(
+      glyrepr::glycan_structure(),
+      include_empty_branch = TRUE,
+      include_mannose_branch = TRUE
+    ),
+    0L
+  )
+})
+
 test_that("extract_branch_motif works for topological glycan structures", {
   glycans <- "NeuAc(??-?)Hex(??-?)HexNAc(??-?)Hex(??-?)[Hex(??-?)HexNAc(??-?)Hex(??-?)]Hex(??-?)HexNAc(??-?)HexNAc(??-"
   res <- extract_branch_motif(glycans)
@@ -299,7 +405,10 @@ test_that("native extraction preserves character anomers from list contexts", {
 
   for (branches in c(FALSE, TRUE)) {
     result <- cpp_extract_motif_candidates(
-      list(context), list(seq_along(anomers)), 1, branches
+      list(context),
+      list(seq_along(anomers)),
+      1,
+      branches
     )
     expect_identical(result, expected)
   }
