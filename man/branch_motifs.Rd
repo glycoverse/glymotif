@@ -41,9 +41,10 @@ matched in the same way as GlcNAc-rooted subtrees. Identical branch labels
 with different source cores receive numeric suffixes to distinguish the
 motifs. With
 \code{include_empty_branch = TRUE}, bare core arms are labelled \code{empty} (or
-\code{empty (generic)} for a generic core). Their arm residue must have no outward
-monosaccharides. \code{\link[=match_motifs]{match_motifs()}} returns that core arm's node index for each
-empty-branch match.
+\code{empty (generic)} or \code{empty (mixed)} for other core types). Substituents are
+preserved and included in the label, e.g. \code{empty (Man6S)}. Their arm residue
+must have no outward monosaccharides. \code{\link[=match_motifs]{match_motifs()}} returns that core arm's
+node index for each empty-branch match.
 
 Therefore, \code{have_motifs(glycans, branch_motifs())} doesn't equal to
 \code{have_motifs(glycans, extract_branch_motif(glycans))}.

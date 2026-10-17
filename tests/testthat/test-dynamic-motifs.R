@@ -136,6 +136,56 @@ test_that("mannose motifs match concrete subtrees on generic and mixed cores", {
   )
 })
 
+test_that("empty branch matching counts substituted arms individually", {
+  glycans <- glyrepr::as_glycan_structure(c(
+    "Man6S(a1-3)[Man(a1-6)]Man(b1-4)GlcNAc(b1-4)GlcNAc(b1-",
+    "Man(a1-3)[Man6S(a1-6)]Man(b1-4)GlcNAc(b1-4)GlcNAc(b1-",
+    "Man6S(a1-3)[Man6S(a1-6)]Man(b1-4)GlcNAc(b1-4)GlcNAc(b1-"
+  ))
+  spec <- branch_motifs(include_empty_branch = TRUE)
+  counts <- count_motifs(glycans, spec)
+  expect_setequal(colnames(counts), c("empty", "empty (Man6S)"))
+  expect_identical(unname(counts[, "empty"]), c(1L, 1L, 0L))
+  expect_identical(unname(counts[, "empty (Man6S)"]), c(1L, 1L, 2L))
+  expect_identical(have_motifs(glycans, spec), counts > 0L)
+  matches <- match_motifs(glycans, spec)
+  expect_equal(
+    matches[["empty (Man6S)"]],
+    list(list(1L), list(2L), list(1L, 2L))
+  )
+})
+
+test_that("substituted empty core paths support generic and mixed identities", {
+  glycans <- glyrepr::as_glycan_structure(c(
+    "Hex6S(??-?)[Hex(??-?)]Hex(??-?)HexNAc(??-?)HexNAc(??-",
+    "Man6S(??-?)[Hex(??-?)]Hex(??-?)HexNAc(??-?)HexNAc(??-",
+    "Man(a1-3)[Man(a1-6)]Man(b1-4)GlcNAc6S(b1-4)GlcNAc(b1-"
+  ))
+  for (i in seq_along(glycans)) {
+    glycan <- glycans[i]
+    spec <- branch_motifs(include_empty_branch = TRUE)
+    counts <- count_motifs(glycan, spec)
+    expect_identical(sum(counts), 2L)
+    expect_identical(have_motifs(glycan, spec), counts > 0L)
+    expect_setequal(
+      unlist(match_motifs(glycan, spec), use.names = FALSE),
+      c(1L, 2L)
+    )
+  }
+})
+
+test_that("mannose branches retain substituents on generic source cores", {
+  glycan <- glyrepr::as_glycan_structure(
+    "Man6S(a1-2)Hex6S(??-?)[Hex(??-?)]Hex(??-?)HexNAc6S(??-?)HexNAc(??-"
+  )
+  spec <- branch_motifs(include_mannose_branch = TRUE)
+  counts <- count_motifs(glycan, spec)
+  expect_identical(colnames(counts), "Man6S(a1-")
+  expect_identical(unname(counts), matrix(1L, nrow = 1))
+  expect_identical(have_motifs(glycan, spec), counts > 0L)
+  expect_equal(match_motifs(glycan, spec)[[1]][[1]], list(1L))
+})
+
 test_that("db_motifs() creates a db_motifs_spec object", {
   spec <- db_motifs()
   expect_s3_class(spec, "db_motifs_spec")

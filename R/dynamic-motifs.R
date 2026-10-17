@@ -64,9 +64,10 @@ print.dynamic_motifs_spec <- function(x, ...) {
 #' with different source cores receive numeric suffixes to distinguish the
 #' motifs. With
 #' `include_empty_branch = TRUE`, bare core arms are labelled `empty` (or
-#' `empty (generic)` for a generic core). Their arm residue must have no outward
-#' monosaccharides. [match_motifs()] returns that core arm's node index for each
-#' empty-branch match.
+#' `empty (generic)` or `empty (mixed)` for other core types). Substituents are
+#' preserved and included in the label, e.g. `empty (Man6S)`. Their arm residue
+#' must have no outward monosaccharides. [match_motifs()] returns that core arm's
+#' node index for each empty-branch match.
 #'
 #' Therefore, `have_motifs(glycans, branch_motifs())` doesn't equal to
 #' `have_motifs(glycans, extract_branch_motif(glycans))`.
@@ -218,7 +219,18 @@ resolve_motif_spec.dynamic_motifs_spec <- function(
   for (i in seq_along(graphs)) {
     graph <- graphs[[i]]
     n_branch <- igraph::vcount(graph) - 4L
-    if (n_branch > 0L && result[[i]] == iupac[[i]]) {
+    if (n_branch == 0L) {
+      mono_type <- graph_mono_type(graph)
+      details <- if (mono_type == "concrete") character() else mono_type
+      sub <- graph_vertex_attr(graph, "sub")
+      mono <- graph_vertex_attr(graph, "mono")
+      details <- c(details, paste0(mono[nzchar(sub)], sub[nzchar(sub)]))
+      result[[i]] <- if (length(details) == 0L) {
+        "empty"
+      } else {
+        paste0("empty (", paste(details, collapse = "; "), ")")
+      }
+    } else if (result[[i]] == iupac[[i]]) {
       branch <- igraph::induced_subgraph(graph, seq_len(n_branch))
       branch$anomer <- .get_node_anomer(graph, n_branch)
       result[[i]] <- as.character(glyrepr::as_glycan_structure(branch))

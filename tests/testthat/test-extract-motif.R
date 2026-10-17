@@ -180,7 +180,8 @@ test_that("special branch extraction supports generic and mixed structures", {
       "Hex(??-?)Hex(??-?)Hex(??-?)HexNAc(??-?)HexNAc(??-",
       "Hex(??-?)Man(??-?)Man(??-?)GlcNAc(??-?)GlcNAc(??-",
       "Man(??-?)Man(??-?)GlcNAc(??-?)GlcNAc(??-",
-      "Hex(??-?)Hex(??-?)HexNAc(??-?)HexNAc(??-"
+      "Hex(??-?)Hex(??-?)HexNAc(??-?)HexNAc(??-",
+      "Hex(??-?)Man(??-?)GlcNAc(??-?)GlcNAc(??-"
     )
   )
 })
@@ -210,6 +211,30 @@ test_that("mannose motifs retain every source core before deduplication", {
       "Man(??-"
     )
   }
+})
+
+test_that("empty branches preserve substituted core paths and source graphs", {
+  glycans <- glyrepr::as_glycan_structure(c(
+    "Man6S(a1-3)[Man(a1-6)]Man(b1-4)GlcNAc(b1-4)GlcNAc(b1-",
+    "Man(a1-3)[Man6S(a1-6)]Man(b1-4)GlcNAc(b1-4)GlcNAc(b1-"
+  ))
+  graphs <- glyrepr::get_structure_graphs(glycans, return_list = TRUE)
+  before <- serialize(graphs, NULL)
+  expected <- c(
+    "Man6S(??-?)Man(??-?)GlcNAc(??-?)GlcNAc(??-",
+    "Man(??-?)Man(??-?)GlcNAc(??-?)GlcNAc(??-"
+  )
+  for (including_core in c(FALSE, TRUE)) {
+    expect_setequal(
+      as.character(extract_branch_motif(
+        glycans,
+        including_core = including_core,
+        include_empty_branch = TRUE
+      )),
+      expected
+    )
+  }
+  expect_identical(serialize(graphs, NULL), before)
 })
 
 test_that("special branch extraction excludes non-core and non-mannose residues", {

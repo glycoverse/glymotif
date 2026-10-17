@@ -37,7 +37,8 @@
 #'   branches: core a3/a6 mannose residues with no outward monosaccharides.
 #'   These are represented by the four-residue core path
 #'   `Man(??-?)Man(??-?)GlcNAc(??-?)GlcNAc(??-` (or its generic equivalent),
-#'   even when `including_core = FALSE`. Default is `FALSE`.
+#'   even when `including_core = FALSE`. The source residue identities and
+#'   substituents on this path are preserved. Default is `FALSE`.
 #' @param include_mannose_branch A logical scalar. If `TRUE`, also extract full
 #'   subtrees rooted at Man (or generic Hex) directly attached to a core a3/a6
 #'   mannose. Default is `FALSE`.
@@ -86,7 +87,10 @@ extract_branch_motif <- function(
   # 1. Handle input types and deduplicate
   glycans <- ensure_glycans_are_structures(glycans)
   glycans <- unique(glycans)
-  have_n_core <- .assert_n_glycans(glycans)
+  have_n_core <- .assert_n_glycans(
+    glycans,
+    strict_sub = !include_empty_branch && !include_mannose_branch
+  )
 
   # 2. Define the motif
   # The motif represents an N-glycan branch, rooted at the GlcNAc attached to the Mannose core.
@@ -110,7 +114,8 @@ extract_branch_motif <- function(
       glyrepr::as_glycan_structure(
         "Hex(??-?)Hex(??-?)Hex(??-?)HexNAc(??-?)HexNAc(??-"
       ),
-      alignment = "core"
+      alignment = "core",
+      strict_sub = FALSE
     )
     for (i in seq_along(matches)) {
       if (!have_n_core[[i]]) {
@@ -219,10 +224,11 @@ extract_branch_motif <- function(
   matches <- match_motif(
     glycans,
     glyrepr::as_glycan_structure("Hex(??-?)Hex(??-?)HexNAc(??-?)HexNAc(??-"),
-    alignment = "core"
+    alignment = "core",
+    strict_sub = FALSE
   )
   graphs <- glyrepr::get_structure_graphs(glycans, return_list = TRUE)
-  cores <- character()
+  cores <- list()
   for (i in which(have_n_core)) {
     mono <- graph_vertex_attr(graphs[[i]], "mono")
     out_degree <- graph_degree(graphs[[i]], mode = "out")
@@ -231,22 +237,25 @@ extract_branch_motif <- function(
       if (!mono[[arm]] %in% c("Man", "Hex") || out_degree[[arm]] != 0) {
         next
       }
-      core <- if (all(mono[mapping] %in% c("Man", "GlcNAc"))) {
-        "Man(??-?)Man(??-?)GlcNAc(??-?)GlcNAc(??-"
-      } else {
-        "Hex(??-?)Hex(??-?)HexNAc(??-?)HexNAc(??-"
-      }
-      cores <- c(cores, core)
+      cores[[length(cores) + 1L]] <- .extract_branch_core_path(
+        graphs[[i]],
+        mapping
+      )
     }
   }
-  glyrepr::as_glycan_structure(unique(cores))
+  unique(glyrepr::as_glycan_structure(cores))
 }
 
-.assert_n_glycans <- function(glycans) {
+.assert_n_glycans <- function(glycans, strict_sub = TRUE) {
   n_motif <- glyrepr::as_glycan_structure(
     "Hex(??-?)[Hex(??-?)]Hex(??-?)HexNAc(??-?)HexNAc(??-"
   )
-  have_n_motif <- have_motif(glycans, n_motif, alignment = "core")
+  have_n_motif <- have_motif(
+    glycans,
+    n_motif,
+    alignment = "core",
+    strict_sub = strict_sub
+  )
   if (!all(have_n_motif)) {
     cli::cli_warn(c(
       "!" = "Some of {.arg glycans} do not have the N-glycan core motif.",

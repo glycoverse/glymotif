@@ -35,7 +35,8 @@ and substituents are preserved instead.}
 branches: core a3/a6 mannose residues with no outward monosaccharides.
 These are represented by the four-residue core path
 \verb{Man(??-?)Man(??-?)GlcNAc(??-?)GlcNAc(??-} (or its generic equivalent),
-even when \code{including_core = FALSE}. Default is \code{FALSE}.}
+even when \code{including_core = FALSE}. The source residue identities and
+substituents on this path are preserved. Default is \code{FALSE}.}
 
 \item{include_mannose_branch}{A logical scalar. If \code{TRUE}, also extract full
 subtrees rooted at Man (or generic Hex) directly attached to a core a3/a6

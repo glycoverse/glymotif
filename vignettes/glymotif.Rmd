@@ -371,6 +371,12 @@ Empty branches are represented by their four-residue core path in
 each bare arm separately. `match_motifs()` returns the core arm's node index
 for each empty branch.
 
+Man-rooted branches retain their source core identities, including generic
+and mixed cores. Empty branches retain the residues and substituents of their
+source core path; mixed cores are labelled `empty (mixed)`, and substituents
+appear in labels such as `empty (Man6S)`. Identical branch labels with different
+cores receive numeric suffixes to distinguish their matching patterns.
+
 ```{r}
 count_motifs(
   glyrepr::n_glycan_core(),
