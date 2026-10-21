@@ -1,7 +1,6 @@
 # glymotif (development version)
 
-* Fix source installation with C++14 on older R versions by explicitly converting
-  character vectors in native motif extraction and structure matching.
+* Fixed installation from source on older versions of R. (#61)
 
 # glymotif 1.0.0
 
