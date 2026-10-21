@@ -4,15 +4,7 @@
 \alias{branch_motifs}
 \title{Branch Motifs Specification}
 \usage{
-branch_motifs(include_empty_branch = FALSE, include_mannose_branch = FALSE)
-}
-\arguments{
-\item{include_empty_branch}{A logical scalar. If \code{TRUE}, include bare core
-a3/a6 mannose arms as empty branches. Default is \code{FALSE}.}
-
-\item{include_mannose_branch}{A logical scalar. If \code{TRUE}, include full
-subtrees rooted at Man (or generic Hex) directly attached to core a3/a6
-mannose. Default is \code{FALSE}.}
+branch_motifs()
 }
 \value{
 A \code{branch_motifs_spec} object.
@@ -36,16 +28,6 @@ This suffix helps differentiate branching GlcNAc and bisecting GlcNAc.
 Then, the \code{match_degree} is constructed so that the four residues in the suffix
 do not have to match the node degree in the motif matching process.
 
-With \code{include_mannose_branch = TRUE}, Man-rooted subtrees are extracted and
-matched in the same way as GlcNAc-rooted subtrees. Identical branch labels
-with different source cores receive numeric suffixes to distinguish the
-motifs. With
-\code{include_empty_branch = TRUE}, bare core arms are labelled \code{empty} (or
-\code{empty (generic)} or \code{empty (mixed)} for other core types). Substituents are
-preserved and included in the label, e.g. \code{empty (Man6S)}. Their arm residue
-must have no outward monosaccharides. \code{\link[=match_motifs]{match_motifs()}} returns that core arm's
-node index for each empty-branch match.
-
 Therefore, \code{have_motifs(glycans, branch_motifs())} doesn't equal to
 \code{have_motifs(glycans, extract_branch_motif(glycans))}.
 Never use the results from \code{extract_branch_motif()} directly in these functions.
@@ -56,10 +38,6 @@ glycans <- c(
   "Gal(b1-4)GlcNAc(b1-2)Man(a1-3)[Man(a1-6)]Man(b1-4)GlcNAc(b1-4)GlcNAc(b1-"
 )
 have_motifs(glycans, branch_motifs())
-count_motifs(
-  glycans,
-  branch_motifs(include_empty_branch = TRUE, include_mannose_branch = TRUE)
-)
 
 }
 \seealso{
