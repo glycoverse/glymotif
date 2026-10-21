@@ -1,3 +1,20 @@
+snapshot_extraction_graphs <- function(graphs) {
+  # Compare graph contents without igraph's lazily initialized pointer/cache.
+  serialize(
+    lapply(graphs, function(graph) {
+      list(
+        directed = igraph::is_directed(graph),
+        vertices = igraph::vcount(graph),
+        edges = igraph::as_edgelist(graph, names = FALSE),
+        graph_attributes = igraph::graph_attr(graph),
+        vertex_attributes = igraph::vertex_attr(graph),
+        edge_attributes = igraph::edge_attr(graph)
+      )
+    }),
+    NULL
+  )
+}
+
 test_that("extract_motif works for intact glycans", {
   glycan <- "Gal(b1-3)[GlcNAc(a1-6)]GalNAc(a1-"
   result <- extract_motif(glycan)
@@ -219,7 +236,7 @@ test_that("empty branches preserve substituted core paths and source graphs", {
     "Man(a1-3)[Man6S(a1-6)]Man(b1-4)GlcNAc(b1-4)GlcNAc(b1-"
   ))
   graphs <- glyrepr::get_structure_graphs(glycans, return_list = TRUE)
-  before <- serialize(graphs, NULL)
+  before <- snapshot_extraction_graphs(graphs)
   expected <- c(
     "Man6S(??-?)Man(??-?)GlcNAc(??-?)GlcNAc(??-",
     "Man(??-?)Man(??-?)GlcNAc(??-?)GlcNAc(??-"
@@ -234,7 +251,7 @@ test_that("empty branches preserve substituted core paths and source graphs", {
       expected
     )
   }
-  expect_identical(serialize(graphs, NULL), before)
+  expect_identical(snapshot_extraction_graphs(graphs), before)
 })
 
 test_that("special branch extraction excludes non-core and non-mannose residues", {
@@ -396,7 +413,7 @@ test_that("native extraction preserves ordered R enumeration and input graphs", 
     "Hex(??-?)[GlcNAc(b1-6)]HexNAc(??-"
   ))
   graphs <- glyrepr::get_structure_graphs(glycans, return_list = TRUE)
-  before <- serialize(graphs, NULL)
+  before <- snapshot_extraction_graphs(graphs)
   for (size in c(0, 1, 2, 2.5, 3, 5, Inf)) {
     seen <- new.env(hash = TRUE, parent = emptyenv())
     expected <- unlist(
@@ -410,7 +427,7 @@ test_that("native extraction preserves ordered R enumeration and input graphs", 
     expect_identical(as.character(actual), as.character(expected))
     expect_identical(names(actual), names(expected))
   }
-  expect_identical(serialize(graphs, NULL), before)
+  expect_identical(snapshot_extraction_graphs(graphs), before)
 })
 
 test_that("native branch extraction deduplicates complete subtrees in order", {
