@@ -34,7 +34,7 @@ jobs:
         run: |
           print(getOption("repos"))
           packages <- c("glyrepr", "glyparse", "glydraw", "Rcpp", "BH")
-          print(installed.packages()[packages, c("Package", "Version", "Repository")])
+          print(installed.packages(fields = "Repository")[packages, c("Package", "Version", "Repository")])
           stopifnot(!any(grepl("\\.900[0-9]$", installed.packages()[packages, "Version"])))
       - name: Check release candidate including PDF manual
         shell: Rscript {0}
