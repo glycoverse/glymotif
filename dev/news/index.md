@@ -2,15 +2,6 @@
 
 ## glymotif (development version)
 
-- [`extract_branch_motif()`](https://glycoverse.github.io/glymotif/dev/reference/extract_branch_motif.md)
-  and
-  [`branch_motifs()`](https://glycoverse.github.io/glymotif/dev/reference/branch_motifs.md)
-  gain `include_empty_branch` and `include_mannose_branch` (both
-  defaulting to `FALSE`) to include bare core arms and full Man-rooted
-  branches. Man branches retain their source cores, and empty branches
-  retain substituents.
-  ([\#62](https://github.com/glycoverse/glymotif/issues/62))
-
 - Fix source installation with C++14 on older R versions by explicitly
   converting character vectors in native motif extraction and structure
   matching.

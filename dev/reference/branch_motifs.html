@@ -49,24 +49,9 @@ This should be passed to the <code>motifs</code> argument of <code><a href="have
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">branch_motifs</span><span class="op">(</span>include_empty_branch <span class="op">=</span> <span class="cn">FALSE</span>, include_mannose_branch <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">branch_motifs</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
     </div>
 
-    <div class="section level2">
-    <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
-
-
-<dl><dt id="arg-include-empty-branch">include_empty_branch<a class="anchor" aria-label="anchor" href="#arg-include-empty-branch"></a></dt>
-<dd><p>A logical scalar. If <code>TRUE</code>, include bare core
-a3/a6 mannose arms as empty branches. Default is <code>FALSE</code>.</p></dd>
-
-
-<dt id="arg-include-mannose-branch">include_mannose_branch<a class="anchor" aria-label="anchor" href="#arg-include-mannose-branch"></a></dt>
-<dd><p>A logical scalar. If <code>TRUE</code>, include full
-subtrees rooted at Man (or generic Hex) directly attached to core a3/a6
-mannose. Default is <code>FALSE</code>.</p></dd>
-
-</dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>A <code>branch_motifs_spec</code> object.</p>
@@ -81,15 +66,6 @@ mannose. Default is <code>FALSE</code>.</p></dd>
 This suffix helps differentiate branching GlcNAc and bisecting GlcNAc.
 Then, the <code>match_degree</code> is constructed so that the four residues in the suffix
 do not have to match the node degree in the motif matching process.</p>
-<p>With <code>include_mannose_branch = TRUE</code>, Man-rooted subtrees are extracted and
-matched in the same way as GlcNAc-rooted subtrees. Identical branch labels
-with different source cores receive numeric suffixes to distinguish the
-motifs. With
-<code>include_empty_branch = TRUE</code>, bare core arms are labelled <code>empty</code> (or
-<code>empty (generic)</code> or <code>empty (mixed)</code> for other core types). Substituents are
-preserved and included in the label, e.g. <code>empty (Man6S)</code>. Their arm residue
-must have no outward monosaccharides. <code><a href="match_motif.html">match_motifs()</a></code> returns that core arm's
-node index for each empty-branch match.</p>
 <p>Therefore, <code>have_motifs(glycans, branch_motifs())</code> doesn't equal to
 <code>have_motifs(glycans, extract_branch_motif(glycans))</code>.
 Never use the results from <code><a href="extract_branch_motif.html">extract_branch_motif()</a></code> directly in these functions.</p>
@@ -112,19 +88,6 @@ Never use the results from <code><a href="extract_branch_motif.html">extract_bra
 <span class="r-out co"><span class="r-pr">#&gt;</span>                                                                             Gal(b1-4)GlcNAc(b1-</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> GlcNAc(b1-2)Man(a1-3)[GlcNAc(b1-2)Man(a1-6)]Man(b1-4)GlcNAc(b1-4)GlcNAc(b1-               FALSE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Gal(b1-4)GlcNAc(b1-2)Man(a1-3)[Man(a1-6)]Man(b1-4)GlcNAc(b1-4)GlcNAc(b1-                   TRUE</span>
-<span class="r-in"><span><span class="fu"><a href="count_motif.html">count_motifs</a></span><span class="op">(</span></span></span>
-<span class="r-in"><span>  <span class="va">glycans</span>,</span></span>
-<span class="r-in"><span>  <span class="fu">branch_motifs</span><span class="op">(</span>include_empty_branch <span class="op">=</span> <span class="cn">TRUE</span>, include_mannose_branch <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                                                                             GlcNAc(b1-</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> GlcNAc(b1-2)Man(a1-3)[GlcNAc(b1-2)Man(a1-6)]Man(b1-4)GlcNAc(b1-4)GlcNAc(b1-          2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Gal(b1-4)GlcNAc(b1-2)Man(a1-3)[Man(a1-6)]Man(b1-4)GlcNAc(b1-4)GlcNAc(b1-             0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                                                                             Gal(b1-4)GlcNAc(b1-</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> GlcNAc(b1-2)Man(a1-3)[GlcNAc(b1-2)Man(a1-6)]Man(b1-4)GlcNAc(b1-4)GlcNAc(b1-                   0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Gal(b1-4)GlcNAc(b1-2)Man(a1-3)[Man(a1-6)]Man(b1-4)GlcNAc(b1-4)GlcNAc(b1-                      1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                                                                             empty</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> GlcNAc(b1-2)Man(a1-3)[GlcNAc(b1-2)Man(a1-6)]Man(b1-4)GlcNAc(b1-4)GlcNAc(b1-     0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Gal(b1-4)GlcNAc(b1-2)Man(a1-3)[Man(a1-6)]Man(b1-4)GlcNAc(b1-4)GlcNAc(b1-        1</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

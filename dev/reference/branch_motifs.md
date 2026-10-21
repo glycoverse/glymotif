@@ -10,21 +10,8 @@ or
 ## Usage
 
 ``` r
-branch_motifs(include_empty_branch = FALSE, include_mannose_branch = FALSE)
+branch_motifs()
 ```
-
-## Arguments
-
-- include_empty_branch:
-
-  A logical scalar. If `TRUE`, include bare core a3/a6 mannose arms as
-  empty branches. Default is `FALSE`.
-
-- include_mannose_branch:
-
-  A logical scalar. If `TRUE`, include full subtrees rooted at Man (or
-  generic Hex) directly attached to core a3/a6 mannose. Default is
-  `FALSE`.
 
 ## Value
 
@@ -51,17 +38,6 @@ GlcNAc. Then, the `match_degree` is constructed so that the four
 residues in the suffix do not have to match the node degree in the motif
 matching process.
 
-With `include_mannose_branch = TRUE`, Man-rooted subtrees are extracted
-and matched in the same way as GlcNAc-rooted subtrees. Identical branch
-labels with different source cores receive numeric suffixes to
-distinguish the motifs. With `include_empty_branch = TRUE`, bare core
-arms are labelled `empty` (or `empty (generic)` or `empty (mixed)` for
-other core types). Substituents are preserved and included in the label,
-e.g. `empty (Man6S)`. Their arm residue must have no outward
-monosaccharides.
-[`match_motifs()`](https://glycoverse.github.io/glymotif/dev/reference/match_motif.md)
-returns that core arm's node index for each empty-branch match.
-
 Therefore, `have_motifs(glycans, branch_motifs())` doesn't equal to
 `have_motifs(glycans, extract_branch_motif(glycans))`. Never use the
 results from
@@ -87,17 +63,4 @@ have_motifs(glycans, branch_motifs())
 #>                                                                             Gal(b1-4)GlcNAc(b1-
 #> GlcNAc(b1-2)Man(a1-3)[GlcNAc(b1-2)Man(a1-6)]Man(b1-4)GlcNAc(b1-4)GlcNAc(b1-               FALSE
 #> Gal(b1-4)GlcNAc(b1-2)Man(a1-3)[Man(a1-6)]Man(b1-4)GlcNAc(b1-4)GlcNAc(b1-                   TRUE
-count_motifs(
-  glycans,
-  branch_motifs(include_empty_branch = TRUE, include_mannose_branch = TRUE)
-)
-#>                                                                             GlcNAc(b1-
-#> GlcNAc(b1-2)Man(a1-3)[GlcNAc(b1-2)Man(a1-6)]Man(b1-4)GlcNAc(b1-4)GlcNAc(b1-          2
-#> Gal(b1-4)GlcNAc(b1-2)Man(a1-3)[Man(a1-6)]Man(b1-4)GlcNAc(b1-4)GlcNAc(b1-             0
-#>                                                                             Gal(b1-4)GlcNAc(b1-
-#> GlcNAc(b1-2)Man(a1-3)[GlcNAc(b1-2)Man(a1-6)]Man(b1-4)GlcNAc(b1-4)GlcNAc(b1-                   0
-#> Gal(b1-4)GlcNAc(b1-2)Man(a1-3)[Man(a1-6)]Man(b1-4)GlcNAc(b1-4)GlcNAc(b1-                      1
-#>                                                                             empty
-#> GlcNAc(b1-2)Man(a1-3)[GlcNAc(b1-2)Man(a1-6)]Man(b1-4)GlcNAc(b1-4)GlcNAc(b1-     0
-#> Gal(b1-4)GlcNAc(b1-2)Man(a1-3)[Man(a1-6)]Man(b1-4)GlcNAc(b1-4)GlcNAc(b1-        1
 ```

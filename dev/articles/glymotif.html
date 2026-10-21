@@ -509,33 +509,6 @@ matching.</p>
 <p>Functions supporting <code><a href="../reference/dynamic_motifs.html">dynamic_motifs()</a></code> and
 <code><a href="../reference/branch_motifs.html">branch_motifs()</a></code>: <code><a href="../reference/have_motif.html">have_motifs()</a></code>,
 <code><a href="../reference/count_motif.html">count_motifs()</a></code>, and <code><a href="../reference/match_motif.html">match_motifs()</a></code>.</p>
-<p>By default, branch extraction includes only GlcNAc/HexNAc-rooted
-antennae. Both <code><a href="../reference/extract_branch_motif.html">extract_branch_motif()</a></code> and
-<code><a href="../reference/branch_motifs.html">branch_motifs()</a></code> accept
-<code>include_empty_branch = TRUE</code> to include core a3/a6 Man
-residues with no outward monosaccharides, and
-<code>include_mannose_branch = TRUE</code> to include full subtrees
-rooted at Man/Hex directly attached to these core arms. Both options
-default to <code>FALSE</code>.</p>
-<p>Empty branches are represented by their four-residue core path in
-<code><a href="../reference/extract_branch_motif.html">extract_branch_motif()</a></code>, even without
-<code>including_core = TRUE</code>. The <code><a href="../reference/branch_motifs.html">branch_motifs()</a></code>
-helper labels them <code>empty</code> (or <code>empty (generic)</code>)
-and counts each bare arm separately. <code><a href="../reference/match_motif.html">match_motifs()</a></code> returns
-the core arm’s node index for each empty branch.</p>
-<p>Man-rooted branches retain their source core identities, including
-generic and mixed cores. Empty branches retain the residues and
-substituents of their source core path; mixed cores are labelled
-<code>empty (mixed)</code>, and substituents appear in labels such as
-<code>empty (Man6S)</code>. Identical branch labels with different cores
-receive numeric suffixes to distinguish their matching patterns.</p>
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/count_motif.html">count_motifs</a></span><span class="op">(</span></span>
-<span>  <span class="fu">glyrepr</span><span class="fu">::</span><span class="fu"><a href="https://glycoverse.github.io/glyrepr/reference/n_glycan_core.html" class="external-link">n_glycan_core</a></span><span class="op">(</span><span class="op">)</span>,</span>
-<span>  <span class="fu"><a href="../reference/branch_motifs.html">branch_motifs</a></span><span class="op">(</span>include_empty_branch <span class="op">=</span> <span class="cn">TRUE</span>, include_mannose_branch <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="op">)</span></span>
-<span><span class="co">#&gt;                                                     empty</span></span>
-<span><span class="co">#&gt; Man(a1-3)[Man(a1-6)]Man(b1-4)GlcNAc(b1-4)GlcNAc(b1-     2</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level2">
