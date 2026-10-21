@@ -1,5 +1,10 @@
 # Changelog
 
+## glymotif 1.0.1
+
+- Fixed installation from source on older versions of R.
+  ([\#61](https://github.com/glycoverse/glymotif/issues/61))
+
 ## glymotif 1.0.0
 
 CRAN release: 2026-10-07
