@@ -8,7 +8,7 @@
 ## Citation
 
 Source:
-[`DESCRIPTION`](https://github.com/glycoverse/glymotif/blob/main/DESCRIPTION)
+[`DESCRIPTION`](https://github.com/glycoverse/glymotif/blob/v1.0.1/DESCRIPTION)
 
 Fu B (2026). *glymotif: Extract Glycan Motifs from Glycan Structures*. R
 package version 1.0.1, <https://glycoverse.github.io/glymotif/>.
