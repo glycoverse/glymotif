@@ -226,6 +226,7 @@ extract_motif <- function(glycans, ..., max_size = 3) {
 
     subtree <- igraph::induced_subgraph(g, subset_nodes)
     subtree$anomer <- anomer
+    subtree$alditol <- key_context$alditols[[root_id]]
     subtree
   })
 
@@ -253,6 +254,7 @@ extract_motif <- function(glycans, ..., max_size = 3) {
   list(
     mono = graph_vertex_attr(g, "mono"),
     sub = graph_vertex_attr(g, "sub"),
+    alditols = .motif_alditol_nodes(g),
     children = children,
     child_linkages = child_linkages
   )
@@ -296,8 +298,22 @@ extract_motif <- function(glycans, ..., max_size = 3) {
   paste0(
     "R",
     .motif_key_field(anomer),
+    if (context$alditols[[root_id]]) "A" else "O",
     .motif_key_field(encode_node(root_id))
   )
+}
+
+# Alditol status belongs only to the original reducing-end residue. A cut
+# nonreducing subtree must not inherit the graph-level flag from its source.
+.motif_alditol_nodes <- function(g) {
+  out <- rep(FALSE, igraph::vcount(g))
+  if (isTRUE(igraph::graph_attr(g, "alditol"))) {
+    roots <- which(graph_degree(g, mode = "in") == 0L)
+    parts <- igraph::graph_attr(g, "floating_parts")
+    floating_roots <- vapply(parts, function(part) as.integer(part$root), integer(1))
+    out[setdiff(roots, floating_roots)] <- TRUE
+  }
+  out
 }
 
 .motif_key_field <- function(value) {
@@ -422,6 +438,7 @@ extract_motif <- function(glycans, ..., max_size = 3) {
       candidate$nodes
     )
     subtree$anomer <- candidate$anomer
+    subtree$alditol <- contexts[[candidate$graph]]$alditols[[candidate$nodes[[1]]]]
     subtree
   })
 }
@@ -469,6 +486,7 @@ extract_motif <- function(glycans, ..., max_size = 3) {
       # We can split by "-"
       anomer_part <- stringr::str_split_i(linkage, "-", 1)
       subtree$anomer <- anomer_part
+      subtree$alditol <- .motif_alditol_nodes(g)[[branch_root_id]]
 
       extracted_subtrees[[length(extracted_subtrees) + 1]] <- subtree
     }

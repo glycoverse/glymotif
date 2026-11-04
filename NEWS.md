@@ -1,5 +1,7 @@
 # glymotif (development version)
 
+* Motif extraction preserves alditol status only when the fragment retains the original reducing end, and no longer deduplicates reduced and ordinary motifs together.
+
 # glymotif 1.0.1
 
 * Fixed installation from source on older versions of R. (#61)
