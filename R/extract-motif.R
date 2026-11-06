@@ -55,7 +55,7 @@ extract_branch_motif <- function(glycans, ..., including_core = FALSE) {
   # 1. Handle input types and deduplicate
   glycans <- ensure_glycans_are_structures(glycans)
   glycans <- unique(glycans)
-  .assert_n_glycans(glycans)
+  glycans <- .keep_n_glycans(glycans)
 
   # 2. Define the motif
   # The motif represents an N-glycan branch, rooted at the GlcNAc attached to the Mannose core.
@@ -114,17 +114,18 @@ extract_branch_motif <- function(glycans, ..., including_core = FALSE) {
   res
 }
 
-.assert_n_glycans <- function(glycans) {
+.keep_n_glycans <- function(glycans) {
   n_motif <- glyrepr::as_glycan_structure(
     "Hex(??-?)[Hex(??-?)]Hex(??-?)HexNAc(??-?)HexNAc(??-"
   )
   have_n_motif <- have_motif(glycans, n_motif, alignment = "core")
-  if (!all(have_n_motif)) {
+  if (!all(have_n_motif %in% TRUE)) {
     cli::cli_warn(c(
       "!" = "Some of {.arg glycans} do not have the N-glycan core motif.",
       "!" = "Those glycans are skipped."
     ))
   }
+  glycans[which(have_n_motif)]
 }
 
 #' Extract All Substructures (Motifs)

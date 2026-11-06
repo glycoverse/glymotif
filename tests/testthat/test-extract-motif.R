@@ -180,6 +180,44 @@ test_that("extract_branch_motif warns for glycans other than N-glycans", {
   expect_length(suppressWarnings(extract_branch_motif(paucimannose)), 0)
 })
 
+test_that("non-N-glycans cannot contribute branch motifs after the warning", {
+  # This has the linear extraction pattern but lacks the second core mannose.
+  non_n <- "Gal(b1-4)GlcNAc(b1-2)Man(a1-3)Man(b1-4)GlcNAc(b1-4)GlcNAc(b1-"
+  n_glycan <- "GlcNAc(b1-2)Man(a1-3)[Man(a1-6)]Man(b1-4)GlcNAc(b1-4)GlcNAc(b1-"
+
+  expect_warning(result <- extract_branch_motif(non_n), "are skipped")
+  expect_length(result, 0)
+  for (including_core in c(FALSE, TRUE)) {
+    expect_warning(
+      result <- extract_branch_motif(c(non_n, n_glycan),
+        including_core = including_core
+      ),
+      "are skipped"
+    )
+    expected <- extract_branch_motif(n_glycan,
+      including_core = including_core
+    )
+    expect_identical(as.character(result), as.character(expected))
+    expect_identical(
+      snapshot_extraction_graphs(as.list(result)),
+      snapshot_extraction_graphs(as.list(expected))
+    )
+  }
+})
+
+test_that("missing glycans are skipped during branch extraction", {
+  n_glycan <- "GlcNAc(b1-2)Man(a1-3)[Man(a1-6)]Man(b1-4)GlcNAc(b1-4)GlcNAc(b1-"
+  expect_warning(result <- extract_branch_motif(c(n_glycan, NA)), "are skipped")
+  expected <- extract_branch_motif(n_glycan)
+  expect_identical(as.character(result), as.character(expected))
+  expect_identical(
+    snapshot_extraction_graphs(as.list(result)),
+    snapshot_extraction_graphs(as.list(expected))
+  )
+  expect_warning(result <- extract_branch_motif(NA_character_), "are skipped")
+  expect_length(result, 0)
+})
+
 test_that("optional extract_branch_motif arguments must be named", {
   glycan <- glyrepr::n_glycan_core()
 
