@@ -23,10 +23,14 @@ class MotifTree {
   std::vector<std::vector<std::string>> links;
   std::vector<std::string> labels;
   Rcpp::CharacterVector anomers;
+  Rcpp::LogicalVector alditols;
   std::map<std::pair<int, int>, Subsets> cache;
 
   explicit MotifTree(const Rcpp::List& context)
       : anomers(Rcpp::as<Rcpp::CharacterVector>(context["anomers"])) {
+    alditols = context.containsElementNamed("alditols") ?
+      Rcpp::as<Rcpp::LogicalVector>(context["alditols"]) :
+      Rcpp::LogicalVector(anomers.size(), false);
     Rcpp::List child_list = context["children"];
     Rcpp::List link_list = context["child_linkages"];
     Rcpp::CharacterVector mono = context["mono"], sub = context["sub"];
@@ -123,7 +127,8 @@ Rcpp::List cpp_extract_motif_candidates(Rcpp::List contexts, Rcpp::List roots,
         Rcpp::checkUserInterrupt();
         std::vector<bool> selected(tree.children.size(), false);
         for (int node : nodes) selected[node] = true;
-        std::string key = "R" + field(tree.anomers[root]) + field(tree.encode(root, selected));
+        std::string key = "R" + field(tree.anomers[root]) +
+          (tree.alditols[root] ? "A" : "O") + field(tree.encode(root, selected));
         if (!seen.insert(key).second) continue;
         Rcpp::IntegerVector ids(nodes.size());
         for (size_t j = 0; j < nodes.size(); ++j) ids[j] = nodes[j] + 1;
