@@ -2,7 +2,13 @@
 
 ## glymotif (development version)
 
+- [`extract_branch_motif()`](https://glycoverse.github.io/glymotif/dev/reference/extract_branch_motif.md)
+  now skips glycans without an N-glycan core, as its warning promises,
+  and handles missing glycans without an error.
+
 ## glymotif 1.0.1
+
+CRAN release: 2026-10-22
 
 - Fixed installation from source on older versions of R.
   ([\#61](https://github.com/glycoverse/glymotif/issues/61))
