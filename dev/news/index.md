@@ -2,6 +2,9 @@
 
 ## glymotif (development version)
 
+- Motif extraction preserves alditol status only when the fragment
+  retains the original reducing end, and no longer deduplicates reduced
+  and ordinary motifs together.
 - [`extract_branch_motif()`](https://glycoverse.github.io/glymotif/dev/reference/extract_branch_motif.md)
   now skips glycans without an N-glycan core, as its warning promises,
   and handles missing glycans without an error.
