@@ -1,6 +1,6 @@
 # glymotif (development version)
 
-* `have_motif()`, `count_motif()`, `match_motif()`, and their batch and graph variants distinguish reducing-end alditols from ordinary residues in every alignment. Use a motif such as `GalNAc-ol` to match that alditol.
+* `have_motif()`, `count_motif()`, `match_motif()`, and their batch and graph variants distinguish reducing-end alditols from ordinary residues in every alignment. Use a motif such as `GalNAc-ol` to match that alditol. (#68)
 * Motif extraction preserves alditol status only when the fragment retains the original reducing end, and no longer deduplicates reduced and ordinary motifs together.
 * `extract_branch_motif()` now skips glycans without an N-glycan core, as its warning promises, and handles missing glycans without an error.
 
