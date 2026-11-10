@@ -64,7 +64,9 @@ test_that("extracted branches carry alditol only when their core is included", {
   )
   motifs <- extract_branch_motif(forms, including_core = TRUE)
   expect_identical(glyrepr::get_alditol(motifs), c(TRUE, FALSE))
-  expect_identical(unname(have_motifs(forms, branch_motifs())), diag(2) == 1)
+  have <- have_motifs(forms, branch_motifs())
+  expect_identical(unname(have), diag(2) == 1)
+  expect_identical(colnames(have), rep("Gal(b1-4)GlcNAc(b1-", 2L))
 })
 
 test_that("extract_motif works for multiple glycans", {

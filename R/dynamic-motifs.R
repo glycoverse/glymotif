@@ -167,6 +167,9 @@ resolve_motif_spec.dynamic_motifs_spec <- function(
 #' @return Trimmed IUPAC strings.
 #' @noRd
 .trim_branch_iupac <- function(iupac) {
+  # Normalize the synthetic reducing end for branch display names.
+  iupac <- sub("-ol(??-", "(??-", iupac, fixed = TRUE)
+
   # Remove the core suffix pattern for concrete mono types using fixed string matching
   # Pattern: ?)Man(??-?)Man(??-?)GlcNAc(??-?)GlcNAc(??-
   concrete_suffix <- "?)Man(??-?)Man(??-?)GlcNAc(??-?)GlcNAc(??-"
