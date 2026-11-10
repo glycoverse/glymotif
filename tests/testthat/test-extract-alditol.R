@@ -31,7 +31,7 @@ test_that("deduplication distinguishes ordinary and reduced motifs", {
   }
 })
 
-test_that("branch motifs do not inherit a reduced N-glycan core", {
+test_that("branch motifs retain the reduced form when the core is included", {
   glycan <- paste0(
     "Gal(b1-4)GlcNAc(b1-2)Man(a1-3)[Man(a1-6)]",
     "Man(b1-4)GlcNAc(b1-4)GlcNAc-ol(a1-"
@@ -39,7 +39,7 @@ test_that("branch motifs do not inherit a reduced N-glycan core", {
   result <- extract_branch_motif(glycan)
   expect_identical(as.character(result), "Gal(b1-4)GlcNAc(b1-")
   expect_identical(glyrepr::get_alditol(result), FALSE)
-  expect_false(any(glyrepr::get_alditol(
+  expect_true(all(glyrepr::get_alditol(
     extract_branch_motif(glycan, including_core = TRUE)
   )))
 })

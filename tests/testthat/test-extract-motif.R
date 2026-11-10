@@ -42,6 +42,33 @@ test_that("extract_motif works for topological glycans", {
   expect_setequal(as.character(result), as.character(expected))
 })
 
+test_that("extracted motifs retain alditol only on the source reducing end", {
+  forms <- c("Gal(b1-3)GalNAc-ol(a1-", "Gal(b1-3)GalNAc(a1-")
+  expected <- c("Gal(b1-", "GalNAc-ol(a1-", "GalNAc(a1-", forms)
+  for (glycans in list(forms, rev(forms))) {
+    expect_setequal(as.character(extract_motif(glycans)), expected)
+  }
+  have <- have_motifs(forms, dynamic_motifs(1))
+  expect_setequal(colnames(have), expected[1:3])
+  expect_identical(unname(have[, "Gal(b1-"]), c(TRUE, TRUE))
+  expect_identical(unname(have[, "GalNAc-ol(a1-"]), c(TRUE, FALSE))
+  expect_identical(unname(have[, "GalNAc(a1-"]), c(FALSE, TRUE))
+})
+
+test_that("extracted branches carry alditol only when their core is included", {
+  core <- "Man(a1-3)[Man(a1-6)]Man(b1-4)GlcNAc(b1-4)GlcNAc"
+  forms <- paste0("Gal(b1-4)GlcNAc(b1-2)", core, c("-ol(b1-", "(b1-"))
+  expect_identical(
+    as.character(extract_branch_motif(forms)),
+    "Gal(b1-4)GlcNAc(b1-"
+  )
+  motifs <- extract_branch_motif(forms, including_core = TRUE)
+  expect_identical(glyrepr::get_alditol(motifs), c(TRUE, FALSE))
+  have <- have_motifs(forms, branch_motifs())
+  expect_identical(unname(have), diag(2) == 1)
+  expect_identical(colnames(have), rep("Gal(b1-4)GlcNAc(b1-", 2L))
+})
+
 test_that("extract_motif works for multiple glycans", {
   glycan <- c(
     "Gal(b1-3)[GlcNAc(a1-6)]GalNAc(a1-",

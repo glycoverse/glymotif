@@ -80,3 +80,55 @@ test_that("floating combination limits remain enforced by native matching", {
   expect_identical(run(8L), matrix(TRUE, 1L, 1L))
   expect_snapshot(error = TRUE, run(9L))
 })
+
+test_that("alditol and ordinary residues match only their own form in every alignment", {
+  forms <- c("Gal(b1-3)GalNAc(a1-", "Gal(b1-3)GalNAc-ol(a1-")
+  graphs <- glyrepr::get_structure_graphs(
+    glyrepr::as_glycan_structure(forms),
+    return_list = TRUE
+  )
+  # Legacy graphs omit the alditol attribute.
+  graphs[[1]] <- igraph::delete_graph_attr(graphs[[1]], "alditol")
+  for (alignment in c("substructure", "core", "terminal", "whole")) {
+    expect_identical(
+      unname(have_motifs(forms, forms, alignments = alignment)),
+      diag(2) == 1
+    )
+    for (g in seq_along(graphs)) {
+      for (m in seq_along(graphs)) {
+        expect_identical(
+          .g_have_motif(graphs[[g]], graphs[[m]], alignment = alignment),
+          g == m
+        )
+      }
+    }
+  }
+})
+
+test_that("only the main reducing end matches alditol motifs", {
+  glycan <- glyrepr::as_glycan_structure(
+    "{GalNAc(a1-3)|2,3}Man(a1-3)[Glc(a1-6)]GalNAc-ol(b1-"
+  )
+  motifs <- glyrepr::as_glycan_structure(c("HexNAc", "HexNAc-ol"))
+  graph <- glyrepr::get_structure_graphs(glycan)
+  motif_graphs <- glyrepr::get_structure_graphs(motifs, return_list = TRUE)
+  # The floating GalNAc (node 1) can attach to either branch. Node 4 is the root.
+  for (i in seq_along(motifs)) {
+    node <- c(1L, 4L)[[i]]
+    args <- list(
+      ignore_linkages = TRUE,
+      strict_sub = FALSE,
+      mode = "lenient",
+      match_degree = FALSE
+    )
+    expect_identical(
+      do.call(match_motif, c(list(glycan, motifs[i]), args)),
+      list(list(node))
+    )
+    expect_identical(
+      do.call(.g_match_motif, c(list(graph, motif_graphs[[i]]), args)),
+      list(node)
+    )
+    expect_identical(count_motif(glycan, motifs[i]), 1L)
+  }
+})

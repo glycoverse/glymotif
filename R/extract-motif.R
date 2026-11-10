@@ -27,8 +27,8 @@
 #' @param including_core A logical scalar. If `TRUE`, the N-glycan core structure
 #'   (`Man(??-?)Man(??-?)GlcNAc(??-?)GlcNAc(??-` or `Hex(??-?)Hex(??-?)HexNAc(??-?)HexNAc(??-`)
 #'   is appended to each branch motif. Concrete branches receive a concrete
-#'   core; generic and mixed branches receive a generic core. Default is
-#'   `FALSE`.
+#'   core; generic and mixed branches receive a generic core. The appended
+#'   core retains the source glycan's alditol status. Default is `FALSE`.
 #'
 #' @details
 #' The function works by:
@@ -56,12 +56,32 @@ extract_branch_motif <- function(glycans, ..., including_core = FALSE) {
   glycans <- ensure_glycans_are_structures(glycans)
   glycans <- unique(glycans)
   glycans <- .keep_n_glycans(glycans)
+  if (!length(glycans)) {
+    return(glyrepr::glycan_structure())
+  }
+
+  # Match each core in its original form and preserve first-occurrence order.
+  alditol <- glyrepr::get_alditol(glycans)
+  runs <- split(seq_along(glycans), vctrs::vec_identify_runs(alditol))
+  branches <- lapply(runs, function(i) {
+    .extract_branches_with_core_form(
+      glycans[i],
+      alditol[[i[1]]],
+      including_core
+    )
+  })
+  unique(do.call(c, unname(branches)))
+}
+
+.extract_branches_with_core_form <- function(glycans, alditol, including_core) {
+  end <- if (alditol) "-ol(??-" else "(??-"
 
   # 2. Define the motif
   # The motif represents an N-glycan branch, rooted at the GlcNAc attached to the Mannose core.
-  motif <- glyrepr::as_glycan_structure(
-    "HexNAc(??-?)Hex(??-?)Hex(??-?)HexNAc(??-?)HexNAc(??-"
-  )
+  motif <- glyrepr::as_glycan_structure(paste0(
+    "HexNAc(??-?)Hex(??-?)Hex(??-?)HexNAc(??-?)HexNAc",
+    end
+  ))
 
   # 3. Find matches
   # Use match_motif to find where the motif maps to the glycan
@@ -101,13 +121,13 @@ extract_branch_motif <- function(glycans, ..., including_core = FALSE) {
     mono_type <- structure_mono_type(res)
     core_suffix <- ifelse(
       mono_type == "concrete",
-      "?)Man(??-?)Man(??-?)GlcNAc(??-?)GlcNAc(??-",
-      "?)Hex(??-?)Hex(??-?)HexNAc(??-?)HexNAc(??-"
+      "?)Man(??-?)Man(??-?)GlcNAc(??-?)GlcNAc",
+      "?)Hex(??-?)Hex(??-?)HexNAc(??-?)HexNAc"
     )
 
     res_chars <- as.character(res)
     # Append core suffix to each branch (position is always ?)
-    res_chars <- paste0(res_chars, core_suffix)
+    res_chars <- paste0(res_chars, core_suffix, end)
     res <- glyrepr::as_glycan_structure(res_chars)
   }
 
@@ -115,10 +135,16 @@ extract_branch_motif <- function(glycans, ..., including_core = FALSE) {
 }
 
 .keep_n_glycans <- function(glycans) {
-  n_motif <- glyrepr::as_glycan_structure(
-    "Hex(??-?)[Hex(??-?)]Hex(??-?)HexNAc(??-?)HexNAc(??-"
-  )
-  have_n_motif <- have_motif(glycans, n_motif, alignment = "core")
+  core <- "Hex(??-?)[Hex(??-?)]Hex(??-?)HexNAc(??-?)HexNAc"
+  reduced <- which(glyrepr::get_alditol(glycans))
+  have_n_motif <- have_motif(glycans, paste0(core, "(??-"), alignment = "core")
+  if (length(reduced)) {
+    have_n_motif[reduced] <- have_motif(
+      glycans[reduced],
+      paste0(core, "-ol(??-"),
+      alignment = "core"
+    )
+  }
   if (!all(have_n_motif %in% TRUE)) {
     cli::cli_warn(c(
       "!" = "Some of {.arg glycans} do not have the N-glycan core motif.",
@@ -132,6 +158,8 @@ extract_branch_motif <- function(glycans, ..., including_core = FALSE) {
 #'
 #' @description
 #' Extract all unique connected subgraphs (motifs) from the input glycans up to a specified size.
+#' A motif retains the source glycan's alditol status only when it contains
+#' the original reducing-end residue.
 #' This function can be useful combined with `count_motifs()` or `glydet::quantify_motifs()`.
 #' If so, set `alignment` to "substructure" for these functions.
 #'
