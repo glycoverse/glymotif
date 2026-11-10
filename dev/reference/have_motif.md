@@ -211,6 +211,11 @@ glycan residues can also match compatible concrete motif residues. For
 example, `Hex` can match a `Gal` motif residue, but `HexNAc` still
 cannot match `Gal`.
 
+Alditol status is part of residue identity in every alignment and
+matching mode. In `Gal(b1-3)GalNAc-ol(a1-`, the reducing end matches
+`GalNAc-ol` or `HexNAc-ol` motifs and excludes their ordinary forms. The
+terminal `Gal` still matches a regular `Gal` motif.
+
 ## Linkages
 
 Obscure linkages (e.g. "??-?") are allowed in the `motif` graph (see

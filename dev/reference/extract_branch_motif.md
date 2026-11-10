@@ -52,7 +52,8 @@ extract_branch_motif(glycans, ..., including_core = FALSE)
   (`Man(??-?)Man(??-?)GlcNAc(??-?)GlcNAc(??-` or
   `Hex(??-?)Hex(??-?)HexNAc(??-?)HexNAc(??-`) is appended to each branch
   motif. Concrete branches receive a concrete core; generic and mixed
-  branches receive a generic core. Default is `FALSE`.
+  branches receive a generic core. The appended core retains the source
+  glycan's alditol status. Default is `FALSE`.
 
 ## Value
 

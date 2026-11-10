@@ -38,7 +38,9 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="development version" id="glymotif-development-version">glymotif (development version)<a class="anchor" aria-label="anchor" href="#glymotif-development-version"></a></h2>
-<ul><li>Motif extraction preserves alditol status only when the fragment retains the original reducing end, and no longer deduplicates reduced and ordinary motifs together.</li>
+<ul><li>
+<code><a href="../reference/have_motif.html">have_motif()</a></code>, <code><a href="../reference/count_motif.html">count_motif()</a></code>, <code><a href="../reference/match_motif.html">match_motif()</a></code>, and their batch and graph variants distinguish reducing-end alditols from ordinary residues in every alignment. Use a motif such as <code>GalNAc-ol</code> to match that alditol. (<a href="https://github.com/glycoverse/glymotif/issues/68" class="external-link">#68</a>)</li>
+<li>Motif extraction preserves alditol status only when the fragment retains the original reducing end, and no longer deduplicates reduced and ordinary motifs together.</li>
 <li>
 <code><a href="../reference/extract_branch_motif.html">extract_branch_motif()</a></code> now skips glycans without an N-glycan core, as its warning promises, and handles missing glycans without an error.</li>
 </ul></div>

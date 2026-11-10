@@ -2,6 +2,13 @@
 
 ## glymotif (development version)
 
+- [`have_motif()`](https://glycoverse.github.io/glymotif/dev/reference/have_motif.md),
+  [`count_motif()`](https://glycoverse.github.io/glymotif/dev/reference/count_motif.md),
+  [`match_motif()`](https://glycoverse.github.io/glymotif/dev/reference/match_motif.md),
+  and their batch and graph variants distinguish reducing-end alditols
+  from ordinary residues in every alignment. Use a motif such as
+  `GalNAc-ol` to match that alditol.
+  ([\#68](https://github.com/glycoverse/glymotif/issues/68))
 - Motif extraction preserves alditol status only when the fragment
   retains the original reducing end, and no longer deduplicates reduced
   and ordinary motifs together.

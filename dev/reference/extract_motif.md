@@ -1,7 +1,9 @@
 # Extract All Substructures (Motifs)
 
 Extract all unique connected subgraphs (motifs) from the input glycans
-up to a specified size. This function can be useful combined with
+up to a specified size. A motif retains the source glycan's alditol
+status only when it contains the original reducing-end residue. This
+function can be useful combined with
 [`count_motifs()`](https://glycoverse.github.io/glymotif/dev/reference/count_motif.md)
 or `glydet::quantify_motifs()`. If so, set `alignment` to "substructure"
 for these functions.
