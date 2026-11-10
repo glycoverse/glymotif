@@ -25,6 +25,8 @@ A \code{\link[glyrepr:glycan_structure]{glyrepr::glycan_structure()}} vector con
 }
 \description{
 Extract all unique connected subgraphs (motifs) from the input glycans up to a specified size.
+A motif retains the source glycan's alditol status only when it contains
+the original reducing-end residue.
 This function can be useful combined with \code{count_motifs()} or \code{glydet::quantify_motifs()}.
 If so, set \code{alignment} to "substructure" for these functions.
 

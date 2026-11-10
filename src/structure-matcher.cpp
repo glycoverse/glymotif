@@ -102,9 +102,16 @@ struct Profile {
   int n; vector<string> mono,sub,links,anomers;
   vector<int> in,out; IntegerMatrix edges;
   bool informative=false;
+  bool alditol;
+
+  bool is_alditol(int node) const {
+    return alditol && in[node] == 0;
+  }
+
   explicit Profile(SEXP obj, bool forest=false):edges(0,2) {
     List graph(obj); n=as<int>(graph["n"]);
     List ga=graph["attributes"],va=graph["vertices"],ea=graph["edge_attributes"];
+    alditol = ga.containsElementNamed("alditol") && as<bool>(ga["alditol"]);
     for(auto key:{"floating_parts","floating_substituents"})
       if(!forest && ga.containsElementNamed(key) && Rf_length(ga[key])>0)
         stop("Motifs cannot contain unresolved floating metadata.");
@@ -154,7 +161,8 @@ List match(const Profile& g,const Profile& m,const Dictionary& dict,
   for(int mi=0;mi<m.n;++mi) {
     bool any=false;
     for(int gi=0;gi<g.n;++gi) {
-      bool ok=dict.residue(g.mono[gi],g.sub[gi],m.mono[mi],m.sub[mi],strict,lenient);
+      bool ok = g.is_alditol(gi) == m.is_alditol(mi) &&
+        dict.residue(g.mono[gi],g.sub[gi],m.mono[mi],m.sub[mi],strict,lenient);
       if(has_degree && deg[mi] == TRUE) ok=ok && m.in[mi]==g.in[gi] && m.out[mi]==g.out[gi];
       if(!has_degree && alignment=="core" && m.in[mi]==0) ok=ok && g.in[gi]==0;
       if(!has_degree && alignment=="terminal" && m.out[mi]==0) ok=ok && g.out[gi]==0;

@@ -483,6 +483,15 @@ perform_compatible_vf2 <- function(
     graph_edge_matrix(motif)
   }
 
+  glycan_alditol <- which(.motif_alditol_nodes(glycan))
+  motif_alditol <- which(.motif_alditol_nodes(motif))
+  if (length(glycan_alditol) || length(motif_alditol)) {
+    other_glycan_nodes <- setdiff(graph_vertex_ids(glycan), glycan_alditol)
+    other_motif_nodes <- setdiff(graph_vertex_ids(motif), motif_alditol)
+    compatibility$vertex[motif_alditol, other_glycan_nodes] <- FALSE
+    compatibility$vertex[other_motif_nodes, glycan_alditol] <- FALSE
+  }
+
   cpp_vf2_subgraph_mono(
     glycan_vertex_count = igraph::vcount(glycan),
     glycan_edges = glycan_edges,

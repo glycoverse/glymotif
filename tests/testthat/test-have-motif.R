@@ -401,6 +401,20 @@ test_that("obscure linkages on the same edge, motif obscurer", {
 
 
 # ========== Alignment ==========
+test_that("have_motif distinguishes reducing-end alditols in every alignment", {
+  forms <- c("Gal(b1-3)GalNAc(a1-", "Gal(b1-3)GalNAc-ol(a1-")
+  for (alignment in c("substructure", "core", "terminal", "whole")) {
+    expect_identical(
+      have_motif(forms, forms[1], alignment = alignment),
+      c(TRUE, FALSE)
+    )
+    expect_identical(
+      have_motif(forms, forms[2], alignment = alignment),
+      c(FALSE, TRUE)
+    )
+  }
+})
+
 test_that("whole alignment simple positive case", {
   glycan <- glyrepr::o_glycan_core_2()
   motif <- glyrepr::o_glycan_core_2()

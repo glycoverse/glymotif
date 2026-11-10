@@ -153,6 +153,11 @@ Examples:
 With \code{mode = "lenient"}, compatibility becomes bidirectional: generic glycan
 residues can also match compatible concrete motif residues. For example,
 \code{Hex} can match a \code{Gal} motif residue, but \code{HexNAc} still cannot match \code{Gal}.
+
+Alditol status is part of residue identity in every alignment and matching
+mode. In \verb{Gal(b1-3)GalNAc-ol(a1-}, the reducing end matches \code{GalNAc-ol}
+or \code{HexNAc-ol} motifs and excludes their ordinary forms. The terminal
+\code{Gal} still matches a regular \code{Gal} motif.
 }
 
 \section{Linkages}{
