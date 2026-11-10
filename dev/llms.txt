@@ -31,9 +31,17 @@ pak::pkg_install("glymotif")
 
 Or install the latest GitHub release:
 
+Install the latest releases of this package and its required Glycoverse
+dependencies together from GitHub:
+
 ``` r
 
-pak::pkg_install("glycoverse/glymotif@*release")
+pak::pkg_install(c(
+  "glycoverse/glyrepr@*release",
+  "glycoverse/glyparse@*release",
+  "glycoverse/glydraw@*release",
+  "glycoverse/glymotif@*release"
+))
 ```
 
 Or install the development version from
